@@ -22,6 +22,7 @@ export const PRIORITY_MOVES: Record<string, PriorityMove> = {
   firstimpression:  { name: 'First Impression', priority: +2, note: 'first turn only' },
   // +1
   quickattack:      { name: 'Quick Attack',     priority: +1 },
+  aquajet:          { name: 'Aqua Jet',         priority: +1 },
   bulletpunch:      { name: 'Bullet Punch',     priority: +1 },
   machpunch:        { name: 'Mach Punch',       priority: +1 },
   shadowsneak:      { name: 'Shadow Sneak',     priority: +1 },

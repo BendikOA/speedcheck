@@ -10,6 +10,15 @@ const NATURES_EXIST: Record<number, boolean> = { 1: false, 2: false };
 
 const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
+export interface MegaStats {
+  id: string;
+  name: string;
+  baseSpe: number;
+  maxSpeed: number;
+  neutralSpeed: number;
+  minSpeed: number;
+}
+
 export interface SpeedEntry {
   id: string;
   name: string;
@@ -18,6 +27,8 @@ export interface SpeedEntry {
   minSpeed: number;
   neutralSpeed: number;
   abilities: string[]; // ability ids, e.g. ['swiftswim', 'waterabsorb']
+  types: string[];     // e.g. ['Water', 'Flying']
+  megaForms: MegaStats[]; // all available mega forms (0 = none, 1 = one mega, 2 = X+Y)
 }
 
 // Abilities that double speed in a specific field condition
@@ -27,6 +38,12 @@ export const WEATHER_ABILITY: Record<string, 'rain' | 'sun' | 'sand' | 'snow' | 
   sandrush:    'sand',
   slushrush:   'snow',
   surgesurfer: 'electric',
+};
+
+// Abilities that give ×1.5 speed when Speed is the boosted stat (proto/quark)
+export const PROTO_ABILITY: Record<string, 'sun' | 'electric'> = {
+  protosynthesis: 'sun',
+  quarkdrive:     'electric',
 };
 
 const cache    = new Map<number, SpeedEntry[]>();
@@ -58,9 +75,27 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
     const abilities = Object.values(sp.abilities)
       .filter(Boolean)
       .map((n: any) => toId(n as string));
+    const types: string[] = sp.types ?? [];
+
+    // Collect all available mega forms (order: X before Y if both exist)
+    const megaForms: MegaStats[] = [];
+    for (const suffix of ['mega', 'megax', 'megay']) {
+      const megaSp = Dex.species.get(`${sp.id}${suffix}`);
+      if (megaSp?.exists) {
+        const megaSpe = megaSp.baseStats.spe;
+        megaForms.push({
+          id: megaSp.id,
+          name: megaSp.name,
+          baseSpe: megaSpe,
+          maxSpeed:     gen.stats.calc('spe', megaSpe, 31, 252, 50, jolly),
+          neutralSpeed: gen.stats.calc('spe', megaSpe, 31, 252, 50, hardy),
+          minSpeed:     gen.stats.calc('spe', megaSpe,  0,   0, 50, brave),
+        });
+      }
+    }
 
     entries.push({
-      id: sp.id, name: sp.name, baseSpe, abilities,
+      id: sp.id, name: sp.name, baseSpe, abilities, types, megaForms,
       maxSpeed:     gen.stats.calc('spe', baseSpe, 31, 252, 50, jolly),
       minSpeed:     gen.stats.calc('spe', baseSpe,  0,   0, 50, brave),
       neutralSpeed: gen.stats.calc('spe', baseSpe, 31, 252, 50, hardy),
@@ -101,33 +136,52 @@ export type Conditions = {
   psychic:      boolean;
 };
 
-// Per-pokemon flags stored outside Conditions (keyed by "you-0", "opp-2", etc.)
-export type PerPokemon = {
-  scarf:     boolean;
-  paralysis: boolean;
-};
-
 export const DEFAULT_CONDITIONS: Conditions = {
   yourTailwind: false, oppTailwind: false, trickRoom: false,
   rain: false, sun: false, sand: false, snow: false, electric: false, grassy: false, psychic: false,
 };
 
+export type NatureTier = '+' | '=' | '-';
+
 export function calcEffectiveSpeed(
   entry: SpeedEntry,
   side: 'you' | 'opp',
-  perPoke: { scarf: boolean; paralysis: boolean },
+  perPoke: {
+    scarf:       boolean;
+    paralysis:   boolean;
+    protoBoost?: boolean;
+    commander?:  boolean;
+    natureTier?: NatureTier;
+    megaIndex?:  number; // 0 = base, 1+ = mega form index into megaForms[]
+  },
   cond: Conditions
 ): number {
-  let speed = entry.maxSpeed;
+  // Pick stat source: mega forme if toggled
+  const megaIdx = perPoke.megaIndex ?? 0;
+  const src = (megaIdx > 0 && entry.megaForms[megaIdx - 1]) ? entry.megaForms[megaIdx - 1] : entry;
 
-  // Weather/terrain ability (×2)
-  for (const abilityId of entry.abilities) {
-    const trigger = WEATHER_ABILITY[abilityId];
-    if (trigger && cond[trigger]) {
-      speed = Math.floor(speed * 2);
-      break;
+  // Pick base speed from nature tier
+  const base = perPoke.natureTier === '=' ? src.neutralSpeed
+             : perPoke.natureTier === '-' ? src.minSpeed
+             : src.maxSpeed;
+  let speed = base;
+
+  // Weather/terrain ability (×2) — skip when mega'd (mega has different ability)
+  if (!megaIdx) {
+    for (const abilityId of entry.abilities) {
+      const trigger = WEATHER_ABILITY[abilityId];
+      if (trigger && cond[trigger]) {
+        speed = Math.floor(speed * 2);
+        break;
+      }
     }
   }
+
+  // Protosynthesis / Quark Drive speed boost (×1.5, only when Speed is boosted stat)
+  if (perPoke.protoBoost) speed = Math.floor(speed * 1.5);
+
+  // Commander (Dondozo + Tatsugiri): +2 speed stages = ×2
+  if (perPoke.commander) speed = Math.floor(speed * 2);
 
   // Scarf ×1.5
   if (perPoke.scarf) speed = Math.floor(speed * 1.5);
