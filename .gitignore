@@ -4,6 +4,7 @@
 node_modules/
 build/
 dist/
+improvements.md
 .env
 .env.*
 !.env.example
