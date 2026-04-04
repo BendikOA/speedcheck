@@ -2,23 +2,44 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root {
-  --bg: #0f1117;
-  --surface: #1a1d27;
-  --surface-2: #22263a;
-  --border: #2e3350;
-  --text: #e8eaf0;
-  --text-muted: #7b82a0;
-  --accent: #6c8ef5;
-  --accent-hover: #8aa4ff;
+  /* Dark theme (default) */
+  --bg: #0f0e17;
+  --surface: #1a1927;
+  --surface-2: #222136;
+  --border: #2e2d4a;
+  --text: #fffffe;
+  --text-muted: #a7a9be;
+  --accent: #ff8906;
+  --accent-hover: #ffaa44;
   --danger: #f56c6c;
   --success: #6cf587;
 
   --radius: 8px;
   --radius-sm: 4px;
   --font: 'Inter', system-ui, sans-serif;
+
+  /* Safe area insets for iOS notch / home bar */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+}
+
+:root[data-theme="light"] {
+  --bg: #eff0f3;
+  --surface: #e2e4ec;
+  --surface-2: #d5d7e3;
+  --border: #c4c7d6;
+  --text: #0d0d0d;
+  --text-muted: #2a2a2a;
+  --accent: #ff8e3c;
+  --accent-hover: #e67828;
+  --danger: #cc2222;
+  --success: #1d8c40;
 }
 
 html {
@@ -27,10 +48,14 @@ html {
   color: var(--text);
   font-size: 15px;
   line-height: 1.5;
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport height — avoids mobile browser bar issues */
+  overflow-x: hidden;
 }
 
 a {
@@ -38,15 +63,33 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  color: var(--accent-hover);
-}
+a:hover { color: var(--accent-hover); }
 
-input, select, button {
+/* Prevent iOS from zooming inputs — must be 16px or larger */
+input, select, textarea, button {
   font-family: inherit;
-  font-size: inherit;
+  font-size: 16px;
 }
 
-button {
-  cursor: pointer;
+/* Minimum 44×44px touch targets on all interactive elements */
+button, label[role="button"], a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* Active feedback since :hover doesn't fire on touch */
+@media (hover: none) and (pointer: coarse) {
+  button:active, label:active {
+    opacity: 0.7;
+  }
+}
+
+/* Scrollable containers should use momentum scrolling on iOS */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll-x::-webkit-scrollbar { display: none; }

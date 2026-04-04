@@ -7,15 +7,21 @@
   import { calcEffectiveSpeed, WEATHER_ABILITY, DEFAULT_CONDITIONS } from '$lib/speedtiers';
   import type { Conditions } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
+  import { getPriorityMoves, getPriorityAbilities, loadPriorityCache } from '$lib/priority';
+  import type { PriorityMove, PriorityAbility } from '$lib/priority';
+
+  let priorityReady = false;
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
   let oppTeam:  TeamSlot[] = Array(6).fill(null);
 
-  onMount(() => {
+  onMount(async () => {
     const state = get(teamState);
     yourTeam = state.yourTeam;
     oppTeam  = state.oppTeam;
+    await loadPriorityCache();
+    priorityReady = true;
   });
 
   // ── Field selection ────────────────────────────────────────────────────────
@@ -29,27 +35,33 @@
     if (set.has(index)) {
       set.delete(index);
       fieldScarfs.delete(key);
+      fieldParalysis.delete(key);
     } else if (set.size < 2) {
       set.add(index);
-      // Carry scarf state over from team builder
       fieldScarfs.set(key, team[index]?.scarf ?? false);
+      fieldParalysis.set(key, false);
     }
-    yourField   = new Set(yourField);
-    oppField    = new Set(oppField);
-    fieldScarfs = new Map(fieldScarfs);
+    yourField      = new Set(yourField);
+    oppField       = new Set(oppField);
+    fieldScarfs    = new Map(fieldScarfs);
+    fieldParalysis = new Map(fieldParalysis);
   }
 
-  // ── Per-field scarf (one per side) ────────────────────────────────────────
-  let fieldScarfs = new Map<string, boolean>();
+  // ── Per-field toggles ─────────────────────────────────────────────────────
+  let fieldScarfs    = new Map<string, boolean>();
+  let fieldParalysis = new Map<string, boolean>();
 
   function toggleFieldScarf(key: string, side: 'you' | 'opp') {
     const wasOn = fieldScarfs.get(key) ?? false;
-    // Clear scarf for entire side first
     const fieldSet = side === 'you' ? yourField : oppField;
     fieldSet.forEach(i => fieldScarfs.set(`${side}-${i}`, false));
-    // Toggle this one on if it wasn't already
     if (!wasOn) fieldScarfs.set(key, true);
     fieldScarfs = new Map(fieldScarfs);
+  }
+
+  function toggleFieldParalysis(key: string) {
+    fieldParalysis.set(key, !(fieldParalysis.get(key) ?? false));
+    fieldParalysis = new Map(fieldParalysis);
   }
 
   // ── Conditions ─────────────────────────────────────────────────────────────
@@ -69,11 +81,13 @@
 
   const CONDITION_BUTTONS: { key: keyof Conditions; label: string; group?: string }[] = [
     { key: 'trickRoom', label: 'Trick Room' },
-    { key: 'rain',      label: 'Rain',     group: 'weather' },
-    { key: 'sun',       label: 'Sun',      group: 'weather' },
-    { key: 'sand',      label: 'Sand',     group: 'weather' },
-    { key: 'snow',      label: 'Snow',     group: 'weather' },
+    { key: 'rain',      label: 'Rain',      group: 'weather' },
+    { key: 'sun',       label: 'Sun',       group: 'weather' },
+    { key: 'sand',      label: 'Sand',      group: 'weather' },
+    { key: 'snow',      label: 'Snow',      group: 'weather' },
     { key: 'electric',  label: 'Electric Terrain', group: 'terrain' },
+    { key: 'grassy',    label: 'Grassy Terrain',   group: 'terrain' },
+    { key: 'psychic',   label: 'Psychic Terrain',  group: 'terrain' },
   ];
 
   // ── Speed order ────────────────────────────────────────────────────────────
@@ -82,38 +96,35 @@
     side: 'you' | 'opp';
     slot: NonNullable<TeamSlot>;
     scarf: boolean;
+    paralysis: boolean;
     effectiveSpeed: number;
     triggeredAbility: string | null;
+    priorityMoves: PriorityMove[];
+    priorityAbilities: PriorityAbility[];
   };
 
   $: fieldRows = (() => {
+    void priorityReady; // re-run when cache loads
     const rows: FieldRow[] = [];
 
-    yourField.forEach(i => {
-      const slot = yourTeam[i];
-      if (!slot) return;
-      const key = `you-${i}`;
-      const scarf = fieldScarfs.get(key) ?? false;
+    const buildRow = (side: 'you' | 'opp', i: number, slot: NonNullable<TeamSlot>) => {
+      const key      = `${side}-${i}`;
+      const scarf    = fieldScarfs.get(key)    ?? false;
+      const paralysis = fieldParalysis.get(key) ?? false;
       const triggered = slot.entry.abilities.find(a => {
         const t = WEATHER_ABILITY[a];
         return t && cond[t];
       }) ?? null;
-      rows.push({ key, side: 'you', slot, scarf, triggeredAbility: triggered,
-        effectiveSpeed: calcEffectiveSpeed(slot.entry, 'you', scarf, cond) });
-    });
+      rows.push({
+        key, side, slot, scarf, paralysis, triggeredAbility: triggered,
+        effectiveSpeed: calcEffectiveSpeed(slot.entry, side, { scarf, paralysis }, cond),
+        priorityMoves: getPriorityMoves(slot.entry.id),
+        priorityAbilities: getPriorityAbilities(slot.entry.abilities),
+      });
+    };
 
-    oppField.forEach(i => {
-      const slot = oppTeam[i];
-      if (!slot) return;
-      const key = `opp-${i}`;
-      const scarf = fieldScarfs.get(key) ?? false;
-      const triggered = slot.entry.abilities.find(a => {
-        const t = WEATHER_ABILITY[a];
-        return t && cond[t];
-      }) ?? null;
-      rows.push({ key, side: 'opp', slot, scarf, triggeredAbility: triggered,
-        effectiveSpeed: calcEffectiveSpeed(slot.entry, 'opp', scarf, cond) });
-    });
+    yourField.forEach(i => { const s = yourTeam[i]; if (s) buildRow('you', i, s); });
+    oppField.forEach(i  => { const s = oppTeam[i];  if (s) buildRow('opp', i, s); });
 
     rows.sort((a, b) => cond.trickRoom
       ? a.effectiveSpeed - b.effectiveSpeed
@@ -124,10 +135,11 @@
 
   // ── Reset ──────────────────────────────────────────────────────────────────
   function resetGame() {
-    yourField   = new Set();
-    oppField    = new Set();
-    fieldScarfs = new Map();
-    cond        = { ...DEFAULT_CONDITIONS };
+    yourField      = new Set();
+    oppField       = new Set();
+    fieldScarfs    = new Map();
+    fieldParalysis = new Map();
+    cond           = { ...DEFAULT_CONDITIONS };
     goto('/');
   }
 </script>
@@ -136,40 +148,9 @@
 
 <div class="page">
 
-  <!-- Top bar: reset + conditions -->
+  <!-- Top bar: reset only -->
   <div class="top-bar">
     <button class="reset-btn" on:click={resetGame}>← New Game</button>
-
-    <div class="conditions-bar">
-      <button
-        class="cond-btn your"
-        class:active={cond.yourTailwind}
-        on:click={() => cond = { ...cond, yourTailwind: !cond.yourTailwind }}
-      >
-        Your Tailwind
-      </button>
-
-      <div class="board-cond">
-        {#each CONDITION_BUTTONS as btn}
-          <button
-            class="cond-btn"
-            class:active={cond[btn.key]}
-            class:tr={btn.key === 'trickRoom'}
-            on:click={() => toggleCond(btn.key, btn.group)}
-          >
-            {btn.label}
-          </button>
-        {/each}
-      </div>
-
-      <button
-        class="cond-btn opp"
-        class:active={cond.oppTailwind}
-        on:click={() => cond = { ...cond, oppTailwind: !cond.oppTailwind }}
-      >
-        Opp Tailwind
-      </button>
-    </div>
   </div>
 
   <!-- Team rows -->
@@ -207,6 +188,32 @@
     {/each}
   </div>
 
+  <!-- Conditions -->
+  <div class="conditions-bar">
+    <button
+      class="cond-btn your"
+      class:active={cond.yourTailwind}
+      on:click={() => cond = { ...cond, yourTailwind: !cond.yourTailwind }}
+    >Your Tailwind</button>
+
+    <div class="board-cond">
+      {#each CONDITION_BUTTONS as btn}
+        <button
+          class="cond-btn"
+          class:active={cond[btn.key]}
+          class:tr={btn.key === 'trickRoom'}
+          on:click={() => toggleCond(btn.key, btn.group)}
+        >{btn.label}</button>
+      {/each}
+    </div>
+
+    <button
+      class="cond-btn opp"
+      class:active={cond.oppTailwind}
+      on:click={() => cond = { ...cond, oppTailwind: !cond.oppTailwind }}
+    >Opp Tailwind</button>
+  </div>
+
   <!-- Speed order -->
   <div class="speed-section">
     <div class="speed-header">
@@ -237,12 +244,34 @@
               {#if row.scarf}
                 <span class="badge scarf-badge">Scarf</span>
               {/if}
+              {#if row.paralysis}
+                <span class="badge para-badge">PAR</span>
+              {/if}
+              {#each row.priorityMoves as pm}
+                {@const active = !cond.psychic && (!pm.requiresCondition || cond[pm.requiresCondition as keyof typeof cond])}
+                <span
+                  class="badge priority-badge"
+                  class:suppressed={!active}
+                  title={cond.psychic ? 'Blocked by Psychic Terrain' : (pm.requiresCondition && !cond[pm.requiresCondition as keyof typeof cond] ? `Requires ${pm.requiresCondition} terrain` : (pm.note ?? ''))}
+                >
+                  {pm.name} {pm.priority > 0 ? '+' : ''}{pm.priority}
+                </span>
+              {/each}
+              {#each row.priorityAbilities as pa}
+                <span class="badge prio-ability-badge" title={pa.effect}>{pa.name}</span>
+              {/each}
             </div>
 
-            <label class="scarf-label" class:active={row.scarf}>
-              <input type="checkbox" checked={row.scarf} on:change={() => toggleFieldScarf(row.key, row.side)} />
-              Scarf
-            </label>
+            <div class="row-toggles">
+              <label class="toggle-pill" class:active={row.scarf}>
+                <input type="checkbox" checked={row.scarf} on:change={() => toggleFieldScarf(row.key, row.side)} />
+                Scarf
+              </label>
+              <label class="toggle-pill para" class:active={row.paralysis}>
+                <input type="checkbox" checked={row.paralysis} on:change={() => toggleFieldParalysis(row.key)} />
+                PAR
+              </label>
+            </div>
 
             <span class="row-speed">{row.effectiveSpeed}</span>
           </div>
@@ -258,8 +287,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.75rem;
-    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
   }
 
   .reset-btn {
@@ -283,7 +311,7 @@
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    flex: 1;
+    margin-bottom: 1.25rem;
   }
 
   .board-cond {
@@ -291,7 +319,6 @@
     gap: 0.4rem;
     flex-wrap: wrap;
     flex: 1;
-    justify-content: center;
   }
 
   .cond-btn {
@@ -307,7 +334,10 @@
     white-space: nowrap;
   }
 
-  .cond-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  .cond-btn:active { opacity: 0.8; }
+  @media (hover: hover) {
+    .cond-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  }
 
   .cond-btn.active {
     border-color: var(--accent);
@@ -337,25 +367,40 @@
   .teams {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    margin-bottom: 2rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .team-row {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  @media (min-width: 640px) {
+    .team-row {
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
   }
 
   .team-label {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
-    width: 100px;
-    flex-shrink: 0;
     display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .team-label {
+      width: 100px;
+      flex-shrink: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+    }
   }
 
   .team-label.you { color: #6c8ef5; }
@@ -368,21 +413,30 @@
   }
 
   .team-slots {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
     gap: 0.5rem;
-    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 600px) {
+    .team-slots { grid-template-columns: repeat(3, 1fr); }
   }
 
   .tslot {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90px;
+    justify-content: center;
+    width: 100%;
+    height: 96px;
     padding: 0.4rem 0.3rem;
     background: var(--surface);
     border: 2px solid var(--border);
     border-radius: var(--radius);
     cursor: pointer;
+    overflow: hidden;
     transition: border-color 0.15s, background 0.15s;
   }
 
@@ -401,15 +455,19 @@
     background: color-mix(in srgb, #f56c6c 14%, var(--surface));
   }
 
-  .tslot.has-mon:not(:disabled):hover {
-    border-color: var(--text-muted);
+  .tslot:active:not(:disabled) { opacity: 0.8; }
+  @media (hover: hover) {
+    .tslot.has-mon:not(:disabled):hover {
+      border-color: var(--text-muted);
+    }
   }
 
   .tslot-sprite {
-    width: 68px;
-    height: 68px;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
     image-rendering: pixelated;
+    flex-shrink: 0;
   }
 
   .tslot-name {
@@ -426,7 +484,6 @@
   .tslot-empty {
     color: var(--border);
     font-size: 1.2rem;
-    line-height: 68px;
   }
 
   /* Speed section */
@@ -536,29 +593,69 @@
     background: color-mix(in srgb, #f5c96c 10%, var(--surface));
   }
 
-  .scarf-label {
+  .row-toggles {
     display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 0.45rem 0.9rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    user-select: none;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    gap: 0.4rem;
     flex-shrink: 0;
   }
 
-  .scarf-label input { display: none; }
+  .toggle-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    user-select: none;
+    min-height: 44px;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
 
-  .scarf-label.active {
+  .toggle-pill input { display: none; }
+
+  .toggle-pill.active {
     color: #f5c96c;
     border-color: #f5c96c;
     background: color-mix(in srgb, #f5c96c 10%, var(--surface));
   }
+
+  .toggle-pill.para.active {
+    color: #f5a06c;
+    border-color: #f5a06c;
+    background: color-mix(in srgb, #f5a06c 10%, var(--surface));
+  }
+
+  .badge.para-badge {
+    color: #f5a06c;
+    border-color: #f5a06c;
+    background: color-mix(in srgb, #f5a06c 10%, var(--surface));
+  }
+
+  .badge.priority-badge {
+    color: #f56cc8;
+    border-color: #f56cc8;
+    background: color-mix(in srgb, #f56cc8 10%, var(--surface));
+  }
+
+  .badge.priority-badge.suppressed {
+    color: var(--text-muted);
+    border-color: var(--border);
+    background: none;
+    opacity: 0.45;
+    text-decoration: line-through;
+  }
+
+  .badge.prio-ability-badge {
+    color: #c46cf5;
+    border-color: #c46cf5;
+    background: color-mix(in srgb, #c46cf5 10%, var(--surface));
+  }
+
+  .toggle-pill:active { opacity: 0.75; }
 
   .row-speed {
     font-size: 1.75rem;
@@ -567,5 +664,17 @@
     min-width: 4rem;
     text-align: right;
     flex-shrink: 0;
+  }
+
+  /* Mobile: tighten the speed rows */
+  @media (max-width: 500px) {
+    .speed-row { gap: 0.5rem; padding: 0.6rem 0.75rem; }
+    .row-sprite { width: 52px; height: 52px; }
+    .row-name { font-size: 0.95rem; }
+    .row-speed { font-size: 1.4rem; min-width: 3rem; }
+    .pos { font-size: 1.1rem; width: 1.25rem; }
+    .toggle-pill { padding: 0.4rem 0.55rem; font-size: 0.78rem; }
+
+    .conditions-bar { gap: 0.35rem; }
   }
 </style>

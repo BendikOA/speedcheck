@@ -29,11 +29,20 @@ export const WEATHER_ABILITY: Record<string, 'rain' | 'sun' | 'sand' | 'snow' | 
   surgesurfer: 'electric',
 };
 
-const cache = new Map<number, SpeedEntry[]>();
+const cache    = new Map<number, SpeedEntry[]>();
+const cacheAll = new Map<number, SpeedEntry[]>();
 
-export function buildSpeedTiers(genNum: GenNumber): SpeedEntry[] {
-  if (cache.has(genNum)) return cache.get(genNum)!;
+// Formes that add no unique speed value (cosmetic / Gmax / Totem)
+const SKIP_SUFFIX = ['-Gmax', '-Totem', '-Low-Key-Gmax', '-Rapid-Strike-Gmax'];
+const SKIP_NS     = new Set(['CAP', 'LGPE', 'Pokestar', 'Custom']);
 
+function isMeaningfulForme(name: string, ns: string | null): boolean {
+  if (ns && SKIP_NS.has(ns)) return false;
+  if (SKIP_SUFFIX.some(s => name.endsWith(s))) return false;
+  return true;
+}
+
+function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
   const gen = gens.get(genNum);
   const hasNatures = NATURES_EXIST[genNum] !== false;
   const jolly = hasNatures ? gen.natures.get('jolly')! : gen.natures.get('hardy')!;
@@ -41,32 +50,43 @@ export function buildSpeedTiers(genNum: GenNumber): SpeedEntry[] {
   const hardy = gen.natures.get('hardy')!;
 
   const entries: SpeedEntry[] = [];
+  for (const sp of species) {
+    if (!sp.exists) continue;
+    if (!isMeaningfulForme(sp.name, sp.isNonstandard)) continue;
 
-  for (const species of gen.species) {
-    if (species.isNonstandard) continue;
-    if (!species.exists) continue;
-
-    const baseSpe = species.baseStats.spe;
-
-    const abilities = Object.values(species.abilities)
+    const baseSpe = sp.baseStats.spe;
+    const abilities = Object.values(sp.abilities)
       .filter(Boolean)
-      .map(name => toId(name as string));
+      .map((n: any) => toId(n as string));
 
     entries.push({
-      id: species.id,
-      name: species.name,
-      baseSpe,
-      maxSpeed: gen.stats.calc('spe', baseSpe, 31, 252, 50, jolly),
-      minSpeed: gen.stats.calc('spe', baseSpe, 0, 0, 50, brave),
+      id: sp.id, name: sp.name, baseSpe, abilities,
+      maxSpeed:     gen.stats.calc('spe', baseSpe, 31, 252, 50, jolly),
+      minSpeed:     gen.stats.calc('spe', baseSpe,  0,   0, 50, brave),
       neutralSpeed: gen.stats.calc('spe', baseSpe, 31, 252, 50, hardy),
-      abilities
     });
   }
-
   entries.sort((a, b) => b.maxSpeed - a.maxSpeed || b.baseSpe - a.baseSpe);
+  return entries;
+}
+
+/** Gen-filtered list — for team builder (only Pokémon legal in that gen's format) */
+export function buildSpeedTiers(genNum: GenNumber): SpeedEntry[] {
+  if (cache.has(genNum)) return cache.get(genNum)!;
+  const gen = gens.get(genNum);
+  const entries = calcEntries(gen.species, genNum);
   cache.set(genNum, entries);
   return entries;
 }
+
+/** Full national dex list — for the tiers reference page */
+export function buildAllTiers(genNum: GenNumber): SpeedEntry[] {
+  if (cacheAll.has(genNum)) return cacheAll.get(genNum)!;
+  const entries = calcEntries(Dex.species.all(), genNum);
+  cacheAll.set(genNum, entries);
+  return entries;
+}
+
 
 export type Conditions = {
   yourTailwind: boolean;
@@ -77,17 +97,25 @@ export type Conditions = {
   sand:         boolean;
   snow:         boolean;
   electric:     boolean;
+  grassy:       boolean;
+  psychic:      boolean;
+};
+
+// Per-pokemon flags stored outside Conditions (keyed by "you-0", "opp-2", etc.)
+export type PerPokemon = {
+  scarf:     boolean;
+  paralysis: boolean;
 };
 
 export const DEFAULT_CONDITIONS: Conditions = {
   yourTailwind: false, oppTailwind: false, trickRoom: false,
-  rain: false, sun: false, sand: false, snow: false, electric: false,
+  rain: false, sun: false, sand: false, snow: false, electric: false, grassy: false, psychic: false,
 };
 
 export function calcEffectiveSpeed(
   entry: SpeedEntry,
   side: 'you' | 'opp',
-  scarf: boolean,
+  perPoke: { scarf: boolean; paralysis: boolean },
   cond: Conditions
 ): number {
   let speed = entry.maxSpeed;
@@ -102,11 +130,14 @@ export function calcEffectiveSpeed(
   }
 
   // Scarf ×1.5
-  if (scarf) speed = Math.floor(speed * 1.5);
+  if (perPoke.scarf) speed = Math.floor(speed * 1.5);
 
   // Tailwind ×2
   const tailwind = side === 'you' ? cond.yourTailwind : cond.oppTailwind;
   if (tailwind) speed = Math.floor(speed * 2);
+
+  // Paralysis ×0.5
+  if (perPoke.paralysis) speed = Math.floor(speed * 0.5);
 
   return speed;
 }

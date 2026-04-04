@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { buildSpeedTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
   import type { SpeedEntry, GenNumber } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
   import { teamState } from '$lib/stores/teams';
   import type { TeamSlot } from '$lib/stores/teams';
+  import { savedTeams } from '$lib/stores/savedTeams';
+  import type { SavedTeam } from '$lib/stores/savedTeams';
   import PokemonPicker from '$lib/components/PokemonPicker.svelte';
 
   let genNum: GenNumber = 9;
@@ -15,7 +18,8 @@
   $: allEntries = buildSpeedTiers(genNum);
   $: yourIds = yourTeam.flatMap(s => s ? [s.entry.id] : []);
   $: oppIds  = oppTeam.flatMap(s => s ? [s.entry.id] : []);
-  $: excludeIds = [...yourIds, ...oppIds];
+  // Each side only excludes its own slots — opponent can have the same Pokémon
+  $: pickerExclude = pickerTarget?.side === 'opp' ? oppIds : yourIds;
 
   // Simple combined speed preview — all filled slots, sorted
   $: speedPreview = [
@@ -26,7 +30,8 @@
     .map(x => ({ ...x, speed: applyModifiers(x.entry.maxSpeed, { scarf: x.scarf }) }))
     .sort((a, b) => b.speed - a.speed);
 
-  $: canStart = yourTeam.some(Boolean) && oppTeam.some(Boolean);
+  $: canStart  = yourTeam.some(Boolean) && oppTeam.some(Boolean);
+  $: canSave   = yourTeam.some(Boolean);
 
   function openPicker(side: 'you' | 'opp', index: number) {
     pickerTarget = { side, index };
@@ -65,6 +70,35 @@
     teamState.set({ genNum, yourTeam: [...yourTeam], oppTeam: [...oppTeam] });
     goto('/game');
   }
+
+  // ── Saved teams ───────────────────────────────────────────────────────────
+  onMount(() => savedTeams.init());
+
+  let saveLabel = '';
+  let showSaveInput = false;
+
+  function saveCurrentTeam() {
+    const label = saveLabel.trim() || `Team ${new Date().toLocaleDateString()}`;
+    const toSlot = (s: TeamSlot) => s ? { id: s.entry.id, name: s.entry.name, scarf: s.scarf } : null;
+    savedTeams.save({
+      label,
+      genNum,
+      yourTeam: yourTeam.map(toSlot),
+    });
+    saveLabel = '';
+    showSaveInput = false;
+  }
+
+  function loadTeam(saved: SavedTeam) {
+    const tiers = buildSpeedTiers(saved.genNum);
+    const byId = new Map(tiers.map(e => [e.id, e]));
+    genNum   = saved.genNum;
+    yourTeam = saved.yourTeam.map(s => s && byId.has(s.id) ? { entry: byId.get(s.id)!, scarf: s.scarf } : null);
+    oppTeam  = Array(6).fill(null);
+  }
+
+  let renamingId: string | null = null;
+  let renameValue = '';
 </script>
 
 <svelte:head><title>Team Builder — VGC Tools</title></svelte:head>
@@ -72,7 +106,7 @@
 {#if pickerTarget}
   <PokemonPicker
     entries={allEntries}
-    exclude={excludeIds}
+    exclude={pickerExclude}
     on:pick={e => onPick(e.detail)}
     on:close={() => pickerTarget = null}
   />
@@ -117,9 +151,28 @@
         </div>
       {/each}
 
-      <button class="start-btn" disabled={!canStart} on:click={startGame}>
-        Start Game →
-      </button>
+      <div class="action-row">
+        <button class="start-btn" disabled={!canStart} on:click={startGame}>
+          Start Game →
+        </button>
+        {#if canSave}
+          {#if showSaveInput}
+            <div class="save-row">
+              <input
+                class="save-input"
+                placeholder="Team name…"
+                bind:value={saveLabel}
+                on:keydown={e => e.key === 'Enter' && saveCurrentTeam()}
+                autocomplete="off"
+              />
+              <button class="save-confirm" on:click={saveCurrentTeam}>Save</button>
+              <button class="save-cancel" on:click={() => { showSaveInput = false; saveLabel = ''; }}>✕</button>
+            </div>
+          {:else}
+            <button class="save-btn" on:click={() => showSaveInput = true}>Save Team</button>
+          {/if}
+        {/if}
+      </div>
     </div>
 
     <!-- Speed preview sidebar -->
@@ -140,27 +193,76 @@
       </div>
     {/if}
   </div>
+
+  <!-- Saved teams -->
+  {#if $savedTeams.length > 0}
+    <div class="saved-section">
+      <span class="saved-title">Saved Teams</span>
+      <div class="saved-list">
+        {#each $savedTeams as team (team.id)}
+          <div class="saved-row">
+            {#if renamingId === team.id}
+              <input
+                class="rename-input"
+                bind:value={renameValue}
+                on:keydown={e => {
+                  if (e.key === 'Enter') { savedTeams.rename(team.id, renameValue); renamingId = null; }
+                  if (e.key === 'Escape') renamingId = null;
+                }}
+                on:blur={() => { savedTeams.rename(team.id, renameValue); renamingId = null; }}
+              />
+            {:else}
+              <!-- svelte-ignore a11y-no-static-element-interactions -->
+              <span class="saved-label" on:dblclick={() => { renamingId = team.id; renameValue = team.label; }}>
+                {team.label}
+              </span>
+            {/if}
+            <span class="saved-gen">Gen {team.genNum}</span>
+            <div class="saved-slots">
+              {#each team.yourTeam.filter(Boolean) as slot}
+                <img src={spriteUrl(slot!.name)} alt={slot!.name} class="saved-sprite" title={slot!.name} />
+              {/each}
+            </div>
+            <div class="saved-actions">
+              <button class="saved-load" on:click={() => loadTeam(team)}>Load</button>
+              <button class="saved-delete" on:click={() => savedTeams.remove(team.id)}>✕</button>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
   .gen-tabs {
     display: flex;
     gap: 0.25rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
   }
+  .gen-tabs::-webkit-scrollbar { display: none; }
 
   .gen-tab {
-    padding: 0.35rem 0.75rem;
+    padding: 0.45rem 0.85rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
     font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-height: 44px;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
 
-  .gen-tab:hover { color: var(--text); border-color: var(--text-muted); }
+  .gen-tab:active { opacity: 0.7; }
+  @media (hover: hover) {
+    .gen-tab:hover { color: var(--text); border-color: var(--text-muted); }
+  }
 
   .gen-tab.active {
     border-color: var(--accent);
@@ -214,7 +316,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    min-height: 86px;
+    min-height: 96px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -223,7 +325,7 @@
 
   .slot-empty {
     width: 100%;
-    height: 86px;
+    min-height: 96px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,7 +338,10 @@
     transition: background 0.1s, color 0.1s;
   }
 
-  .slot-empty:hover { background: var(--surface-2); color: var(--text); }
+  .slot-empty:active { background: var(--surface-2); }
+  @media (hover: hover) {
+    .slot-empty:hover { background: var(--surface-2); color: var(--text); }
+  }
 
   .slot-filled {
     display: flex;
@@ -272,8 +377,8 @@
 
   .slot-clear {
     position: absolute;
-    top: 2px;
-    right: 4px;
+    top: 0;
+    right: 0;
     background: none;
     border: none;
     color: var(--text-muted);
@@ -281,9 +386,15 @@
     font-size: 1rem;
     line-height: 1;
     z-index: 1;
+    /* Enlarge touch area */
+    padding: 0.4rem 0.5rem;
+    min-height: unset;
   }
 
-  .slot-clear:hover { color: var(--danger); }
+  .slot-clear:active { color: var(--danger); }
+  @media (hover: hover) {
+    .slot-clear:hover { color: var(--danger); }
+  }
 
   .scarf-pill {
     font-size: 0.6rem;
@@ -306,20 +417,203 @@
   }
 
   .start-btn {
-    align-self: flex-start;
-    padding: 0.65rem 2rem;
+    width: 100%;
+    padding: 0.85rem 2rem;
     background: var(--accent);
     color: #fff;
     border: none;
     border-radius: var(--radius);
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
+    min-height: 52px;
     transition: background 0.15s, opacity 0.15s;
   }
 
-  .start-btn:hover:not(:disabled) { background: var(--accent-hover); }
+  @media (min-width: 600px) {
+    .start-btn { width: auto; align-self: flex-start; }
+  }
+
+  .start-btn:active:not(:disabled) { background: var(--accent-hover); }
+  @media (hover: hover) {
+    .start-btn:hover:not(:disabled) { background: var(--accent-hover); }
+  }
   .start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Action row: Start + Save */
+  .action-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  @media (min-width: 600px) {
+    .action-row { flex-direction: row; align-items: center; flex-wrap: wrap; }
+  }
+
+  .save-btn {
+    padding: 0.75rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    cursor: pointer;
+    min-height: 52px;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) { .save-btn:hover { color: var(--text); border-color: var(--text-muted); } }
+
+  .save-row {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    flex: 1;
+  }
+
+  .save-input {
+    flex: 1;
+    padding: 0.65rem 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+    min-height: 44px;
+  }
+  .save-input:focus { border-color: var(--accent); }
+
+  .save-confirm {
+    padding: 0.65rem 1rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .save-cancel {
+    padding: 0.65rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-height: 44px;
+  }
+
+  /* Saved teams list */
+  .saved-section {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+
+  .saved-title {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .saved-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .saved-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+  }
+
+  .saved-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-width: 6rem;
+    cursor: text;
+    user-select: none;
+  }
+
+  .saved-gen {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .saved-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem;
+    flex: 1;
+  }
+
+  .saved-sprite {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+
+  .saved-actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .saved-load {
+    padding: 0.4rem 0.85rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 36px;
+  }
+
+  .saved-delete {
+    padding: 0.4rem 0.65rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    min-height: 36px;
+  }
+  @media (hover: hover) { .saved-delete:hover { color: var(--danger); border-color: var(--danger); } }
+
+  .rename-input {
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    outline: none;
+    min-width: 8rem;
+  }
 
   /* Speed preview sidebar */
   .preview-col {
