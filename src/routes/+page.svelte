@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { buildSpeedTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
   import type { SpeedEntry, GenNumber } from '$lib/speedtiers';
+  import { parsePaste, resolvePaste } from '$lib/parsePaste';
   import { spriteUrl } from '$lib/sprites';
   import { teamState } from '$lib/stores/teams';
   import type { TeamSlot } from '$lib/stores/teams';
@@ -40,8 +41,8 @@
   function onPick(entry: SpeedEntry) {
     if (!pickerTarget) return;
     const { side, index } = pickerTarget;
-    if (side === 'you') { yourTeam[index] = { entry, scarf: false }; yourTeam = [...yourTeam]; }
-    else { oppTeam[index] = { entry, scarf: false }; oppTeam = [...oppTeam]; }
+    if (side === 'you') { yourTeam[index] = { entry, scarf: false, nature: '=' }; yourTeam = [...yourTeam]; }
+    else { oppTeam[index] = { entry, scarf: false, nature: '=' }; oppTeam = [...oppTeam]; }
     pickerTarget = null;
   }
 
@@ -93,12 +94,38 @@
     const tiers = buildSpeedTiers(saved.genNum);
     const byId = new Map(tiers.map(e => [e.id, e]));
     genNum   = saved.genNum;
-    yourTeam = saved.yourTeam.map(s => s && byId.has(s.id) ? { entry: byId.get(s.id)!, scarf: s.scarf } : null);
+    yourTeam = saved.yourTeam.map(s => s && byId.has(s.id) ? { entry: byId.get(s.id)!, scarf: s.scarf, nature: '=' as const } : null);
     oppTeam  = Array(6).fill(null);
   }
 
   let renamingId: string | null = null;
   let renameValue = '';
+
+  // ── Paste import ──────────────────────────────────────────────────────────
+  let showImport = false;
+  let importSide: 'you' | 'opp' = 'you';
+  let importText = '';
+  let importError = '';
+  let importLoading = false;
+
+  async function doImport() {
+    importError = '';
+    importLoading = true;
+    try {
+      const text = await resolvePaste(importText);
+      const slots = parsePaste(text, allEntries);
+      const filled = slots.filter(Boolean);
+      if (!filled.length) { importError = 'No matching Pokémon found — check the paste or selected gen.'; return; }
+      if (importSide === 'you') yourTeam = slots;
+      else oppTeam = slots;
+      showImport = false;
+      importText = '';
+    } catch (e: any) {
+      importError = e?.message ?? 'Failed to fetch paste.';
+    } finally {
+      importLoading = false;
+    }
+  }
 </script>
 
 <svelte:head><title>Team Builder — VGC Tools</title></svelte:head>
@@ -110,6 +137,43 @@
     on:pick={e => onPick(e.detail)}
     on:close={() => pickerTarget = null}
   />
+{/if}
+
+{#if showImport}
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+  <div class="modal-backdrop" on:click|self={() => { showImport = false; importError = ''; }}>
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Import Poképaste</span>
+        <button class="modal-close" on:click={() => { showImport = false; importError = ''; }}>✕</button>
+      </div>
+
+      <div class="import-side-tabs">
+        <button class="side-tab" class:active={importSide === 'you'} on:click={() => importSide = 'you'}>Your Team</button>
+        <button class="side-tab" class:active={importSide === 'opp'} on:click={() => importSide = 'opp'}>Opponent</button>
+      </div>
+
+      <textarea
+        class="import-textarea"
+        placeholder="Paste a pokepast.es URL or raw Showdown export here…"
+        bind:value={importText}
+        rows="10"
+        autocomplete="off"
+        spellcheck="false"
+      ></textarea>
+
+      {#if importError}
+        <p class="import-error">{importError}</p>
+      {/if}
+
+      <div class="modal-actions">
+        <button class="save-confirm" on:click={doImport} disabled={importLoading || !importText.trim()}>
+          {importLoading ? 'Loading…' : 'Import'}
+        </button>
+        <button class="save-cancel" on:click={() => { showImport = false; importError = ''; importText = ''; }}>Cancel</button>
+      </div>
+    </div>
+  </div>
 {/if}
 
 <div class="page">
@@ -155,6 +219,7 @@
         <button class="start-btn" disabled={!canStart} on:click={startGame}>
           Start Game →
         </button>
+        <button class="import-btn" on:click={() => showImport = true}>Import Paste</button>
         {#if canSave}
           {#if showSaveInput}
             <div class="save-row">
@@ -602,6 +667,115 @@
     min-height: 36px;
   }
   @media (hover: hover) { .saved-delete:hover { color: var(--danger); border-color: var(--danger); } }
+
+  /* Import button */
+  .import-btn {
+    padding: 0.75rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    cursor: pointer;
+    min-height: 52px;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  @media (hover: hover) { .import-btn:hover { color: var(--text); border-color: var(--text-muted); } }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    min-height: unset;
+    padding: 0.25rem 0.5rem;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .import-side-tabs {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .side-tab {
+    padding: 0.4rem 0.9rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-height: unset;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .side-tab.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  }
+
+  .import-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-family: monospace;
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+  }
+  .import-textarea:focus { border-color: var(--accent); }
+
+  .import-error {
+    font-size: 0.85rem;
+    color: var(--danger);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
 
   .rename-input {
     font-size: 0.95rem;

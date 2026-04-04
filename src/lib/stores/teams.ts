@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
-import type { SpeedEntry, GenNumber } from '$lib/speedtiers';
+import type { SpeedEntry, GenNumber, NatureTier } from '$lib/speedtiers';
 
-export type TeamSlot = { entry: SpeedEntry; scarf: boolean } | null;
+export type TeamSlot = { entry: SpeedEntry; scarf: boolean; nature: NatureTier } | null;
 
 export interface TeamState {
   genNum: GenNumber;

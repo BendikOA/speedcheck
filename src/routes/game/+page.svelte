@@ -264,10 +264,13 @@
       <span class="cond-group-label">Field</span>
       <div class="cond-group-btns">
         <button class="cond-btn tr" class:active={cond.trickRoom}
+          title="Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"
           on:click={() => cond = { ...cond, trickRoom: !cond.trickRoom }}>Trick Room</button>
         <button class="cond-btn your" class:active={cond.yourTailwind}
+          title="Your Tailwind: doubles Speed for your side for 4 turns (×2)"
           on:click={() => cond = { ...cond, yourTailwind: !cond.yourTailwind }}>Your TW</button>
         <button class="cond-btn opp" class:active={cond.oppTailwind}
+          title="Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"
           on:click={() => cond = { ...cond, oppTailwind: !cond.oppTailwind }}>Opp TW</button>
       </div>
     </div>
@@ -275,13 +278,13 @@
       <span class="cond-group-label">Weather</span>
       <div class="cond-group-btns">
         {#each [
-          { key: 'rain'  as const, label: 'Rain'  },
-          { key: 'sun'   as const, label: 'Sun'   },
-          { key: 'sand'  as const, label: 'Sand'  },
-          { key: 'snow'  as const, label: 'Snow'  },
+          { key: 'rain'  as const, label: 'Rain',  tip: 'Rain: doubles Speed of Swift Swim users (Kingdra, Barraskewda, etc.)' },
+          { key: 'sun'   as const, label: 'Sun',   tip: 'Sun: doubles Speed of Chlorophyll users (Venusaur, Lilligant, etc.) and activates Protosynthesis' },
+          { key: 'sand'  as const, label: 'Sand',  tip: 'Sand: doubles Speed of Sand Rush users (Excadrill, Sandaconda, etc.)' },
+          { key: 'snow'  as const, label: 'Snow',  tip: 'Snow: doubles Speed of Slush Rush users (Beartic, Cetitan, etc.)' },
         ] as btn}
           <button class="cond-btn" class:active={cond[btn.key]}
-            on:click={() => toggleWeather(btn.key)}>{btn.label}</button>
+            title={btn.tip} on:click={() => toggleWeather(btn.key)}>{btn.label}</button>
         {/each}
       </div>
     </div>
@@ -289,12 +292,12 @@
       <span class="cond-group-label">Terrain</span>
       <div class="cond-group-btns">
         {#each [
-          { key: 'electric' as const, label: 'Electric' },
-          { key: 'grassy'   as const, label: 'Grassy'   },
-          { key: 'psychic'  as const, label: 'Psychic'  },
+          { key: 'electric' as const, label: 'Electric', tip: 'Electric Terrain: doubles Speed of Surge Surfer users (Raichu-Alola) and activates Quark Drive' },
+          { key: 'grassy'   as const, label: 'Grassy',   tip: 'Grassy Terrain: gives Grassy Glide +1 priority. Halves damage from Earthquake/Bulldoze.' },
+          { key: 'psychic'  as const, label: 'Psychic',  tip: 'Psychic Terrain: blocks all +1 and higher priority moves targeting grounded Pokémon' },
         ] as btn}
           <button class="cond-btn" class:active={cond[btn.key]}
-            on:click={() => toggleTerrain(btn.key)}>{btn.label}</button>
+            title={btn.tip} on:click={() => toggleTerrain(btn.key)}>{btn.label}</button>
         {/each}
       </div>
     </div>
@@ -326,59 +329,64 @@
                 <span class="row-name">{displayName}</span>
                 <div class="row-badges">
                   {#if row.megaIndex > 0}
-                    <span class="badge mega-badge">{row.megaForms[row.megaIndex - 1]?.name ?? 'Mega'}</span>
+                    {@const mf = row.megaForms[row.megaIndex - 1]}
+                    <span class="badge mega-badge" title="{mf?.name}: Base Speed {mf?.baseSpe} (toggled via Mega button below)">{mf?.name ?? 'Mega'}</span>
                   {/if}
                   {#if row.triggeredAbility}
-                    <span class="badge ability">{row.triggeredAbility}</span>
+                    <span class="badge ability" title="{row.triggeredAbility}: doubles Speed in the current weather/terrain">{row.triggeredAbility}</span>
                   {/if}
                   {#if row.protoBoost}
-                    <span class="badge proto-badge">{row.protoLabel}</span>
+                    <span class="badge proto-badge" title="{row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}: +1.5× Speed when Speed is the boosted stat (toggled via button below)">{row.protoLabel}</span>
                   {/if}
                   {#if row.commander}
-                    <span class="badge commander-badge">Cmd ×2</span>
+                    <span class="badge commander-badge" title="Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)">Cmd ×2</span>
                   {/if}
                   {#if (row.side === 'you' && cond.yourTailwind) || (row.side === 'opp' && cond.oppTailwind)}
-                    <span class="badge tailwind">TW</span>
+                    <span class="badge tailwind" title="Tailwind: ×2 Speed for your side for 4 turns">TW ×2</span>
                   {/if}
                   {#if row.scarf}
-                    <span class="badge scarf-badge">Scarf</span>
+                    <span class="badge scarf-badge" title="Choice Scarf: ×1.5 Speed">Scarf ×1.5</span>
                   {/if}
                   {#if row.paralysis}
-                    <span class="badge para-badge">PAR</span>
+                    <span class="badge para-badge" title="Paralysis: ×0.5 Speed">PAR ×0.5</span>
                   {/if}
                   {#each row.priorityMoves as pm}
                     {@const active = !cond.psychic && (!pm.requiresCondition || cond[pm.requiresCondition as keyof typeof cond])}
-                    <span
-                      class="badge priority-badge"
-                      class:suppressed={!active}
-                      title={cond.psychic ? 'Blocked by Psychic Terrain' : (pm.requiresCondition && !cond[pm.requiresCondition as keyof typeof cond] ? `Requires ${pm.requiresCondition} terrain` : (pm.note ?? ''))}
+                    {@const tooltip = cond.psychic
+                      ? `${pm.name}: blocked by Psychic Terrain (priority moves don't work on grounded Pokémon)`
+                      : pm.requiresCondition && !cond[pm.requiresCondition as keyof typeof cond]
+                        ? `${pm.name}: only has +${pm.priority} priority under ${pm.requiresCondition} terrain`
+                        : `This Pokémon may know ${pm.name} — a +${pm.priority} priority move${pm.note ? ` (${pm.note})` : ''}`}
+                    <span class="badge priority-badge" class:suppressed={!active} title={tooltip}
                     >{pm.name} {pm.priority > 0 ? '+' : ''}{pm.priority}</span>
                   {/each}
                   {#each row.priorityAbilities as pa}
-                    <span class="badge prio-ability-badge" title={pa.effect}>{pa.name}</span>
+                    <span class="badge prio-ability-badge" title="{pa.name}: {pa.effect}">{pa.name}</span>
                   {/each}
                 </div>
               </div>
 
               <div class="row-toggles">
-                <!-- Nature: cycles + → = → - -->
+                <!-- Nature: cycles = → + → - -->
                 <button
                   class="toggle-pill nature-pill"
                   class:nature-pos={row.nature === '+'}
                   class:nature-neu={row.nature === '='}
                   class:nature-neg={row.nature === '-'}
                   on:click={() => cycleNature(row.key)}
-                  title="Nature: + positive / = neutral / − negative"
+                  title="Speed nature — click to cycle&#10;= Neutral (Hardy/Docile/Serious/Bashful/Quirky): no modifier&#10;+ Positive (Timid/Jolly/Naive/Hasty): ×1.1 Speed&#10;− Negative (Brave/Quiet/Relaxed/Sassy): ×0.9 Speed"
                 >{row.nature === '+' ? '+Spe' : row.nature === '=' ? '=Spe' : '−Spe'}</button>
 
                 <!-- Scarf -->
-                <label class="toggle-pill" class:active={row.scarf}>
+                <label class="toggle-pill" class:active={row.scarf}
+                  title="Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time.">
                   <input type="checkbox" checked={row.scarf} on:change={() => toggleFieldScarf(row.key, row.side)} />
                   Scarf
                 </label>
 
                 <!-- Paralysis -->
-                <label class="toggle-pill para" class:active={row.paralysis}>
+                <label class="toggle-pill para" class:active={row.paralysis}
+                  title="Paralysis: multiplies Speed by ×0.5">
                   <input type="checkbox" checked={row.paralysis} on:change={() => toggleFieldParalysis(row.key)} />
                   PAR
                 </label>
@@ -386,7 +394,7 @@
                 <!-- Proto/Quark (only when condition is active) -->
                 {#if row.canProtoBoost}
                   <label class="toggle-pill proto" class:active={row.protoBoost}
-                    title="{row.protoLabel}: toggle if Speed is the boosted stat">
+                    title="{row.protoLabel === 'QD ×1.5' ? 'Quark Drive (Electric Terrain active)' : 'Protosynthesis (Sun active)'}: boosts the highest stat by ×1.5. Toggle on if Speed is the boosted stat.">
                     <input type="checkbox" checked={row.protoBoost} on:change={() => toggleFieldProto(row.key)} />
                     {row.protoLabel}
                   </label>
@@ -395,7 +403,7 @@
                 <!-- Commander (Dondozo only) -->
                 {#if row.canCommander}
                   <label class="toggle-pill commander-pill" class:active={row.commander}
-                    title="Commander: +2 Speed stages (×2) when Tatsugiri uses Commander">
+                    title="Commander: when Tatsugiri uses Commander, Dondozo gains +2 in all stats including Speed (×2 effective)">
                     <input type="checkbox" checked={row.commander} on:change={() => toggleCommander(row.key)} />
                     Cmd
                   </label>
@@ -404,16 +412,16 @@
                 <!-- Mega toggle: button cycles through forms (base → mega/megaX → megaY → base) -->
                 {#if row.megaForms.length === 1}
                   <button
-                    class="toggle-pill mega-pill"
+                    class="toggle-pill"
                     class:active={row.megaIndex > 0}
-                    title="Toggle Mega Evolution: {row.megaForms[0].name}"
+                    title="Mega Evolution: {row.megaForms[0].name} (Base Speed {row.megaForms[0].baseSpe}). Click to toggle."
                     on:click={() => cycleMega(row.key, 1)}
-                  >{row.megaIndex > 0 ? 'Mega ✓' : 'Mega'}</button>
+                  >{row.megaIndex > 0 ? row.megaForms[0].name : 'Mega'}</button>
                 {:else if row.megaForms.length > 1}
                   <button
-                    class="toggle-pill mega-pill"
+                    class="toggle-pill"
                     class:active={row.megaIndex > 0}
-                    title="Cycle: Base → {row.megaForms.map(f => f.name).join(' → ')} → Base"
+                    title="Cycle Mega forms — {row.megaForms.map(f => `${f.name} (Base ${f.baseSpe})`).join(' / ')}. Click to cycle."
                     on:click={() => cycleMega(row.key, row.megaForms.length)}
                   >{row.megaIndex === 0 ? 'Mega X/Y' : row.megaForms[row.megaIndex - 1].name}</button>
                 {/if}
@@ -859,10 +867,7 @@
     color: #6ca5f5; border-color: #6ca5f5;
     background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
   }
-  .toggle-pill.mega-pill.active {
-    color: #f5d76c; border-color: #f5d76c;
-    background: color-mix(in srgb, #f5d76c 10%, var(--surface));
-  }
+  /* mega uses same active colour as scarf (default) — no override needed */
 
   /* Nature pill cycles: + green / = grey / − red */
   .nature-pill {
