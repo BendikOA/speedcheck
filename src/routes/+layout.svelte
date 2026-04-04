@@ -4,7 +4,9 @@
 
 <nav>
   <a href="/" class="brand">VGC Tools</a>
-  <a href="/">Speed Tiers</a>
+  <a href="/">Teams</a>
+  <a href="/game">Game</a>
+  <a href="/tiers">All Tiers</a>
 </nav>
 
 <main>
