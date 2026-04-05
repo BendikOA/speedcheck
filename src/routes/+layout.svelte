@@ -1,7 +1,10 @@
 <script lang="ts">
   import '../app.css';
-  import { browser } from '$app/environment';
+  import { browser, dev } from '$app/environment';
   import Tooltip from '$lib/components/Tooltip.svelte';
+  import { injectAnalytics } from '@vercel/analytics/sveltekit';
+
+  injectAnalytics({ mode: dev ? 'development' : 'production' });
 
   let dark = true;
 
@@ -24,9 +27,13 @@
     <img src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png" alt="" class="brand-icon" />
     Speedcheck
   </a>
-  <a href="/">Teams</a>
-  <a href="/game">Game</a>
-  <a href="/tiers">All Tiers</a>
+  <div class="nav-links">
+    <a href="/">Teams</a>
+    <a href="/game">Game</a>
+    <a href="/tiers">All Tiers</a>
+    <a href="/boost-tiers">Boost Tiers</a>
+    <a href="/quiz">Quiz</a>
+  </div>
   <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme" title={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
     {#if dark}
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -55,22 +62,17 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 1rem;
     padding: 0 1rem;
     padding-left: max(1rem, var(--safe-left));
     padding-right: max(1rem, var(--safe-right));
     height: 52px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
     flex-shrink: 0;
   }
-
-  nav::-webkit-scrollbar { display: none; }
 
   .brand {
     display: flex;
@@ -81,7 +83,7 @@
     color: var(--accent);
     margin-right: auto;
     white-space: nowrap;
-    min-height: unset;
+    min-height: 44px;
   }
 
   .brand-icon {
@@ -92,12 +94,27 @@
     flex-shrink: 0;
   }
 
+  .brand { grid-column: 1; }
+
+  .nav-links {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+
+  .theme-toggle { grid-column: 3; justify-self: end; }
+
   nav a {
     color: var(--text-muted);
     font-size: 0.9rem;
     white-space: nowrap;
-    min-height: unset;
-    padding: 0.25rem 0;
+    min-height: 44px;
+    padding: 0 0.5rem;
   }
 
   nav a:hover { color: var(--text); }
@@ -108,9 +125,8 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
-    padding: 0 0.5rem;
-    height: 32px;
-    min-height: unset;
+    padding: 0 0.6rem;
+    min-height: 44px;
     cursor: pointer;
     flex-shrink: 0;
     transition: color 0.15s, border-color 0.15s;

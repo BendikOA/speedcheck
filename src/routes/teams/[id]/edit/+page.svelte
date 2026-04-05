@@ -277,15 +277,15 @@
 
             <!-- Nickname -->
             <div class="field-row">
-              <label class="field-label">Nickname</label>
-              <input class="field-input" value={slot.nickname ?? ''} placeholder={slot.name}
+              <label class="field-label" for="field-{i}-nickname">Nickname</label>
+              <input id="field-{i}-nickname" class="field-input" value={slot.nickname ?? ''} placeholder={slot.name}
                 on:input={e => setField(i, 'nickname', e.currentTarget.value || undefined)} />
             </div>
 
             <!-- Level -->
             <div class="field-row">
-              <label class="field-label">Level</label>
-              <input class="field-input short" type="number" min="1" max="100"
+              <label class="field-label" for="field-{i}-level">Level</label>
+              <input id="field-{i}-level" class="field-input short" type="number" min="1" max="100"
                 value={slot.level ?? 50}
                 on:change={e => setField(i, 'level', +e.currentTarget.value)} />
             </div>
@@ -293,9 +293,9 @@
             <!-- Item -->
             {#if hasItems}
               <div class="field-row autocomplete-wrap">
-                <label class="field-label">Item</label>
+                <label class="field-label" for="field-{i}-item">Item</label>
                 <div class="autocomplete">
-                  <input class="field-input" value={slot.item ?? ''}
+                  <input id="field-{i}-item" class="field-input" value={slot.item ?? ''}
                     on:input={e => onItemInput(i, e.currentTarget.value)}
                     on:focus={() => itemSuggestions = searchItems(slot.item ?? '')}
                     placeholder="e.g. Life Orb" />
@@ -314,8 +314,8 @@
             {#if hasAbility}
               {@const abilities = getSpeciesAbilities(slot.id)}
               <div class="field-row">
-                <label class="field-label">Ability</label>
-                <select class="field-input"
+                <label class="field-label" for="field-{i}-ability">Ability</label>
+                <select id="field-{i}-ability" class="field-input"
                   value={slot.ability ?? abilities[0]}
                   on:change={e => setField(i, 'ability', e.currentTarget.value)}>
                   {#each abilities as ab}
@@ -328,8 +328,8 @@
             <!-- Tera Type -->
             {#if hasTera}
               <div class="field-row">
-                <label class="field-label">Tera Type</label>
-                <select class="field-input"
+                <label class="field-label" for="field-{i}-tera">Tera Type</label>
+                <select id="field-{i}-tera" class="field-input"
                   value={slot.teraType ?? 'Normal'}
                   on:change={e => setField(i, 'teraType', e.currentTarget.value)}>
                   {#each TERA_TYPES as t}
@@ -342,8 +342,8 @@
             <!-- Nature -->
             {#if hasNatures}
               <div class="field-row">
-                <label class="field-label">Nature</label>
-                <select class="field-input"
+                <label class="field-label" for="field-{i}-nature">Nature</label>
+                <select id="field-{i}-nature" class="field-input"
                   value={slot.nature}
                   on:change={e => setField(i, 'nature', e.currentTarget.value as NatureTier)}>
                   {#each NATURES as n}
@@ -363,8 +363,8 @@
               </div>
               <div class="stat-grid">
                 {#each STAT_KEYS as stat, si}
-                  <label class="stat-label">{STAT_LABELS[si]}</label>
-                  <input class="stat-input" type="number" min="0" max="252"
+                  <label class="stat-label" for="ev-{i}-{stat}">{STAT_LABELS[si]}</label>
+                  <input id="ev-{i}-{stat}" class="stat-input" type="number" min="0" max="252"
                     value={slot.evs?.[stat] ?? 0}
                     on:change={e => setEv(i, stat, +e.currentTarget.value)} />
                 {/each}
@@ -376,8 +376,8 @@
               <div class="stat-block-title">{dvMode ? 'DVs (0–15)' : 'IVs'}</div>
               <div class="stat-grid">
                 {#each STAT_KEYS as stat, si}
-                  <label class="stat-label">{STAT_LABELS[si]}</label>
-                  <input class="stat-input" type="number" min="0" max={ivMax}
+                  <label class="stat-label" for="iv-{i}-{stat}">{STAT_LABELS[si]}</label>
+                  <input id="iv-{i}-{stat}" class="stat-input" type="number" min="0" max={ivMax}
                     value={slot.ivs?.[stat] ?? ivMax}
                     on:change={e => setIv(i, stat, +e.currentTarget.value)} />
                 {/each}
@@ -428,14 +428,14 @@
   }
 
   .back-btn {
-    padding: 0.45rem 0.85rem;
+    padding: 0 0.85rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
     font-size: 0.85rem;
     white-space: nowrap;
-    min-height: 36px;
+    min-height: 44px;
     transition: color 0.15s, border-color 0.15s;
   }
   .back-btn:hover { color: var(--text); border-color: var(--text-muted); }
@@ -443,30 +443,29 @@
   .label-input {
     flex: 1;
     min-width: 10rem;
-    padding: 0.45rem 0.75rem;
+    padding: 0 0.75rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
     font-size: 0.95rem;
-    outline: none;
-    min-height: 36px;
+    min-height: 44px;
   }
-  .label-input:focus { border-color: var(--accent); }
+  .label-input:focus-visible { border-color: var(--accent); }
 
   .gen-select {
-    padding: 0.45rem 0.75rem;
+    padding: 0 0.75rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
     font-size: 0.85rem;
-    min-height: 36px;
+    min-height: 44px;
     cursor: pointer;
   }
 
   .save-btn {
-    padding: 0.45rem 1.1rem;
+    padding: 0 1.1rem;
     background: var(--accent);
     border: none;
     border-radius: var(--radius-sm);
@@ -474,7 +473,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    min-height: 36px;
+    min-height: 44px;
     white-space: nowrap;
     transition: background 0.15s;
   }
@@ -529,7 +528,7 @@
   }
 
   .slot-sub {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -543,14 +542,15 @@
   }
 
   .slot-edit-btn, .slot-clear-btn {
-    padding: 0.3rem 0.6rem;
+    padding: 0 0.7rem;
     background: none;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
     cursor: pointer;
     font-size: 0.8rem;
-    min-height: unset;
+    min-height: 44px;
+    min-width: 44px;
     transition: color 0.15s, border-color 0.15s;
   }
   .slot-edit-btn:hover { color: var(--text); border-color: var(--text-muted); }
@@ -589,14 +589,14 @@
   }
 
   .change-species-btn {
-    padding: 0.35rem 0.85rem;
+    padding: 0 0.85rem;
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     cursor: pointer;
-    min-height: unset;
+    min-height: 44px;
     transition: color 0.15s, border-color 0.15s;
   }
   .change-species-btn:hover { color: var(--text); border-color: var(--text-muted); }
@@ -608,7 +608,7 @@
   }
 
   .field-label {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     width: 5.5rem;
     flex-shrink: 0;
@@ -616,17 +616,15 @@
 
   .field-input {
     flex: 1;
-    padding: 0.4rem 0.6rem;
+    padding: 0 0.6rem;
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
     font-size: 0.85rem;
-    outline: none;
-    min-height: unset;
-    height: 34px;
+    min-height: 44px;
   }
-  .field-input:focus { border-color: var(--accent); }
+  .field-input:focus-visible { border-color: var(--accent); }
   .field-input.short { max-width: 80px; flex: none; }
 
   /* Autocomplete */
@@ -650,14 +648,14 @@
 
   .suggestions li button {
     width: 100%;
-    padding: 0.4rem 0.7rem;
+    padding: 0 0.7rem;
     background: none;
     border: none;
     color: var(--text);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     cursor: pointer;
     text-align: left;
-    min-height: unset;
+    min-height: 44px;
     justify-content: flex-start;
     transition: background 0.1s;
   }
@@ -671,7 +669,7 @@
   }
 
   .stat-block-title {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -695,7 +693,7 @@
   }
 
   .stat-label {
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
     text-align: center;
     display: block;
@@ -703,18 +701,16 @@
 
   .stat-input {
     width: 100%;
-    padding: 0.3rem 0.25rem;
+    padding: 0.4rem 0.25rem;
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     text-align: center;
-    outline: none;
-    min-height: unset;
-    height: 30px;
+    min-height: 44px;
   }
-  .stat-input:focus { border-color: var(--accent); }
+  .stat-input:focus-visible { border-color: var(--accent); }
 
   /* Moves */
   .moves-block {

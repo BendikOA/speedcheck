@@ -7,16 +7,25 @@
   import { calcEffectiveSpeed, WEATHER_ABILITY, PROTO_ABILITY, DEFAULT_CONDITIONS } from '$lib/speedtiers';
   import type { Conditions, NatureTier } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
-  import { getPriorityMoves, getPriorityAbilities, loadPriorityCache, PRIORITY_MOVES } from '$lib/priority';
+  import { getPriorityMoves, getPriorityAbilities, loadPriorityCache, PRIORITY_MOVES, loadBoostCache, getMaxSpeedBoostStage } from '$lib/priority';
   import type { PriorityMove, PriorityAbility } from '$lib/priority';
   import { tooltip } from '$lib/tooltip';
-  import { loadSmogonNatures, getSmogonNature, loadSmogonPriorityMoves, loadSmogonAbilities } from '$lib/smogonUsage';
-  import type { UsageNatures, UsagePriorityMoves, UsageAbilities } from '$lib/smogonUsage';
+  import { loadSmogonNatures, getSmogonNature, loadSmogonPriorityMoves, loadSmogonAbilities, loadSmogonMoves } from '$lib/smogonUsage';
+  import type { UsageNatures, UsagePriorityMoves, UsageAbilities, UsageMoves } from '$lib/smogonUsage';
+
+  const GEN9_REGS = [
+    { label: 'Reg I', format: 'gen9vgc2026regi' },
+    { label: 'Reg F', format: 'gen9vgc2026regf' },
+    { label: 'Reg G', format: 'gen9vgc2025regg' },
+  ];
 
   let priorityReady = false;
+  let selectedReg           = GEN9_REGS[0].format;
   let smogonNatures:         UsageNatures       = {};
   let smogonPriorityMoves:   UsagePriorityMoves = {};
   let smogonAbilities:       UsageAbilities     = {};
+  let smogonMoves:           UsageMoves         = {};
+  let openMoves              = new Set<string>();
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -26,14 +35,46 @@
     const state = get(teamState);
     yourTeam = state.yourTeam;
     oppTeam  = state.oppTeam;
-    await loadPriorityCache();
+    await Promise.all([loadPriorityCache(), loadBoostCache()]);
     priorityReady = true;
-    [smogonNatures, smogonPriorityMoves, smogonAbilities] = await Promise.all([
-      loadSmogonNatures(),
-      loadSmogonPriorityMoves(),
-      loadSmogonAbilities(),
+    [smogonNatures, smogonPriorityMoves, smogonAbilities, smogonMoves] = await Promise.all([
+      loadSmogonNatures(9, selectedReg),
+      loadSmogonPriorityMoves(9, selectedReg),
+      loadSmogonAbilities(9, selectedReg),
+      loadSmogonMoves(9, selectedReg),
     ]);
   });
+
+  async function changeReg(format: string) {
+    selectedReg = format;
+    [smogonNatures, smogonPriorityMoves, smogonAbilities, smogonMoves] = await Promise.all([
+      loadSmogonNatures(9, format),
+      loadSmogonPriorityMoves(9, format),
+      loadSmogonAbilities(9, format),
+      loadSmogonMoves(9, format),
+    ]);
+    // Re-apply smart natures if active
+    if (smartNaturesActive) {
+      const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
+        field.forEach(i => {
+          const slot = team[i];
+          if (!slot) return;
+          if (side === 'you' && slot.natureLocked) { fieldNature.set(`${side}-${i}`, slot.nature); return; }
+          const nature = getSmogonNature(smogonNatures, slot.entry.id);
+          if (nature !== null) fieldNature.set(`${side}-${i}`, nature);
+        });
+      };
+      applyFor('you', yourField, yourTeam);
+      applyFor('opp', oppField, oppTeam);
+      fieldNature = new Map(fieldNature);
+    }
+  }
+
+  function toggleMoves(key: string) {
+    if (openMoves.has(key)) openMoves.delete(key);
+    else openMoves.add(key);
+    openMoves = new Set(openMoves);
+  }
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
@@ -63,12 +104,13 @@
   }
 
   // ── Per-field toggles ─────────────────────────────────────────────────────
-  let fieldScarfs    = new Map<string, boolean>();
-  let fieldParalysis = new Map<string, boolean>();
-  let fieldProto     = new Map<string, boolean>();
-  let fieldNature    = new Map<string, NatureTier>();
-  let fieldCommander = new Map<string, boolean>();
-  let fieldMega      = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
+  let fieldScarfs     = new Map<string, boolean>();
+  let fieldParalysis  = new Map<string, boolean>();
+  let fieldProto      = new Map<string, boolean>();
+  let fieldNature     = new Map<string, NatureTier>();
+  let fieldCommander  = new Map<string, boolean>();
+  let fieldMega       = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
+  let fieldSpeedBoost = new Map<string, number>(); // 0=off, 1=+1 stage, 2=+2 stages
 
   function toggleFieldScarf(key: string, side: 'you' | 'opp') {
     const wasOn = fieldScarfs.get(key) ?? false;
@@ -99,6 +141,13 @@
   function toggleCommander(key: string) {
     fieldCommander.set(key, !(fieldCommander.get(key) ?? false));
     fieldCommander = new Map(fieldCommander);
+  }
+
+  function cycleSpeedBoost(key: string, maxStage: number) {
+    const cur = fieldSpeedBoost.get(key) ?? 0;
+    const next = cur >= maxStage ? 0 : cur + 1;
+    fieldSpeedBoost.set(key, next);
+    fieldSpeedBoost = new Map(fieldSpeedBoost);
   }
 
   function cycleMega(key: string, numForms: number) {
@@ -139,9 +188,13 @@
     commander:        boolean;
     megaForms:        import('$lib/speedtiers').MegaStats[];
     megaIndex:        number;
-    effectiveSpeed:   number;
-    triggeredAbility: string | null;
-    priorityMoves:    PriorityMove[];
+    effectiveSpeed:    number;
+    weatherAbility:    string | null; // always set if has a weather/terrain ability
+    weatherTriggered:  boolean;       // true only when the relevant condition is active
+    canSpeedBoost:     boolean;
+    maxBoostStage:     number;
+    speedBoostStage:   number;
+    priorityMoves:     PriorityMove[];
     priorityAbilities: PriorityAbility[];
   };
 
@@ -174,12 +227,23 @@
         ? [smogonAbilities[slot.entry.id]]
         : slot.entry.abilities;
 
-      const triggered = effectiveAbilities.find(a => {
-        const t = WEATHER_ABILITY[a];
-        return t && cond[t];
-      }) ?? null;
+      // Weather/terrain ability — always find it, separately track if triggered
+      const ABILITY_NAMES: Record<string, string> = {
+        swiftswim: 'Swift Swim', chlorophyll: 'Chlorophyll',
+        sandrush: 'Sand Rush', slushrush: 'Slush Rush', surgesurfer: 'Surge Surfer',
+      };
+      const weatherAbilityId = !megaIndex
+        ? effectiveAbilities.find(a => WEATHER_ABILITY[a]) ?? null
+        : null;
+      const weatherAbility   = weatherAbilityId ? (ABILITY_NAMES[weatherAbilityId] ?? weatherAbilityId) : null;
+      const weatherTriggered = !!weatherAbilityId && !!cond[WEATHER_ABILITY[weatherAbilityId]!];
 
       const natureLocked = side === 'you' && (slot.natureLocked ?? false);
+
+      // Speed boost from moves (Dragon Dance, Agility, etc.)
+      const maxBoostStage  = getMaxSpeedBoostStage(slot.entry.id);
+      const canSpeedBoost  = maxBoostStage > 0;
+      const speedBoostStage = canSpeedBoost ? (fieldSpeedBoost.get(key) ?? 0) : 0;
 
       // Priority moves: learnset-based normally, usage-filtered when likelyMovesActive
       const effectivePriorityMoves = likelyMovesActive && smogonPriorityMoves[slot.entry.id]
@@ -193,10 +257,11 @@
         canProtoBoost, protoBoost, protoCondActive, protoLabel,
         canCommander, commander,
         megaForms, megaIndex,
-        triggeredAbility: triggered,
+        weatherAbility, weatherTriggered,
+        canSpeedBoost, maxBoostStage, speedBoostStage,
         effectiveSpeed: calcEffectiveSpeed(
           slot.entry, side,
-          { scarf, paralysis, protoBoost, commander, natureTier: nature, megaIndex },
+          { scarf, paralysis, protoBoost, commander, natureTier: nature, megaIndex, speedBoostStage },
           cond
         ),
         priorityMoves:     effectivePriorityMoves,
@@ -263,14 +328,16 @@
 
   // ── Reset ──────────────────────────────────────────────────────────────────
   function resetGame() {
-    yourField      = new Set();
-    oppField       = new Set();
-    fieldScarfs    = new Map();
-    fieldParalysis = new Map();
-    fieldProto     = new Map();
-    fieldNature    = new Map();
-    fieldCommander = new Map();
-    fieldMega      = new Map();
+    yourField       = new Set();
+    oppField        = new Set();
+    fieldScarfs     = new Map();
+    fieldParalysis  = new Map();
+    fieldProto      = new Map();
+    fieldNature     = new Map();
+    fieldCommander  = new Map();
+    fieldMega       = new Map();
+    fieldSpeedBoost = new Map();
+    openMoves       = new Set();
     cond                  = { ...DEFAULT_CONDITIONS };
     smartNaturesActive    = false;
     likelyMovesActive     = false;
@@ -295,6 +362,15 @@
       >Smart Natures</button>
     {/if}
     <div class="top-bar-right">
+      <div class="reg-tabs" use:tooltip={"Switch Smogon usage data source (affects Smart Natures, Likely Moves, Likely Abilities, and Move Reveal)"}>
+        {#each GEN9_REGS as reg}
+          <button
+            class="reg-tab"
+            class:active={selectedReg === reg.format}
+            on:click={() => changeReg(reg.format)}
+          >{reg.label}</button>
+        {/each}
+      </div>
       <button
         class="usage-btn"
         class:active={likelyMovesActive}
@@ -429,8 +505,10 @@
                     {@const mf = row.megaForms[row.megaIndex - 1]}
                     <span class="badge mega-badge" use:tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}>{mf?.name ?? 'Mega'}</span>
                   {/if}
-                  {#if row.triggeredAbility}
-                    <span class="badge ability" use:tooltip={`${row.triggeredAbility}: doubles Speed in the current weather/terrain`}>{row.triggeredAbility}</span>
+                  {#if row.weatherAbility}
+                    <span class="badge ability" class:ability-dim={!row.weatherTriggered}
+                      use:tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? ' ✓ active' : ' — inactive (no matching weather/terrain)'}`}
+                    >{row.weatherAbility}</span>
                   {/if}
                   {#if row.protoBoost}
                     <span class="badge proto-badge" use:tooltip={`${row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}: ×1.5 Speed when Speed is the boosted stat`}>{row.protoLabel}</span>
@@ -490,6 +568,15 @@
                   PAR
                 </label>
 
+                <!-- Speed boost stages (Dragon Dance, Agility, etc.) -->
+                {#if row.canSpeedBoost}
+                  <button class="toggle-pill boost-pill" class:active={row.speedBoostStage > 0}
+                    on:click={() => cycleSpeedBoost(row.key, row.maxBoostStage)}
+                    use:tooltip={`Speed boost stages from moves (Dragon Dance, Agility, etc.).\nCurrent: +${row.speedBoostStage} stage${row.speedBoostStage !== 1 ? 's' : ''} (×${((2 + row.speedBoostStage) / 2).toFixed(1)})\nClick to cycle: 0 → +1 (×1.5) → +2 (×2.0) → 0`}>
+                    +{row.speedBoostStage > 0 ? row.speedBoostStage : '?'} Spd
+                  </button>
+                {/if}
+
                 <!-- Proto/Quark (only when condition is active) -->
                 {#if row.canProtoBoost}
                   {@const protoName = row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}
@@ -526,7 +613,26 @@
                     on:click={() => cycleMega(row.key, row.megaForms.length)}
                   >{row.megaIndex === 0 ? 'Mega X/Y' : row.megaForms[row.megaIndex - 1].name}</button>
                 {/if}
+
+                <!-- Move reveal -->
+                {#if smogonMoves[row.slot.entry.id]?.length}
+                  <button
+                    class="toggle-pill moves-pill"
+                    class:active={openMoves.has(row.key)}
+                    use:tooltip={"Show top moves from Smogon usage data for this Pokémon"}
+                    on:click={() => toggleMoves(row.key)}
+                  >{openMoves.has(row.key) ? '▾ Moves' : '▸ Moves'}</button>
+                {/if}
               </div>
+
+              <!-- Move list panel -->
+              {#if openMoves.has(row.key) && smogonMoves[row.slot.entry.id]?.length}
+                <div class="move-list">
+                  {#each smogonMoves[row.slot.entry.id] as move}
+                    <span class="move-chip">{move}</span>
+                  {/each}
+                </div>
+              {/if}
             </div>
 
             <span class="row-speed">{row.effectiveSpeed}</span>
@@ -565,7 +671,7 @@
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s;
     flex-shrink: 0;
-    min-height: 36px;
+    min-height: 44px;
   }
   .usage-btn:hover { color: var(--text); border-color: var(--text-muted); }
   .usage-btn.active { color: var(--text); border-color: var(--text-muted); }
@@ -587,7 +693,7 @@
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s;
     flex-shrink: 0;
-    min-height: 36px;
+    min-height: 44px;
   }
   .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
 
@@ -602,7 +708,7 @@
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s;
     flex-shrink: 0;
-    min-height: 36px;
+    min-height: 44px;
   }
   .smart-nature-btn:hover { color: var(--text); border-color: var(--text-muted); }
   .smart-nature-btn.active { color: var(--text); border-color: var(--text-muted); }
@@ -622,7 +728,7 @@
   }
 
   .cond-group-label {
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -647,7 +753,7 @@
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
-    min-height: 34px;
+    min-height: 44px;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
   .cond-btn:active { opacity: 0.8; }
@@ -769,7 +875,7 @@
     flex-shrink: 0;
   }
   .tslot-name {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-align: center;
     max-width: 86px;
     overflow: hidden;
@@ -787,7 +893,7 @@
   }
 
   .type-pip {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -841,7 +947,7 @@
   }
 
   .tr-badge {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     padding: 0.1rem 0.45rem;
     background: color-mix(in srgb, #c46cf5 15%, var(--surface));
     border: 1px solid #c46cf5;
@@ -915,7 +1021,7 @@
   }
 
   .badge {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     padding: 0.1rem 0.4rem;
     border-radius: 100px;
     border: 1px solid;
@@ -925,6 +1031,12 @@
   .badge.ability {
     color: #6cf5b8; border-color: #6cf5b8;
     background: color-mix(in srgb, #6cf5b8 10%, var(--surface));
+  }
+  .badge.ability.ability-dim {
+    color: var(--text-muted);
+    border-color: var(--border);
+    background: none;
+    opacity: 0.45;
   }
   .badge.tailwind {
     color: #6c8ef5; border-color: #6c8ef5;
@@ -939,7 +1051,7 @@
     background: color-mix(in srgb, #f5a06c 10%, var(--surface));
   }
   .badge.priority-badge {
-    font-size: 0.63rem;
+    font-size: 0.72rem;
     color: #f56cc8; border-color: #f56cc8;
     background: color-mix(in srgb, #f56cc8 10%, var(--surface));
   }
@@ -948,7 +1060,7 @@
     background: none; opacity: 0.45; text-decoration: line-through;
   }
   .badge.prio-ability-badge {
-    font-size: 0.63rem;
+    font-size: 0.72rem;
     color: #c46cf5; border-color: #c46cf5;
     background: color-mix(in srgb, #c46cf5 10%, var(--surface));
   }
@@ -976,16 +1088,16 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
+    padding: 0 0.6rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     user-select: none;
-    min-height: 28px;
+    min-height: 36px;
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s, background 0.15s;
   }
@@ -1007,6 +1119,11 @@
   .toggle-pill.commander-pill.active {
     color: #6ca5f5; border-color: #6ca5f5;
     background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
+  }
+  .toggle-pill.boost-pill { color: var(--text-muted); }
+  .toggle-pill.boost-pill.active {
+    color: #f5d76c; border-color: #f5d76c;
+    background: color-mix(in srgb, #f5d76c 10%, var(--surface));
   }
   /* Mega pill: gradient border */
   .mega-pill {
@@ -1052,6 +1169,60 @@
     min-width: 3.5rem;
     text-align: right;
     flex-shrink: 0;
+  }
+
+  /* Regulation tabs */
+  .reg-tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .reg-tab {
+    padding: 0 0.75rem;
+    min-height: 44px;
+    background: var(--surface);
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+  }
+  .reg-tab:last-child { border-right: none; }
+  .reg-tab:hover { color: var(--text); }
+  .reg-tab.active {
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+    color: var(--accent);
+  }
+
+  /* Moves toggle pill */
+  .toggle-pill.moves-pill { color: var(--text-muted); }
+  .toggle-pill.moves-pill.active {
+    color: #a8d8a8;
+    border-color: #a8d8a8;
+    background: color-mix(in srgb, #a8d8a8 10%, var(--surface));
+  }
+
+  /* Move list panel */
+  .move-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.35rem 0.1rem 0.1rem;
+  }
+  .move-chip {
+    font-size: 0.78rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: var(--surface);
+    white-space: nowrap;
   }
 
   /* Mobile tightening */

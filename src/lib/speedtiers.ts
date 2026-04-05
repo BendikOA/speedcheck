@@ -42,6 +42,18 @@ export const WEATHER_ABILITY: Record<string, 'rain' | 'sun' | 'sand' | 'snow' | 
   surgesurfer: 'electric',
 };
 
+/** Speed-boosting moves: moveId → speed stages gained (+1 = ×1.5, +2 = ×2.0) */
+export const SPEED_BOOST_MOVES: Record<string, { stages: number; label: string }> = {
+  dragondance:  { stages: 1, label: 'Dragon Dance' },
+  quiverdance:  { stages: 1, label: 'Quiver Dance' },
+  flamecharge:  { stages: 1, label: 'Flame Charge' },
+  agility:      { stages: 2, label: 'Agility'      },
+  rockpolish:   { stages: 2, label: 'Rock Polish'  },
+  shiftgear:    { stages: 2, label: 'Shift Gear'   },
+  autotomize:   { stages: 2, label: 'Autotomize'   },
+  tailglow:     { stages: 0, label: 'Tail Glow'    }, // SpA only — excluded from speed calc
+};
+
 // Abilities that give ×1.5 speed when Speed is the boosted stat (proto/quark)
 export const PROTO_ABILITY: Record<string, 'sun' | 'electric'> = {
   protosynthesis: 'sun',
@@ -155,12 +167,13 @@ export function calcEffectiveSpeed(
   entry: SpeedEntry,
   side: 'you' | 'opp',
   perPoke: {
-    scarf:       boolean;
-    paralysis:   boolean;
-    protoBoost?: boolean;
-    commander?:  boolean;
-    natureTier?: NatureTier;
-    megaIndex?:  number; // 0 = base, 1+ = mega form index into megaForms[]
+    scarf:           boolean;
+    paralysis:       boolean;
+    protoBoost?:     boolean;
+    commander?:      boolean;
+    natureTier?:     NatureTier;
+    megaIndex?:      number; // 0 = base, 1+ = mega form index into megaForms[]
+    speedBoostStage?: number; // +1 = ×1.5, +2 = ×2.0
   },
   cond: Conditions
 ): number {
@@ -184,6 +197,10 @@ export function calcEffectiveSpeed(
       }
     }
   }
+
+  // Speed boost stages from Dragon Dance, Agility, etc. — (2+n)/2 multiplier
+  if (perPoke.speedBoostStage && perPoke.speedBoostStage > 0)
+    speed = Math.floor(speed * (2 + perPoke.speedBoostStage) / 2);
 
   // Protosynthesis / Quark Drive speed boost (×1.5, only when Speed is boosted stat)
   if (perPoke.protoBoost) speed = Math.floor(speed * 1.5);

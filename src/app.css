@@ -79,6 +79,14 @@ button, label[role="button"], a {
   justify-content: center;
 }
 
+/* Keyboard focus ring — visible only for keyboard navigation */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 /* Active feedback since :hover doesn't fire on touch */
 @media (hover: none) and (pointer: coarse) {
   button:active, label:active {

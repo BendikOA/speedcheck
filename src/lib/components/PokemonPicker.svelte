@@ -37,6 +37,8 @@
   <div class="panel">
     <div class="panel-handle"></div>
     <input
+      id="picker-search"
+      name="picker-search"
       bind:this={inputEl}
       bind:value={search}
       placeholder="Search Pokémon…"
@@ -129,9 +131,9 @@
     border-bottom: 1px solid var(--border);
     color: var(--text);
     font-size: 16px; /* prevents iOS zoom */
-    outline: none;
     flex-shrink: 0;
   }
+  .search:focus-visible { border-color: var(--accent); }
 
   .empty {
     padding: 2rem 1rem;
@@ -156,8 +158,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    min-height: 52px;
+    padding: 0.65rem 0.9rem;
+    min-height: 60px;
     background: none;
     border: none;
     border-bottom: 1px solid var(--border);
@@ -176,8 +178,8 @@
   }
 
   .sprite {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
     image-rendering: pixelated;
     flex-shrink: 0;

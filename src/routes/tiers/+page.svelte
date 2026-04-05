@@ -160,7 +160,7 @@
   .page { display: flex; flex-direction: column; gap: 0; }
 
   .section-label {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -184,7 +184,7 @@
     margin-bottom: 0.25rem;
   }
 
-  .search:focus { border-color: var(--accent); }
+  .search:focus-visible { border-color: var(--accent); }
 
   .controls {
     display: flex;
@@ -277,7 +277,7 @@
     padding: 0.6rem 0.75rem;
     text-align: left;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);

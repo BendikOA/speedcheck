@@ -147,7 +147,7 @@
             nickname: s.nickname,
           }
         : null;
-    savedTeams.save({ label, genNum, yourTeam: yourTeam.map(toSlot) });
+    savedTeams.save({ label, genNum, yourTeam: yourTeam.map(toSlot), recordHistory: [] });
     saveLabel = "";
     showSaveInput = false;
   }
@@ -382,6 +382,8 @@
           {#if showSaveInput}
             <div class="save-row">
               <input
+                id="save-label"
+                name="save-label"
                 class="save-input"
                 placeholder="Team name…"
                 bind:value={saveLabel}
@@ -447,6 +449,7 @@
               <div class="saved-top-meta">
                 {#if renamingId === team.id}
                   <input
+                    name="rename-team"
                     class="rename-input"
                     bind:value={renameValue}
                     on:keydown={(e) => {
@@ -533,15 +536,16 @@
                     </svg>
                   </button>
                 {/if}
-                {#if (team.recordHistory ?? []).length > 0}
-                  <button
-                    class="record-history-btn"
-                    on:click={() => toggleHistory(team.id)}
-                    title="View previous version records"
-                  >
-                    hist {expandedHistory.has(team.id) ? "▲" : "▼"}
-                  </button>
-                {/if}
+                <button
+                  class="record-history-btn"
+                  class:invisible={(team.recordHistory ?? []).length === 0}
+                  on:click={() => toggleHistory(team.id)}
+                  title="View previous version records"
+                  tabindex={(team.recordHistory ?? []).length === 0 ? -1 : 0}
+                  aria-hidden={(team.recordHistory ?? []).length === 0}
+                >
+                  hist {expandedHistory.has(team.id) ? "▲" : "▼"}
+                </button>
               </div>
               <div class="saved-actions">
                 <button class="saved-load" on:click={() => loadTeam(team)}
@@ -641,15 +645,14 @@
   }
 
   .gen-select {
-    padding: 0.45rem 0.75rem;
+    padding: 0 0.75rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
     font-size: 0.85rem;
     cursor: pointer;
-    outline: none;
-    min-height: 36px;
+    min-height: 44px;
     transition: border-color 0.15s;
   }
   .gen-select:focus {
@@ -761,7 +764,7 @@
   }
 
   .slot-name {
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     font-weight: 500;
     text-align: center;
     max-width: 70px;
@@ -772,7 +775,7 @@
   }
 
   .slot-spe {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
   }
 
@@ -788,8 +791,9 @@
     line-height: 1;
     z-index: 1;
     /* Enlarge touch area */
-    padding: 0.4rem 0.5rem;
-    min-height: unset;
+    padding: 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .slot-clear:active {
@@ -802,10 +806,10 @@
   }
 
   .scarf-pill {
-    font-size: 0.6rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.03em;
-    padding: 0.15rem 0.4rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 100px;
     border: 1px solid var(--border);
     color: var(--text-muted);
@@ -912,10 +916,9 @@
     border-radius: var(--radius);
     color: var(--text);
     font-size: 16px;
-    outline: none;
     min-height: 44px;
   }
-  .save-input:focus {
+  .save-input:focus-visible {
     border-color: var(--accent);
   }
 
@@ -1004,17 +1007,19 @@
   }
 
   .saved-slots {
-    display: grid;
-    grid-template-columns: repeat(3, 40px);
-    gap: 0.5rem;
-    flex-shrink: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   .saved-sprite {
-    width: 40px;
-    height: 40px;
+    width: min(40px, calc((100vw - 14rem) / 6));
+    height: min(40px, calc((100vw - 14rem) / 6));
     object-fit: contain;
     image-rendering: pixelated;
+    flex-shrink: 1;
   }
 
   .saved-bottom {
@@ -1064,7 +1069,7 @@
     }
     .saved-bottom {
       flex: unset;
-      gap: 0;
+      gap: 0.5rem;
     }
     .saved-record {
       flex: unset;
@@ -1075,14 +1080,15 @@
   }
 
   .record-btn {
-    padding: 0.2rem 0.5rem;
+    padding: 0 0.75rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: var(--surface);
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
-    min-height: unset;
+    min-height: 44px;
+    min-width: 44px;
     transition:
       background 0.1s,
       color 0.1s,
@@ -1105,7 +1111,7 @@
   }
 
   .record-stat {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -1121,12 +1127,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.2rem;
+    padding: 0 0.5rem;
     background: none;
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    min-height: unset;
+    min-height: 44px;
+    min-width: 44px;
     border-radius: var(--radius-sm);
     opacity: 0.5;
     transition:
@@ -1138,14 +1145,16 @@
     color: var(--text);
   }
 
+  .invisible { visibility: hidden; pointer-events: none; }
+
   .record-history-btn {
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
     background: none;
     border: none;
     cursor: pointer;
-    min-height: unset;
-    padding: 0.1rem 0.3rem;
+    min-height: 44px;
+    padding: 0 0.5rem;
     opacity: 0.6;
     transition: opacity 0.15s;
   }
@@ -1169,12 +1178,12 @@
   }
 
   .history-dates {
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
   }
 
   .history-stat {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
   }
@@ -1193,15 +1202,15 @@
   }
 
   .saved-load {
-    padding: 0.4rem 0.85rem;
+    padding: 0 1rem;
     background: var(--accent);
     color: #fff;
     border: none;
     border-radius: var(--radius-sm);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    min-height: 36px;
+    min-height: 44px;
   }
 
   .saved-edit,
@@ -1209,13 +1218,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.4rem 0.6rem;
+    padding: 0 0.75rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
     cursor: pointer;
-    min-height: 36px;
+    min-height: 44px;
+    min-width: 44px;
     transition:
       color 0.15s,
       border-color 0.15s;
@@ -1294,8 +1304,9 @@
     color: var(--text-muted);
     font-size: 1.1rem;
     cursor: pointer;
-    min-height: unset;
-    padding: 0.25rem 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.75rem;
   }
   .modal-close:hover {
     color: var(--text);
@@ -1307,14 +1318,14 @@
   }
 
   .side-tab {
-    padding: 0.4rem 0.9rem;
+    padding: 0 0.9rem;
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
     font-size: 0.9rem;
     cursor: pointer;
-    min-height: unset;
+    min-height: 44px;
     transition:
       border-color 0.15s,
       color 0.15s;
@@ -1338,7 +1349,7 @@
     outline: none;
     line-height: 1.5;
   }
-  .import-textarea:focus {
+  .import-textarea:focus-visible {
     border-color: var(--accent);
   }
 
@@ -1356,12 +1367,12 @@
   .rename-input {
     font-size: 0.95rem;
     font-weight: 600;
-    padding: 0.2rem 0.4rem;
+    padding: 0 0.4rem;
     background: var(--surface);
     border: 1px solid var(--accent);
     border-radius: var(--radius-sm);
     color: var(--text);
-    outline: none;
+    min-height: 44px;
     min-width: 8rem;
   }
 

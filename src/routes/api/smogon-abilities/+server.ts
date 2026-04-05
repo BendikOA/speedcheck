@@ -5,8 +5,9 @@ import { getSmogonChaos } from '$lib/server/smogonData';
 const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 export const GET: RequestHandler = async ({ url }) => {
-  const gen = parseInt(url.searchParams.get('gen') ?? '9', 10);
-  const chaos = await getSmogonChaos(gen);
+  const gen    = parseInt(url.searchParams.get('gen') ?? '9', 10);
+  const format = url.searchParams.get('format') ?? undefined;
+  const chaos  = await getSmogonChaos(gen, format);
   // Returns the top ability ID per Pokémon by usage count
   const result: Record<string, string> = {};
 

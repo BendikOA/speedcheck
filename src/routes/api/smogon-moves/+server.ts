@@ -8,22 +8,18 @@ export const GET: RequestHandler = async ({ url }) => {
   const gen    = parseInt(url.searchParams.get('gen') ?? '9', 10);
   const format = url.searchParams.get('format') ?? undefined;
   const chaos  = await getSmogonChaos(gen, format);
-
-  const ranked: { id: string; count: number }[] = [];
+  const result: Record<string, string[]> = {};
 
   if (chaos?.data) {
     for (const [name, entry] of Object.entries<any>(chaos.data)) {
-      const count = entry['Raw count'] ?? 0;
-      if (count > 0) ranked.push({ id: toId(name), count });
+      if (!entry.Moves) continue;
+      const top = Object.entries<number>(entry.Moves)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4)
+        .map(([move]) => move); // keep display name
+      if (top.length) result[toId(name)] = top;
     }
   }
 
-  ranked.sort((a, b) => b.count - a.count);
-
-  // Return top 100 IDs in order
-  const top100 = ranked.slice(0, 100).map(r => r.id);
-
-  return json(top100, {
-    headers: { 'Cache-Control': 'public, max-age=86400' }
-  });
+  return json(result, { headers: { 'Cache-Control': 'public, max-age=86400' } });
 };

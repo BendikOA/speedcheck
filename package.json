@@ -20,7 +20,8 @@
     "@pkmn/data": "^0.10.3",
     "@pkmn/dex": "^0.10.7",
     "@pkmn/img": "^0.3.3",
-    "@sveltejs/adapter-vercel": "^6.3.3"
+    "@sveltejs/adapter-vercel": "^6.3.3",
+    "@vercel/analytics": "^2.0.1"
   },
   "type": "module"
 }

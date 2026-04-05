@@ -7,8 +7,9 @@ const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 const PRIORITY_IDS = new Set(Object.keys(PRIORITY_MOVES));
 
 export const GET: RequestHandler = async ({ url }) => {
-  const gen = parseInt(url.searchParams.get('gen') ?? '9', 10);
-  const chaos = await getSmogonChaos(gen);
+  const gen    = parseInt(url.searchParams.get('gen') ?? '9', 10);
+  const format = url.searchParams.get('format') ?? undefined;
+  const chaos  = await getSmogonChaos(gen, format);
   const result: Record<string, string[]> = {};
 
   if (chaos?.data) {

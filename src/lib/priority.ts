@@ -140,3 +140,73 @@ export function getPriorityAbilities(abilityIds: string[]): PriorityAbility[] {
     .map(id => PRIORITY_ABILITIES[id])
     .filter(Boolean);
 }
+
+// ── Speed-boost move cache ────────────────────────────────────────────────────
+
+import { SPEED_BOOST_MOVES } from './speedtiers';
+
+/** speciesId → max speed stages that species can reach via learnable moves */
+let _boostCache: Map<string, number> | null = null;
+let _boostPromise: Promise<void> | null = null;
+
+const BOOST_LS_KEY = 'speed_boost_cache_v1';
+const BOOST_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function boostLsLoad(): Map<string, number> | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(BOOST_LS_KEY);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts > BOOST_TTL_MS) { localStorage.removeItem(BOOST_LS_KEY); return null; }
+    return new Map(Object.entries(data).map(([k, v]) => [k, v as number]));
+  } catch { return null; }
+}
+
+function boostLsSave(map: Map<string, number>): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    localStorage.setItem(BOOST_LS_KEY, JSON.stringify({ data: Object.fromEntries(map), ts: Date.now() }));
+  } catch { /* quota */ }
+}
+
+const BOOST_MOVE_IDS = Object.entries(SPEED_BOOST_MOVES)
+  .filter(([, v]) => v.stages > 0)
+  .map(([id]) => id);
+
+export async function loadBoostCache(): Promise<void> {
+  if (_boostCache) return;
+  const stored = boostLsLoad();
+  if (stored) { _boostCache = stored; return; }
+  if (_boostPromise) return _boostPromise;
+
+  _boostPromise = (async () => {
+    const map = new Map<string, number>();
+    const allSpecies = [...Dex.species.all()].filter(s => s.exists);
+    await Promise.all(allSpecies.map(s => Dex.learnsets.get(s.id)));
+
+    for (const sp of allSpecies) {
+      const allMoves = new Set<string>();
+      let cur: typeof sp | null = sp;
+      while (cur?.exists) {
+        const ls = await Dex.learnsets.get(cur.id);
+        for (const m of Object.keys(ls?.learnset ?? {})) allMoves.add(m);
+        cur = cur.prevo ? Dex.species.get(cur.prevo) : null;
+      }
+      const maxStage = BOOST_MOVE_IDS
+        .filter(id => allMoves.has(id))
+        .reduce((mx, id) => Math.max(mx, SPEED_BOOST_MOVES[id].stages), 0);
+      if (maxStage > 0) map.set(sp.id, maxStage);
+    }
+
+    _boostCache = map;
+    boostLsSave(_boostCache);
+  })();
+
+  return _boostPromise;
+}
+
+/** Returns max reachable speed stage for a species (0 if none). */
+export function getMaxSpeedBoostStage(speciesId: string): number {
+  return _boostCache?.get(speciesId) ?? 0;
+}

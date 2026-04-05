@@ -26,11 +26,18 @@ const GEN_SEARCH: Record<number, { formats: string[]; months?: string[] }> = {
   },
 };
 
+// Exported regulation options for client-side display
+export const GEN9_REGS: { label: string; format: string }[] = [
+  { label: 'Reg I', format: 'gen9vgc2026regi' },
+  { label: 'Reg F', format: 'gen9vgc2026regf' },
+  { label: 'Reg G', format: 'gen9vgc2025regg' },
+];
+
 const TTL_MS = 24 * 60 * 60 * 1000;
 
-// Per-gen cache
-const cacheMap   = new Map<number, any>();
-const fetchedMap = new Map<number, number>();
+// Per-format cache (key = format string or `gen:${gen}`)
+const cacheMap   = new Map<string, any>();
+const fetchedMap = new Map<string, number>();
 
 function rollingMonths(count = 6): string[] {
   const months: string[] = [];
@@ -53,10 +60,17 @@ async function tryFetch(format: string, months: string[]): Promise<any | null> {
   return null;
 }
 
-export async function getSmogonChaos(gen = 9): Promise<any | null> {
+/**
+ * Fetch Smogon chaos data.
+ * @param gen     Generation number (default 9)
+ * @param format  Optional specific format slug (e.g. 'gen9vgc2026regi'). When
+ *                provided, only that format is tried (no fallback chain).
+ */
+export async function getSmogonChaos(gen = 9, format?: string): Promise<any | null> {
+  const cacheKey = format ?? `gen:${gen}`;
   const now = Date.now();
-  if (cacheMap.has(gen) && (now - (fetchedMap.get(gen) ?? 0)) < TTL_MS) {
-    return cacheMap.get(gen);
+  if (cacheMap.has(cacheKey) && (now - (fetchedMap.get(cacheKey) ?? 0)) < TTL_MS) {
+    return cacheMap.get(cacheKey);
   }
 
   const search = GEN_SEARCH[gen];
@@ -64,11 +78,22 @@ export async function getSmogonChaos(gen = 9): Promise<any | null> {
 
   const months = search.months ?? rollingMonths(6);
 
-  for (const format of search.formats) {
+  if (format) {
+    // Only try the specified format
     const data = await tryFetch(format, months);
     if (data) {
-      cacheMap.set(gen, data);
-      fetchedMap.set(gen, now);
+      cacheMap.set(cacheKey, data);
+      fetchedMap.set(cacheKey, now);
+    }
+    return data ?? null;
+  }
+
+  // Default: try formats in priority order
+  for (const fmt of search.formats) {
+    const data = await tryFetch(fmt, months);
+    if (data) {
+      cacheMap.set(cacheKey, data);
+      fetchedMap.set(cacheKey, now);
       return data;
     }
   }
