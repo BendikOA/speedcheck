@@ -1,31 +1,74 @@
 <script lang="ts">
-  import { buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
+  import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
   import type { GenNumber } from '$lib/speedtiers';
 
-  let selectedGen: GenNumber = 9;
+  let selectedGen: GenNumber | null = null; // null = all
   let search = '';
   let scarf = false;
   let tailwind = false;
   let trickRoom = false;
   let paralysis = false;
 
-  $: allEntries = buildAllTiers(selectedGen);
-  $: hasNatures = selectedGen >= 3;
+  $: allEntries = selectedGen ? buildSpeedTiers(selectedGen) : buildAllTiers(9);
+  $: hasNatures = selectedGen === null || selectedGen >= 3;
+  $: hasMegas   = selectedGen !== null && (selectedGen === 6 || selectedGen === 7);
 
-  $: filtered = allEntries
-    .filter(e => e.name.toLowerCase().includes(search.toLowerCase()))
-    .map(e => ({
-      ...e,
-      displayMax:     applyModifiers(e.maxSpeed,     { scarf, tailwind, paralysis }),
-      displayMin:     applyModifiers(e.minSpeed,     { scarf, tailwind, paralysis }),
-      displayNeutral: applyModifiers(e.neutralSpeed, { scarf, tailwind, paralysis }),
-    }))
-    .sort((a, b) => trickRoom
+  type Row = {
+    id: string;
+    name: string;
+    baseSpe: number;
+    displayMax: number;
+    displayNeutral: number;
+    displayMin: number;
+    isMega: boolean;
+  };
+
+  $: filtered = (() => {
+    const q = search.toLowerCase();
+    const rows: Row[] = [];
+
+    for (const e of allEntries) {
+      const nameMatch = e.name.toLowerCase().includes(q);
+      const megaMatch = hasMegas && e.megaForms.some(m => m.name.toLowerCase().includes(q));
+      if (!nameMatch && !megaMatch) continue;
+
+      if (nameMatch) {
+        rows.push({
+          id:             e.id,
+          name:           e.name,
+          baseSpe:        e.baseSpe,
+          displayMax:     applyModifiers(e.maxSpeed,     { scarf, tailwind, paralysis }),
+          displayNeutral: applyModifiers(e.neutralSpeed, { scarf, tailwind, paralysis }),
+          displayMin:     applyModifiers(e.minSpeed,     { scarf, tailwind, paralysis }),
+          isMega: false,
+        });
+      }
+
+      // Expand mega forms as sub-rows
+      if (hasMegas) {
+        for (const m of e.megaForms) {
+          if (!nameMatch && !m.name.toLowerCase().includes(q)) continue;
+          rows.push({
+            id:             m.id,
+            name:           m.name,
+            baseSpe:        m.baseSpe,
+            displayMax:     applyModifiers(m.maxSpeed,     { scarf, tailwind, paralysis }),
+            displayNeutral: applyModifiers(m.neutralSpeed, { scarf, tailwind, paralysis }),
+            displayMin:     applyModifiers(m.minSpeed,     { scarf, tailwind, paralysis }),
+            isMega: true,
+          });
+        }
+      }
+    }
+
+    rows.sort((a, b) => trickRoom
       ? a.displayMax - b.displayMax || a.baseSpe - b.baseSpe
       : b.displayMax - a.displayMax || b.baseSpe - a.baseSpe
     );
+    return rows;
+  })();
 
-  function changeGen(g: GenNumber) {
+  function changeGen(g: GenNumber | null) {
     selectedGen = g;
     scarf = tailwind = trickRoom = paralysis = false;
   }
@@ -50,6 +93,9 @@
   <div class="section-label">Variables</div>
   <div class="controls">
     <div class="gen-tabs scroll-x">
+      <button class="gen-tab" class:active={selectedGen === null} on:click={() => { selectedGen = null; scarf = tailwind = trickRoom = paralysis = false; }}>
+        All
+      </button>
       {#each GEN_NUMBERS as g}
         <button class="gen-tab" class:active={selectedGen === g} on:click={() => changeGen(g)}>
           Gen {g}
@@ -94,9 +140,9 @@
       </thead>
       <tbody>
         {#each filtered as entry, i}
-          <tr>
+          <tr class:mega-row={entry.isMega}>
             <td class="rank">{i + 1}</td>
-            <td class="name">{entry.name}</td>
+            <td class="name">{entry.isMega ? '↳ ' : ''}{entry.name}</td>
             <td class="base">{entry.baseSpe}</td>
             <td class="stat max">{entry.displayMax}</td>
             {#if hasNatures}<td class="stat hide-xs">{entry.displayNeutral}</td>{/if}
@@ -244,6 +290,9 @@
   @media (hover: hover) { tbody tr:hover { background: var(--surface-2); } }
 
   td { padding: 0.45rem 0.75rem; }
+
+  .mega-row { background: color-mix(in srgb, var(--accent) 4%, transparent); }
+  .mega-row .name { color: var(--text-muted); font-style: italic; }
 
   .rank { color: var(--text-muted); font-size: 0.8rem; width: 2.5rem; }
   .name { font-weight: 500; }

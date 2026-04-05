@@ -1,22 +1,27 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
-  import type { SpeedEntry, GenNumber } from '$lib/speedtiers';
-  import { parsePaste, resolvePaste } from '$lib/parsePaste';
-  import { spriteUrl } from '$lib/sprites';
-  import { teamState } from '$lib/stores/teams';
-  import type { TeamSlot } from '$lib/stores/teams';
-  import { savedTeams } from '$lib/stores/savedTeams';
-  import type { SavedTeam } from '$lib/stores/savedTeams';
-  import PokemonPicker from '$lib/components/PokemonPicker.svelte';
-  import { loadSmogonOrder } from '$lib/smogonUsage';
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import {
+    buildSpeedTiers,
+    buildAllTiers,
+    applyModifiers,
+    GEN_NUMBERS,
+  } from "$lib/speedtiers";
+  import type { SpeedEntry, GenNumber } from "$lib/speedtiers";
+  import { parsePaste, resolvePaste } from "$lib/parsePaste";
+  import { spriteUrl } from "$lib/sprites";
+  import { teamState } from "$lib/stores/teams";
+  import type { TeamSlot } from "$lib/stores/teams";
+  import { savedTeams } from "$lib/stores/savedTeams";
+  import type { SavedTeam } from "$lib/stores/savedTeams";
+  import PokemonPicker from "$lib/components/PokemonPicker.svelte";
+  import { loadSmogonOrder } from "$lib/smogonUsage";
 
   let genFilter: GenNumber | null = null; // null = all gens
-  $: genNum = genFilter ?? 9 as GenNumber; // concrete gen for team state / saving
+  $: genNum = genFilter ?? (9 as GenNumber); // concrete gen for team state / saving
   let yourTeam: TeamSlot[] = Array(6).fill(null);
-  let oppTeam:  TeamSlot[] = Array(6).fill(null);
-  let pickerTarget: { side: 'you' | 'opp'; index: number } | null = null;
+  let oppTeam: TeamSlot[] = Array(6).fill(null);
+  let pickerTarget: { side: "you" | "opp"; index: number } | null = null;
   let usageOrder: string[] = [];
 
   // When no gen filter, show all national dex Pokémon (gen 9 as widest set); otherwise gen-filtered
@@ -24,116 +29,150 @@
 
   // Featured: usage-ordered top 100 for the selected gen (or gen 9 for "all")
   $: {
-    const byId = new Map(allEntries.map(e => [e.id, e]));
-    featuredEntries = usageOrder.map(id => byId.get(id)).filter(Boolean) as SpeedEntry[];
+    const byId = new Map(allEntries.map((e) => [e.id, e]));
+    featuredEntries = usageOrder
+      .map((id) => byId.get(id))
+      .filter(Boolean) as SpeedEntry[];
   }
   let featuredEntries: SpeedEntry[] = [];
-  $: yourIds = yourTeam.flatMap(s => s ? [s.entry.id] : []);
-  $: oppIds  = oppTeam.flatMap(s => s ? [s.entry.id] : []);
+  $: yourIds = yourTeam.flatMap((s) => (s ? [s.entry.id] : []));
+  $: oppIds = oppTeam.flatMap((s) => (s ? [s.entry.id] : []));
   // Each side only excludes its own slots — opponent can have the same Pokémon
-  $: pickerExclude = pickerTarget?.side === 'opp' ? oppIds : yourIds;
+  $: pickerExclude = pickerTarget?.side === "opp" ? oppIds : yourIds;
 
   // Simple combined speed preview — all filled slots, sorted
   $: speedPreview = [
-    ...yourTeam.map(s => s ? { side: 'you' as const, s } : null).filter(Boolean),
-    ...oppTeam.map(s => s ? { side: 'opp' as const, s } : null).filter(Boolean),
+    ...yourTeam
+      .map((s) => (s ? { side: "you" as const, s } : null))
+      .filter(Boolean),
+    ...oppTeam
+      .map((s) => (s ? { side: "opp" as const, s } : null))
+      .filter(Boolean),
   ]
-    .map(x => ({ side: x!.side, entry: x!.s!.entry, scarf: x!.s!.scarf }))
-    .map(x => ({ ...x, speed: applyModifiers(x.entry.maxSpeed, { scarf: x.scarf }) }))
+    .map((x) => ({ side: x!.side, entry: x!.s!.entry, scarf: x!.s!.scarf }))
+    .map((x) => ({
+      ...x,
+      speed: applyModifiers(x.entry.maxSpeed, { scarf: x.scarf }),
+    }))
     .sort((a, b) => b.speed - a.speed);
 
-  $: canStart  = yourTeam.some(Boolean) && oppTeam.some(Boolean);
-  $: canSave   = yourTeam.some(Boolean);
+  $: canStart = yourTeam.some(Boolean) && oppTeam.some(Boolean);
+  $: canSave = yourTeam.some(Boolean);
 
-  function openPicker(side: 'you' | 'opp', index: number) {
+  function openPicker(side: "you" | "opp", index: number) {
     pickerTarget = { side, index };
   }
 
   function onPick(entry: SpeedEntry) {
     if (!pickerTarget) return;
     const { side, index } = pickerTarget;
-    if (side === 'you') { yourTeam[index] = { entry, scarf: false, nature: '=' }; yourTeam = [...yourTeam]; }
-    else { oppTeam[index] = { entry, scarf: false, nature: '=' }; oppTeam = [...oppTeam]; }
+    if (side === "you") {
+      yourTeam[index] = { entry, scarf: false, nature: "=" };
+      yourTeam = [...yourTeam];
+    } else {
+      oppTeam[index] = { entry, scarf: false, nature: "=" };
+      oppTeam = [...oppTeam];
+    }
     pickerTarget = null;
   }
 
-  function clearSlot(side: 'you' | 'opp', index: number) {
-    if (side === 'you') { yourTeam[index] = null; yourTeam = [...yourTeam]; }
-    else { oppTeam[index] = null; oppTeam = [...oppTeam]; }
+  function clearSlot(side: "you" | "opp", index: number) {
+    if (side === "you") {
+      yourTeam[index] = null;
+      yourTeam = [...yourTeam];
+    } else {
+      oppTeam[index] = null;
+      oppTeam = [...oppTeam];
+    }
   }
 
-  function toggleScarf(side: 'you' | 'opp', index: number) {
-    const team = side === 'you' ? yourTeam : oppTeam;
+  function toggleScarf(side: "you" | "opp", index: number) {
+    const team = side === "you" ? yourTeam : oppTeam;
     const wasOn = team[index]?.scarf ?? false;
     // Clear scarf from whole team, then set this one if it wasn't already on
-    team.forEach(s => { if (s) s.scarf = false; });
+    team.forEach((s) => {
+      if (s) s.scarf = false;
+    });
     if (!wasOn && team[index]) team[index]!.scarf = true;
-    if (side === 'you') yourTeam = [...yourTeam];
+    if (side === "you") yourTeam = [...yourTeam];
     else oppTeam = [...oppTeam];
   }
 
   async function changeGen(g: GenNumber | null) {
     genFilter = g;
     yourTeam = Array(6).fill(null);
-    oppTeam  = Array(6).fill(null);
-    try { usageOrder = await loadSmogonOrder(g ?? 9); } catch { usageOrder = []; }
+    oppTeam = Array(6).fill(null);
+    try {
+      usageOrder = await loadSmogonOrder(g ?? 9);
+    } catch {
+      usageOrder = [];
+    }
   }
 
   function startGame() {
     teamState.set({ genNum, yourTeam: [...yourTeam], oppTeam: [...oppTeam] });
-    goto('/game');
+    goto("/game");
   }
 
   // ── Saved teams ───────────────────────────────────────────────────────────
   onMount(async () => {
     savedTeams.init();
-    try { usageOrder = await loadSmogonOrder(9); } catch { /* fallback to speed-sorted */ }
+    try {
+      usageOrder = await loadSmogonOrder(9);
+    } catch {
+      /* fallback to speed-sorted */
+    }
   });
 
-  let saveLabel = '';
+  let saveLabel = "";
   let showSaveInput = false;
 
   function saveCurrentTeam() {
     const label = saveLabel.trim() || `Team ${new Date().toLocaleDateString()}`;
-    const toSlot = (s: TeamSlot) => s ? {
-      id:           s.entry.id,
-      name:         s.entry.name,
-      scarf:        s.scarf,
-      nature:       s.nature,
-      natureLocked: s.natureLocked ?? false,
-      item:         s.item,
-      ability:      s.ability,
-      teraType:     s.teraType,
-      level:        s.level,
-      evs:          s.evs,
-      ivs:          s.ivs,
-      moves:        s.moves,
-      nickname:     s.nickname,
-    } : null;
+    const toSlot = (s: TeamSlot) =>
+      s
+        ? {
+            id: s.entry.id,
+            name: s.entry.name,
+            scarf: s.scarf,
+            nature: s.nature,
+            natureLocked: s.natureLocked ?? false,
+            item: s.item,
+            ability: s.ability,
+            teraType: s.teraType,
+            level: s.level,
+            evs: s.evs,
+            ivs: s.ivs,
+            moves: s.moves,
+            nickname: s.nickname,
+          }
+        : null;
     savedTeams.save({ label, genNum, yourTeam: yourTeam.map(toSlot) });
-    saveLabel = '';
+    saveLabel = "";
     showSaveInput = false;
   }
 
   function loadTeam(saved: SavedTeam) {
     const tiers = buildSpeedTiers(saved.genNum);
-    const byId = new Map(tiers.map(e => [e.id, e]));
+    const byId = new Map(tiers.map((e) => [e.id, e]));
     genFilter = saved.genNum;
-    yourTeam = saved.yourTeam.map(s =>
-      s && byId.has(s.id) ? {
-        entry:        byId.get(s.id)!,
-        scarf:        s.scarf,
-        nature:       s.nature ?? '=',
-        natureLocked: s.natureLocked ?? false,
-        item:         s.item,
-        ability:      s.ability,
-        teraType:     s.teraType,
-        level:        s.level,
-        evs:          s.evs,
-        ivs:          s.ivs,
-        moves:        s.moves,
-        nickname:     s.nickname,
-      } : null
+    yourTeam = saved.yourTeam.map((s) =>
+      s && byId.has(s.id)
+        ? {
+            entry: byId.get(s.id)!,
+            scarf: s.scarf,
+            nature: s.nature ?? "=",
+            natureLocked: s.natureLocked ?? false,
+            item: s.item,
+            ability: s.ability,
+            teraType: s.teraType,
+            level: s.level,
+            evs: s.evs,
+            ivs: s.ivs,
+            moves: s.moves,
+            nickname: s.nickname,
+          }
+        : null,
     );
     oppTeam = Array(6).fill(null);
   }
@@ -146,31 +185,38 @@
     expandedHistory = new Set(expandedHistory);
   }
   function fmtDate(ts: number) {
-    return new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    return new Date(ts).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    });
   }
-  let renameValue = '';
+  let renameValue = "";
 
   // ── Paste import ──────────────────────────────────────────────────────────
   let showImport = false;
-  let importSide: 'you' | 'opp' = 'you';
-  let importText = '';
-  let importError = '';
+  let importSide: "you" | "opp" = "you";
+  let importText = "";
+  let importError = "";
   let importLoading = false;
 
   async function doImport() {
-    importError = '';
+    importError = "";
     importLoading = true;
     try {
       const text = await resolvePaste(importText);
       const slots = parsePaste(text, allEntries);
       const filled = slots.filter(Boolean);
-      if (!filled.length) { importError = 'No matching Pokémon found — check the paste or selected gen.'; return; }
-      if (importSide === 'you') yourTeam = slots;
+      if (!filled.length) {
+        importError =
+          "No matching Pokémon found — check the paste or selected gen.";
+        return;
+      }
+      if (importSide === "you") yourTeam = slots;
       else oppTeam = slots;
       showImport = false;
-      importText = '';
+      importText = "";
     } catch (e: any) {
-      importError = e?.message ?? 'Failed to fetch paste.';
+      importError = e?.message ?? "Failed to fetch paste.";
     } finally {
       importLoading = false;
     }
@@ -184,23 +230,43 @@
     entries={allEntries}
     featured={featuredEntries}
     exclude={pickerExclude}
-    on:pick={e => onPick(e.detail)}
-    on:close={() => pickerTarget = null}
+    on:pick={(e) => onPick(e.detail)}
+    on:close={() => (pickerTarget = null)}
   />
 {/if}
 
 {#if showImport}
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="modal-backdrop" on:click|self={() => { showImport = false; importError = ''; }}>
+  <div
+    class="modal-backdrop"
+    on:click|self={() => {
+      showImport = false;
+      importError = "";
+    }}
+  >
     <div class="modal">
       <div class="modal-header">
         <span class="modal-title">Import Poképaste</span>
-        <button class="modal-close" on:click={() => { showImport = false; importError = ''; }}>✕</button>
+        <button
+          class="modal-close"
+          on:click={() => {
+            showImport = false;
+            importError = "";
+          }}>✕</button
+        >
       </div>
 
       <div class="import-side-tabs">
-        <button class="side-tab" class:active={importSide === 'you'} on:click={() => importSide = 'you'}>Your Team</button>
-        <button class="side-tab" class:active={importSide === 'opp'} on:click={() => importSide = 'opp'}>Opponent</button>
+        <button
+          class="side-tab"
+          class:active={importSide === "you"}
+          on:click={() => (importSide = "you")}>Your Team</button
+        >
+        <button
+          class="side-tab"
+          class:active={importSide === "opp"}
+          on:click={() => (importSide = "opp")}>Opponent</button
+        >
       </div>
 
       <textarea
@@ -217,10 +283,21 @@
       {/if}
 
       <div class="modal-actions">
-        <button class="save-confirm" on:click={doImport} disabled={importLoading || !importText.trim()}>
-          {importLoading ? 'Loading…' : 'Import'}
+        <button
+          class="save-confirm"
+          on:click={doImport}
+          disabled={importLoading || !importText.trim()}
+        >
+          {importLoading ? "Loading…" : "Import"}
         </button>
-        <button class="save-cancel" on:click={() => { showImport = false; importError = ''; importText = ''; }}>Cancel</button>
+        <button
+          class="save-cancel"
+          on:click={() => {
+            showImport = false;
+            importError = "";
+            importText = "";
+          }}>Cancel</button
+        >
       </div>
     </div>
   </div>
@@ -229,10 +306,14 @@
 <div class="page">
   <div class="page-header">
     <span class="page-title">Pokémon Select</span>
-    <select class="gen-select" value={genFilter ?? ''} on:change={e => {
-      const v = e.currentTarget.value;
-      changeGen(v === '' ? null : +v as GenNumber);
-    }}>
+    <select
+      class="gen-select"
+      value={genFilter ?? ""}
+      on:change={(e) => {
+        const v = e.currentTarget.value;
+        changeGen(v === "" ? null : (+v as GenNumber));
+      }}
+    >
       <option value="">All Gens</option>
       {#each GEN_NUMBERS as g}
         <option value={g}>Gen {g}</option>
@@ -243,26 +324,43 @@
   <div class="layout">
     <!-- Teams -->
     <div class="teams-col">
-      {#each [{ side: 'you' as const, team: yourTeam, label: 'Your Team' }, { side: 'opp' as const, team: oppTeam, label: 'Opponent' }] as { side, team, label }}
+      {#each [{ side: "you" as const, team: yourTeam, label: "Your Team" }, { side: "opp" as const, team: oppTeam, label: "Opponent" }] as { side, team, label }}
         <div class="team-block">
-          <span class="team-label" class:you={side === 'you'} class:opp={side === 'opp'}>{label}</span>
+          <span
+            class="team-label"
+            class:you={side === "you"}
+            class:opp={side === "opp"}>{label}</span
+          >
           <div class="slots">
             {#each team as slot, i}
               <div class="slot">
                 {#if slot}
-                  <button class="slot-clear" on:click={() => clearSlot(side, i)}>×</button>
+                  <button class="slot-clear" on:click={() => clearSlot(side, i)}
+                    >×</button
+                  >
                   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
                   <div class="slot-filled" on:click={() => openPicker(side, i)}>
-                    <img src={spriteUrl(slot.entry.name)} alt={slot.entry.name} class="slot-sprite" />
+                    <img
+                      src={spriteUrl(slot.entry.name)}
+                      alt={slot.entry.name}
+                      class="slot-sprite"
+                    />
                     <span class="slot-name">{slot.entry.name}</span>
                     <span class="slot-spe">{slot.entry.baseSpe}</span>
                   </div>
                   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                  <div class="scarf-pill" class:active={slot.scarf} on:click|stopPropagation={() => toggleScarf(side, i)}>
+                  <div
+                    class="scarf-pill"
+                    class:active={slot.scarf}
+                    on:click|stopPropagation={() => toggleScarf(side, i)}
+                  >
                     Scarf
                   </div>
                 {:else}
-                  <button class="slot-empty" on:click={() => openPicker(side, i)}>
+                  <button
+                    class="slot-empty"
+                    on:click={() => openPicker(side, i)}
+                  >
                     <span class="plus">+</span>
                   </button>
                 {/if}
@@ -276,7 +374,9 @@
         <button class="start-btn" disabled={!canStart} on:click={startGame}>
           Start Game →
         </button>
-        <button class="import-btn" on:click={() => showImport = true}>Import Paste</button>
+        <button class="import-btn" on:click={() => (showImport = true)}
+          >Import Paste</button
+        >
         {#if canSave}
           {#if showSaveInput}
             <div class="save-row">
@@ -284,14 +384,24 @@
                 class="save-input"
                 placeholder="Team name…"
                 bind:value={saveLabel}
-                on:keydown={e => e.key === 'Enter' && saveCurrentTeam()}
+                on:keydown={(e) => e.key === "Enter" && saveCurrentTeam()}
                 autocomplete="off"
               />
-              <button class="save-confirm" on:click={saveCurrentTeam}>Save</button>
-              <button class="save-cancel" on:click={() => { showSaveInput = false; saveLabel = ''; }}>✕</button>
+              <button class="save-confirm" on:click={saveCurrentTeam}
+                >Save</button
+              >
+              <button
+                class="save-cancel"
+                on:click={() => {
+                  showSaveInput = false;
+                  saveLabel = "";
+                }}>✕</button
+              >
             </div>
           {:else}
-            <button class="save-btn" on:click={() => showSaveInput = true}>Save Team</button>
+            <button class="save-btn" on:click={() => (showSaveInput = true)}
+              >Save Team</button
+            >
           {/if}
         {/if}
       </div>
@@ -303,9 +413,17 @@
         <span class="preview-title">Speed Order</span>
         <div class="preview-list">
           {#each speedPreview as row, i}
-            <div class="preview-row" class:side-you={row.side === 'you'} class:side-opp={row.side === 'opp'}>
+            <div
+              class="preview-row"
+              class:side-you={row.side === "you"}
+              class:side-opp={row.side === "opp"}
+            >
               <span class="preview-rank">{i + 1}</span>
-              <img src={spriteUrl(row.entry.name)} alt={row.entry.name} class="preview-sprite" />
+              <img
+                src={spriteUrl(row.entry.name)}
+                alt={row.entry.name}
+                class="preview-sprite"
+              />
               <span class="preview-name">{row.entry.name}</span>
               <span class="preview-speed">{row.speed}</span>
             </div>
@@ -323,80 +441,182 @@
       <div class="saved-list">
         {#each $savedTeams as team (team.id)}
           <div class="saved-row">
-            {#if renamingId === team.id}
-              <input
-                class="rename-input"
-                bind:value={renameValue}
-                on:keydown={e => {
-                  if (e.key === 'Enter') { savedTeams.rename(team.id, renameValue); renamingId = null; }
-                  if (e.key === 'Escape') renamingId = null;
-                }}
-                on:blur={() => { savedTeams.rename(team.id, renameValue); renamingId = null; }}
-              />
-            {:else}
-              <!-- svelte-ignore a11y-no-static-element-interactions -->
-              <span class="saved-label" on:dblclick={() => { renamingId = team.id; renameValue = team.label; }}>
-                {team.label}
-              </span>
-            {/if}
-            <span class="saved-gen">Gen {team.genNum}</span>
-            <div class="saved-slots">
-              {#each team.yourTeam.filter(Boolean) as slot}
-                <img src={spriteUrl(slot!.name)} alt={slot!.name} class="saved-sprite" title={slot!.name} />
-              {/each}
-            </div>
-            <div class="saved-record">
-              <button class="record-btn win-btn" on:click={() => savedTeams.recordResult(team.id, 'win')}>W</button>
-              <button class="record-btn loss-btn" on:click={() => savedTeams.recordResult(team.id, 'loss')}>L</button>
-              <span class="record-stat">
-                {team.wins}W {team.losses}L
-                {#if team.wins + team.losses > 0}
-                  <span class="record-pct">{Math.round(team.wins / (team.wins + team.losses) * 100)}%</span>
+            <!-- Top: label + gen + sprites -->
+            <div class="saved-top">
+              <div class="saved-top-meta">
+                {#if renamingId === team.id}
+                  <input
+                    class="rename-input"
+                    bind:value={renameValue}
+                    on:keydown={(e) => {
+                      if (e.key === "Enter") {
+                        savedTeams.rename(team.id, renameValue);
+                        renamingId = null;
+                      }
+                      if (e.key === "Escape") renamingId = null;
+                    }}
+                    on:blur={() => {
+                      savedTeams.rename(team.id, renameValue);
+                      renamingId = null;
+                    }}
+                  />
+                {:else}
+                  <!-- svelte-ignore a11y-no-static-element-interactions -->
+                  <span
+                    class="saved-label"
+                    on:dblclick={() => {
+                      renamingId = team.id;
+                      renameValue = team.label;
+                    }}
+                  >
+                    {team.label}
+                  </span>
                 {/if}
-              </span>
-              {#if team.wins + team.losses > 0}
-                <button class="record-reset" aria-label="Reset record" title="Reset win/loss record" on:click={() => savedTeams.resetRecord(team.id)}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                <span class="saved-gen">Gen {team.genNum}</span>
+              </div>
+              <div class="saved-slots">
+                {#each team.yourTeam.filter(Boolean) as slot}
+                  <img
+                    src={spriteUrl(slot!.name)}
+                    alt={slot!.name}
+                    class="saved-sprite"
+                    title={slot!.name}
+                  />
+                {/each}
+              </div>
+            </div>
+
+            <!-- Bottom: record + actions on same row -->
+            <div class="saved-bottom">
+              <div class="saved-record">
+                <button
+                  class="record-btn win-btn"
+                  on:click={() => savedTeams.recordResult(team.id, "win")}
+                  >W</button
+                >
+                <button
+                  class="record-btn loss-btn"
+                  on:click={() => savedTeams.recordResult(team.id, "loss")}
+                  >L</button
+                >
+                <span class="record-stat">
+                  {team.wins}W {team.losses}L
+                  {#if team.wins + team.losses > 0}
+                    <span class="record-pct"
+                      >{Math.round(
+                        (team.wins / (team.wins + team.losses)) * 100,
+                      )}%</span
+                    >
+                  {/if}
+                </span>
+                {#if team.wins + team.losses > 0}
+                  <button
+                    class="record-reset"
+                    aria-label="Reset record"
+                    title="Reset win/loss record"
+                    on:click={() => savedTeams.resetRecord(team.id)}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+                      /><path d="M3 3v5h5" />
+                    </svg>
+                  </button>
+                {/if}
+                {#if (team.recordHistory ?? []).length > 0}
+                  <button
+                    class="record-history-btn"
+                    on:click={() => toggleHistory(team.id)}
+                    title="View previous version records"
+                  >
+                    hist {expandedHistory.has(team.id) ? "▲" : "▼"}
+                  </button>
+                {/if}
+              </div>
+              <div class="saved-actions">
+                <button class="saved-load" on:click={() => loadTeam(team)}
+                  >Load</button
+                >
+                <a
+                  class="saved-edit"
+                  href="/teams/{team.id}/edit"
+                  aria-label="Edit team"
+                  title="Edit team"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                    /><path
+                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                    />
+                  </svg>
+                </a>
+                <button
+                  class="saved-delete"
+                  aria-label="Delete team"
+                  title="Delete team"
+                  on:click={() => savedTeams.remove(team.id)}
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="3 6 5 6 21 6" /><path
+                      d="M19 6l-1 14H6L5 6"
+                    /><path d="M10 11v6" /><path d="M14 11v6" /><path
+                      d="M9 6V4h6v2"
+                    />
                   </svg>
                 </button>
-              {/if}
-              {#if (team.recordHistory ?? []).length > 0}
-                <button class="record-history-btn" on:click={() => toggleHistory(team.id)}
-                  title="View previous version records">
-                  hist {expandedHistory.has(team.id) ? '▲' : '▼'}
-                </button>
-              {/if}
+              </div>
             </div>
+
             {#if expandedHistory.has(team.id) && (team.recordHistory ?? []).length > 0}
               <div class="record-history">
                 {#each [...(team.recordHistory ?? [])].reverse() as period, pi}
                   {@const total = period.wins + period.losses}
                   <div class="history-row">
-                    <span class="history-dates">v{(team.recordHistory ?? []).length - pi} · {fmtDate(period.from)}–{fmtDate(period.to)}</span>
+                    <span class="history-dates"
+                      >v{(team.recordHistory ?? []).length - pi} · {fmtDate(
+                        period.from,
+                      )}–{fmtDate(period.to)}</span
+                    >
                     <span class="history-stat">
                       {period.wins}W {period.losses}L
                       {#if total > 0}
-                        <span class="history-pct">{Math.round(period.wins / total * 100)}%</span>
+                        <span class="history-pct"
+                          >{Math.round((period.wins / total) * 100)}%</span
+                        >
                       {/if}
                     </span>
                   </div>
                 {/each}
               </div>
             {/if}
-            <div class="saved-actions">
-              <button class="saved-load" on:click={() => loadTeam(team)}>Load</button>
-              <a class="saved-edit" href="/teams/{team.id}/edit" aria-label="Edit team" title="Edit team">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-              </a>
-              <button class="saved-delete" aria-label="Delete team" title="Delete team" on:click={() => savedTeams.remove(team.id)}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-                </svg>
-              </button>
-            </div>
           </div>
         {/each}
       </div>
@@ -431,7 +651,9 @@
     min-height: 36px;
     transition: border-color 0.15s;
   }
-  .gen-select:focus { border-color: var(--accent); }
+  .gen-select:focus {
+    border-color: var(--accent);
+  }
 
   .layout {
     display: grid;
@@ -441,7 +663,9 @@
   }
 
   @media (max-width: 700px) {
-    .layout { grid-template-columns: 1fr; }
+    .layout {
+      grid-template-columns: 1fr;
+    }
   }
 
   .teams-col {
@@ -461,8 +685,12 @@
     font-size: 0.9rem;
   }
 
-  .team-label.you { color: #6c8ef5; }
-  .team-label.opp { color: #f56c6c; }
+  .team-label.you {
+    color: #6c8ef5;
+  }
+  .team-label.opp {
+    color: #f56c6c;
+  }
 
   .slots {
     display: grid;
@@ -471,7 +699,9 @@
   }
 
   @media (max-width: 600px) {
-    .slots { grid-template-columns: repeat(3, 1fr); }
+    .slots {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .slot {
@@ -498,12 +728,19 @@
     cursor: pointer;
     border-radius: var(--radius);
     font-size: 1.5rem;
-    transition: background 0.1s, color 0.1s;
+    transition:
+      background 0.1s,
+      color 0.1s;
   }
 
-  .slot-empty:active { background: var(--surface-2); }
+  .slot-empty:active {
+    background: var(--surface-2);
+  }
   @media (hover: hover) {
-    .slot-empty:hover { background: var(--surface-2); color: var(--text); }
+    .slot-empty:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
   }
 
   .slot-filled {
@@ -554,9 +791,13 @@
     min-height: unset;
   }
 
-  .slot-clear:active { color: var(--danger); }
+  .slot-clear:active {
+    color: var(--danger);
+  }
   @media (hover: hover) {
-    .slot-clear:hover { color: var(--danger); }
+    .slot-clear:hover {
+      color: var(--danger);
+    }
   }
 
   .scarf-pill {
@@ -570,7 +811,10 @@
     cursor: pointer;
     user-select: none;
     margin-bottom: 0.25rem;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
   }
 
   .scarf-pill.active {
@@ -590,18 +834,30 @@
     font-weight: 600;
     cursor: pointer;
     min-height: 52px;
-    transition: background 0.15s, opacity 0.15s;
+    transition:
+      background 0.15s,
+      opacity 0.15s;
   }
 
   @media (min-width: 600px) {
-    .start-btn { width: auto; align-self: flex-start; }
+    .start-btn {
+      width: auto;
+      align-self: flex-start;
+    }
   }
 
-  .start-btn:active:not(:disabled) { background: var(--accent-hover); }
-  @media (hover: hover) {
-    .start-btn:hover:not(:disabled) { background: var(--accent-hover); }
+  .start-btn:active:not(:disabled) {
+    background: var(--accent-hover);
   }
-  .start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  @media (hover: hover) {
+    .start-btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+  }
+  .start-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
 
   /* Action row: Start + Save */
   .action-row {
@@ -611,7 +867,11 @@
   }
 
   @media (min-width: 600px) {
-    .action-row { flex-direction: row; align-items: center; flex-wrap: wrap; }
+    .action-row {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   }
 
   .save-btn {
@@ -623,11 +883,18 @@
     font-size: 0.95rem;
     cursor: pointer;
     min-height: 52px;
-    transition: border-color 0.15s, color 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
     white-space: nowrap;
   }
 
-  @media (hover: hover) { .save-btn:hover { color: var(--text); border-color: var(--text-muted); } }
+  @media (hover: hover) {
+    .save-btn:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+  }
 
   .save-row {
     display: flex;
@@ -647,7 +914,9 @@
     outline: none;
     min-height: 44px;
   }
-  .save-input:focus { border-color: var(--accent); }
+  .save-input:focus {
+    border-color: var(--accent);
+  }
 
   .save-confirm {
     padding: 0.65rem 1rem;
@@ -696,21 +965,33 @@
     gap: 0.5rem;
   }
 
+  /* Mobile: stacked layout */
   .saved-row {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem 0.85rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 0.85rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    flex-wrap: wrap;
+  }
+
+  .saved-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .saved-top-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
   }
 
   .saved-label {
     font-weight: 600;
     font-size: 0.95rem;
-    min-width: 6rem;
     cursor: text;
     user-select: none;
   }
@@ -722,24 +1003,74 @@
   }
 
   .saved-slots {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.1rem;
-    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    gap: 0.5rem;
+    flex-shrink: 0;
   }
 
   .saved-sprite {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     image-rendering: pixelated;
+  }
+
+  .saved-bottom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .saved-record {
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    flex-shrink: 0;
+    flex: 1;
+  }
+
+  /* Desktop: restore original single-row layout */
+  @media (min-width: 600px) {
+    .saved-row {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 0.6rem 0.85rem;
+    }
+    .saved-top {
+      display: contents; /* dissolve — children flow into parent row */
+    }
+    .saved-top-meta {
+      flex-direction: row;
+      align-items: center;
+      flex: unset;
+      gap: 0.75rem;
+    }
+    .saved-label {
+      min-width: 6rem;
+    }
+    .saved-slots {
+      display: flex;
+      flex-wrap: wrap;
+      grid-template-columns: unset;
+      flex: 1;
+      gap: 0.1rem;
+    }
+    .saved-sprite {
+      width: 32px;
+      height: 32px;
+    }
+    .saved-bottom {
+      flex: unset;
+      gap: 0;
+    }
+    .saved-record {
+      flex: unset;
+    }
+    .saved-actions {
+      margin-left: 0;
+    }
   }
 
   .record-btn {
@@ -751,13 +1082,26 @@
     font-weight: 700;
     cursor: pointer;
     min-height: unset;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    transition:
+      background 0.1s,
+      color 0.1s,
+      border-color 0.1s;
   }
 
-  .win-btn  { color: #4caf7d; }
-  .loss-btn { color: #f56c6c; }
-  .win-btn:hover  { background: color-mix(in srgb, #4caf7d 15%, var(--surface)); border-color: #4caf7d; }
-  .loss-btn:hover { background: color-mix(in srgb, #f56c6c 15%, var(--surface)); border-color: #f56c6c; }
+  .win-btn {
+    color: #4caf7d;
+  }
+  .loss-btn {
+    color: #f56c6c;
+  }
+  .win-btn:hover {
+    background: color-mix(in srgb, #4caf7d 15%, var(--surface));
+    border-color: #4caf7d;
+  }
+  .loss-btn:hover {
+    background: color-mix(in srgb, #f56c6c 15%, var(--surface));
+    border-color: #f56c6c;
+  }
 
   .record-stat {
     font-size: 0.78rem;
@@ -784,9 +1128,14 @@
     min-height: unset;
     border-radius: var(--radius-sm);
     opacity: 0.5;
-    transition: opacity 0.15s, color 0.15s;
+    transition:
+      opacity 0.15s,
+      color 0.15s;
   }
-  .record-reset:hover { opacity: 1; color: var(--text); }
+  .record-reset:hover {
+    opacity: 1;
+    color: var(--text);
+  }
 
   .record-history-btn {
     font-size: 0.68rem;
@@ -799,7 +1148,9 @@
     opacity: 0.6;
     transition: opacity 0.15s;
   }
-  .record-history-btn:hover { opacity: 1; }
+  .record-history-btn:hover {
+    opacity: 1;
+  }
 
   .record-history {
     padding: 0.4rem 0.85rem 0.6rem;
@@ -836,8 +1187,8 @@
   .saved-actions {
     display: flex;
     gap: 0.4rem;
-    margin-left: auto;
     flex-shrink: 0;
+    margin-left: auto;
   }
 
   .saved-load {
@@ -852,7 +1203,8 @@
     min-height: 36px;
   }
 
-  .saved-edit, .saved-delete {
+  .saved-edit,
+  .saved-delete {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -863,11 +1215,19 @@
     color: var(--text-muted);
     cursor: pointer;
     min-height: 36px;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
   @media (hover: hover) {
-    .saved-edit:hover  { color: var(--text); border-color: var(--text-muted); }
-    .saved-delete:hover { color: var(--danger); border-color: var(--danger); }
+    .saved-edit:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+    .saved-delete:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
   }
 
   /* Import button */
@@ -881,15 +1241,22 @@
     cursor: pointer;
     min-height: 52px;
     white-space: nowrap;
-    transition: border-color 0.15s, color 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
   }
-  @media (hover: hover) { .import-btn:hover { color: var(--text); border-color: var(--text-muted); } }
+  @media (hover: hover) {
+    .import-btn:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+  }
 
   /* Modal */
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -929,7 +1296,9 @@
     min-height: unset;
     padding: 0.25rem 0.5rem;
   }
-  .modal-close:hover { color: var(--text); }
+  .modal-close:hover {
+    color: var(--text);
+  }
 
   .import-side-tabs {
     display: flex;
@@ -945,7 +1314,9 @@
     font-size: 0.9rem;
     cursor: pointer;
     min-height: unset;
-    transition: border-color 0.15s, color 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
   }
   .side-tab.active {
     border-color: var(--accent);
@@ -966,7 +1337,9 @@
     outline: none;
     line-height: 1.5;
   }
-  .import-textarea:focus { border-color: var(--accent); }
+  .import-textarea:focus {
+    border-color: var(--accent);
+  }
 
   .import-error {
     font-size: 0.85rem;
@@ -1025,9 +1398,15 @@
     font-size: 0.82rem;
   }
 
-  .preview-row:last-child { border-bottom: none; }
-  .preview-row.side-you { border-left-color: #6c8ef5; }
-  .preview-row.side-opp { border-left-color: #f56c6c; }
+  .preview-row:last-child {
+    border-bottom: none;
+  }
+  .preview-row.side-you {
+    border-left-color: #6c8ef5;
+  }
+  .preview-row.side-opp {
+    border-left-color: #f56c6c;
+  }
 
   .preview-rank {
     color: var(--text-muted);
