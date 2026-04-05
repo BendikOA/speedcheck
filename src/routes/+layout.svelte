@@ -7,7 +7,6 @@
   injectAnalytics({ mode: dev ? 'development' : 'production' });
 
   let dark = true;
-
   if (browser) {
     const saved = localStorage.getItem('theme');
     dark = saved ? saved === 'dark' : true;
@@ -56,6 +55,22 @@
 </main>
 
 <Tooltip />
+
+<div class="kofi-banner" role="complementary" aria-label="Support the developer">
+  <div class="kofi-inner">
+    <span class="kofi-cup">☕</span>
+    <div class="kofi-text">
+      <strong>Speedcheck is free and built solo.</strong>
+      <span class="kofi-sub">If it's ever saved you a game, a coffee helps keep it going.</span>
+    </div>
+    <a
+      class="kofi-link"
+      href="https://ko-fi.com/T6T21XBBI8"
+      target="_blank"
+      rel="noopener"
+    >Support on Ko-fi</a>
+  </div>
+</div>
 
 <style>
   nav {
@@ -148,5 +163,81 @@
 
   @media (min-width: 600px) {
     main { padding: 2rem 1.5rem; }
+  }
+
+  /* Ko-fi banner */
+  .kofi-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    padding-bottom: max(0.75rem, var(--safe-bottom));
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.25);
+    animation: slide-up 0.3s ease;
+  }
+
+  @keyframes slide-up {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .kofi-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .kofi-cup {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .kofi-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .kofi-text strong {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .kofi-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .kofi-link {
+    flex-shrink: 0;
+    padding: 0.5rem 1.1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--surface);
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    border: none;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .kofi-link:hover { opacity: 0.88; color: var(--surface); }
+
+
+  @media (max-width: 500px) {
+    .kofi-sub { display: none; }
+    .kofi-text strong { font-size: 0.82rem; }
+    .kofi-link { padding: 0.5rem 0.8rem; font-size: 0.82rem; }
   }
 </style>

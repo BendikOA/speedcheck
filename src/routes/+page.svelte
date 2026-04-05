@@ -147,7 +147,7 @@
             nickname: s.nickname,
           }
         : null;
-    savedTeams.save({ label, genNum, yourTeam: yourTeam.map(toSlot), recordHistory: [] });
+    savedTeams.save({ label, genNum, yourTeam: yourTeam.map(toSlot) });
     saveLabel = "";
     showSaveInput = false;
   }
@@ -179,18 +179,6 @@
   }
 
   let renamingId: string | null = null;
-  let expandedHistory = new Set<string>();
-  function toggleHistory(id: string) {
-    if (expandedHistory.has(id)) expandedHistory.delete(id);
-    else expandedHistory.add(id);
-    expandedHistory = new Set(expandedHistory);
-  }
-  function fmtDate(ts: number) {
-    return new Date(ts).toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-    });
-  }
   let renameValue = "";
 
   // ── Paste import ──────────────────────────────────────────────────────────
@@ -493,26 +481,6 @@
             <!-- Bottom: record + actions on same row -->
             <div class="saved-bottom">
               <div class="saved-record">
-                <button
-                  class="record-btn win-btn"
-                  on:click={() => savedTeams.recordResult(team.id, "win")}
-                  >W</button
-                >
-                <button
-                  class="record-btn loss-btn"
-                  on:click={() => savedTeams.recordResult(team.id, "loss")}
-                  >L</button
-                >
-                <span class="record-stat">
-                  {team.wins}W {team.losses}L
-                  {#if team.wins + team.losses > 0}
-                    <span class="record-pct"
-                      >{Math.round(
-                        (team.wins / (team.wins + team.losses)) * 100,
-                      )}%</span
-                    >
-                  {/if}
-                </span>
                 {#if team.wins + team.losses > 0}
                   <button
                     class="record-reset"
@@ -536,16 +504,26 @@
                     </svg>
                   </button>
                 {/if}
+                <span class="record-stat">
+                  {team.wins}W {team.losses}L
+                  {#if team.wins + team.losses > 0}
+                    <span class="record-pct"
+                      >{Math.round(
+                        (team.wins / (team.wins + team.losses)) * 100,
+                      )}%</span
+                    >
+                  {/if}
+                </span>
                 <button
-                  class="record-history-btn"
-                  class:invisible={(team.recordHistory ?? []).length === 0}
-                  on:click={() => toggleHistory(team.id)}
-                  title="View previous version records"
-                  tabindex={(team.recordHistory ?? []).length === 0 ? -1 : 0}
-                  aria-hidden={(team.recordHistory ?? []).length === 0}
+                  class="record-btn win-btn"
+                  on:click={() => savedTeams.recordResult(team.id, "win")}
+                  >W</button
                 >
-                  hist {expandedHistory.has(team.id) ? "▲" : "▼"}
-                </button>
+                <button
+                  class="record-btn loss-btn"
+                  on:click={() => savedTeams.recordResult(team.id, "loss")}
+                  >L</button
+                >
               </div>
               <div class="saved-actions">
                 <button class="saved-load" on:click={() => loadTeam(team)}
@@ -600,28 +578,6 @@
               </div>
             </div>
 
-            {#if expandedHistory.has(team.id) && (team.recordHistory ?? []).length > 0}
-              <div class="record-history">
-                {#each [...(team.recordHistory ?? [])].reverse() as period, pi}
-                  {@const total = period.wins + period.losses}
-                  <div class="history-row">
-                    <span class="history-dates"
-                      >v{(team.recordHistory ?? []).length - pi} · {fmtDate(
-                        period.from,
-                      )}–{fmtDate(period.to)}</span
-                    >
-                    <span class="history-stat">
-                      {period.wins}W {period.losses}L
-                      {#if total > 0}
-                        <span class="history-pct"
-                          >{Math.round((period.wins / total) * 100)}%</span
-                        >
-                      {/if}
-                    </span>
-                  </div>
-                {/each}
-              </div>
-            {/if}
           </div>
         {/each}
       </div>
@@ -1114,6 +1070,7 @@
     font-size: 0.82rem;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
+    margin-right: 0.4rem;
     white-space: nowrap;
   }
 
@@ -1145,54 +1102,6 @@
     color: var(--text);
   }
 
-  .invisible { visibility: hidden; pointer-events: none; }
-
-  .record-history-btn {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    background: none;
-    border: none;
-    cursor: pointer;
-    min-height: 44px;
-    padding: 0 0.5rem;
-    opacity: 0.6;
-    transition: opacity 0.15s;
-  }
-  .record-history-btn:hover {
-    opacity: 1;
-  }
-
-  .record-history {
-    padding: 0.4rem 0.85rem 0.6rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .history-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .history-dates {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .history-stat {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .history-pct {
-    font-weight: 600;
-    color: var(--text);
-    margin-left: 0.2rem;
-  }
 
   .saved-actions {
     display: flex;
