@@ -56,12 +56,39 @@ export const PRIORITY_ABILITIES: Record<string, PriorityAbility> = {
 let _cache: Map<string, string[]> | null = null;
 let _cachePromise: Promise<void> | null = null;
 
+// Cache key includes a version so stale data is evicted if PRIORITY_MOVES changes.
+const LS_KEY     = 'priority_cache_v' + Object.keys(PRIORITY_MOVES).sort().join(',').length;
+const LS_TTL_MS  = 7 * 24 * 60 * 60 * 1000; // 7 days — only changes with dex updates
+
+function lsLoad(): Map<string, string[]> | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts > LS_TTL_MS) { localStorage.removeItem(LS_KEY); return null; }
+    return new Map(Object.entries(data));
+  } catch { return null; }
+}
+
+function lsSave(map: Map<string, string[]>): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    const data = Object.fromEntries(map);
+    localStorage.setItem(LS_KEY, JSON.stringify({ data, ts: Date.now() }));
+  } catch { /* quota exceeded — skip */ }
+}
+
 /**
  * Loads the priority move cache by querying @pkmn/dex learnsets.
- * Call once on mount; subsequent calls are instant (data is in-memory after first load).
+ * Result is persisted to localStorage (7-day TTL) so subsequent page loads are instant.
  */
 export async function loadPriorityCache(): Promise<void> {
   if (_cache) return;
+
+  const stored = lsLoad();
+  if (stored) { _cache = stored; return; }
+
   if (_cachePromise) return _cachePromise;
 
   _cachePromise = (async () => {
@@ -88,6 +115,7 @@ export async function loadPriorityCache(): Promise<void> {
     }
 
     _cache = map;
+    lsSave(_cache);
   })();
 
   return _cachePromise;

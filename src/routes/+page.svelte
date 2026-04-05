@@ -10,6 +10,7 @@
   import { savedTeams } from '$lib/stores/savedTeams';
   import type { SavedTeam } from '$lib/stores/savedTeams';
   import PokemonPicker from '$lib/components/PokemonPicker.svelte';
+  import { loadSmogonOrder } from '$lib/smogonUsage';
 
   let genNum: GenNumber = 9;
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -83,10 +84,7 @@
   // ── Saved teams ───────────────────────────────────────────────────────────
   onMount(async () => {
     savedTeams.init();
-    try {
-      const res = await fetch('/api/smogon-usage');
-      if (res.ok) usageOrder = await res.json();
-    } catch { /* leave empty — picker falls back to speed-sorted */ }
+    try { usageOrder = await loadSmogonOrder(); } catch { /* fallback to speed-sorted */ }
   });
 
   let saveLabel = '';

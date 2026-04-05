@@ -10,7 +10,7 @@ const VGC_FORMATS = [
 
 let cached: any = null;
 let fetchedAt = 0;
-const TTL_MS = 6 * 60 * 60 * 1000; // re-fetch after 6 hours
+const TTL_MS = 24 * 60 * 60 * 1000; // re-fetch after 24 hours (data updates monthly)
 
 async function tryFetch(format: string): Promise<any | null> {
   const now = new Date();
