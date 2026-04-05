@@ -127,7 +127,7 @@
         <span class="stat"><span class="stat-val">{winPct}%</span></span>
       {/if}
       {#if streak >= 3}
-        <span class="streak">🔥 {streak}</span>
+        <span class="streak"><span aria-hidden="true">🔥</span> {streak} streak</span>
       {/if}
     </div>
   </div>

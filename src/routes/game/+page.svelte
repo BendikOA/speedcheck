@@ -20,6 +20,7 @@
   ];
 
   let priorityReady = false;
+  let smogonReady   = false;
   let selectedReg           = GEN9_REGS[0].format;
   let smogonNatures:         UsageNatures       = {};
   let smogonPriorityMoves:   UsagePriorityMoves = {};
@@ -43,9 +44,11 @@
       loadSmogonAbilities(9, selectedReg),
       loadSmogonMoves(9, selectedReg),
     ]);
+    smogonReady = true;
   });
 
   async function changeReg(format: string) {
+    smogonReady = false;
     selectedReg = format;
     [smogonNatures, smogonPriorityMoves, smogonAbilities, smogonMoves] = await Promise.all([
       loadSmogonNatures(9, format),
@@ -53,6 +56,7 @@
       loadSmogonAbilities(9, format),
       loadSmogonMoves(9, format),
     ]);
+    smogonReady = true;
     // Re-apply smart natures if active
     if (smartNaturesActive) {
       const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
@@ -362,7 +366,7 @@
       >Smart Natures</button>
     {/if}
     <div class="top-bar-right">
-      <div class="reg-tabs" use:tooltip={"Switch Smogon usage data source (affects Smart Natures, Likely Moves, Likely Abilities, and Move Reveal)"}>
+      <div class="reg-tabs" class:loading={!smogonReady} use:tooltip={"Switch Smogon usage data source (affects Smart Natures, Likely Moves, Likely Abilities, and Move Reveal)"}>
         {#each GEN9_REGS as reg}
           <button
             class="reg-tab"
@@ -1199,6 +1203,7 @@
     background: color-mix(in srgb, var(--accent) 15%, var(--surface));
     color: var(--accent);
   }
+  .reg-tabs.loading { opacity: 0.5; pointer-events: none; }
 
   /* Moves toggle pill */
   .toggle-pill.moves-pill { color: var(--text-muted); }

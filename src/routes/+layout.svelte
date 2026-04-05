@@ -1,6 +1,7 @@
 <script lang="ts">
   import '../app.css';
   import { browser, dev } from '$app/environment';
+  import { page } from '$app/stores';
   import Tooltip from '$lib/components/Tooltip.svelte';
   import { injectAnalytics } from '@vercel/analytics/sveltekit';
 
@@ -9,7 +10,8 @@
   let dark = true;
   if (browser) {
     const saved = localStorage.getItem('theme');
-    dark = saved ? saved === 'dark' : true;
+    // Respect system preference on first visit; default to dark if system prefers dark
+    dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   }
 
@@ -19,6 +21,7 @@
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem('theme', t);
   }
+
 </script>
 
 <nav>
@@ -27,11 +30,11 @@
     Speedcheck
   </a>
   <div class="nav-links">
-    <a href="/">Teams</a>
-    <a href="/game">Game</a>
-    <a href="/tiers">All Tiers</a>
-    <a href="/boost-tiers">Boost Tiers</a>
-    <a href="/quiz">Quiz</a>
+    <a href="/"            class:active={$page.url.pathname === '/'}>Teams</a>
+    <a href="/game"        class:active={$page.url.pathname === '/game'}>Game</a>
+    <a href="/tiers"       class:active={$page.url.pathname === '/tiers'}>All Tiers</a>
+    <a href="/boost-tiers" class:active={$page.url.pathname === '/boost-tiers'}>Boost Tiers</a>
+    <a href="/quiz"        class:active={$page.url.pathname === '/quiz'}>Quiz</a>
   </div>
   <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme" title={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
     {#if dark}
@@ -124,6 +127,7 @@
   }
 
   nav a:hover { color: var(--text); }
+  nav a.active { color: var(--text); font-weight: 600; }
 
   .theme-toggle {
     margin-left: auto;
@@ -185,6 +189,7 @@
     font-size: 1rem;
     text-decoration: underline;
     text-underline-offset: 3px;
+    min-height: unset;
   }
   .kofi-link:hover { color: var(--accent-hover); }
 </style>
