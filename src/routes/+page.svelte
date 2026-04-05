@@ -153,9 +153,10 @@
   }
 
   function loadTeam(saved: SavedTeam) {
-    const tiers = buildSpeedTiers(saved.genNum);
+    // Use full national dex so legality filtering can't drop saved Pokémon
+    const tiers = buildAllTiers(9);
     const byId = new Map(tiers.map((e) => [e.id, e]));
-    genFilter = saved.genNum;
+    // Do not change genFilter — keep the pre-game page's current gen selection
     yourTeam = saved.yourTeam.map((s) =>
       s && byId.has(s.id)
         ? {

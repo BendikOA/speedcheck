@@ -9,7 +9,7 @@
   import { GEN_NUMBERS } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
   import PokemonPicker from '$lib/components/PokemonPicker.svelte';
-  import { buildSpeedTiers } from '$lib/speedtiers';
+  import { buildAllTiers } from '$lib/speedtiers';
   import type { SpeedEntry } from '$lib/speedtiers';
 
   // ── Load team ────────────────────────────────────────────────────────────
@@ -34,10 +34,9 @@
   $: hasAbility   = genNum >= 3;
   $: hasItems     = genNum >= 2;
   $: hasNatures   = genNum >= 3;
-  $: hasIVs       = genNum >= 3;  // Gen 1-2 use DVs (0-15)
   $: dvMode       = genNum <= 2;
   $: ivMax        = dvMode ? 15 : 31;
-  $: allEntries   = buildSpeedTiers(genNum);
+  $: allEntries   = buildAllTiers(9);
 
   // ── Editing state ─────────────────────────────────────────────────────────
   let activeSlot: number | null = null;
@@ -147,7 +146,7 @@
         const move = Dex.moves.get(m);
         if (move?.exists) allMoves.add(move.name);
       }
-      cur = cur.prevo ? Dex.species.get(cur.prevo) : null;
+      cur = cur.prevo ? Dex.species.get(cur.prevo) : (null as any);
     }
     const sorted = [...allMoves].sort();
     learnsetCache.set(speciesId, sorted);
@@ -178,18 +177,15 @@
     return allItems.filter(i => i.toLowerCase().includes(query.toLowerCase())).slice(0, 8);
   }
 
-  let itemSearch = '';
   let itemSuggestions: string[] = [];
 
   function onItemInput(i: number, value: string) {
-    itemSearch = value;
     setField(i, 'item', value || undefined);
     itemSuggestions = searchItems(value);
     slots = [...slots];
   }
 
   function pickItem(i: number, name: string) {
-    itemSearch = name;
     itemSuggestions = [];
     setField(i, 'item', name);
     setField(i, 'scarf', toId(name) === 'choicescarf');
