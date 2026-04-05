@@ -54,8 +54,10 @@ html {
 
 body {
   min-height: 100vh;
-  min-height: 100dvh; /* dynamic viewport height — avoids mobile browser bar issues */
+  min-height: 100dvh;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
