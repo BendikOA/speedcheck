@@ -1,13 +1,24 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import type { GenNumber } from '$lib/speedtiers';
+import type { GenNumber, NatureTier } from '$lib/speedtiers';
+import type { StatSpread } from '$lib/stores/teams';
 
 const STORAGE_KEY = 'vgc-saved-teams';
 
 export interface SavedTeamSlot {
-  id: string;
-  name: string;
-  scarf: boolean;
+  id:            string;
+  name:          string;
+  scarf:         boolean;
+  nature:        NatureTier;
+  natureLocked?: boolean;
+  item?:         string;
+  ability?:      string;
+  teraType?:     string;
+  level?:        number;
+  evs?:          StatSpread;
+  ivs?:          StatSpread;
+  moves?:        string[];
+  nickname?:     string;
 }
 
 export interface SavedTeam {
@@ -16,6 +27,8 @@ export interface SavedTeam {
   genNum: GenNumber;
   yourTeam: (SavedTeamSlot | null)[];
   savedAt: number;
+  wins:   number;
+  losses: number;
 }
 
 function load(): SavedTeam[] {
@@ -39,11 +52,13 @@ function createStore() {
     init() {
       set(load());
     },
-    save(team: Omit<SavedTeam, 'id' | 'savedAt'>) {
+    save(team: Omit<SavedTeam, 'id' | 'savedAt' | 'wins' | 'losses'>) {
       const entry: SavedTeam = {
         ...team,
         id: crypto.randomUUID(),
         savedAt: Date.now(),
+        wins: 0,
+        losses: 0,
       };
       update(teams => {
         const next = [entry, ...teams];
@@ -55,6 +70,22 @@ function createStore() {
     rename(id: string, label: string) {
       update(teams => {
         const next = teams.map(t => t.id === id ? { ...t, label } : t);
+        persist(next);
+        return next;
+      });
+    },
+    resetRecord(id: string) {
+      update(teams => {
+        const next = teams.map(t => t.id === id ? { ...t, wins: 0, losses: 0 } : t);
+        persist(next);
+        return next;
+      });
+    },
+    recordResult(id: string, result: 'win' | 'loss') {
+      update(teams => {
+        const next = teams.map(t => t.id === id
+          ? { ...t, wins: t.wins + (result === 'win' ? 1 : 0), losses: t.losses + (result === 'loss' ? 1 : 0) }
+          : t);
         persist(next);
         return next;
       });

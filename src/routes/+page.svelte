@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { buildSpeedTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
+  import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
   import type { SpeedEntry, GenNumber } from '$lib/speedtiers';
   import { parsePaste, resolvePaste } from '$lib/parsePaste';
   import { spriteUrl } from '$lib/sprites';
@@ -12,15 +12,17 @@
   import PokemonPicker from '$lib/components/PokemonPicker.svelte';
   import { loadSmogonOrder } from '$lib/smogonUsage';
 
-  let genNum: GenNumber = 9;
+  let genFilter: GenNumber | null = null; // null = all gens
+  $: genNum = genFilter ?? 9 as GenNumber; // concrete gen for team state / saving
   let yourTeam: TeamSlot[] = Array(6).fill(null);
   let oppTeam:  TeamSlot[] = Array(6).fill(null);
   let pickerTarget: { side: 'you' | 'opp'; index: number } | null = null;
-  let usageOrder: string[] = []; // top-100 Pokémon IDs by Smogon usage, in order
+  let usageOrder: string[] = [];
 
-  $: allEntries = buildSpeedTiers(genNum);
+  // When no gen filter, show all national dex Pokémon (gen 9 as widest set); otherwise gen-filtered
+  $: allEntries = genFilter ? buildSpeedTiers(genFilter) : buildAllTiers(9);
 
-  // Build featured list: usage-ordered top 100 mapped to SpeedEntry (filtered to current gen)
+  // Featured: usage-ordered top 100 for the selected gen (or gen 9 for "all")
   $: {
     const byId = new Map(allEntries.map(e => [e.id, e]));
     featuredEntries = usageOrder.map(id => byId.get(id)).filter(Boolean) as SpeedEntry[];
@@ -70,10 +72,11 @@
     else oppTeam = [...oppTeam];
   }
 
-  function changeGen(g: GenNumber) {
-    genNum = g;
+  async function changeGen(g: GenNumber | null) {
+    genFilter = g;
     yourTeam = Array(6).fill(null);
     oppTeam  = Array(6).fill(null);
+    try { usageOrder = await loadSmogonOrder(g ?? 9); } catch { usageOrder = []; }
   }
 
   function startGame() {
@@ -84,7 +87,7 @@
   // ── Saved teams ───────────────────────────────────────────────────────────
   onMount(async () => {
     savedTeams.init();
-    try { usageOrder = await loadSmogonOrder(); } catch { /* fallback to speed-sorted */ }
+    try { usageOrder = await loadSmogonOrder(9); } catch { /* fallback to speed-sorted */ }
   });
 
   let saveLabel = '';
@@ -92,12 +95,22 @@
 
   function saveCurrentTeam() {
     const label = saveLabel.trim() || `Team ${new Date().toLocaleDateString()}`;
-    const toSlot = (s: TeamSlot) => s ? { id: s.entry.id, name: s.entry.name, scarf: s.scarf } : null;
-    savedTeams.save({
-      label,
-      genNum,
-      yourTeam: yourTeam.map(toSlot),
-    });
+    const toSlot = (s: TeamSlot) => s ? {
+      id:           s.entry.id,
+      name:         s.entry.name,
+      scarf:        s.scarf,
+      nature:       s.nature,
+      natureLocked: s.natureLocked ?? false,
+      item:         s.item,
+      ability:      s.ability,
+      teraType:     s.teraType,
+      level:        s.level,
+      evs:          s.evs,
+      ivs:          s.ivs,
+      moves:        s.moves,
+      nickname:     s.nickname,
+    } : null;
+    savedTeams.save({ label, genNum, yourTeam: yourTeam.map(toSlot) });
     saveLabel = '';
     showSaveInput = false;
   }
@@ -105,9 +118,24 @@
   function loadTeam(saved: SavedTeam) {
     const tiers = buildSpeedTiers(saved.genNum);
     const byId = new Map(tiers.map(e => [e.id, e]));
-    genNum   = saved.genNum;
-    yourTeam = saved.yourTeam.map(s => s && byId.has(s.id) ? { entry: byId.get(s.id)!, scarf: s.scarf, nature: '=' as const } : null);
-    oppTeam  = Array(6).fill(null);
+    genFilter = saved.genNum;
+    yourTeam = saved.yourTeam.map(s =>
+      s && byId.has(s.id) ? {
+        entry:        byId.get(s.id)!,
+        scarf:        s.scarf,
+        nature:       s.nature ?? '=',
+        natureLocked: s.natureLocked ?? false,
+        item:         s.item,
+        ability:      s.ability,
+        teraType:     s.teraType,
+        level:        s.level,
+        evs:          s.evs,
+        ivs:          s.ivs,
+        moves:        s.moves,
+        nickname:     s.nickname,
+      } : null
+    );
+    oppTeam = Array(6).fill(null);
   }
 
   let renamingId: string | null = null;
@@ -192,7 +220,11 @@
 <div class="page">
   <div class="page-header">
     <span class="page-title">Pokémon Select</span>
-    <select class="gen-select" value={genNum} on:change={e => changeGen(+e.currentTarget.value as GenNumber)}>
+    <select class="gen-select" value={genFilter ?? ''} on:change={e => {
+      const v = e.currentTarget.value;
+      changeGen(v === '' ? null : +v as GenNumber);
+    }}>
+      <option value="">All Gens</option>
       {#each GEN_NUMBERS as g}
         <option value={g}>Gen {g}</option>
       {/each}
@@ -304,9 +336,30 @@
                 <img src={spriteUrl(slot!.name)} alt={slot!.name} class="saved-sprite" title={slot!.name} />
               {/each}
             </div>
+            <div class="saved-record">
+              <button class="record-btn win-btn" on:click={() => savedTeams.recordResult(team.id, 'win')}>W</button>
+              <button class="record-btn loss-btn" on:click={() => savedTeams.recordResult(team.id, 'loss')}>L</button>
+              <span class="record-stat">
+                {team.wins}W {team.losses}L
+                {#if team.wins + team.losses > 0}
+                  <span class="record-pct">{Math.round(team.wins / (team.wins + team.losses) * 100)}%</span>
+                {/if}
+              </span>
+              {#if team.wins + team.losses > 0}
+                <button class="record-reset" aria-label="Reset record" title="Reset win/loss record" on:click={() => savedTeams.resetRecord(team.id)}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                  </svg>
+                </button>
+              {/if}
+            </div>
             <div class="saved-actions">
               <button class="saved-load" on:click={() => loadTeam(team)}>Load</button>
-              <button class="saved-delete" on:click={() => savedTeams.remove(team.id)}>✕</button>
+<button class="saved-delete" aria-label="Delete team" title="Delete team" on:click={() => savedTeams.remove(team.id)}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                </svg>
+              </button>
             </div>
           </div>
         {/each}
@@ -646,6 +699,59 @@
     image-rendering: pixelated;
   }
 
+  .saved-record {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+  }
+
+  .record-btn {
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: unset;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+
+  .win-btn  { color: #4caf7d; }
+  .loss-btn { color: #f56c6c; }
+  .win-btn:hover  { background: color-mix(in srgb, #4caf7d 15%, var(--surface)); border-color: #4caf7d; }
+  .loss-btn:hover { background: color-mix(in srgb, #f56c6c 15%, var(--surface)); border-color: #f56c6c; }
+
+  .record-stat {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .record-pct {
+    font-weight: 600;
+    color: var(--text);
+    margin-left: 0.2rem;
+  }
+
+  .record-reset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    min-height: unset;
+    border-radius: var(--radius-sm);
+    opacity: 0.5;
+    transition: opacity 0.15s, color 0.15s;
+  }
+  .record-reset:hover { opacity: 1; color: var(--text); }
+
   .saved-actions {
     display: flex;
     gap: 0.4rem;
@@ -666,16 +772,21 @@
   }
 
   .saved-delete {
-    padding: 0.4rem 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.6rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
-    font-size: 0.85rem;
     cursor: pointer;
     min-height: 36px;
+    transition: color 0.15s, border-color 0.15s;
   }
-  @media (hover: hover) { .saved-delete:hover { color: var(--danger); border-color: var(--danger); } }
+  @media (hover: hover) {
+    .saved-delete:hover { color: var(--danger); border-color: var(--danger); }
+  }
 
   /* Import button */
   .import-btn {

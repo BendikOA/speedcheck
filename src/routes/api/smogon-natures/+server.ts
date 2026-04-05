@@ -21,8 +21,9 @@ function dominantNature(spreads: Record<string, number>): NatureTier {
   return '=';
 }
 
-export const GET: RequestHandler = async () => {
-  const chaos = await getSmogonChaos();
+export const GET: RequestHandler = async ({ url }) => {
+  const gen = parseInt(url.searchParams.get('gen') ?? '9', 10);
+  const chaos = await getSmogonChaos(gen);
   const result: Record<string, NatureTier> = {};
 
   if (chaos?.data) {

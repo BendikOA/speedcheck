@@ -1,9 +1,11 @@
 import type { NatureTier } from './speedtiers';
 
-export type UsageNatures = Record<string, NatureTier>; // pokemonId → dominant speed nature
-export type UsageOrder  = string[];                    // top-100 IDs in usage order
+export type UsageNatures       = Record<string, NatureTier>;
+export type UsageOrder         = string[];
+export type UsagePriorityMoves = Record<string, string[]>;
+export type UsageAbilities     = Record<string, string>;
 
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 // ── localStorage helpers ───────────────────────────────────────────────────
 
@@ -23,44 +25,92 @@ function lsSet(key: string, data: unknown): void {
   try { localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() })); } catch { /* quota */ }
 }
 
-// ── In-memory dedup (one fetch per session even if called concurrently) ────
+// ── Per-gen in-memory caches ───────────────────────────────────────────────
 
-let naturesCache:  UsageNatures | null = null;
-let naturesInflight: Promise<UsageNatures> | null = null;
+const naturesCache   = new Map<number, UsageNatures>();
+const naturesInflight = new Map<number, Promise<UsageNatures>>();
 
-let orderCache:  UsageOrder | null = null;
-let orderInflight: Promise<UsageOrder> | null = null;
+const orderCache    = new Map<number, UsageOrder>();
+const orderInflight  = new Map<number, Promise<UsageOrder>>();
+
+const movesCache    = new Map<number, UsagePriorityMoves>();
+const movesInflight  = new Map<number, Promise<UsagePriorityMoves>>();
+
+const abilitiesCache    = new Map<number, UsageAbilities>();
+const abilitiesInflight  = new Map<number, Promise<UsageAbilities>>();
 
 // ── Public API ─────────────────────────────────────────────────────────────
 
-export async function loadSmogonNatures(): Promise<UsageNatures> {
-  if (naturesCache) return naturesCache;
-  const stored = lsGet<UsageNatures>('smogon_natures');
-  if (stored) { naturesCache = stored; return stored; }
-  if (naturesInflight) return naturesInflight;
+export async function loadSmogonNatures(gen = 9): Promise<UsageNatures> {
+  if (naturesCache.has(gen)) return naturesCache.get(gen)!;
+  const key = `smogon_natures_g${gen}`;
+  const stored = lsGet<UsageNatures>(key);
+  if (stored) { naturesCache.set(gen, stored); return stored; }
+  if (naturesInflight.has(gen)) return naturesInflight.get(gen)!;
 
-  naturesInflight = (async (): Promise<UsageNatures> => {
-    const res = await fetch('/api/smogon-natures');
-    naturesCache = res.ok ? await res.json() : {};
-    lsSet('smogon_natures', naturesCache);
-    return naturesCache!;
+  const p = (async (): Promise<UsageNatures> => {
+    const res = await fetch(`/api/smogon-natures?gen=${gen}`);
+    const data: UsageNatures = res.ok ? await res.json() : {};
+    naturesCache.set(gen, data);
+    lsSet(key, data);
+    return data;
   })();
-  return naturesInflight;
+  naturesInflight.set(gen, p);
+  return p;
 }
 
-export async function loadSmogonOrder(): Promise<UsageOrder> {
-  if (orderCache) return orderCache;
-  const stored = lsGet<UsageOrder>('smogon_order');
-  if (stored) { orderCache = stored; return stored; }
-  if (orderInflight) return orderInflight;
+export async function loadSmogonOrder(gen = 9): Promise<UsageOrder> {
+  if (orderCache.has(gen)) return orderCache.get(gen)!;
+  const key = `smogon_order_g${gen}`;
+  const stored = lsGet<UsageOrder>(key);
+  if (stored) { orderCache.set(gen, stored); return stored; }
+  if (orderInflight.has(gen)) return orderInflight.get(gen)!;
 
-  orderInflight = (async (): Promise<UsageOrder> => {
-    const res = await fetch('/api/smogon-usage');
-    orderCache = res.ok ? await res.json() : [];
-    lsSet('smogon_order', orderCache);
-    return orderCache!;
+  const p = (async (): Promise<UsageOrder> => {
+    const res = await fetch(`/api/smogon-usage?gen=${gen}`);
+    const data: UsageOrder = res.ok ? await res.json() : [];
+    orderCache.set(gen, data);
+    lsSet(key, data);
+    return data;
   })();
-  return orderInflight;
+  orderInflight.set(gen, p);
+  return p;
+}
+
+export async function loadSmogonPriorityMoves(gen = 9): Promise<UsagePriorityMoves> {
+  if (movesCache.has(gen)) return movesCache.get(gen)!;
+  const key = `smogon_priority_moves_g${gen}`;
+  const stored = lsGet<UsagePriorityMoves>(key);
+  if (stored) { movesCache.set(gen, stored); return stored; }
+  if (movesInflight.has(gen)) return movesInflight.get(gen)!;
+
+  const p = (async (): Promise<UsagePriorityMoves> => {
+    const res = await fetch(`/api/smogon-priority-moves?gen=${gen}`);
+    const data: UsagePriorityMoves = res.ok ? await res.json() : {};
+    movesCache.set(gen, data);
+    lsSet(key, data);
+    return data;
+  })();
+  movesInflight.set(gen, p);
+  return p;
+}
+
+export async function loadSmogonAbilities(gen = 9): Promise<UsageAbilities> {
+  if (abilitiesCache.has(gen)) return abilitiesCache.get(gen)!;
+  const key = `smogon_abilities_g${gen}`;
+  const stored = lsGet<UsageAbilities>(key);
+  if (stored) { abilitiesCache.set(gen, stored); return stored; }
+  if (abilitiesInflight.has(gen)) return abilitiesInflight.get(gen)!;
+
+  const p = (async (): Promise<UsageAbilities> => {
+    const res = await fetch(`/api/smogon-abilities?gen=${gen}`);
+    const data: UsageAbilities = res.ok ? await res.json() : {};
+    abilitiesCache.set(gen, data);
+    lsSet(key, data);
+    return data;
+  })();
+  abilitiesInflight.set(gen, p);
+  return p;
 }
 
 /** Returns the dominant speed nature for a Pokémon, or null if not in usage data. */

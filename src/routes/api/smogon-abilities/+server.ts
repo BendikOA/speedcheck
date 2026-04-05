@@ -7,22 +7,17 @@ const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 export const GET: RequestHandler = async ({ url }) => {
   const gen = parseInt(url.searchParams.get('gen') ?? '9', 10);
   const chaos = await getSmogonChaos(gen);
-
-  const ranked: { id: string; count: number }[] = [];
+  // Returns the top ability ID per Pokémon by usage count
+  const result: Record<string, string> = {};
 
   if (chaos?.data) {
     for (const [name, entry] of Object.entries<any>(chaos.data)) {
-      const count = entry['Raw count'] ?? 0;
-      if (count > 0) ranked.push({ id: toId(name), count });
+      if (!entry.Abilities) continue;
+      const top = Object.entries<number>(entry.Abilities)
+        .sort((a, b) => b[1] - a[1])[0];
+      if (top) result[toId(name)] = toId(top[0]);
     }
   }
 
-  ranked.sort((a, b) => b.count - a.count);
-
-  // Return top 100 IDs in order
-  const top100 = ranked.slice(0, 100).map(r => r.id);
-
-  return json(top100, {
-    headers: { 'Cache-Control': 'public, max-age=86400' }
-  });
+  return json(result, { headers: { 'Cache-Control': 'public, max-age=86400' } });
 };

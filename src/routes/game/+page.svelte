@@ -7,14 +7,16 @@
   import { calcEffectiveSpeed, WEATHER_ABILITY, PROTO_ABILITY, DEFAULT_CONDITIONS } from '$lib/speedtiers';
   import type { Conditions, NatureTier } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
-  import { getPriorityMoves, getPriorityAbilities, loadPriorityCache } from '$lib/priority';
+  import { getPriorityMoves, getPriorityAbilities, loadPriorityCache, PRIORITY_MOVES } from '$lib/priority';
   import type { PriorityMove, PriorityAbility } from '$lib/priority';
   import { tooltip } from '$lib/tooltip';
-  import { loadSmogonNatures, getSmogonNature } from '$lib/smogonUsage';
-  import type { UsageNatures } from '$lib/smogonUsage';
+  import { loadSmogonNatures, getSmogonNature, loadSmogonPriorityMoves, loadSmogonAbilities } from '$lib/smogonUsage';
+  import type { UsageNatures, UsagePriorityMoves, UsageAbilities } from '$lib/smogonUsage';
 
   let priorityReady = false;
-  let smogonNatures: UsageNatures = {};
+  let smogonNatures:         UsageNatures       = {};
+  let smogonPriorityMoves:   UsagePriorityMoves = {};
+  let smogonAbilities:       UsageAbilities     = {};
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -26,7 +28,11 @@
     oppTeam  = state.oppTeam;
     await loadPriorityCache();
     priorityReady = true;
-    smogonNatures = await loadSmogonNatures();
+    [smogonNatures, smogonPriorityMoves, smogonAbilities] = await Promise.all([
+      loadSmogonNatures(),
+      loadSmogonPriorityMoves(),
+      loadSmogonAbilities(),
+    ]);
   });
 
   // ── Field selection ────────────────────────────────────────────────────────
@@ -46,8 +52,8 @@
       set.add(index);
       fieldScarfs.set(key, team[index]?.scarf ?? false);
       fieldParalysis.set(key, false);
-      // Restore nature from team slot if not already set; other toggles keep their last value
-      if (!fieldNature.has(key)) fieldNature.set(key, team[index]?.nature ?? '=');
+      // Default to neutral; paste nature only applied when Smart Natures is toggled on
+      if (!fieldNature.has(key)) fieldNature.set(key, '=');
     }
     yourField      = new Set(yourField);
     oppField       = new Set(oppField);
@@ -124,6 +130,7 @@
     scarf:            boolean;
     paralysis:        boolean;
     nature:           NatureTier;
+    natureLocked:     boolean;
     canProtoBoost:    boolean;
     protoBoost:       boolean;
     protoCondActive:  boolean;
@@ -139,7 +146,7 @@
   };
 
   $: fieldRows = (() => {
-    void priorityReady; // re-run when priority cache loads
+    void priorityReady; void likelyMovesActive; void likelyAbilitiesActive;
 
     const rows: FieldRow[] = [];
 
@@ -162,13 +169,27 @@
       const megaForms    = slot.entry.megaForms;
       const megaIndex    = fieldMega.get(key) ?? 0;
 
-      const triggered = slot.entry.abilities.find(a => {
+      // When likelyAbilitiesActive, narrow to the top-used ability only
+      const effectiveAbilities = likelyAbilitiesActive && smogonAbilities[slot.entry.id]
+        ? [smogonAbilities[slot.entry.id]]
+        : slot.entry.abilities;
+
+      const triggered = effectiveAbilities.find(a => {
         const t = WEATHER_ABILITY[a];
         return t && cond[t];
       }) ?? null;
 
+      const natureLocked = side === 'you' && (slot.natureLocked ?? false);
+
+      // Priority moves: learnset-based normally, usage-filtered when likelyMovesActive
+      const effectivePriorityMoves = likelyMovesActive && smogonPriorityMoves[slot.entry.id]
+        ? smogonPriorityMoves[slot.entry.id]
+            .map(id => PRIORITY_MOVES[id])
+            .filter((m): m is PriorityMove => !!m)
+        : getPriorityMoves(slot.entry.id);
+
       rows.push({
-        key, side, slot, scarf, paralysis, nature,
+        key, side, slot, scarf, paralysis, nature, natureLocked,
         canProtoBoost, protoBoost, protoCondActive, protoLabel,
         canCommander, commander,
         megaForms, megaIndex,
@@ -178,8 +199,8 @@
           { scarf, paralysis, protoBoost, commander, natureTier: nature, megaIndex },
           cond
         ),
-        priorityMoves:     getPriorityMoves(slot.entry.id),
-        priorityAbilities: getPriorityAbilities(slot.entry.abilities),
+        priorityMoves:     effectivePriorityMoves,
+        priorityAbilities: getPriorityAbilities(effectiveAbilities),
       });
     };
 
@@ -193,8 +214,10 @@
     return rows;
   })();
 
-  // ── Smart nature ───────────────────────────────────────────────────────────
-  let smartNaturesActive = false;
+  // ── Usage-based toggles ────────────────────────────────────────────────────
+  let smartNaturesActive    = false;
+  let likelyMovesActive     = false;
+  let likelyAbilitiesActive = false;
 
   function toggleSmartNatures() {
     if (smartNaturesActive) {
@@ -207,11 +230,18 @@
       fieldNature = new Map(fieldNature);
       smartNaturesActive = false;
     } else {
-      // Apply dominant speed nature from Smogon usage data; skip if not in data
+      // Apply dominant speed nature from Smogon usage data.
+      // For your team: skip Pokémon whose nature is locked from a pokepaste.
+      // For opponent: always apply.
       const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
         field.forEach(i => {
           const slot = team[i];
           if (!slot) return;
+          // Your team: paste nature takes priority over Smogon data
+          if (side === 'you' && slot.natureLocked) {
+            fieldNature.set(`${side}-${i}`, slot.nature);
+            return;
+          }
           const nature = getSmogonNature(smogonNatures, slot.entry.id);
           if (nature !== null) fieldNature.set(`${side}-${i}`, nature);
         });
@@ -221,6 +251,14 @@
       fieldNature = new Map(fieldNature);
       smartNaturesActive = true;
     }
+  }
+
+  function toggleLikelyMoves() {
+    likelyMovesActive = !likelyMovesActive;
+  }
+
+  function toggleLikelyAbilities() {
+    likelyAbilitiesActive = !likelyAbilitiesActive;
   }
 
   // ── Reset ──────────────────────────────────────────────────────────────────
@@ -233,8 +271,10 @@
     fieldNature    = new Map();
     fieldCommander = new Map();
     fieldMega      = new Map();
-    cond               = { ...DEFAULT_CONDITIONS };
-    smartNaturesActive = false;
+    cond                  = { ...DEFAULT_CONDITIONS };
+    smartNaturesActive    = false;
+    likelyMovesActive     = false;
+    likelyAbilitiesActive = false;
     goto('/');
   }
 </script>
@@ -254,6 +294,20 @@
         on:click={toggleSmartNatures}
       >Smart Natures</button>
     {/if}
+    <div class="top-bar-right">
+      <button
+        class="usage-btn"
+        class:active={likelyMovesActive}
+        use:tooltip={likelyMovesActive ? "Showing priority moves from usage data — click to revert to learnset" : "Show only priority moves actually used in the current meta (Smogon data). Click again to revert."}
+        on:click={toggleLikelyMoves}
+      >Likely Moves</button>
+      <button
+        class="usage-btn"
+        class:active={likelyAbilitiesActive}
+        use:tooltip={likelyAbilitiesActive ? "Showing top ability from usage data — click to revert" : "Narrow to the most commonly run ability per Pokémon (Smogon data). Affects weather/terrain triggers shown. Click again to revert."}
+        on:click={toggleLikelyAbilities}
+      >Likely Abilities</button>
+    </div>
   </div>
 
   <!-- Team rows -->
@@ -417,8 +471,10 @@
                   class:nature-neu={row.nature === '='}
                   class:nature-neg={row.nature === '-'}
                   on:click={() => cycleNature(row.key)}
-                  use:tooltip={"Speed nature — click to cycle\n= Neutral (Hardy/Docile/Serious/Bashful/Quirky): no modifier\n+ Positive (Timid/Jolly/Naive/Hasty): ×1.1 Speed\n− Negative (Brave/Quiet/Relaxed/Sassy): ×0.9 Speed"}
-                >{row.nature === '+' ? '+Spe' : row.nature === '=' ? '=Spe' : '−Spe'}</button>
+                  use:tooltip={row.natureLocked && smartNaturesActive
+                    ? "Nature from pokepaste — overruling Smart Natures"
+                    : "Speed nature — click to cycle\n= Neutral (Hardy/Docile/Serious/Bashful/Quirky): no modifier\n+ Positive (Timid/Jolly/Naive/Hasty): ×1.1 Speed\n− Negative (Brave/Quiet/Relaxed/Sassy): ×0.9 Speed"}
+                >{row.nature === '+' ? '+Spe' : row.nature === '=' ? '=Spe' : '−Spe'}{#if row.natureLocked && smartNaturesActive}&thinsp;🔒{/if}</button>
 
                 <!-- Scarf -->
                 <label class="toggle-pill" class:active={row.scarf}
@@ -490,6 +546,29 @@
     margin-bottom: 1.25rem;
     flex-wrap: wrap;
   }
+
+  .top-bar-right {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .usage-btn {
+    padding: 0.45rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+    min-height: 36px;
+  }
+  .usage-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  .usage-btn.active { color: var(--text); border-color: var(--text-muted); }
 
   .top-conds {
     display: flex;
