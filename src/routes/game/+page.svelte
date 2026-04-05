@@ -9,8 +9,12 @@
   import { spriteUrl } from '$lib/sprites';
   import { getPriorityMoves, getPriorityAbilities, loadPriorityCache } from '$lib/priority';
   import type { PriorityMove, PriorityAbility } from '$lib/priority';
+  import { tooltip } from '$lib/tooltip';
+  import { loadSmogonNatures, getSmogonNature } from '$lib/smogonUsage';
+  import type { UsageNatures } from '$lib/smogonUsage';
 
   let priorityReady = false;
+  let smogonNatures: UsageNatures = {};
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -22,6 +26,7 @@
     oppTeam  = state.oppTeam;
     await loadPriorityCache();
     priorityReady = true;
+    smogonNatures = await loadSmogonNatures();
   });
 
   // ── Field selection ────────────────────────────────────────────────────────
@@ -36,27 +41,19 @@
       set.delete(index);
       fieldScarfs.delete(key);
       fieldParalysis.delete(key);
-      fieldProto.delete(key);
-      fieldNature.delete(key);
-      fieldCommander.delete(key);
-      fieldMega.delete(key);
+      // fieldProto / fieldNature / fieldCommander / fieldMega persist across field toggles
     } else if (set.size < 2) {
       set.add(index);
       fieldScarfs.set(key, team[index]?.scarf ?? false);
       fieldParalysis.set(key, false);
-      fieldProto.set(key, false);
-      fieldNature.set(key, '=');
-      fieldCommander.set(key, false);
-      fieldMega.set(key, 0);
+      // Restore nature from team slot if not already set; other toggles keep their last value
+      if (!fieldNature.has(key)) fieldNature.set(key, team[index]?.nature ?? '=');
     }
     yourField      = new Set(yourField);
     oppField       = new Set(oppField);
     fieldScarfs    = new Map(fieldScarfs);
     fieldParalysis = new Map(fieldParalysis);
-    fieldProto     = new Map(fieldProto);
     fieldNature    = new Map(fieldNature);
-    fieldCommander = new Map(fieldCommander);
-    fieldMega      = new Map(fieldMega);
   }
 
   // ── Per-field toggles ─────────────────────────────────────────────────────
@@ -129,6 +126,7 @@
     nature:           NatureTier;
     canProtoBoost:    boolean;
     protoBoost:       boolean;
+    protoCondActive:  boolean;
     protoLabel:       string;
     canCommander:     boolean;
     commander:        boolean;
@@ -152,11 +150,12 @@
       const nature    = fieldNature.get(key)    ?? '+';
       const commander = fieldCommander.get(key) ?? false;
 
-      // Proto/Quark: only show toggle when the relevant condition is active
+      // Proto/Quark: always show toggle (can be triggered by Booster Energy regardless of weather/terrain)
       const protoAbilityId  = slot.entry.abilities.find(a => PROTO_ABILITY[a]);
-      const protoCondition  = protoAbilityId ? PROTO_ABILITY[protoAbilityId] : null;
-      const canProtoBoost   = !!protoAbilityId && !!protoCondition && !!cond[protoCondition];
+      const canProtoBoost   = !!protoAbilityId;
       const protoBoost      = canProtoBoost && (fieldProto.get(key) ?? false);
+      const protoCondition  = protoAbilityId ? PROTO_ABILITY[protoAbilityId] : null;
+      const protoCondActive = !!protoCondition && !!cond[protoCondition];
       const protoLabel      = protoAbilityId === 'quarkdrive' ? 'QD ×1.5' : 'PS ×1.5';
 
       const canCommander = slot.entry.id === 'dondozo';
@@ -170,7 +169,7 @@
 
       rows.push({
         key, side, slot, scarf, paralysis, nature,
-        canProtoBoost, protoBoost, protoLabel,
+        canProtoBoost, protoBoost, protoCondActive, protoLabel,
         canCommander, commander,
         megaForms, megaIndex,
         triggeredAbility: triggered,
@@ -194,6 +193,36 @@
     return rows;
   })();
 
+  // ── Smart nature ───────────────────────────────────────────────────────────
+  let smartNaturesActive = false;
+
+  function toggleSmartNatures() {
+    if (smartNaturesActive) {
+      // Reset all fielded Pokémon back to neutral
+      const resetFor = (side: 'you' | 'opp', field: Set<number>) => {
+        field.forEach(i => fieldNature.set(`${side}-${i}`, '='));
+      };
+      resetFor('you', yourField);
+      resetFor('opp', oppField);
+      fieldNature = new Map(fieldNature);
+      smartNaturesActive = false;
+    } else {
+      // Apply dominant speed nature from Smogon usage data; skip if not in data
+      const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
+        field.forEach(i => {
+          const slot = team[i];
+          if (!slot) return;
+          const nature = getSmogonNature(smogonNatures, slot.entry.id);
+          if (nature !== null) fieldNature.set(`${side}-${i}`, nature);
+        });
+      };
+      applyFor('you', yourField, yourTeam);
+      applyFor('opp', oppField,  oppTeam);
+      fieldNature = new Map(fieldNature);
+      smartNaturesActive = true;
+    }
+  }
+
   // ── Reset ──────────────────────────────────────────────────────────────────
   function resetGame() {
     yourField      = new Set();
@@ -204,18 +233,27 @@
     fieldNature    = new Map();
     fieldCommander = new Map();
     fieldMega      = new Map();
-    cond           = { ...DEFAULT_CONDITIONS };
+    cond               = { ...DEFAULT_CONDITIONS };
+    smartNaturesActive = false;
     goto('/');
   }
 </script>
 
-<svelte:head><title>Game — VGC Tools</title></svelte:head>
+<svelte:head><title>Game — Speedcheck</title></svelte:head>
 
 <div class="page">
 
-  <!-- Top bar: reset only -->
+  <!-- Top bar -->
   <div class="top-bar">
     <button class="reset-btn" on:click={resetGame}>← New Game</button>
+    {#if yourField.size > 0 || oppField.size > 0}
+      <button
+        class="smart-nature-btn"
+        class:active={smartNaturesActive}
+        use:tooltip={smartNaturesActive ? "Click to reset all natures to neutral (=Spe)" : "Set each fielded Pokémon's speed nature from Smogon usage data. Click again to reset."}
+        on:click={toggleSmartNatures}
+      >Smart Natures</button>
+    {/if}
   </div>
 
   <!-- Team rows -->
@@ -231,6 +269,11 @@
         </span>
         <div class="team-slots">
           {#each team as slot, i}
+            {@const slotKey   = `${side}-${i}`}
+            {@const megaIdx   = fieldMega.get(slotKey) ?? 0}
+            {@const activeMegaForm = slot && megaIdx > 0 ? slot.entry.megaForms[megaIdx - 1] : null}
+            {@const displayName  = activeMegaForm ? activeMegaForm.name  : slot?.entry.name ?? ''}
+            {@const displayTypes = activeMegaForm ? activeMegaForm.types : slot?.entry.types ?? []}
             <button
               class="tslot"
               class:has-mon={!!slot}
@@ -241,10 +284,10 @@
               on:click={() => toggleField(side, i)}
             >
               {#if slot}
-                <img src={spriteUrl(slot.entry.name)} alt={slot.entry.name} class="tslot-sprite" />
-                <span class="tslot-name">{slot.entry.name}</span>
+                <img src={spriteUrl(displayName)} alt={displayName} class="tslot-sprite" />
+                <span class="tslot-name">{displayName}</span>
                 <div class="tslot-types">
-                  {#each slot.entry.types as t}
+                  {#each displayTypes as t}
                     <span class="type-pip type-{t.toLowerCase()}">{t}</span>
                   {/each}
                 </div>
@@ -264,13 +307,13 @@
       <span class="cond-group-label">Field</span>
       <div class="cond-group-btns">
         <button class="cond-btn tr" class:active={cond.trickRoom}
-          title="Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"
+          use:tooltip={"Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"}
           on:click={() => cond = { ...cond, trickRoom: !cond.trickRoom }}>Trick Room</button>
         <button class="cond-btn your" class:active={cond.yourTailwind}
-          title="Your Tailwind: doubles Speed for your side for 4 turns (×2)"
+          use:tooltip={"Your Tailwind: doubles Speed for your side for 4 turns (×2)"}
           on:click={() => cond = { ...cond, yourTailwind: !cond.yourTailwind }}>Your TW</button>
         <button class="cond-btn opp" class:active={cond.oppTailwind}
-          title="Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"
+          use:tooltip={"Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"}
           on:click={() => cond = { ...cond, oppTailwind: !cond.oppTailwind }}>Opp TW</button>
       </div>
     </div>
@@ -284,7 +327,7 @@
           { key: 'snow'  as const, label: 'Snow',  tip: 'Snow: doubles Speed of Slush Rush users (Beartic, Cetitan, etc.)' },
         ] as btn}
           <button class="cond-btn" class:active={cond[btn.key]}
-            title={btn.tip} on:click={() => toggleWeather(btn.key)}>{btn.label}</button>
+            use:tooltip={btn.tip} on:click={() => toggleWeather(btn.key)}>{btn.label}</button>
         {/each}
       </div>
     </div>
@@ -297,7 +340,7 @@
           { key: 'psychic'  as const, label: 'Psychic',  tip: 'Psychic Terrain: blocks all +1 and higher priority moves targeting grounded Pokémon' },
         ] as btn}
           <button class="cond-btn" class:active={cond[btn.key]}
-            title={btn.tip} on:click={() => toggleTerrain(btn.key)}>{btn.label}</button>
+            use:tooltip={btn.tip} on:click={() => toggleTerrain(btn.key)}>{btn.label}</button>
         {/each}
       </div>
     </div>
@@ -330,38 +373,38 @@
                 <div class="row-badges">
                   {#if row.megaIndex > 0}
                     {@const mf = row.megaForms[row.megaIndex - 1]}
-                    <span class="badge mega-badge" title="{mf?.name}: Base Speed {mf?.baseSpe} (toggled via Mega button below)">{mf?.name ?? 'Mega'}</span>
+                    <span class="badge mega-badge" use:tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}>{mf?.name ?? 'Mega'}</span>
                   {/if}
                   {#if row.triggeredAbility}
-                    <span class="badge ability" title="{row.triggeredAbility}: doubles Speed in the current weather/terrain">{row.triggeredAbility}</span>
+                    <span class="badge ability" use:tooltip={`${row.triggeredAbility}: doubles Speed in the current weather/terrain`}>{row.triggeredAbility}</span>
                   {/if}
                   {#if row.protoBoost}
-                    <span class="badge proto-badge" title="{row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}: +1.5× Speed when Speed is the boosted stat (toggled via button below)">{row.protoLabel}</span>
+                    <span class="badge proto-badge" use:tooltip={`${row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}: ×1.5 Speed when Speed is the boosted stat`}>{row.protoLabel}</span>
                   {/if}
                   {#if row.commander}
-                    <span class="badge commander-badge" title="Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)">Cmd ×2</span>
+                    <span class="badge commander-badge" use:tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}>Cmd ×2</span>
                   {/if}
                   {#if (row.side === 'you' && cond.yourTailwind) || (row.side === 'opp' && cond.oppTailwind)}
-                    <span class="badge tailwind" title="Tailwind: ×2 Speed for your side for 4 turns">TW ×2</span>
+                    <span class="badge tailwind" use:tooltip={"Tailwind: ×2 Speed for 4 turns"}>TW ×2</span>
                   {/if}
                   {#if row.scarf}
-                    <span class="badge scarf-badge" title="Choice Scarf: ×1.5 Speed">Scarf ×1.5</span>
+                    <span class="badge scarf-badge" use:tooltip={"Choice Scarf: ×1.5 Speed"}>Scarf ×1.5</span>
                   {/if}
                   {#if row.paralysis}
-                    <span class="badge para-badge" title="Paralysis: ×0.5 Speed">PAR ×0.5</span>
+                    <span class="badge para-badge" use:tooltip={"Paralysis: ×0.5 Speed"}>PAR ×0.5</span>
                   {/if}
                   {#each row.priorityMoves as pm}
                     {@const active = !cond.psychic && (!pm.requiresCondition || cond[pm.requiresCondition as keyof typeof cond])}
-                    {@const tooltip = cond.psychic
+                    {@const tipText = cond.psychic
                       ? `${pm.name}: blocked by Psychic Terrain (priority moves don't work on grounded Pokémon)`
                       : pm.requiresCondition && !cond[pm.requiresCondition as keyof typeof cond]
                         ? `${pm.name}: only has +${pm.priority} priority under ${pm.requiresCondition} terrain`
                         : `This Pokémon may know ${pm.name} — a +${pm.priority} priority move${pm.note ? ` (${pm.note})` : ''}`}
-                    <span class="badge priority-badge" class:suppressed={!active} title={tooltip}
+                    <span class="badge priority-badge" class:suppressed={!active} use:tooltip={tipText}
                     >{pm.name} {pm.priority > 0 ? '+' : ''}{pm.priority}</span>
                   {/each}
                   {#each row.priorityAbilities as pa}
-                    <span class="badge prio-ability-badge" title="{pa.name}: {pa.effect}">{pa.name}</span>
+                    <span class="badge prio-ability-badge" use:tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</span>
                   {/each}
                 </div>
               </div>
@@ -374,27 +417,29 @@
                   class:nature-neu={row.nature === '='}
                   class:nature-neg={row.nature === '-'}
                   on:click={() => cycleNature(row.key)}
-                  title="Speed nature — click to cycle&#10;= Neutral (Hardy/Docile/Serious/Bashful/Quirky): no modifier&#10;+ Positive (Timid/Jolly/Naive/Hasty): ×1.1 Speed&#10;− Negative (Brave/Quiet/Relaxed/Sassy): ×0.9 Speed"
+                  use:tooltip={"Speed nature — click to cycle\n= Neutral (Hardy/Docile/Serious/Bashful/Quirky): no modifier\n+ Positive (Timid/Jolly/Naive/Hasty): ×1.1 Speed\n− Negative (Brave/Quiet/Relaxed/Sassy): ×0.9 Speed"}
                 >{row.nature === '+' ? '+Spe' : row.nature === '=' ? '=Spe' : '−Spe'}</button>
 
                 <!-- Scarf -->
                 <label class="toggle-pill" class:active={row.scarf}
-                  title="Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time.">
+                  use:tooltip={"Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time."}>
                   <input type="checkbox" checked={row.scarf} on:change={() => toggleFieldScarf(row.key, row.side)} />
                   Scarf
                 </label>
 
                 <!-- Paralysis -->
                 <label class="toggle-pill para" class:active={row.paralysis}
-                  title="Paralysis: multiplies Speed by ×0.5">
+                  use:tooltip={"Paralysis: multiplies Speed by ×0.5"}>
                   <input type="checkbox" checked={row.paralysis} on:change={() => toggleFieldParalysis(row.key)} />
                   PAR
                 </label>
 
                 <!-- Proto/Quark (only when condition is active) -->
                 {#if row.canProtoBoost}
+                  {@const protoName = row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}
+                  {@const protoTrigger = row.protoLabel === 'QD ×1.5' ? 'Electric Terrain' : 'Sun'}
                   <label class="toggle-pill proto" class:active={row.protoBoost}
-                    title="{row.protoLabel === 'QD ×1.5' ? 'Quark Drive (Electric Terrain active)' : 'Protosynthesis (Sun active)'}: boosts the highest stat by ×1.5. Toggle on if Speed is the boosted stat.">
+                    use:tooltip={`${protoName}: ×1.5 Speed when Speed is the highest stat. Activates in ${protoTrigger}${row.protoCondActive ? ' ✓ active' : ''} or via Booster Energy. Toggle on if Speed is the boosted stat.`}>
                     <input type="checkbox" checked={row.protoBoost} on:change={() => toggleFieldProto(row.key)} />
                     {row.protoLabel}
                   </label>
@@ -403,7 +448,7 @@
                 <!-- Commander (Dondozo only) -->
                 {#if row.canCommander}
                   <label class="toggle-pill commander-pill" class:active={row.commander}
-                    title="Commander: when Tatsugiri uses Commander, Dondozo gains +2 in all stats including Speed (×2 effective)">
+                    use:tooltip={"Commander: when Tatsugiri uses Commander, Dondozo gains +2 in all stats including Speed (×2 effective)"}>
                     <input type="checkbox" checked={row.commander} on:change={() => toggleCommander(row.key)} />
                     Cmd
                   </label>
@@ -412,16 +457,16 @@
                 <!-- Mega toggle: button cycles through forms (base → mega/megaX → megaY → base) -->
                 {#if row.megaForms.length === 1}
                   <button
-                    class="toggle-pill"
+                    class="toggle-pill mega-pill"
                     class:active={row.megaIndex > 0}
-                    title="Mega Evolution: {row.megaForms[0].name} (Base Speed {row.megaForms[0].baseSpe}). Click to toggle."
+                    use:tooltip={`Mega Evolution: ${row.megaForms[0].name} (Base Speed ${row.megaForms[0].baseSpe}). Click to toggle.`}
                     on:click={() => cycleMega(row.key, 1)}
                   >{row.megaIndex > 0 ? row.megaForms[0].name : 'Mega'}</button>
                 {:else if row.megaForms.length > 1}
                   <button
-                    class="toggle-pill"
+                    class="toggle-pill mega-pill"
                     class:active={row.megaIndex > 0}
-                    title="Cycle Mega forms — {row.megaForms.map(f => `${f.name} (Base ${f.baseSpe})`).join(' / ')}. Click to cycle."
+                    use:tooltip={`Cycle Mega forms — ${row.megaForms.map(f => `${f.name} (Base ${f.baseSpe})`).join(' / ')}. Click to cycle.`}
                     on:click={() => cycleMega(row.key, row.megaForms.length)}
                   >{row.megaIndex === 0 ? 'Mega X/Y' : row.megaForms[row.megaIndex - 1].name}</button>
                 {/if}
@@ -466,6 +511,22 @@
     min-height: 36px;
   }
   .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
+
+  .smart-nature-btn {
+    padding: 0.45rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+    min-height: 36px;
+  }
+  .smart-nature-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  .smart-nature-btn.active { color: var(--text); border-color: var(--text-muted); }
 
   /* Conditions */
   .conditions-bar {
@@ -841,6 +902,7 @@
     color: var(--text-muted);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     user-select: none;
@@ -867,7 +929,25 @@
     color: #6ca5f5; border-color: #6ca5f5;
     background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
   }
-  /* mega uses same active colour as scarf (default) — no override needed */
+  /* Mega pill: gradient border */
+  .mega-pill {
+    border: 1.5px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  .mega-pill::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(to right, #b0e000, #22cc55, #44ddee, #2255cc, #9933ee);
+    z-index: -1;
+  }
+  .mega-pill.active {
+    color: #f5c96c;
+    background: color-mix(in srgb, #f5c96c 10%, var(--surface));
+    background-clip: padding-box;
+  }
 
   /* Nature pill cycles: + green / = grey / − red */
   .nature-pill {

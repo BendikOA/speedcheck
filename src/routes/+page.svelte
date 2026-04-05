@@ -15,8 +15,16 @@
   let yourTeam: TeamSlot[] = Array(6).fill(null);
   let oppTeam:  TeamSlot[] = Array(6).fill(null);
   let pickerTarget: { side: 'you' | 'opp'; index: number } | null = null;
+  let usageOrder: string[] = []; // top-100 Pokémon IDs by Smogon usage, in order
 
   $: allEntries = buildSpeedTiers(genNum);
+
+  // Build featured list: usage-ordered top 100 mapped to SpeedEntry (filtered to current gen)
+  $: {
+    const byId = new Map(allEntries.map(e => [e.id, e]));
+    featuredEntries = usageOrder.map(id => byId.get(id)).filter(Boolean) as SpeedEntry[];
+  }
+  let featuredEntries: SpeedEntry[] = [];
   $: yourIds = yourTeam.flatMap(s => s ? [s.entry.id] : []);
   $: oppIds  = oppTeam.flatMap(s => s ? [s.entry.id] : []);
   // Each side only excludes its own slots — opponent can have the same Pokémon
@@ -73,7 +81,13 @@
   }
 
   // ── Saved teams ───────────────────────────────────────────────────────────
-  onMount(() => savedTeams.init());
+  onMount(async () => {
+    savedTeams.init();
+    try {
+      const res = await fetch('/api/smogon-usage');
+      if (res.ok) usageOrder = await res.json();
+    } catch { /* leave empty — picker falls back to speed-sorted */ }
+  });
 
   let saveLabel = '';
   let showSaveInput = false;
@@ -128,11 +142,12 @@
   }
 </script>
 
-<svelte:head><title>Team Builder — VGC Tools</title></svelte:head>
+<svelte:head><title>Pokémon Select — Speedcheck</title></svelte:head>
 
 {#if pickerTarget}
   <PokemonPicker
     entries={allEntries}
+    featured={featuredEntries}
     exclude={pickerExclude}
     on:pick={e => onPick(e.detail)}
     on:close={() => pickerTarget = null}
@@ -177,10 +192,13 @@
 {/if}
 
 <div class="page">
-  <div class="gen-tabs">
-    {#each GEN_NUMBERS as g}
-      <button class="gen-tab" class:active={genNum === g} on:click={() => changeGen(g)}>Gen {g}</button>
-    {/each}
+  <div class="page-header">
+    <span class="page-title">Pokémon Select</span>
+    <select class="gen-select" value={genNum} on:change={e => changeGen(+e.currentTarget.value as GenNumber)}>
+      {#each GEN_NUMBERS as g}
+        <option value={g}>Gen {g}</option>
+      {/each}
+    </select>
   </div>
 
   <div class="layout">
@@ -300,40 +318,33 @@
 </div>
 
 <style>
-  .gen-tabs {
+  .page-header {
     display: flex;
-    gap: 0.25rem;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.25rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
+    gap: 1rem;
   }
-  .gen-tabs::-webkit-scrollbar { display: none; }
 
-  .gen-tab {
-    padding: 0.45rem 0.85rem;
+  .page-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .gen-select {
+    padding: 0.45rem 0.75rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--text);
     font-size: 0.85rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-height: 44px;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    cursor: pointer;
+    outline: none;
+    min-height: 36px;
+    transition: border-color 0.15s;
   }
-
-  .gen-tab:active { opacity: 0.7; }
-  @media (hover: hover) {
-    .gen-tab:hover { color: var(--text); border-color: var(--text-muted); }
-  }
-
-  .gen-tab.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
-  }
+  .gen-select:focus { border-color: var(--accent); }
 
   .layout {
     display: grid;

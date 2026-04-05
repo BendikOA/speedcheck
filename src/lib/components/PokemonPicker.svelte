@@ -4,6 +4,7 @@
   import { spriteUrl } from '$lib/sprites';
 
   export let entries: SpeedEntry[];
+  export let featured: SpeedEntry[] = [];
   export let exclude: string[] = [];
 
   const dispatch = createEventDispatcher<{ pick: SpeedEntry; close: void }>();
@@ -11,10 +12,14 @@
   let search = '';
   let inputEl: HTMLInputElement;
 
-  $: available = entries.filter(e => !exclude.includes(e.id));
+  $: excludeSet = new Set(exclude);
+  $: available = entries.filter(e => !excludeSet.has(e.id));
+
   $: filtered = search.length < 1
-    ? available.slice(0, 48)
-    : available.filter(e => e.name.toLowerCase().includes(search.toLowerCase())).slice(0, 48);
+    ? (featured.length > 0
+        ? featured.filter(e => !excludeSet.has(e.id)).slice(0, 100)
+        : available.slice(0, 100))
+    : available.filter(e => e.name.toLowerCase().includes(search.toLowerCase())).slice(0, 100);
 
   onMount(() => {
     // Slight delay so the panel animates in before keyboard opens

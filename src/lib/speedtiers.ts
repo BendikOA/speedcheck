@@ -1,5 +1,6 @@
 import { Dex } from '@pkmn/dex';
 import { Generations } from '@pkmn/data';
+import { getLZAMegas } from './lzaMegas';
 
 const gens = new Generations(Dex);
 
@@ -17,6 +18,7 @@ export interface MegaStats {
   maxSpeed: number;
   neutralSpeed: number;
   minSpeed: number;
+  types: string[];
 }
 
 export interface SpeedEntry {
@@ -87,11 +89,17 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
           id: megaSp.id,
           name: megaSp.name,
           baseSpe: megaSpe,
+          types: megaSp.types ?? types,
           maxSpeed:     gen.stats.calc('spe', megaSpe, 31, 252, 50, jolly),
           neutralSpeed: gen.stats.calc('spe', megaSpe, 31, 252, 50, hardy),
           minSpeed:     gen.stats.calc('spe', megaSpe,  0,   0, 50, brave),
         });
       }
+    }
+
+    // Merge any LZA megas not yet in the dex
+    for (const lza of getLZAMegas(sp.id)) {
+      if (!megaForms.some(m => m.id === lza.id)) megaForms.push(lza);
     }
 
     entries.push({

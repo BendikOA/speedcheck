@@ -31,7 +31,7 @@
   }
 </script>
 
-<svelte:head><title>Speed Tiers — VGC Tools</title></svelte:head>
+<svelte:head><title>Speed Tiers — Speedcheck</title></svelte:head>
 
 <div class="page">
   <!-- 1. Choose Pokémon -->

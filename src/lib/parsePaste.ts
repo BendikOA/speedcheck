@@ -35,7 +35,12 @@ export function parsePaste(text: string, entries: SpeedEntry[]): TeamSlot[] {
   const byId   = new Map(entries.map(e => [e.id, e]));
 
   function findEntry(name: string): SpeedEntry | undefined {
-    return byName.get(name.toLowerCase()) ?? byId.get(toId(name));
+    const direct = byName.get(name.toLowerCase()) ?? byId.get(toId(name));
+    if (direct) return direct;
+    // Strip mega suffix and retry — pastes sometimes include "Metagross-Mega" etc.
+    const baseName = name.replace(/-Mega(?:-[XY])?$/i, '').trim();
+    if (baseName !== name) return byName.get(baseName.toLowerCase()) ?? byId.get(toId(baseName));
+    return undefined;
   }
 
   const slots: TeamSlot[] = [];

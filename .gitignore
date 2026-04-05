@@ -5,6 +5,7 @@ node_modules/
 build/
 dist/
 improvements.md
+manualwork.md
 .env
 .env.*
 !.env.example

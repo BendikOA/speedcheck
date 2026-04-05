@@ -1,6 +1,7 @@
 <script lang="ts">
   import '../app.css';
   import { browser } from '$app/environment';
+  import Tooltip from '$lib/components/Tooltip.svelte';
 
   let dark = true;
 
@@ -19,7 +20,10 @@
 </script>
 
 <nav>
-  <a href="/" class="brand">VGC Tools</a>
+  <a href="/" class="brand">
+    <img src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png" alt="" class="brand-icon" />
+    Speedcheck
+  </a>
   <a href="/">Teams</a>
   <a href="/game">Game</a>
   <a href="/tiers">All Tiers</a>
@@ -44,6 +48,8 @@
   <slot />
 </main>
 
+<Tooltip />
+
 <style>
   nav {
     position: sticky;
@@ -67,12 +73,23 @@
   nav::-webkit-scrollbar { display: none; }
 
   .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     font-weight: 700;
     font-size: 1rem;
     color: var(--accent);
     margin-right: auto;
     white-space: nowrap;
-    min-height: unset; /* override global button min-height on anchor */
+    min-height: unset;
+  }
+
+  .brand-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    flex-shrink: 0;
   }
 
   nav a {
