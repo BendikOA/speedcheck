@@ -16,7 +16,7 @@
   let team: SavedTeam | null = null;
   let slots: (SavedTeamSlot | null)[] = Array(6).fill(null);
   let label = '';
-  let genNum: GenNumber = 9;
+  let genNum: GenNumber | null = null; // null = All Gens
 
   $: teamId = $page.params.id;
 
@@ -29,12 +29,13 @@
     slots = found.yourTeam.map(s => s ? { ...s } : null);
   });
 
-  // ── Gen-awareness ────────────────────────────────────────────────────────
-  $: hasTera      = genNum >= 9;
-  $: hasAbility   = genNum >= 3;
-  $: hasItems     = genNum >= 2;
-  $: hasNatures   = genNum >= 3;
-  $: dvMode       = genNum <= 2;
+  // ── Gen-awareness (null = all gens, treat as gen 9 for flags) ────────────
+  $: g            = genNum ?? 9;
+  $: hasTera      = g >= 9;
+  $: hasAbility   = g >= 3;
+  $: hasItems     = g >= 2;
+  $: hasNatures   = g >= 3;
+  $: dvMode       = g <= 2;
   $: ivMax        = dvMode ? 15 : 31;
   $: allEntries   = buildAllTiers(9);
 
@@ -209,7 +210,7 @@
     if (!team) return;
     savedTeams.updateTeam(team.id, {
       label,
-      genNum,
+      genNum: genNum ?? 9,
       yourTeam: slots,
     });
     goto('/');
@@ -230,7 +231,10 @@
   <div class="toolbar">
     <a href="/" class="back-btn">← Back</a>
     <input class="label-input" bind:value={label} placeholder="Team name…" />
-    <select class="gen-select" bind:value={genNum}>
+    <select class="gen-select"
+      value={genNum ?? ''}
+      on:change={e => { const v = e.currentTarget.value; genNum = v === '' ? null : +v as GenNumber; }}>
+      <option value="">All Gens</option>
       {#each GEN_NUMBERS as g}
         <option value={g}>Gen {g}</option>
       {/each}
