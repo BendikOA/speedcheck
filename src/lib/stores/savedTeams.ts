@@ -21,14 +21,22 @@ export interface SavedTeamSlot {
   nickname?:     string;
 }
 
+export interface RecordPeriod {
+  wins:   number;
+  losses: number;
+  from:   number; // timestamp when this version started
+  to:     number; // timestamp when team was edited
+}
+
 export interface SavedTeam {
   id: string;
   label: string;
   genNum: GenNumber;
   yourTeam: (SavedTeamSlot | null)[];
   savedAt: number;
-  wins:   number;
-  losses: number;
+  wins:          number;
+  losses:        number;
+  recordHistory: RecordPeriod[];
 }
 
 function load(): SavedTeam[] {
@@ -59,6 +67,7 @@ function createStore() {
         savedAt: Date.now(),
         wins: 0,
         losses: 0,
+        recordHistory: [],
       };
       update(teams => {
         const next = [entry, ...teams];
@@ -86,6 +95,22 @@ function createStore() {
         const next = teams.map(t => t.id === id
           ? { ...t, wins: t.wins + (result === 'win' ? 1 : 0), losses: t.losses + (result === 'loss' ? 1 : 0) }
           : t);
+        persist(next);
+        return next;
+      });
+    },
+    updateTeam(id: string, data: Partial<Pick<SavedTeam, 'label' | 'genNum' | 'yourTeam'>>) {
+      const now = Date.now();
+      update(teams => {
+        const next = teams.map(t => {
+          if (t.id !== id) return t;
+          // Snapshot current record period if any games were played
+          const history = [...(t.recordHistory ?? [])];
+          if (t.wins + t.losses > 0) {
+            history.push({ wins: t.wins, losses: t.losses, from: t.savedAt, to: now });
+          }
+          return { ...t, ...data, savedAt: now, wins: 0, losses: 0, recordHistory: history };
+        });
         persist(next);
         return next;
       });
