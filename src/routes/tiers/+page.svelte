@@ -132,7 +132,7 @@
         <tr>
           <th>#</th>
           <th>Pokémon</th>
-          <th>Base</th>
+          <th class="col-speed">Base</th>
           <th class="col-speed">Max</th>
           {#if hasNatures}<th class="col-speed hide-xs">Neutral</th>{/if}
           <th class="col-speed">Min</th>
@@ -301,6 +301,8 @@
   .max  { color: var(--success); }
   .min  { color: var(--text-muted); }
   .col-speed { text-align: right; }
+  .stat { text-align: right; }
+  .base { text-align: right; }
 
   /* Hide neutral column on very small screens */
   @media (max-width: 400px) {
