@@ -733,7 +733,7 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-muted);
-    width: 3.5rem;
+    width: 4.5rem;
     flex-shrink: 0;
   }
 

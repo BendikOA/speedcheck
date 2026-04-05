@@ -3,9 +3,9 @@
 
   $: t = $tooltipStore;
 
-  // Keep tooltip on screen
-  $: left = Math.min(t.x + 12, (typeof window !== 'undefined' ? window.innerWidth : 400) - 220);
-  $: top  = t.y + 16;
+  // Keep tooltip on screen — appear above cursor, clamped horizontally
+  $: left = Math.max(8, Math.min(t.x - 8, (typeof window !== 'undefined' ? window.innerWidth : 400) - 220));
+  $: top  = t.y - 8;
 </script>
 
 <svelte:window
@@ -18,7 +18,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="tt"
-    style="left:{left}px; top:{top}px"
+    style="left:{left}px; top:{top}px; transform: translateY(-100%)"
     on:mouseenter={() => tooltipStore.update(s => ({ ...s, visible: false }))}
   >
     {t.text}
