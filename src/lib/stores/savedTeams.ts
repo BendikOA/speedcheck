@@ -53,7 +53,13 @@ function persist(teams: SavedTeam[]) {
 }
 
 function createStore() {
-  const { subscribe, update, set } = writable<SavedTeam[]>(load());
+  const { subscribe, update, set } = writable<SavedTeam[]>([]);
+
+  // Hydrate from localStorage as soon as we're on the client.
+  // Using `if (browser)` here covers both initial page load and hard reloads.
+  if (browser) {
+    set(load());
+  }
 
   return {
     subscribe,
