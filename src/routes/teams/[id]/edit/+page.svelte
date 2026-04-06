@@ -304,14 +304,17 @@
   <div class="toolbar">
     <a href="/" class="back-btn">← Back</a>
     <input class="label-input" bind:value={label} placeholder="Team name…" />
-    <select class="gen-select"
-      value={genNum ?? ''}
-      on:change={e => { const v = e.currentTarget.value; genNum = v === '' ? null : +v as GenNumber; }}>
-      <option value="">All Gens</option>
-      {#each GEN_NUMBERS as g}
-        <option value={g}>Gen {g}</option>
-      {/each}
-    </select>
+    <div class="select-wrap">
+      <select class="gen-select"
+        value={genNum ?? ''}
+        on:change={e => { const v = e.currentTarget.value; genNum = v === '' ? null : +v as GenNumber; }}>
+        <option value="">All Gens</option>
+        {#each GEN_NUMBERS as g}
+          <option value={g}>Gen {g}</option>
+        {/each}
+      </select>
+      <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
     <button class="export-btn" on:click={exportPaste}>
       {exportCopied ? 'Copied!' : 'Export'}
     </button>
@@ -528,8 +531,21 @@
   }
   .label-input:focus-visible { border-color: var(--accent); }
 
+  .select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  .select-chevron {
+    position: absolute;
+    right: 0.6rem;
+    pointer-events: none;
+    color: var(--text-muted);
+  }
   .gen-select {
-    padding: 0 0.75rem;
+    padding: 0 2rem 0 0.75rem;
+    appearance: none;
+    -webkit-appearance: none;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -537,6 +553,7 @@
     font-size: 0.85rem;
     min-height: 44px;
     cursor: pointer;
+    transition: border-color 0.15s;
   }
 
   .save-btn {

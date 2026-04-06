@@ -1129,12 +1129,8 @@
   .row-toggles {
     display: flex;
     gap: 0.3rem;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    flex-wrap: wrap;
   }
-  .row-toggles::-webkit-scrollbar { display: none; }
 
   .toggle-pill {
     display: inline-flex;

@@ -1,75 +1,153 @@
 <script lang="ts">
-  import '../app.css';
-  import { browser, dev } from '$app/environment';
-  import { page } from '$app/stores';
-  import Tooltip from '$lib/components/Tooltip.svelte';
-  import { injectAnalytics } from '@vercel/analytics/sveltekit';
+  import "../app.css";
+  import { browser, dev } from "$app/environment";
+  import { page } from "$app/stores";
+  import Tooltip from "$lib/components/Tooltip.svelte";
+  import { injectAnalytics } from "@vercel/analytics/sveltekit";
 
-  injectAnalytics({ mode: dev ? 'development' : 'production' });
+  injectAnalytics({ mode: dev ? "development" : "production" });
 
   let dark = true;
   if (browser) {
-    const saved = localStorage.getItem('theme');
-    dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    const saved = localStorage.getItem("theme");
+    dark = saved
+      ? saved === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute(
+      "data-theme",
+      dark ? "dark" : "light",
+    );
   }
 
   function toggleTheme() {
     dark = !dark;
-    const t = dark ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem('theme', t);
+    const t = dark ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+    localStorage.setItem("theme", t);
   }
 
   let menuOpen = false;
   // Close menu on any navigation or Escape
   $: if ($page.url.pathname) menuOpen = false;
-  function handleKeydown(e: KeyboardEvent) { if (e.key === 'Escape') menuOpen = false; }
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") menuOpen = false;
+  }
 </script>
 
 <nav>
   <a href="/" class="brand">
-    <img src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png" alt="" class="brand-icon" />
+    <img
+      src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png"
+      alt=""
+      class="brand-icon"
+    />
     Speedcheck
   </a>
 
   <!-- Desktop nav links -->
   <div class="nav-links">
-    <a href="/"            class:active={$page.url.pathname === '/'}>Teams</a>
-    <a href="/game"        class:active={$page.url.pathname === '/game'}>Game</a>
-    <a href="/tiers"       class:active={$page.url.pathname === '/tiers'}>All Tiers</a>
-    <a href="/boost-tiers" class:active={$page.url.pathname === '/boost-tiers'}>Boost Tiers</a>
-    <a href="/quiz"        class:active={$page.url.pathname === '/quiz'}>Quiz</a>
+    <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
+    <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+    <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a
+    >
+    <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}
+      >Boost Tiers</a
+    >
+    <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
   </div>
 
   <!-- Desktop theme toggle -->
   <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
     {#if dark}
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" /><line
+          x1="12"
+          y1="21"
+          x2="12"
+          y2="23"
+        />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line
+          x1="18.36"
+          y1="18.36"
+          x2="19.78"
+          y2="19.78"
+        />
+        <line x1="1" y1="12" x2="3" y2="12" /><line
+          x1="21"
+          y1="12"
+          x2="23"
+          y2="12"
+        />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line
+          x1="18.36"
+          y1="5.64"
+          x2="19.78"
+          y2="4.22"
+        />
       </svg>
     {:else}
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
     {/if}
   </button>
 
   <!-- Mobile hamburger -->
-  <button class="hamburger" on:click={() => menuOpen = !menuOpen} aria-label="Menu" aria-expanded={menuOpen}>
+  <button
+    class="hamburger"
+    on:click={() => (menuOpen = !menuOpen)}
+    aria-label="Menu"
+    aria-expanded={menuOpen}
+  >
     {#if menuOpen}
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" /><line
+          x1="6"
+          y1="6"
+          x2="18"
+          y2="18"
+        />
       </svg>
     {:else}
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <line x1="3" y1="6"  x2="21" y2="6"/>
-        <line x1="3" y1="12" x2="21" y2="12"/>
-        <line x1="3" y1="18" x2="21" y2="18"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
       </svg>
     {/if}
   </button>
@@ -80,53 +158,124 @@
 {#if menuOpen}
   <!-- Backdrop -->
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="drawer-backdrop" on:click={() => menuOpen = false}></div>
+  <div class="drawer-backdrop" on:click={() => (menuOpen = false)}></div>
 
   <!-- Drawer -->
   <nav class="drawer" aria-label="Mobile navigation">
     <div class="drawer-header">
       <a href="/" class="brand drawer-brand">
-        <img src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png" alt="" class="brand-icon" />
+        <img
+          src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png"
+          alt=""
+          class="brand-icon"
+        />
         Speedcheck
       </a>
-      <button class="drawer-close" on:click={() => menuOpen = false} aria-label="Close menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      <button
+        class="drawer-close"
+        on:click={() => (menuOpen = false)}
+        aria-label="Close menu"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" /><line
+            x1="6"
+            y1="6"
+            x2="18"
+            y2="18"
+          />
         </svg>
       </button>
     </div>
 
     <div class="drawer-links">
-      <a href="/"            class:active={$page.url.pathname === '/'}>Teams</a>
-      <a href="/game"        class:active={$page.url.pathname === '/game'}>Game</a>
-      <a href="/tiers"       class:active={$page.url.pathname === '/tiers'}>All Tiers</a>
-      <a href="/boost-tiers" class:active={$page.url.pathname === '/boost-tiers'}>Boost Tiers</a>
-      <a href="/quiz"        class:active={$page.url.pathname === '/quiz'}>Quiz</a>
+      <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
+      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
+        >All Tiers</a
+      >
+      <a
+        href="/boost-tiers"
+        class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a
+      >
+      <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
     </div>
 
     <div class="drawer-footer">
       <button class="mobile-theme-btn" on:click={toggleTheme}>
         {#if dark}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" /><line
+              x1="12"
+              y1="21"
+              x2="12"
+              y2="23"
+            />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line
+              x1="18.36"
+              y1="18.36"
+              x2="19.78"
+              y2="19.78"
+            />
+            <line x1="1" y1="12" x2="3" y2="12" /><line
+              x1="21"
+              y1="12"
+              x2="23"
+              y2="12"
+            />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line
+              x1="18.36"
+              y1="5.64"
+              x2="19.78"
+              y2="4.22"
+            />
           </svg>
           Switch to light mode
         {:else}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
           Switch to dark mode
         {/if}
       </button>
       <div class="drawer-kofi">
-        <span>Speedcheck is free &amp; built solo.</span>
-        <a href="https://ko-fi.com/T6T21XBBI8" target="_blank" rel="noopener">
-          <span aria-hidden="true">☕</span> Buy me a coffee on Ko-fi ↗
-        </a>
+        <span>Speedcheck is free, no ads, built solo.</span>
+        <span
+          >If it helped you in a game, <a
+            href="https://ko-fi.com/T6T21XBBI8"
+            target="_blank"
+            rel="noopener"
+            >consider buying me a coffee on Ko-fi <span aria-hidden="true"
+              >☕</span
+            > ↗</a
+          ></span
+        >
       </div>
     </div>
   </nav>
@@ -138,11 +287,24 @@
 
 <Tooltip />
 
-<div class="kofi-banner" role="complementary" aria-label="Support the developer">
-  <span class="kofi-desc">Speedcheck is free, no ads, built solo. If it's helped you in a game,</span>
-  <a class="kofi-link" href="https://ko-fi.com/T6T21XBBI8" target="_blank" rel="noopener">
-    <span class="kofi-cup" aria-hidden="true">☕</span> buy me a coffee on Ko-fi ↗
-  </a>
+<div
+  class="kofi-banner"
+  role="complementary"
+  aria-label="Support the developer"
+>
+  <span class="kofi-line">Speedcheck is free, no ads, built solo.</span>
+  <span class="kofi-line"
+    >If it helped you in a game, <a
+      class="kofi-link"
+      href="https://ko-fi.com/T6T21XBBI8"
+      target="_blank"
+      rel="noopener"
+      >consider buying me a coffee on Ko-fi <span
+        class="kofi-cup"
+        aria-hidden="true">☕</span
+      ></a
+    ></span
+  >
 </div>
 
 <style>
@@ -190,7 +352,10 @@
     gap: 0.25rem;
   }
 
-  .theme-toggle { grid-column: 3; justify-self: end; }
+  .theme-toggle {
+    grid-column: 3;
+    justify-self: end;
+  }
 
   nav a {
     color: var(--text-muted);
@@ -200,8 +365,13 @@
     padding: 0 0.5rem;
   }
 
-  nav a:hover { color: var(--text); }
-  nav a.active { color: var(--text); font-weight: 600; }
+  nav a:hover {
+    color: var(--text);
+  }
+  nav a.active {
+    color: var(--text);
+    font-weight: 600;
+  }
 
   .theme-toggle {
     margin-left: auto;
@@ -213,9 +383,14 @@
     min-height: 44px;
     cursor: pointer;
     flex-shrink: 0;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
-  .theme-toggle:hover { color: var(--text); border-color: var(--text-muted); }
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
 
   /* Hamburger — mobile only */
   .hamburger {
@@ -302,10 +477,18 @@
     color: var(--text-muted);
     border-bottom: 1px solid var(--border);
     min-height: unset;
-    transition: background 0.1s, color 0.1s;
+    transition:
+      background 0.1s,
+      color 0.1s;
   }
-  .drawer-links a:hover   { background: var(--surface-2); color: var(--text); }
-  .drawer-links a.active  { color: var(--text); font-weight: 600; }
+  .drawer-links a:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  .drawer-links a.active {
+    color: var(--text);
+    font-weight: 600;
+  }
 
   .drawer-footer {
     border-top: 1px solid var(--border);
@@ -329,7 +512,10 @@
     text-align: left;
     width: 100%;
   }
-  .mobile-theme-btn:hover { background: var(--surface-2); color: var(--text); }
+  .mobile-theme-btn:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
 
   .drawer-kofi {
     display: flex;
@@ -339,6 +525,8 @@
     padding-bottom: max(1rem, var(--safe-bottom));
     font-size: 0.85rem;
     color: var(--text-muted);
+    text-align: center;
+    align-items: center;
   }
   .drawer-kofi a {
     color: var(--accent);
@@ -349,15 +537,24 @@
     align-items: center;
     gap: 0.3rem;
   }
-  .drawer-kofi a:hover { color: var(--accent-hover); }
+  .drawer-kofi a:hover {
+    color: var(--accent-hover);
+  }
 
   @media (max-width: 640px) {
     nav {
       grid-template-columns: 1fr auto;
     }
-    .nav-links    { display: none; }
-    .theme-toggle { display: none; }
-    .hamburger    { display: flex; align-items: center; }
+    .nav-links {
+      display: none;
+    }
+    .theme-toggle {
+      display: none;
+    }
+    .hamburger {
+      display: flex;
+      align-items: center;
+    }
   }
 
   main {
@@ -372,7 +569,9 @@
   }
 
   @media (min-width: 600px) {
-    main { padding: 2rem 1.5rem 1.5rem; }
+    main {
+      padding: 2rem 1.5rem 1.5rem;
+    }
   }
 
   /* Ko-fi banner */
@@ -389,19 +588,26 @@
     gap: 0.3rem;
   }
 
-  .kofi-desc { line-height: 1.5; }
-  .kofi-cup { font-size: 1.25rem; line-height: 1; }
+  .kofi-line {
+    line-height: 1.5;
+  }
+  .kofi-cup {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
 
   .kofi-link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    color: var(--accent);
+    color: var(--text);
     font-weight: 600;
     font-size: 1rem;
     text-decoration: underline;
     text-underline-offset: 3px;
     min-height: unset;
   }
-  .kofi-link:hover { color: var(--accent-hover); }
+  .kofi-link:hover {
+    color: var(--text-muted);
+  }
 </style>

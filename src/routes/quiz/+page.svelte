@@ -395,6 +395,7 @@
     font-size: 0.95rem;
     font-weight: 600;
     text-align: center;
+    color: var(--text);
   }
 
   .pills {
