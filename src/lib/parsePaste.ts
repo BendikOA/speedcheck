@@ -136,10 +136,17 @@ export async function resolvePaste(input: string): Promise<string> {
   const trimmed = input.trim();
   const urlMatch = trimmed.match(/pokepast\.es\/([a-zA-Z0-9]+)/i);
   if (urlMatch) {
-    const resp = await fetch(`https://pokepast.es/${urlMatch[1]}/json`);
-    if (!resp.ok) throw new Error(`Pokepaste fetch failed: ${resp.status}`);
-    const data = await resp.json();
-    return data.paste as string;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10_000);
+    try {
+      const resp = await fetch(`https://pokepast.es/${urlMatch[1]}/json`, { signal: controller.signal });
+      if (!resp.ok) throw new Error(`Pokepaste fetch failed: ${resp.status}`);
+      const data = await resp.json();
+      if (typeof data?.paste !== 'string') throw new Error('Unexpected response from pokepast.es');
+      return data.paste;
+    } finally {
+      clearTimeout(timeout);
+    }
   }
   return trimmed;
 }

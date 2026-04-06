@@ -130,12 +130,12 @@
     <table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>Pokémon</th>
-          <th class="col-speed">Base</th>
-          <th class="col-speed">Max</th>
-          {#if hasNatures}<th class="col-speed hide-xs">Neutral</th>{/if}
-          <th class="col-speed">Min</th>
+          <th scope="col">#</th>
+          <th scope="col">Pokémon</th>
+          <th scope="col" class="col-speed">Base</th>
+          <th scope="col" class="col-speed">Max</th>
+          {#if hasNatures}<th scope="col" class="col-speed hide-xs">Neutral</th>{/if}
+          <th scope="col" class="col-speed">Min</th>
         </tr>
       </thead>
       <tbody>

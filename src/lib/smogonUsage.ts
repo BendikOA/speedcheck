@@ -3,7 +3,7 @@ import type { NatureTier } from './speedtiers';
 export type UsageNatures       = Record<string, NatureTier>;
 export type UsageOrder         = string[];
 export type UsagePriorityMoves = Record<string, string[]>;
-export type UsageAbilities     = Record<string, string>;
+export type UsageAbilities     = Record<string, { name: string; desc: string }>;
 export type UsageMoves         = Record<string, string[]>; // top 4 move display names
 export type UsageBuilds        = Record<string, { speEV: number; nature: NatureTier; item: string }>;
 

@@ -42,7 +42,7 @@ const fetchedMap = new Map<string, number>();
 function rollingMonths(count = 6): string[] {
   const months: string[] = [];
   const now = new Date();
-  for (let lag = 1; lag <= count; lag++) {
+  for (let lag = 0; lag < count; lag++) {
     const d = new Date(now.getFullYear(), now.getMonth() - lag, 1);
     months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
   }
@@ -51,11 +51,14 @@ function rollingMonths(count = 6): string[] {
 
 async function tryFetch(format: string, months: string[]): Promise<any | null> {
   for (const ym of months) {
-    const url = `https://www.smogon.com/stats/${ym}/chaos/${format}-0.json`;
-    try {
-      const res = await fetch(url);
-      if (res.ok) return await res.json();
-    } catch { /* try next */ }
+    // Try high-rated ladder first (1760), fall back to all-ratings (0)
+    for (const elo of [1760, 0]) {
+      const url = `https://www.smogon.com/stats/${ym}/chaos/${format}-${elo}.json`;
+      try {
+        const res = await fetch(url);
+        if (res.ok) return await res.json();
+      } catch { /* try next */ }
+    }
   }
   return null;
 }

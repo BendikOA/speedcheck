@@ -153,7 +153,9 @@
   </div>
 
   <!-- Question card -->
-  {#if a && b}
+  {#if pool.length < 2}
+    <p class="empty-notice">Not enough Pokémon in the pool for this gen/filter combination.</p>
+  {:else if a && b}
     <div class="question">
       <!-- A -->
       <button
@@ -234,6 +236,13 @@
     gap: 1rem;
     max-width: 640px;
     margin: 0 auto;
+  }
+
+  .empty-notice {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 2rem 0;
   }
 
   .header {

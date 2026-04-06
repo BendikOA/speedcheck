@@ -82,7 +82,7 @@ function createStore() {
     },
     resetRecord(id: string) {
       update(teams => {
-        const next = teams.map(t => t.id === id ? { ...t, wins: 0, losses: 0, recordHistory: [] } : t);
+        const next = teams.map(t => t.id === id ? { ...t, wins: 0, losses: 0 } : t);
         persist(next);
         return next;
       });

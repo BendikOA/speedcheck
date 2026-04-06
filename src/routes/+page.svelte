@@ -193,11 +193,11 @@
     importLoading = true;
     try {
       const text = await resolvePaste(importText);
-      const slots = parsePaste(text, allEntries);
+      const slots = parsePaste(text, buildAllTiers(9));
       const filled = slots.filter(Boolean);
       if (!filled.length) {
         importError =
-          "No matching Pokémon found — check the paste or selected gen.";
+          "No matching Pokémon found — check the paste.";
         return;
       }
       if (importSide === "you") yourTeam = slots;
@@ -213,6 +213,7 @@
 </script>
 
 <svelte:head><title>Pokémon Select — Speedcheck</title></svelte:head>
+<svelte:window on:keydown={e => { if (e.key === 'Escape') { showImport = false; importError = ''; } }} />
 
 {#if pickerTarget}
   <PokemonPicker
@@ -327,24 +328,24 @@
                   <button class="slot-clear" on:click={() => clearSlot(side, i)}
                     >×</button
                   >
-                  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                  <div class="slot-filled" on:click={() => openPicker(side, i)}>
+                  <button class="slot-filled" on:click={() => openPicker(side, i)}
+                    aria-label="Change {slot.entry.name}">
                     <img
                       src={spriteUrl(slot.entry.name)}
-                      alt={slot.entry.name}
+                      alt=""
                       class="slot-sprite"
                     />
                     <span class="slot-name">{slot.entry.name}</span>
                     <span class="slot-spe">{slot.entry.baseSpe}</span>
-                  </div>
-                  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                  <div
+                  </button>
+                  <button
                     class="scarf-pill"
                     class:active={slot.scarf}
+                    aria-pressed={slot.scarf}
                     on:click|stopPropagation={() => toggleScarf(side, i)}
                   >
                     Scarf
-                  </div>
+                  </button>
                 {:else}
                   <button
                     class="slot-empty"
@@ -711,6 +712,9 @@
     cursor: pointer;
     padding: 0.25rem;
     width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
   }
 
   .slot-sprite {
@@ -769,6 +773,7 @@
     padding: 0.2rem 0.5rem;
     border-radius: 100px;
     border: 1px solid var(--border);
+    background: none;
     color: var(--text-muted);
     cursor: pointer;
     user-select: none;
@@ -930,7 +935,7 @@
   .saved-row {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.85rem;
     padding: 0.75rem 0.85rem;
     background: var(--surface);
     border: 1px solid var(--border);

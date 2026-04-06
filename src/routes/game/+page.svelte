@@ -26,7 +26,6 @@
   let smogonAbilities:       UsageAbilities     = {};
   let smogonMoves:           UsageMoves         = {};
   let smogonBuilds:          UsageBuilds        = {};
-  let openMoves              = new Set<string>();
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -79,11 +78,7 @@
     }
   }
 
-  function toggleMoves(key: string) {
-    if (openMoves.has(key)) openMoves.delete(key);
-    else openMoves.add(key);
-    openMoves = new Set(openMoves);
-  }
+
 
   // ── Usage-based toggles (declared early — used in toggleField) ───────────
   let likelyMovesActive     = false;
@@ -248,9 +243,10 @@
       const megaForms    = slot.entry.megaForms;
       const megaIndex    = fieldMega.get(key) ?? 0;
 
-      // When likelyAbilitiesActive, narrow to the top-used ability only
+      // When likelyAbilitiesActive, narrow to the top-used ability only (stored as display name → convert to id)
+      const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
       const effectiveAbilities = likelyAbilitiesActive && smogonAbilities[slot.entry.id]
-        ? [smogonAbilities[slot.entry.id]]
+        ? [toId(smogonAbilities[slot.entry.id].name)]
         : slot.entry.abilities;
 
       // Weather/terrain ability — always find it, separately track if triggered
@@ -359,7 +355,7 @@
     fieldMega       = new Map();
     fieldSpeedBoost = new Map();
     fieldSpeedEV    = new Map();
-    openMoves       = new Set();
+
     cond                  = { ...DEFAULT_CONDITIONS };
     likelyMovesActive     = false;
     likelyAbilitiesActive = false;
@@ -375,38 +371,40 @@
   <!-- Top bar -->
   <div class="top-bar">
     <button class="reset-btn" on:click={resetGame}>← New Game</button>
-    {#if yourField.size > 0 || oppField.size > 0}
-      <button
-        class="smart-nature-btn"
-        class:active={likelyBuildsActive}
-        use:tooltip={likelyBuildsActive
-          ? "Showing most common EV spread, nature & item from Smogon usage data — click to reset"
-          : "Apply the most common EV spread, nature & item per Pokémon from Smogon usage data (speed tiers vary a lot based on the actual spread run)"}
-        on:click={toggleLikelyBuilds}
-      >Likely Build</button>
-    {/if}
     <div class="top-bar-right">
-      <div class="reg-tabs" class:loading={!smogonReady} use:tooltip={"Switch Smogon usage data source (affects Smart Natures, Likely Moves, Likely Abilities, and Move Reveal)"}>
-        {#each GEN9_REGS as reg}
-          <button
-            class="reg-tab"
-            class:active={selectedReg === reg.format}
-            on:click={() => changeReg(reg.format)}
-          >{reg.label}</button>
-        {/each}
+      {#if likelyBuildsActive || likelyMovesActive || likelyAbilitiesActive}
+        <div class="reg-tabs" class:loading={!smogonReady} use:tooltip={"Switch Smogon usage data source"}>
+          {#each GEN9_REGS as reg}
+            <button
+              class="reg-tab"
+              class:active={selectedReg === reg.format}
+              on:click={() => changeReg(reg.format)}
+            >{reg.label}</button>
+          {/each}
+        </div>
+      {/if}
+      <div class="reg-tabs usage-tabs">
+        <button
+          class="reg-tab"
+          class:active={likelyBuildsActive}
+          use:tooltip={likelyBuildsActive
+            ? "Showing most common EV spread, nature & item from Smogon usage stats — click to reset"
+            : "Apply the most common EV spread, nature & item per Pokémon from Smogon usage stats"}
+          on:click={toggleLikelyBuilds}
+        >Usage Build</button>
+        <button
+          class="reg-tab"
+          class:active={likelyMovesActive}
+          use:tooltip={likelyMovesActive ? "Click to hide moves" : "Show top moves from Smogon usage stats for each fielded Pokémon"}
+          on:click={toggleLikelyMoves}
+        >Moves</button>
+        <button
+          class="reg-tab"
+          class:active={likelyAbilitiesActive}
+          use:tooltip={likelyAbilitiesActive ? "Showing top ability from usage stats — click to revert" : "Show the most commonly run ability per Pokémon from Smogon usage stats"}
+          on:click={toggleLikelyAbilities}
+        >Ability</button>
       </div>
-      <button
-        class="usage-btn"
-        class:active={likelyMovesActive}
-        use:tooltip={likelyMovesActive ? "Showing priority moves from usage data — click to revert to learnset" : "Show only priority moves actually used in the current meta (Smogon data). Click again to revert."}
-        on:click={toggleLikelyMoves}
-      >Likely Moves</button>
-      <button
-        class="usage-btn"
-        class:active={likelyAbilitiesActive}
-        use:tooltip={likelyAbilitiesActive ? "Showing top ability from usage data — click to revert" : "Narrow to the most commonly run ability per Pokémon (Smogon data). Affects weather/terrain triggers shown. Click again to revert."}
-        on:click={toggleLikelyAbilities}
-      >Likely Abilities</button>
     </div>
   </div>
 
@@ -435,6 +433,8 @@
               class:side-you={side === 'you'}
               class:side-opp={side === 'opp'}
               disabled={!slot}
+              aria-pressed={fieldSet.has(i)}
+              aria-label={slot ? `${displayName} — ${fieldSet.has(i) ? 'on field, click to remove' : 'click to put on field'}` : 'Empty slot'}
               on:click={() => toggleField(side, i)}
             >
               {#if slot}
@@ -562,6 +562,10 @@
                   {#each row.priorityAbilities as pa}
                     <span class="badge prio-ability-badge" use:tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</span>
                   {/each}
+                  {#if likelyAbilitiesActive && smogonAbilities[row.slot.entry.id]}
+                    {@const ab = smogonAbilities[row.slot.entry.id]}
+                    <span class="badge ability-likely-badge" use:tooltip={ab.desc}>{ab.name}</span>
+                  {/if}
                   {#if likelyBuildsActive}
                     {@const build = smogonBuilds[row.slot.entry.id]}
                     {#if build?.item && build.item !== 'Choice Scarf'}
@@ -579,10 +583,10 @@
                   class:nature-neu={row.nature === '='}
                   class:nature-neg={row.nature === '-'}
                   on:click={() => cycleNature(row.key)}
-                  use:tooltip={row.natureLocked && likelyBuildsActive
-                    ? "Nature from pokepaste — overruling Likely Build"
+                  use:tooltip={row.natureLocked
+                    ? "Nature from pokepaste (known)"
                     : "Speed nature — click to cycle\n+ Positive (Timid/Jolly/Naive/Hasty): 252 EVs ×1.1 — max speed investment\n= Neutral: 0 EVs, no modifier — no speed investment\n− Negative (Brave/Quiet/Relaxed/Sassy): 0 EVs ×0.9 — TR min speed"}
-                >{row.nature === '+' ? '+' : row.nature === '=' ? '=' : '−'}Nat{#if row.natureLocked && likelyBuildsActive}&thinsp;🔒{/if}</button>
+                >{row.nature === '+' ? '+' : row.nature === '=' ? '=' : '−'}Nat{#if likelyBuildsActive && !row.natureLocked}<span class="nature-assumed">*</span>{/if}</button>
 
                 <!-- Spe EV chip (shown when Likely Build is active) -->
                 {#if row.speedEV !== undefined}
@@ -651,19 +655,10 @@
                   >{row.megaIndex === 0 ? 'Mega X/Y' : row.megaForms[row.megaIndex - 1].name}</button>
                 {/if}
 
-                <!-- Move reveal -->
-                {#if smogonMoves[row.slot.entry.id]?.length}
-                  <button
-                    class="toggle-pill moves-pill"
-                    class:active={openMoves.has(row.key)}
-                    use:tooltip={"Show top moves from Smogon usage data for this Pokémon"}
-                    on:click={() => toggleMoves(row.key)}
-                  >{openMoves.has(row.key) ? '▾ Moves' : '▸ Moves'}</button>
-                {/if}
               </div>
 
               <!-- Move list panel -->
-              {#if openMoves.has(row.key) && smogonMoves[row.slot.entry.id]?.length}
+              {#if likelyMovesActive && smogonMoves[row.slot.entry.id]?.length}
                 <div class="move-list">
                   {#each smogonMoves[row.slot.entry.id] as move}
                     <span class="move-chip">{move}</span>
@@ -695,23 +690,14 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    align-items: center;
   }
 
-  .usage-btn {
-    padding: 0.45rem 0.9rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
+  /* Usage tabs group never wraps internally on any screen size */
+  .usage-tabs {
     flex-shrink: 0;
-    min-height: 44px;
   }
-  .usage-btn:hover { color: var(--text); border-color: var(--text-muted); }
-  .usage-btn.active { color: var(--text); border-color: var(--text-muted); }
+
 
   .top-conds {
     display: flex;
@@ -720,7 +706,9 @@
   }
 
   .reset-btn {
-    padding: 0.45rem 0.9rem;
+    padding: 0 0.9rem;
+    height: 44px;
+    box-sizing: border-box;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -730,54 +718,62 @@
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s;
     flex-shrink: 0;
-    min-height: 44px;
   }
   .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
 
-  .smart-nature-btn {
-    padding: 0.45rem 0.9rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
-    flex-shrink: 0;
-    min-height: 44px;
-  }
-  .smart-nature-btn:hover { color: var(--text); border-color: var(--text-muted); }
-  .smart-nature-btn.active { color: var(--text); border-color: var(--text-muted); }
 
   /* Conditions */
   .conditions-bar {
     display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0;
     margin-bottom: 1.25rem;
   }
 
   .cond-group {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+    padding: 0 1rem;
+  }
+  .cond-group:first-child { padding-left: 0; }
+  .cond-group:last-child  { padding-right: 0; }
+  .cond-group:not(:last-child) {
+    border-right: 1px solid var(--border);
   }
 
   .cond-group-label {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-muted);
-    width: 4.5rem;
-    flex-shrink: 0;
   }
 
   .cond-group-btns {
     display: flex;
     gap: 0.3rem;
     flex-wrap: wrap;
+  }
+
+  @media (max-width: 600px) {
+    .conditions-bar {
+      flex-direction: column;
+      gap: 0;
+    }
+    .cond-group {
+      padding: 0.5rem 0;
+    }
+    .cond-group:first-child { padding-top: 0; }
+    .cond-group:not(:last-child) {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .cond-group-btns {
+      justify-content: space-between;
+    }
   }
 
   .cond-btn {
@@ -1216,10 +1212,12 @@
     border-radius: var(--radius-sm);
     overflow: hidden;
     flex-shrink: 0;
+    height: 44px;
+    box-sizing: border-box;
   }
   .reg-tab {
     padding: 0 0.75rem;
-    min-height: 44px;
+    height: 100%;
     background: var(--surface);
     border: none;
     border-right: 1px solid var(--border);
@@ -1261,6 +1259,21 @@
     color: var(--text-muted);
     background: var(--surface);
     white-space: nowrap;
+  }
+
+  /* Likely Abilities: top ability badge */
+  .badge.ability-likely-badge {
+    background: color-mix(in srgb, #d4a8ff 12%, transparent);
+    border: 1px solid color-mix(in srgb, #d4a8ff 40%, transparent);
+    color: #d4a8ff;
+  }
+
+  /* Nature assumed marker */
+  .nature-assumed {
+    font-size: 0.7em;
+    opacity: 0.6;
+    vertical-align: super;
+    line-height: 0;
   }
 
   /* Likely Build: EV pill and item badge */

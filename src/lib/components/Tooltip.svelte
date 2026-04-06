@@ -15,11 +15,11 @@
 />
 
 {#if t.visible && t.text}
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="tt"
+    role="tooltip"
+    aria-hidden="true"
     style="left:{left}px; top:{top}px; transform: translateY(-100%)"
-    on:mouseenter={() => tooltipStore.update(s => ({ ...s, visible: false }))}
   >
     {t.text}
   </div>

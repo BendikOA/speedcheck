@@ -198,12 +198,71 @@
     '=': '= Neutral',
     '-': '− Speed (Brave/Quiet/Relaxed/Sassy)',
   };
+  const NATURE_EXPORT: Record<NatureTier, string> = { '+': 'Timid', '=': 'Hardy', '-': 'Brave' };
 
   const TERA_TYPES = ['Normal','Fire','Water','Electric','Grass','Ice','Fighting','Poison','Ground',
     'Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy'];
 
   const STAT_KEYS: (keyof import('$lib/stores/teams').StatSpread)[] = ['hp','atk','def','spa','spd','spe'];
   const STAT_LABELS = ['HP','Atk','Def','SpA','SpD','Spe'];
+
+  // ── Export ────────────────────────────────────────────────────────────────
+  let showExportModal = false;
+  let exportText = '';
+  let exportCopied = false;
+
+  function generatePaste(): string {
+    const blocks: string[] = [];
+    for (const slot of slots) {
+      if (!slot) continue;
+      const lines: string[] = [];
+      const namePart = slot.nickname ? `${slot.nickname} (${slot.name})` : slot.name;
+      lines.push(slot.item ? `${namePart} @ ${slot.item}` : namePart);
+      if (slot.ability) lines.push(`Ability: ${slot.ability}`);
+      if (slot.level && slot.level !== 50) lines.push(`Level: ${slot.level}`);
+      if (hasTera && slot.teraType) lines.push(`Tera Type: ${slot.teraType}`);
+      if (slot.evs) {
+        const ev = slot.evs;
+        const parts: string[] = [];
+        if (ev.hp)  parts.push(`${ev.hp} HP`);
+        if (ev.atk) parts.push(`${ev.atk} Atk`);
+        if (ev.def) parts.push(`${ev.def} Def`);
+        if (ev.spa) parts.push(`${ev.spa} SpA`);
+        if (ev.spd) parts.push(`${ev.spd} SpD`);
+        if (ev.spe) parts.push(`${ev.spe} Spe`);
+        if (parts.length) lines.push(`EVs: ${parts.join(' / ')}`);
+      }
+      lines.push(`${NATURE_EXPORT[slot.nature ?? '=']} Nature`);
+      if (slot.ivs) {
+        const iv = slot.ivs;
+        const parts: string[] = [];
+        if (iv.hp  !== 31) parts.push(`${iv.hp} HP`);
+        if (iv.atk !== 31) parts.push(`${iv.atk} Atk`);
+        if (iv.def !== 31) parts.push(`${iv.def} Def`);
+        if (iv.spa !== 31) parts.push(`${iv.spa} SpA`);
+        if (iv.spd !== 31) parts.push(`${iv.spd} SpD`);
+        if (iv.spe !== 31) parts.push(`${iv.spe} Spe`);
+        if (parts.length) lines.push(`IVs: ${parts.join(' / ')}`);
+      }
+      for (const move of slot.moves ?? []) {
+        if (move) lines.push(`- ${move}`);
+      }
+      blocks.push(lines.join('\n'));
+    }
+    return blocks.join('\n\n');
+  }
+
+  async function exportPaste() {
+    const text = generatePaste();
+    try {
+      await navigator.clipboard.writeText(text);
+      exportCopied = true;
+      setTimeout(() => exportCopied = false, 2000);
+    } catch {
+      exportText = text;
+      showExportModal = true;
+    }
+  }
 
   // ── Save ──────────────────────────────────────────────────────────────────
   function save() {
@@ -227,6 +286,20 @@
   />
 {/if}
 
+{#if showExportModal}
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+  <div class="modal-backdrop" on:click={() => showExportModal = false}>
+    <div class="modal-box" on:click|stopPropagation>
+      <div class="modal-header">
+        <span class="modal-title">Export Poképaste</span>
+        <button class="modal-close" on:click={() => showExportModal = false}>✕</button>
+      </div>
+      <textarea class="export-textarea" readonly value={exportText}
+        on:focus={e => e.currentTarget.select()}></textarea>
+    </div>
+  </div>
+{/if}
+
 <div class="page">
   <div class="toolbar">
     <a href="/" class="back-btn">← Back</a>
@@ -239,6 +312,9 @@
         <option value={g}>Gen {g}</option>
       {/each}
     </select>
+    <button class="export-btn" on:click={exportPaste}>
+      {exportCopied ? 'Copied!' : 'Export'}
+    </button>
     <button class="save-btn" on:click={save}>Save</button>
   </div>
 
@@ -300,7 +376,7 @@
                     on:focus={() => itemSuggestions = searchItems(slot.item ?? '')}
                     placeholder="e.g. Life Orb" />
                   {#if itemSuggestions.length}
-                    <ul class="suggestions">
+                    <ul class="suggestions" role="listbox">
                       {#each itemSuggestions as s}
                         <li><button on:click={() => pickItem(i, s)}>{s}</button></li>
                       {/each}
@@ -316,10 +392,9 @@
               <div class="field-row">
                 <label class="field-label" for="field-{i}-ability">Ability</label>
                 <select id="field-{i}-ability" class="field-input"
-                  value={slot.ability ?? abilities[0]}
                   on:change={e => setField(i, 'ability', e.currentTarget.value)}>
                   {#each abilities as ab}
-                    <option value={ab}>{ab}</option>
+                    <option value={ab} selected={ab === (slot.ability ?? abilities[0])}>{ab}</option>
                   {/each}
                 </select>
               </div>
@@ -397,7 +472,7 @@
                         moveSuggestions[mi] = searchMoves(slot.id, moveSearch[mi]);
                     }} />
                   {#if moveSuggestions[mi]?.length}
-                    <ul class="suggestions">
+                    <ul class="suggestions" role="listbox">
                       {#each moveSuggestions[mi] as s}
                         <li><button on:click={() => pickMove(i, mi, s)}>{s}</button></li>
                       {/each}
@@ -478,6 +553,71 @@
     transition: background 0.15s;
   }
   .save-btn:hover { background: var(--accent-hover); }
+
+  .export-btn {
+    padding: 0 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    min-height: 44px;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .export-btn:hover { color: var(--text); border-color: var(--text-muted); }
+
+  /* Export / modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title { font-weight: 600; font-size: 1rem; }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    min-height: unset;
+  }
+  .export-textarea {
+    width: 100%;
+    min-height: 220px;
+    padding: 0.65rem 0.75rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-family: monospace;
+    resize: vertical;
+    box-sizing: border-box;
+  }
 
   /* Slots */
   .slots-grid {
