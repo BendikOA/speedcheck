@@ -364,7 +364,7 @@
   }
 </script>
 
-<svelte:head><title>Game — Speedcheck</title></svelte:head>
+<svelte:head><title>Game — Turnadus</title></svelte:head>
 
 <div class="page">
 

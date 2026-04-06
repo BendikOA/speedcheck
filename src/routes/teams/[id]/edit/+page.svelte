@@ -276,7 +276,7 @@
   }
 </script>
 
-<svelte:head><title>Edit Team — Speedcheck</title></svelte:head>
+<svelte:head><title>Edit Team — Turnadus</title></svelte:head>
 
 {#if showPicker && activeSlot !== null}
   <PokemonPicker

@@ -212,7 +212,7 @@
   }
 </script>
 
-<svelte:head><title>Pokémon Select — Speedcheck</title></svelte:head>
+<svelte:head><title>Pokémon Select — Turnadus</title></svelte:head>
 <svelte:window on:keydown={e => { if (e.key === 'Escape') { showImport = false; importError = ''; } }} />
 
 {#if pickerTarget}

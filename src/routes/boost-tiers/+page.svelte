@@ -64,7 +64,7 @@
   function changeGen(g: GenNumber | null) { selectedGen = g; }
 </script>
 
-<svelte:head><title>Boost Tiers — Speedcheck</title></svelte:head>
+<svelte:head><title>Boost Tiers — Turnadus</title></svelte:head>
 
 <div class="page">
   <div class="section-label">Boost Speed Tiers</div>

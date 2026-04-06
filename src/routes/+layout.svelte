@@ -37,11 +37,11 @@
 <nav>
   <a href="/" class="brand">
     <img
-      src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png"
+      src="https://play.pokemonshowdown.com/sprites/dex/tornadus.png"
       alt=""
       class="brand-icon"
     />
-    Speedcheck
+    Turnadus
   </a>
 
   <!-- Desktop nav links -->
@@ -165,11 +165,11 @@
     <div class="drawer-header">
       <a href="/" class="brand drawer-brand">
         <img
-          src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png"
+          src="https://play.pokemonshowdown.com/sprites/dex/tornadus.png"
           alt=""
           class="brand-icon"
         />
-        Speedcheck
+        Turnadus
       </a>
       <button
         class="drawer-close"
@@ -265,7 +265,7 @@
         {/if}
       </button>
       <div class="drawer-kofi">
-        <span>Speedcheck is free, no ads, built solo.</span>
+        <span>Turnadus is free, no ads, built solo.</span>
         <span
           >If it helped you in a game, <a
             href="https://ko-fi.com/T6T21XBBI8"
@@ -292,7 +292,7 @@
   role="complementary"
   aria-label="Support the developer"
 >
-  <span class="kofi-line">Speedcheck is free, no ads, built solo.</span>
+  <span class="kofi-line">Turnadus is free, no ads, built solo.</span>
   <span class="kofi-line"
     >If it helped you in a game, <a
       class="kofi-link"
@@ -338,10 +338,9 @@
   }
 
   .brand-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
-    image-rendering: pixelated;
     flex-shrink: 0;
   }
 

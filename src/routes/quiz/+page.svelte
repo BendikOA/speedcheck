@@ -112,7 +112,7 @@
   $: winPct    = total > 0 ? Math.round((correct / total) * 100) : 0;
 </script>
 
-<svelte:head><title>Speed Quiz — Speedcheck</title></svelte:head>
+<svelte:head><title>Speed Quiz — Turnadus</title></svelte:head>
 
 <div class="page">
   <div class="header">
