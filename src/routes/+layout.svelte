@@ -77,32 +77,58 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<!-- Mobile dropdown menu -->
 {#if menuOpen}
-  <nav class="mobile-menu" aria-label="Mobile navigation">
-    <a href="/"            class:active={$page.url.pathname === '/'}>Teams</a>
-    <a href="/game"        class:active={$page.url.pathname === '/game'}>Game</a>
-    <a href="/tiers"       class:active={$page.url.pathname === '/tiers'}>All Tiers</a>
-    <a href="/boost-tiers" class:active={$page.url.pathname === '/boost-tiers'}>Boost Tiers</a>
-    <a href="/quiz"        class:active={$page.url.pathname === '/quiz'}>Quiz</a>
-    <div class="mobile-menu-divider"></div>
-    <button class="mobile-theme-btn" on:click={toggleTheme}>
-      {#if dark}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  <!-- Backdrop -->
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+  <div class="drawer-backdrop" on:click={() => menuOpen = false}></div>
+
+  <!-- Drawer -->
+  <nav class="drawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="/" class="brand drawer-brand">
+        <img src="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png" alt="" class="brand-icon" />
+        Speedcheck
+      </a>
+      <button class="drawer-close" on:click={() => menuOpen = false} aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
-        Switch to light mode
-      {:else}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        Switch to dark mode
-      {/if}
-    </button>
+      </button>
+    </div>
+
+    <div class="drawer-links">
+      <a href="/"            class:active={$page.url.pathname === '/'}>Teams</a>
+      <a href="/game"        class:active={$page.url.pathname === '/game'}>Game</a>
+      <a href="/tiers"       class:active={$page.url.pathname === '/tiers'}>All Tiers</a>
+      <a href="/boost-tiers" class:active={$page.url.pathname === '/boost-tiers'}>Boost Tiers</a>
+      <a href="/quiz"        class:active={$page.url.pathname === '/quiz'}>Quiz</a>
+    </div>
+
+    <div class="drawer-footer">
+      <button class="mobile-theme-btn" on:click={toggleTheme}>
+        {#if dark}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          Switch to light mode
+        {:else}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          Switch to dark mode
+        {/if}
+      </button>
+      <div class="drawer-kofi">
+        <span>Speedcheck is free &amp; built solo.</span>
+        <a href="https://ko-fi.com/T6T21XBBI8" target="_blank" rel="noopener">
+          <span aria-hidden="true">☕</span> Buy me a coffee on Ko-fi ↗
+        </a>
+      </div>
+    </div>
   </nav>
 {/if}
 
@@ -204,34 +230,88 @@
     cursor: pointer;
   }
 
-  /* Mobile menu dropdown */
-  .mobile-menu {
-    display: none;
-    position: sticky;
-    top: 52px;
-    z-index: 49;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    flex-direction: column;
-    padding: 0.5rem 0;
-    padding-left: max(1rem, var(--safe-left));
-    padding-right: max(1rem, var(--safe-right));
+  /* Drawer backdrop */
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0.55);
   }
 
-  .mobile-menu a {
-    color: var(--text-muted);
-    font-size: 1rem;
-    padding: 0.75rem 0;
+  /* Drawer panel */
+  .drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: min(82vw, 320px);
+    z-index: 100;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+    height: 60px;
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .drawer-brand {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     min-height: unset;
   }
-  .mobile-menu a:last-of-type { border-bottom: none; }
-  .mobile-menu a.active { color: var(--text); font-weight: 600; }
 
-  .mobile-menu-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 0.25rem 0;
+  .drawer-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+  }
+
+  .drawer-links {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .drawer-links a {
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    height: 60px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    min-height: unset;
+    transition: background 0.1s, color 0.1s;
+  }
+  .drawer-links a:hover   { background: var(--surface-2); color: var(--text); }
+  .drawer-links a.active  { color: var(--text); font-weight: 600; }
+
+  .drawer-footer {
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
   }
 
   .mobile-theme-btn {
@@ -240,21 +320,44 @@
     gap: 0.6rem;
     background: none;
     border: none;
+    border-bottom: 1px solid var(--border);
     color: var(--text-muted);
     font-size: 1rem;
-    padding: 0.75rem 0;
+    padding: 0 1.25rem;
+    height: 56px;
     cursor: pointer;
     text-align: left;
+    width: 100%;
   }
+  .mobile-theme-btn:hover { background: var(--surface-2); color: var(--text); }
+
+  .drawer-kofi {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.25rem;
+    padding-bottom: max(1rem, var(--safe-bottom));
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .drawer-kofi a {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-height: unset;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .drawer-kofi a:hover { color: var(--accent-hover); }
 
   @media (max-width: 640px) {
     nav {
       grid-template-columns: 1fr auto;
     }
-    .nav-links  { display: none; }
+    .nav-links    { display: none; }
     .theme-toggle { display: none; }
-    .hamburger  { display: flex; align-items: center; }
-    .mobile-menu { display: flex; }
+    .hamburger    { display: flex; align-items: center; }
   }
 
   main {
