@@ -10,8 +10,8 @@
   import { getPriorityMoves, getPriorityAbilities, loadPriorityCache, PRIORITY_MOVES, loadBoostCache, getMaxSpeedBoostStage } from '$lib/priority';
   import type { PriorityMove, PriorityAbility } from '$lib/priority';
   import { tooltip } from '$lib/tooltip';
-  import { loadSmogonNatures, getSmogonNature, loadSmogonPriorityMoves, loadSmogonAbilities, loadSmogonMoves } from '$lib/smogonUsage';
-  import type { UsageNatures, UsagePriorityMoves, UsageAbilities, UsageMoves } from '$lib/smogonUsage';
+  import { loadSmogonPriorityMoves, loadSmogonAbilities, loadSmogonMoves, loadSmogonBuilds } from '$lib/smogonUsage';
+  import type { UsagePriorityMoves, UsageAbilities, UsageMoves, UsageBuilds } from '$lib/smogonUsage';
 
   const GEN9_REGS = [
     { label: 'Reg I', format: 'gen9vgc2026regi' },
@@ -22,10 +22,10 @@
   let priorityReady = false;
   let smogonReady   = false;
   let selectedReg           = GEN9_REGS[0].format;
-  let smogonNatures:         UsageNatures       = {};
   let smogonPriorityMoves:   UsagePriorityMoves = {};
   let smogonAbilities:       UsageAbilities     = {};
   let smogonMoves:           UsageMoves         = {};
+  let smogonBuilds:          UsageBuilds        = {};
   let openMoves              = new Set<string>();
 
   // ── Team data ──────────────────────────────────────────────────────────────
@@ -38,11 +38,11 @@
     oppTeam  = state.oppTeam;
     await Promise.all([loadPriorityCache(), loadBoostCache()]);
     priorityReady = true;
-    [smogonNatures, smogonPriorityMoves, smogonAbilities, smogonMoves] = await Promise.all([
-      loadSmogonNatures(9, selectedReg),
+    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] = await Promise.all([
       loadSmogonPriorityMoves(9, selectedReg),
       loadSmogonAbilities(9, selectedReg),
       loadSmogonMoves(9, selectedReg),
+      loadSmogonBuilds(9, selectedReg),
     ]);
     smogonReady = true;
   });
@@ -50,27 +50,32 @@
   async function changeReg(format: string) {
     smogonReady = false;
     selectedReg = format;
-    [smogonNatures, smogonPriorityMoves, smogonAbilities, smogonMoves] = await Promise.all([
-      loadSmogonNatures(9, format),
+    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] = await Promise.all([
       loadSmogonPriorityMoves(9, format),
       loadSmogonAbilities(9, format),
       loadSmogonMoves(9, format),
+      loadSmogonBuilds(9, format),
     ]);
     smogonReady = true;
-    // Re-apply smart natures if active
-    if (smartNaturesActive) {
+    // Re-apply likely builds if active (data changed for new reg)
+    if (likelyBuildsActive) {
       const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
         field.forEach(i => {
           const slot = team[i];
           if (!slot) return;
-          if (side === 'you' && slot.natureLocked) { fieldNature.set(`${side}-${i}`, slot.nature); return; }
-          const nature = getSmogonNature(smogonNatures, slot.entry.id);
-          if (nature !== null) fieldNature.set(`${side}-${i}`, nature);
+          const key   = `${side}-${i}`;
+          const build = smogonBuilds[slot.entry.id];
+          if (!build) return;
+          if (!(side === 'you' && slot.natureLocked)) fieldNature.set(key, build.nature);
+          fieldSpeedEV.set(key, build.speEV);
+          if (build.item === 'Choice Scarf') fieldScarfs.set(key, true);
         });
       };
       applyFor('you', yourField, yourTeam);
       applyFor('opp', oppField, oppTeam);
-      fieldNature = new Map(fieldNature);
+      fieldNature  = new Map(fieldNature);
+      fieldSpeedEV = new Map(fieldSpeedEV);
+      fieldScarfs  = new Map(fieldScarfs);
     }
   }
 
@@ -79,6 +84,11 @@
     else openMoves.add(key);
     openMoves = new Set(openMoves);
   }
+
+  // ── Usage-based toggles (declared early — used in toggleField) ───────────
+  let likelyMovesActive     = false;
+  let likelyAbilitiesActive = false;
+  let likelyBuildsActive    = false;
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
@@ -92,19 +102,29 @@
       set.delete(index);
       fieldScarfs.delete(key);
       fieldParalysis.delete(key);
+      fieldSpeedEV.delete(key);
       // fieldProto / fieldNature / fieldCommander / fieldMega persist across field toggles
     } else if (set.size < 2) {
       set.add(index);
       fieldScarfs.set(key, team[index]?.scarf ?? false);
       fieldParalysis.set(key, false);
-      // Default to neutral; paste nature only applied when Smart Natures is toggled on
       if (!fieldNature.has(key)) fieldNature.set(key, '=');
+      // Auto-apply likely build if mode is active
+      if (likelyBuildsActive && team[index]) {
+        const build = smogonBuilds[team[index]!.entry.id];
+        if (build) {
+          if (!(side === 'you' && team[index]!.natureLocked)) fieldNature.set(key, build.nature);
+          fieldSpeedEV.set(key, build.speEV);
+          if (build.item === 'Choice Scarf') fieldScarfs.set(key, true);
+        }
+      }
     }
     yourField      = new Set(yourField);
     oppField       = new Set(oppField);
     fieldScarfs    = new Map(fieldScarfs);
     fieldParalysis = new Map(fieldParalysis);
     fieldNature    = new Map(fieldNature);
+    fieldSpeedEV   = new Map(fieldSpeedEV);
   }
 
   // ── Per-field toggles ─────────────────────────────────────────────────────
@@ -115,6 +135,7 @@
   let fieldCommander  = new Map<string, boolean>();
   let fieldMega       = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
   let fieldSpeedBoost = new Map<string, number>(); // 0=off, 1=+1 stage, 2=+2 stages
+  let fieldSpeedEV    = new Map<string, number>(); // Spe EV from likely build (0-252)
 
   function toggleFieldScarf(key: string, side: 'you' | 'opp') {
     const wasOn = fieldScarfs.get(key) ?? false;
@@ -193,6 +214,7 @@
     megaForms:        import('$lib/speedtiers').MegaStats[];
     megaIndex:        number;
     effectiveSpeed:    number;
+    speedEV:           number | undefined; // set when likely build is active
     weatherAbility:    string | null; // always set if has a weather/terrain ability
     weatherTriggered:  boolean;       // true only when the relevant condition is active
     canSpeedBoost:     boolean;
@@ -203,7 +225,7 @@
   };
 
   $: fieldRows = (() => {
-    void priorityReady; void likelyMovesActive; void likelyAbilitiesActive;
+    void priorityReady; void likelyMovesActive; void likelyAbilitiesActive; void likelyBuildsActive;
 
     const rows: FieldRow[] = [];
 
@@ -256,6 +278,8 @@
             .filter((m): m is PriorityMove => !!m)
         : getPriorityMoves(slot.entry.id);
 
+      const speedEV = fieldSpeedEV.get(key);
+
       rows.push({
         key, side, slot, scarf, paralysis, nature, natureLocked,
         canProtoBoost, protoBoost, protoCondActive, protoLabel,
@@ -263,9 +287,10 @@
         megaForms, megaIndex,
         weatherAbility, weatherTriggered,
         canSpeedBoost, maxBoostStage, speedBoostStage,
+        speedEV,
         effectiveSpeed: calcEffectiveSpeed(
           slot.entry, side,
-          { scarf, paralysis, protoBoost, commander, natureTier: nature, megaIndex, speedBoostStage },
+          { scarf, paralysis, protoBoost, commander, natureTier: nature, megaIndex, speedBoostStage, speedEV },
           cond
         ),
         priorityMoves:     effectivePriorityMoves,
@@ -283,51 +308,43 @@
     return rows;
   })();
 
-  // ── Usage-based toggles ────────────────────────────────────────────────────
-  let smartNaturesActive    = false;
-  let likelyMovesActive     = false;
-  let likelyAbilitiesActive = false;
-
-  function toggleSmartNatures() {
-    if (smartNaturesActive) {
-      // Reset all fielded Pokémon back to neutral
-      const resetFor = (side: 'you' | 'opp', field: Set<number>) => {
-        field.forEach(i => fieldNature.set(`${side}-${i}`, '='));
-      };
-      resetFor('you', yourField);
-      resetFor('opp', oppField);
-      fieldNature = new Map(fieldNature);
-      smartNaturesActive = false;
-    } else {
-      // Apply dominant speed nature from Smogon usage data.
-      // For your team: skip Pokémon whose nature is locked from a pokepaste.
-      // For opponent: always apply.
-      const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
-        field.forEach(i => {
-          const slot = team[i];
-          if (!slot) return;
-          // Your team: paste nature takes priority over Smogon data
-          if (side === 'you' && slot.natureLocked) {
-            fieldNature.set(`${side}-${i}`, slot.nature);
-            return;
-          }
-          const nature = getSmogonNature(smogonNatures, slot.entry.id);
-          if (nature !== null) fieldNature.set(`${side}-${i}`, nature);
-        });
-      };
-      applyFor('you', yourField, yourTeam);
-      applyFor('opp', oppField,  oppTeam);
-      fieldNature = new Map(fieldNature);
-      smartNaturesActive = true;
-    }
-  }
-
   function toggleLikelyMoves() {
     likelyMovesActive = !likelyMovesActive;
   }
 
   function toggleLikelyAbilities() {
     likelyAbilitiesActive = !likelyAbilitiesActive;
+  }
+
+  function toggleLikelyBuilds() {
+    if (likelyBuildsActive) {
+      // Clear EV overrides; reset natures to neutral
+      yourField.forEach(i => { fieldSpeedEV.delete(`you-${i}`); fieldNature.set(`you-${i}`, '='); });
+      oppField.forEach(i  => { fieldSpeedEV.delete(`opp-${i}`); fieldNature.set(`opp-${i}`, '='); });
+      fieldSpeedEV = new Map(fieldSpeedEV);
+      fieldNature  = new Map(fieldNature);
+      likelyBuildsActive = false;
+    } else {
+      // Apply most common build to every fielded Pokémon
+      const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
+        field.forEach(i => {
+          const slot = team[i];
+          if (!slot) return;
+          const key   = `${side}-${i}`;
+          const build = smogonBuilds[slot.entry.id];
+          if (!build) return;
+          if (!(side === 'you' && slot.natureLocked)) fieldNature.set(key, build.nature);
+          fieldSpeedEV.set(key, build.speEV);
+          if (build.item === 'Choice Scarf') fieldScarfs.set(key, true);
+        });
+      };
+      applyFor('you', yourField, yourTeam);
+      applyFor('opp', oppField,  oppTeam);
+      fieldSpeedEV = new Map(fieldSpeedEV);
+      fieldNature  = new Map(fieldNature);
+      fieldScarfs  = new Map(fieldScarfs);
+      likelyBuildsActive = true;
+    }
   }
 
   // ── Reset ──────────────────────────────────────────────────────────────────
@@ -341,11 +358,12 @@
     fieldCommander  = new Map();
     fieldMega       = new Map();
     fieldSpeedBoost = new Map();
+    fieldSpeedEV    = new Map();
     openMoves       = new Set();
     cond                  = { ...DEFAULT_CONDITIONS };
-    smartNaturesActive    = false;
     likelyMovesActive     = false;
     likelyAbilitiesActive = false;
+    likelyBuildsActive    = false;
     goto('/');
   }
 </script>
@@ -360,10 +378,12 @@
     {#if yourField.size > 0 || oppField.size > 0}
       <button
         class="smart-nature-btn"
-        class:active={smartNaturesActive}
-        use:tooltip={smartNaturesActive ? "Click to reset all natures to neutral (=Spe)" : "Set each fielded Pokémon's speed nature from Smogon usage data. Click again to reset."}
-        on:click={toggleSmartNatures}
-      >Smart Natures</button>
+        class:active={likelyBuildsActive}
+        use:tooltip={likelyBuildsActive
+          ? "Showing most common EV spread, nature & item from Smogon usage data — click to reset"
+          : "Apply the most common EV spread, nature & item per Pokémon from Smogon usage data (speed tiers vary a lot based on the actual spread run)"}
+        on:click={toggleLikelyBuilds}
+      >Likely Build</button>
     {/if}
     <div class="top-bar-right">
       <div class="reg-tabs" class:loading={!smogonReady} use:tooltip={"Switch Smogon usage data source (affects Smart Natures, Likely Moves, Likely Abilities, and Move Reveal)"}>
@@ -542,6 +562,12 @@
                   {#each row.priorityAbilities as pa}
                     <span class="badge prio-ability-badge" use:tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</span>
                   {/each}
+                  {#if likelyBuildsActive}
+                    {@const build = smogonBuilds[row.slot.entry.id]}
+                    {#if build?.item && build.item !== 'Choice Scarf'}
+                      <span class="badge item-badge" use:tooltip={`Most common item (Smogon ${selectedReg}): ${build.item}`}>{build.item}</span>
+                    {/if}
+                  {/if}
                 </div>
               </div>
 
@@ -553,10 +579,17 @@
                   class:nature-neu={row.nature === '='}
                   class:nature-neg={row.nature === '-'}
                   on:click={() => cycleNature(row.key)}
-                  use:tooltip={row.natureLocked && smartNaturesActive
-                    ? "Nature from pokepaste — overruling Smart Natures"
-                    : "Speed nature — click to cycle\n= Neutral (Hardy/Docile/Serious/Bashful/Quirky): no modifier\n+ Positive (Timid/Jolly/Naive/Hasty): ×1.1 Speed\n− Negative (Brave/Quiet/Relaxed/Sassy): ×0.9 Speed"}
-                >{row.nature === '+' ? '+Spe' : row.nature === '=' ? '=Spe' : '−Spe'}{#if row.natureLocked && smartNaturesActive}&thinsp;🔒{/if}</button>
+                  use:tooltip={row.natureLocked && likelyBuildsActive
+                    ? "Nature from pokepaste — overruling Likely Build"
+                    : "Speed nature — click to cycle\n+ Positive (Timid/Jolly/Naive/Hasty): 252 EVs ×1.1 — max speed investment\n= Neutral: 0 EVs, no modifier — no speed investment\n− Negative (Brave/Quiet/Relaxed/Sassy): 0 EVs ×0.9 — TR min speed"}
+                >{row.nature === '+' ? '+' : row.nature === '=' ? '=' : '−'}Nat{#if row.natureLocked && likelyBuildsActive}&thinsp;🔒{/if}</button>
+
+                <!-- Spe EV chip (shown when Likely Build is active) -->
+                {#if row.speedEV !== undefined}
+                  <span class="toggle-pill ev-pill"
+                    use:tooltip={`Spe EVs from most common spread (Smogon ${selectedReg}): ${row.speedEV}`}
+                  >{row.speedEV} EVs</span>
+                {/if}
 
                 <!-- Scarf -->
                 <label class="toggle-pill" class:active={row.scarf}
@@ -1228,6 +1261,19 @@
     color: var(--text-muted);
     background: var(--surface);
     white-space: nowrap;
+  }
+
+  /* Likely Build: EV pill and item badge */
+  .toggle-pill.ev-pill {
+    color: #a8c8ff;
+    border-color: #a8c8ff;
+    cursor: default;
+    pointer-events: auto;
+  }
+  .badge.item-badge {
+    background: color-mix(in srgb, #a8c8ff 12%, transparent);
+    border: 1px solid color-mix(in srgb, #a8c8ff 40%, transparent);
+    color: #a8c8ff;
   }
 
   /* Mobile tightening */

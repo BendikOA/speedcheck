@@ -5,6 +5,7 @@ export type UsageOrder         = string[];
 export type UsagePriorityMoves = Record<string, string[]>;
 export type UsageAbilities     = Record<string, string>;
 export type UsageMoves         = Record<string, string[]>; // top 4 move display names
+export type UsageBuilds        = Record<string, { speEV: number; nature: NatureTier; item: string }>;
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -42,6 +43,9 @@ const abilitiesInflight = new Map<string, Promise<UsageAbilities>>();
 
 const topMovesCache    = new Map<string, UsageMoves>();
 const topMovesInflight = new Map<string, Promise<UsageMoves>>();
+
+const buildsCache    = new Map<string, UsageBuilds>();
+const buildsInflight = new Map<string, Promise<UsageBuilds>>();
 
 // ── URL helpers ────────────────────────────────────────────────────────────
 
@@ -145,6 +149,24 @@ export async function loadSmogonMoves(gen = 9, format?: string): Promise<UsageMo
     return data;
   })();
   topMovesInflight.set(k, p);
+  return p;
+}
+
+export async function loadSmogonBuilds(gen = 9, format?: string): Promise<UsageBuilds> {
+  const k = cacheKey('smogon_builds', gen, format);
+  if (buildsCache.has(k)) return buildsCache.get(k)!;
+  const stored = lsGet<UsageBuilds>(k);
+  if (stored) { buildsCache.set(k, stored); return stored; }
+  if (buildsInflight.has(k)) return buildsInflight.get(k)!;
+
+  const p = (async (): Promise<UsageBuilds> => {
+    const res  = await fetch(apiUrl('/api/smogon-builds', gen, format));
+    const data: UsageBuilds = res.ok ? await res.json() : {};
+    buildsCache.set(k, data);
+    lsSet(k, data);
+    return data;
+  })();
+  buildsInflight.set(k, p);
   return p;
 }
 

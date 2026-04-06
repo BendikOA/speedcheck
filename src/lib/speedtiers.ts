@@ -103,8 +103,8 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
           baseSpe: megaSpe,
           types: megaSp.types ?? types,
           maxSpeed:     gen.stats.calc('spe', megaSpe, 31, 252, 50, jolly),
-          neutralSpeed: gen.stats.calc('spe', megaSpe, 31, 252, 50, hardy),
-          minSpeed:     gen.stats.calc('spe', megaSpe,  0,   0, 50, brave),
+          neutralSpeed: gen.stats.calc('spe', megaSpe, 31,   0, 50, hardy),
+          minSpeed:     gen.stats.calc('spe', megaSpe, 31,   0, 50, brave),
         });
       }
     }
@@ -117,8 +117,8 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
     entries.push({
       id: sp.id, name: sp.name, baseSpe, abilities, types, megaForms,
       maxSpeed:     gen.stats.calc('spe', baseSpe, 31, 252, 50, jolly),
-      minSpeed:     gen.stats.calc('spe', baseSpe,  0,   0, 50, brave),
-      neutralSpeed: gen.stats.calc('spe', baseSpe, 31, 252, 50, hardy),
+      neutralSpeed: gen.stats.calc('spe', baseSpe, 31,   0, 50, hardy),
+      minSpeed:     gen.stats.calc('spe', baseSpe, 31,   0, 50, brave),
     });
   }
   entries.sort((a, b) => b.maxSpeed - a.maxSpeed || b.baseSpe - a.baseSpe);
@@ -163,6 +163,14 @@ export const DEFAULT_CONDITIONS: Conditions = {
 
 export type NatureTier = '+' | '=' | '-';
 
+/** Compute raw speed stat from base, EVs (0-252), IVs=31, Level=50. */
+export function calcRawSpeed(baseSpe: number, ev: number, natureTier: NatureTier): number {
+  const raw = Math.floor((2 * baseSpe + 31 + Math.floor(ev / 4)) * 50 / 100 + 5);
+  if (natureTier === '+') return Math.floor(raw * 1.1);
+  if (natureTier === '-') return Math.floor(raw * 0.9);
+  return raw;
+}
+
 export function calcEffectiveSpeed(
   entry: SpeedEntry,
   side: 'you' | 'opp',
@@ -174,6 +182,7 @@ export function calcEffectiveSpeed(
     natureTier?:     NatureTier;
     megaIndex?:      number; // 0 = base, 1+ = mega form index into megaForms[]
     speedBoostStage?: number; // +1 = ×1.5, +2 = ×2.0
+    speedEV?:        number; // when set, compute speed from EVs instead of precomputed values
   },
   cond: Conditions
 ): number {
@@ -181,10 +190,12 @@ export function calcEffectiveSpeed(
   const megaIdx = perPoke.megaIndex ?? 0;
   const src = (megaIdx > 0 && entry.megaForms[megaIdx - 1]) ? entry.megaForms[megaIdx - 1] : entry;
 
-  // Pick base speed from nature tier
-  const base = perPoke.natureTier === '=' ? src.neutralSpeed
-             : perPoke.natureTier === '-' ? src.minSpeed
-             : src.maxSpeed;
+  // Pick base speed — use EV-aware calc when speedEV is specified, else precomputed tiers
+  const base = perPoke.speedEV !== undefined
+    ? calcRawSpeed(src.baseSpe, perPoke.speedEV, perPoke.natureTier ?? '=')
+    : perPoke.natureTier === '=' ? src.neutralSpeed
+    : perPoke.natureTier === '-' ? src.minSpeed
+    : src.maxSpeed;
   let speed = base;
 
   // Weather/terrain ability (×2) — skip when mega'd (mega has different ability)
