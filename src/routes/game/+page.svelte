@@ -506,7 +506,8 @@
             : "Show top moves from Smogon usage stats for each fielded Pokémon"}
           on:click={toggleLikelyMoves}>Moves</button
         >
-        <button
+        <!-- Reimplementing this when it works properly. currently broken.
+         <button
           class="reg-tab"
           class:active={likelyAbilitiesActive}
           use:tooltip={likelyAbilitiesActive
@@ -514,6 +515,7 @@
             : "Show the most commonly run ability per Pokémon from Smogon usage stats"}
           on:click={toggleLikelyAbilities}>Ability</button
         >
+        -->
       </div>
     </div>
   </div>
