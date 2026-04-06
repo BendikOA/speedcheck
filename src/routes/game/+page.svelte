@@ -761,18 +761,32 @@
   @media (max-width: 600px) {
     .conditions-bar {
       flex-direction: column;
+      align-items: stretch;
       gap: 0;
     }
     .cond-group {
-      padding: 0.5rem 0;
+      flex-direction: row;
+      align-items: center;
+      padding: 0.45rem 0;
+      gap: 0.5rem;
     }
     .cond-group:first-child { padding-top: 0; }
+    .cond-group:last-child  { padding-bottom: 0; }
     .cond-group:not(:last-child) {
       border-right: none;
       border-bottom: 1px solid var(--border);
     }
+    .cond-group-label {
+      width: 4.5rem;
+      flex-shrink: 0;
+    }
     .cond-group-btns {
+      flex: 1;
       justify-content: space-between;
+    }
+    .cond-btn {
+      flex: 1;
+      text-align: center;
     }
   }
 
@@ -1055,10 +1069,11 @@
 
   .badge {
     font-size: 0.75rem;
-    padding: 0.1rem 0.4rem;
+    padding: 2px 0.4rem;
     border-radius: 100px;
     border: 1px solid;
     white-space: nowrap;
+    line-height: 1.4;
   }
 
   .badge.ability {
@@ -1114,8 +1129,12 @@
   .row-toggles {
     display: flex;
     gap: 0.3rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .row-toggles::-webkit-scrollbar { display: none; }
 
   .toggle-pill {
     display: inline-flex;

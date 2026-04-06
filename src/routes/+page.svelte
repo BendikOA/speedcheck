@@ -338,14 +338,14 @@
                     <span class="slot-name">{slot.entry.name}</span>
                     <span class="slot-spe">{slot.entry.baseSpe}</span>
                   </button>
-                  <button
+                  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                  <div
                     class="scarf-pill"
                     class:active={slot.scarf}
-                    aria-pressed={slot.scarf}
                     on:click|stopPropagation={() => toggleScarf(side, i)}
                   >
                     Scarf
-                  </button>
+                  </div>
                 {:else}
                   <button
                     class="slot-empty"
@@ -773,7 +773,6 @@
     padding: 0.2rem 0.5rem;
     border-radius: 100px;
     border: 1px solid var(--border);
-    background: none;
     color: var(--text-muted);
     cursor: pointer;
     user-select: none;
