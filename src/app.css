@@ -7,16 +7,17 @@
 
 :root {
   /* Dark theme (default) */
-  --bg: #0f0e17;
-  --surface: #1a1927;
-  --surface-2: #222136;
-  --border: #2e2d4a;
-  --text: #fffffe;
-  --text-muted: #a7a9be;
-  --accent: #ff8906;
-  --accent-hover: #ffaa44;
+  --bg: #06080F;
+  --surface: #0f1118;
+  --surface-2: #161a24;
+  --border: #252a38;
+  --text: #ffffff;
+  --text-muted: #aaaaaa;
+  --accent: #a056d4;
+  --accent-hover: #c07eee;
+  --accent-2: #4a9c41;
   --danger: #f56c6c;
-  --success: #6cf587;
+  --success: #4a9c41;
 
   --radius: 8px;
   --radius-sm: 4px;

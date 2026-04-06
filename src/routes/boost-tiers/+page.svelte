@@ -222,7 +222,7 @@
   .boost-label { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; }
   .base        { font-variant-numeric: tabular-nums; color: var(--text-muted); }
   .nature      { font-size: 0.8rem; white-space: nowrap; }
-  .nature-pos  { color: #6c8ef5; }
+  .nature-pos  { color: var(--accent-2); }
   .nature-neu  { color: var(--text-muted); }
   .notes       { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; }
   .pokemon-list {

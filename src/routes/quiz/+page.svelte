@@ -412,8 +412,8 @@
     border-radius: 100px;
     border: 1px solid;
   }
-  .nature-pill.pos { color: #6c8ef5; border-color: #6c8ef5; }
-  .nature-pill.neg { color: #f56c6c; border-color: #f56c6c; }
+  .nature-pill.pos { color: var(--accent-2); border-color: var(--accent-2); }
+  .nature-pill.neg { color: #c94040; border-color: #c94040; }
   .scarf-pill { color: #f5c96c; border-color: #f5c96c; }
 
   .reveal-speed {
