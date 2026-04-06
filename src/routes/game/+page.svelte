@@ -1,98 +1,125 @@
 <script lang="ts">
-  import { get } from 'svelte/store';
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { teamState } from '$lib/stores/teams';
-  import type { TeamSlot } from '$lib/stores/teams';
-  import { calcEffectiveSpeed, WEATHER_ABILITY, PROTO_ABILITY, DEFAULT_CONDITIONS } from '$lib/speedtiers';
-  import type { Conditions, NatureTier } from '$lib/speedtiers';
-  import { spriteUrl } from '$lib/sprites';
-  import { getPriorityMoves, getPriorityAbilities, loadPriorityCache, PRIORITY_MOVES, loadBoostCache, getMaxSpeedBoostStage } from '$lib/priority';
-  import type { PriorityMove, PriorityAbility } from '$lib/priority';
-  import { tooltip } from '$lib/tooltip';
-  import { loadSmogonPriorityMoves, loadSmogonAbilities, loadSmogonMoves, loadSmogonBuilds } from '$lib/smogonUsage';
-  import type { UsagePriorityMoves, UsageAbilities, UsageMoves, UsageBuilds } from '$lib/smogonUsage';
+  import { get } from "svelte/store";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { teamState } from "$lib/stores/teams";
+  import type { TeamSlot } from "$lib/stores/teams";
+  import {
+    calcEffectiveSpeed,
+    WEATHER_ABILITY,
+    PROTO_ABILITY,
+    DEFAULT_CONDITIONS,
+  } from "$lib/speedtiers";
+  import type { Conditions, NatureTier } from "$lib/speedtiers";
+  import { spriteUrl } from "$lib/sprites";
+  import {
+    getPriorityMoves,
+    getPriorityAbilities,
+    loadPriorityCache,
+    PRIORITY_MOVES,
+    loadBoostCache,
+    getMaxSpeedBoostStage,
+  } from "$lib/priority";
+  import type { PriorityMove, PriorityAbility } from "$lib/priority";
+  import { tooltip } from "$lib/tooltip";
+  import {
+    loadSmogonPriorityMoves,
+    loadSmogonAbilities,
+    loadSmogonMoves,
+    loadSmogonBuilds,
+  } from "$lib/smogonUsage";
+  import type {
+    UsagePriorityMoves,
+    UsageAbilities,
+    UsageMoves,
+    UsageBuilds,
+  } from "$lib/smogonUsage";
 
   const GEN9_REGS = [
-    { label: 'Reg I', format: 'gen9vgc2026regi' },
-    { label: 'Reg F', format: 'gen9vgc2026regf' },
-    { label: 'Reg G', format: 'gen9vgc2025regg' },
+    { label: "Reg I", format: "gen9vgc2026regi" },
+    { label: "Reg F", format: "gen9vgc2026regf" },
+    { label: "Reg G", format: "gen9vgc2025regg" },
   ];
 
   let priorityReady = false;
-  let smogonReady   = false;
-  let selectedReg           = GEN9_REGS[0].format;
-  let smogonPriorityMoves:   UsagePriorityMoves = {};
-  let smogonAbilities:       UsageAbilities     = {};
-  let smogonMoves:           UsageMoves         = {};
-  let smogonBuilds:          UsageBuilds        = {};
+  let smogonReady = false;
+  let selectedReg = GEN9_REGS[0].format;
+  let smogonPriorityMoves: UsagePriorityMoves = {};
+  let smogonAbilities: UsageAbilities = {};
+  let smogonMoves: UsageMoves = {};
+  let smogonBuilds: UsageBuilds = {};
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
-  let oppTeam:  TeamSlot[] = Array(6).fill(null);
+  let oppTeam: TeamSlot[] = Array(6).fill(null);
 
   onMount(async () => {
     const state = get(teamState);
     yourTeam = state.yourTeam;
-    oppTeam  = state.oppTeam;
+    oppTeam = state.oppTeam;
     await Promise.all([loadPriorityCache(), loadBoostCache()]);
     priorityReady = true;
-    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] = await Promise.all([
-      loadSmogonPriorityMoves(9, selectedReg),
-      loadSmogonAbilities(9, selectedReg),
-      loadSmogonMoves(9, selectedReg),
-      loadSmogonBuilds(9, selectedReg),
-    ]);
+    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
+      await Promise.all([
+        loadSmogonPriorityMoves(9, selectedReg),
+        loadSmogonAbilities(9, selectedReg),
+        loadSmogonMoves(9, selectedReg),
+        loadSmogonBuilds(9, selectedReg),
+      ]);
     smogonReady = true;
   });
 
   async function changeReg(format: string) {
     smogonReady = false;
     selectedReg = format;
-    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] = await Promise.all([
-      loadSmogonPriorityMoves(9, format),
-      loadSmogonAbilities(9, format),
-      loadSmogonMoves(9, format),
-      loadSmogonBuilds(9, format),
-    ]);
+    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
+      await Promise.all([
+        loadSmogonPriorityMoves(9, format),
+        loadSmogonAbilities(9, format),
+        loadSmogonMoves(9, format),
+        loadSmogonBuilds(9, format),
+      ]);
     smogonReady = true;
     // Re-apply likely builds if active (data changed for new reg)
     if (likelyBuildsActive) {
-      const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
-        field.forEach(i => {
+      const applyFor = (
+        side: "you" | "opp",
+        field: Set<number>,
+        team: TeamSlot[],
+      ) => {
+        field.forEach((i) => {
           const slot = team[i];
           if (!slot) return;
-          const key   = `${side}-${i}`;
+          const key = `${side}-${i}`;
           const build = smogonBuilds[slot.entry.id];
           if (!build) return;
-          if (!(side === 'you' && slot.natureLocked)) fieldNature.set(key, build.nature);
+          if (!(side === "you" && slot.natureLocked))
+            fieldNature.set(key, build.nature);
           fieldSpeedEV.set(key, build.speEV);
-          if (build.item === 'Choice Scarf') fieldScarfs.set(key, true);
+          if (build.item === "Choice Scarf") fieldScarfs.set(key, true);
         });
       };
-      applyFor('you', yourField, yourTeam);
-      applyFor('opp', oppField, oppTeam);
-      fieldNature  = new Map(fieldNature);
+      applyFor("you", yourField, yourTeam);
+      applyFor("opp", oppField, oppTeam);
+      fieldNature = new Map(fieldNature);
       fieldSpeedEV = new Map(fieldSpeedEV);
-      fieldScarfs  = new Map(fieldScarfs);
+      fieldScarfs = new Map(fieldScarfs);
     }
   }
 
-
-
   // ── Usage-based toggles (declared early — used in toggleField) ───────────
-  let likelyMovesActive     = false;
+  let likelyMovesActive = false;
   let likelyAbilitiesActive = false;
-  let likelyBuildsActive    = false;
+  let likelyBuildsActive = false;
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
-  let oppField  = new Set<number>();
+  let oppField = new Set<number>();
 
-  function toggleField(side: 'you' | 'opp', index: number) {
-    const set  = side === 'you' ? yourField : oppField;
-    const team = side === 'you' ? yourTeam  : oppTeam;
-    const key  = `${side}-${index}`;
+  function toggleField(side: "you" | "opp", index: number) {
+    const set = side === "you" ? yourField : oppField;
+    const team = side === "you" ? yourTeam : oppTeam;
+    const key = `${side}-${index}`;
     if (set.has(index)) {
       set.delete(index);
       fieldScarfs.delete(key);
@@ -103,39 +130,40 @@
       set.add(index);
       fieldScarfs.set(key, team[index]?.scarf ?? false);
       fieldParalysis.set(key, false);
-      if (!fieldNature.has(key)) fieldNature.set(key, '=');
+      if (!fieldNature.has(key)) fieldNature.set(key, "=");
       // Auto-apply likely build if mode is active
       if (likelyBuildsActive && team[index]) {
         const build = smogonBuilds[team[index]!.entry.id];
         if (build) {
-          if (!(side === 'you' && team[index]!.natureLocked)) fieldNature.set(key, build.nature);
+          if (!(side === "you" && team[index]!.natureLocked))
+            fieldNature.set(key, build.nature);
           fieldSpeedEV.set(key, build.speEV);
-          if (build.item === 'Choice Scarf') fieldScarfs.set(key, true);
+          if (build.item === "Choice Scarf") fieldScarfs.set(key, true);
         }
       }
     }
-    yourField      = new Set(yourField);
-    oppField       = new Set(oppField);
-    fieldScarfs    = new Map(fieldScarfs);
+    yourField = new Set(yourField);
+    oppField = new Set(oppField);
+    fieldScarfs = new Map(fieldScarfs);
     fieldParalysis = new Map(fieldParalysis);
-    fieldNature    = new Map(fieldNature);
-    fieldSpeedEV   = new Map(fieldSpeedEV);
+    fieldNature = new Map(fieldNature);
+    fieldSpeedEV = new Map(fieldSpeedEV);
   }
 
   // ── Per-field toggles ─────────────────────────────────────────────────────
-  let fieldScarfs     = new Map<string, boolean>();
-  let fieldParalysis  = new Map<string, boolean>();
-  let fieldProto      = new Map<string, boolean>();
-  let fieldNature     = new Map<string, NatureTier>();
-  let fieldCommander  = new Map<string, boolean>();
-  let fieldMega       = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
+  let fieldScarfs = new Map<string, boolean>();
+  let fieldParalysis = new Map<string, boolean>();
+  let fieldProto = new Map<string, boolean>();
+  let fieldNature = new Map<string, NatureTier>();
+  let fieldCommander = new Map<string, boolean>();
+  let fieldMega = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
   let fieldSpeedBoost = new Map<string, number>(); // 0=off, 1=+1 stage, 2=+2 stages
-  let fieldSpeedEV    = new Map<string, number>(); // Spe EV from likely build (0-252)
+  let fieldSpeedEV = new Map<string, number>(); // Spe EV from likely build (0-252)
 
-  function toggleFieldScarf(key: string, side: 'you' | 'opp') {
+  function toggleFieldScarf(key: string, side: "you" | "opp") {
     const wasOn = fieldScarfs.get(key) ?? false;
-    const fieldSet = side === 'you' ? yourField : oppField;
-    fieldSet.forEach(i => fieldScarfs.set(`${side}-${i}`, false));
+    const fieldSet = side === "you" ? yourField : oppField;
+    fieldSet.forEach((i) => fieldScarfs.set(`${side}-${i}`, false));
     if (!wasOn) fieldScarfs.set(key, true);
     fieldScarfs = new Map(fieldScarfs);
   }
@@ -151,9 +179,9 @@
   }
 
   function cycleNature(key: string) {
-    const cur = fieldNature.get(key) ?? '=';
+    const cur = fieldNature.get(key) ?? "=";
     // = (neutral) → + (positive) → - (negative) → = …
-    const next: NatureTier = cur === '=' ? '+' : cur === '+' ? '-' : '=';
+    const next: NatureTier = cur === "=" ? "+" : cur === "+" ? "-" : "=";
     fieldNature.set(key, next);
     fieldNature = new Map(fieldNature);
   }
@@ -179,13 +207,13 @@
   // ── Conditions ─────────────────────────────────────────────────────────────
   let cond: Conditions = { ...DEFAULT_CONDITIONS };
 
-  function toggleWeather(w: 'rain' | 'sun' | 'sand' | 'snow') {
+  function toggleWeather(w: "rain" | "sun" | "sand" | "snow") {
     const was = cond[w];
     cond = { ...cond, rain: false, sun: false, sand: false, snow: false };
     if (!was) cond[w] = true;
   }
 
-  function toggleTerrain(t: 'electric' | 'grassy' | 'psychic') {
+  function toggleTerrain(t: "electric" | "grassy" | "psychic") {
     const was = cond[t];
     cond = { ...cond, electric: false, grassy: false, psychic: false };
     if (!was) cond[t] = true;
@@ -193,113 +221,165 @@
 
   // ── Speed order ────────────────────────────────────────────────────────────
   type FieldRow = {
-    key:              string;
-    side:             'you' | 'opp';
-    slot:             NonNullable<TeamSlot>;
-    scarf:            boolean;
-    paralysis:        boolean;
-    nature:           NatureTier;
-    natureLocked:     boolean;
-    canProtoBoost:    boolean;
-    protoBoost:       boolean;
-    protoCondActive:  boolean;
-    protoLabel:       string;
-    canCommander:     boolean;
-    commander:        boolean;
-    megaForms:        import('$lib/speedtiers').MegaStats[];
-    megaIndex:        number;
-    effectiveSpeed:    number;
-    speedEV:           number | undefined; // set when likely build is active
-    weatherAbility:    string | null; // always set if has a weather/terrain ability
-    weatherTriggered:  boolean;       // true only when the relevant condition is active
-    canSpeedBoost:     boolean;
-    maxBoostStage:     number;
-    speedBoostStage:   number;
-    priorityMoves:     PriorityMove[];
+    key: string;
+    side: "you" | "opp";
+    slot: NonNullable<TeamSlot>;
+    scarf: boolean;
+    paralysis: boolean;
+    nature: NatureTier;
+    natureLocked: boolean;
+    canProtoBoost: boolean;
+    protoBoost: boolean;
+    protoCondActive: boolean;
+    protoLabel: string;
+    canCommander: boolean;
+    commander: boolean;
+    megaForms: import("$lib/speedtiers").MegaStats[];
+    megaIndex: number;
+    effectiveSpeed: number;
+    speedEV: number | undefined; // set when likely build is active
+    weatherAbility: string | null; // always set if has a weather/terrain ability
+    weatherTriggered: boolean; // true only when the relevant condition is active
+    canSpeedBoost: boolean;
+    maxBoostStage: number;
+    speedBoostStage: number;
+    priorityMoves: PriorityMove[];
     priorityAbilities: PriorityAbility[];
   };
 
   $: fieldRows = (() => {
-    void priorityReady; void likelyMovesActive; void likelyAbilitiesActive; void likelyBuildsActive;
+    void priorityReady;
+    void likelyMovesActive;
+    void likelyAbilitiesActive;
+    void likelyBuildsActive;
 
     const rows: FieldRow[] = [];
 
-    const buildRow = (side: 'you' | 'opp', i: number, slot: NonNullable<TeamSlot>) => {
-      const key       = `${side}-${i}`;
-      const scarf     = fieldScarfs.get(key)    ?? false;
+    const buildRow = (
+      side: "you" | "opp",
+      i: number,
+      slot: NonNullable<TeamSlot>,
+    ) => {
+      const key = `${side}-${i}`;
+      const scarf = fieldScarfs.get(key) ?? false;
       const paralysis = fieldParalysis.get(key) ?? false;
-      const nature    = fieldNature.get(key)    ?? '+';
+      const nature = fieldNature.get(key) ?? "+";
       const commander = fieldCommander.get(key) ?? false;
 
       // Proto/Quark: always show toggle (can be triggered by Booster Energy regardless of weather/terrain)
-      const protoAbilityId  = slot.entry.abilities.find(a => PROTO_ABILITY[a]);
-      const canProtoBoost   = !!protoAbilityId;
-      const protoBoost      = canProtoBoost && (fieldProto.get(key) ?? false);
-      const protoCondition  = protoAbilityId ? PROTO_ABILITY[protoAbilityId] : null;
+      const protoAbilityId = slot.entry.abilities.find((a) => PROTO_ABILITY[a]);
+      const canProtoBoost = !!protoAbilityId;
+      const protoBoost = canProtoBoost && (fieldProto.get(key) ?? false);
+      const protoCondition = protoAbilityId
+        ? PROTO_ABILITY[protoAbilityId]
+        : null;
       const protoCondActive = !!protoCondition && !!cond[protoCondition];
-      const protoLabel      = protoAbilityId === 'quarkdrive' ? 'QD ×1.5' : 'PS ×1.5';
+      const protoLabel =
+        protoAbilityId === "quarkdrive" ? "QD ×1.5" : "PS ×1.5";
 
-      const canCommander = slot.entry.id === 'dondozo';
-      const megaForms    = slot.entry.megaForms;
-      const megaIndex    = fieldMega.get(key) ?? 0;
+      const canCommander = slot.entry.id === "dondozo";
+      const megaForms = slot.entry.megaForms;
+      const megaIndex = fieldMega.get(key) ?? 0;
 
       // When likelyAbilitiesActive, narrow to the top-used ability only (stored as display name → convert to id)
-      const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const effectiveAbilities = likelyAbilitiesActive && smogonAbilities[slot.entry.id]
-        ? [toId(smogonAbilities[slot.entry.id].name)]
-        : slot.entry.abilities;
+      const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const effectiveAbilities =
+        likelyAbilitiesActive && smogonAbilities[slot.entry.id]
+          ? [toId(smogonAbilities[slot.entry.id].name)]
+          : slot.entry.abilities;
 
       // Weather/terrain ability — always find it, separately track if triggered
       const ABILITY_NAMES: Record<string, string> = {
-        swiftswim: 'Swift Swim', chlorophyll: 'Chlorophyll',
-        sandrush: 'Sand Rush', slushrush: 'Slush Rush', surgesurfer: 'Surge Surfer',
+        swiftswim: "Swift Swim",
+        chlorophyll: "Chlorophyll",
+        sandrush: "Sand Rush",
+        slushrush: "Slush Rush",
+        surgesurfer: "Surge Surfer",
       };
       const weatherAbilityId = !megaIndex
-        ? effectiveAbilities.find(a => WEATHER_ABILITY[a]) ?? null
+        ? (effectiveAbilities.find((a) => WEATHER_ABILITY[a]) ?? null)
         : null;
-      const weatherAbility   = weatherAbilityId ? (ABILITY_NAMES[weatherAbilityId] ?? weatherAbilityId) : null;
-      const weatherTriggered = !!weatherAbilityId && !!cond[WEATHER_ABILITY[weatherAbilityId]!];
+      const weatherAbility = weatherAbilityId
+        ? (ABILITY_NAMES[weatherAbilityId] ?? weatherAbilityId)
+        : null;
+      const weatherTriggered =
+        !!weatherAbilityId && !!cond[WEATHER_ABILITY[weatherAbilityId]!];
 
-      const natureLocked = side === 'you' && (slot.natureLocked ?? false);
+      const natureLocked = side === "you" && (slot.natureLocked ?? false);
 
       // Speed boost from moves (Dragon Dance, Agility, etc.)
-      const maxBoostStage  = getMaxSpeedBoostStage(slot.entry.id);
-      const canSpeedBoost  = maxBoostStage > 0;
-      const speedBoostStage = canSpeedBoost ? (fieldSpeedBoost.get(key) ?? 0) : 0;
+      const maxBoostStage = getMaxSpeedBoostStage(slot.entry.id);
+      const canSpeedBoost = maxBoostStage > 0;
+      const speedBoostStage = canSpeedBoost
+        ? (fieldSpeedBoost.get(key) ?? 0)
+        : 0;
 
       // Priority moves: learnset-based normally, usage-filtered when likelyMovesActive
-      const effectivePriorityMoves = likelyMovesActive && smogonPriorityMoves[slot.entry.id]
-        ? smogonPriorityMoves[slot.entry.id]
-            .map(id => PRIORITY_MOVES[id])
-            .filter((m): m is PriorityMove => !!m)
-        : getPriorityMoves(slot.entry.id);
+      const effectivePriorityMoves =
+        likelyMovesActive && smogonPriorityMoves[slot.entry.id]
+          ? smogonPriorityMoves[slot.entry.id]
+              .map((id) => PRIORITY_MOVES[id])
+              .filter((m): m is PriorityMove => !!m)
+          : getPriorityMoves(slot.entry.id);
 
       const speedEV = fieldSpeedEV.get(key);
 
       rows.push({
-        key, side, slot, scarf, paralysis, nature, natureLocked,
-        canProtoBoost, protoBoost, protoCondActive, protoLabel,
-        canCommander, commander,
-        megaForms, megaIndex,
-        weatherAbility, weatherTriggered,
-        canSpeedBoost, maxBoostStage, speedBoostStage,
+        key,
+        side,
+        slot,
+        scarf,
+        paralysis,
+        nature,
+        natureLocked,
+        canProtoBoost,
+        protoBoost,
+        protoCondActive,
+        protoLabel,
+        canCommander,
+        commander,
+        megaForms,
+        megaIndex,
+        weatherAbility,
+        weatherTriggered,
+        canSpeedBoost,
+        maxBoostStage,
+        speedBoostStage,
         speedEV,
         effectiveSpeed: calcEffectiveSpeed(
-          slot.entry, side,
-          { scarf, paralysis, protoBoost, commander, natureTier: nature, megaIndex, speedBoostStage, speedEV },
-          cond
+          slot.entry,
+          side,
+          {
+            scarf,
+            paralysis,
+            protoBoost,
+            commander,
+            natureTier: nature,
+            megaIndex,
+            speedBoostStage,
+            speedEV,
+          },
+          cond,
         ),
-        priorityMoves:     effectivePriorityMoves,
+        priorityMoves: effectivePriorityMoves,
         priorityAbilities: getPriorityAbilities(effectiveAbilities),
       });
     };
 
-    yourField.forEach(i => { const s = yourTeam[i]; if (s) buildRow('you', i, s); });
-    oppField.forEach(i  => { const s = oppTeam[i];  if (s) buildRow('opp', i, s); });
+    yourField.forEach((i) => {
+      const s = yourTeam[i];
+      if (s) buildRow("you", i, s);
+    });
+    oppField.forEach((i) => {
+      const s = oppTeam[i];
+      if (s) buildRow("opp", i, s);
+    });
 
-    rows.sort((a, b) => cond.trickRoom
-      ? a.effectiveSpeed - b.effectiveSpeed
-      : b.effectiveSpeed - a.effectiveSpeed);
+    rows.sort((a, b) =>
+      cond.trickRoom
+        ? a.effectiveSpeed - b.effectiveSpeed
+        : b.effectiveSpeed - a.effectiveSpeed,
+    );
 
     return rows;
   })();
@@ -315,77 +395,97 @@
   function toggleLikelyBuilds() {
     if (likelyBuildsActive) {
       // Clear EV overrides; reset natures to neutral
-      yourField.forEach(i => { fieldSpeedEV.delete(`you-${i}`); fieldNature.set(`you-${i}`, '='); });
-      oppField.forEach(i  => { fieldSpeedEV.delete(`opp-${i}`); fieldNature.set(`opp-${i}`, '='); });
+      yourField.forEach((i) => {
+        fieldSpeedEV.delete(`you-${i}`);
+        fieldNature.set(`you-${i}`, "=");
+      });
+      oppField.forEach((i) => {
+        fieldSpeedEV.delete(`opp-${i}`);
+        fieldNature.set(`opp-${i}`, "=");
+      });
       fieldSpeedEV = new Map(fieldSpeedEV);
-      fieldNature  = new Map(fieldNature);
+      fieldNature = new Map(fieldNature);
       likelyBuildsActive = false;
     } else {
       // Apply most common build to every fielded Pokémon
-      const applyFor = (side: 'you' | 'opp', field: Set<number>, team: TeamSlot[]) => {
-        field.forEach(i => {
+      const applyFor = (
+        side: "you" | "opp",
+        field: Set<number>,
+        team: TeamSlot[],
+      ) => {
+        field.forEach((i) => {
           const slot = team[i];
           if (!slot) return;
-          const key   = `${side}-${i}`;
+          const key = `${side}-${i}`;
           const build = smogonBuilds[slot.entry.id];
           if (!build) return;
-          if (!(side === 'you' && slot.natureLocked)) fieldNature.set(key, build.nature);
+          if (!(side === "you" && slot.natureLocked))
+            fieldNature.set(key, build.nature);
           fieldSpeedEV.set(key, build.speEV);
-          if (build.item === 'Choice Scarf') fieldScarfs.set(key, true);
+          if (build.item === "Choice Scarf") fieldScarfs.set(key, true);
         });
       };
-      applyFor('you', yourField, yourTeam);
-      applyFor('opp', oppField,  oppTeam);
+      applyFor("you", yourField, yourTeam);
+      applyFor("opp", oppField, oppTeam);
       fieldSpeedEV = new Map(fieldSpeedEV);
-      fieldNature  = new Map(fieldNature);
-      fieldScarfs  = new Map(fieldScarfs);
+      fieldNature = new Map(fieldNature);
+      fieldScarfs = new Map(fieldScarfs);
       likelyBuildsActive = true;
     }
   }
 
   // ── Reset ──────────────────────────────────────────────────────────────────
   function resetGame() {
-    yourField       = new Set();
-    oppField        = new Set();
-    fieldScarfs     = new Map();
-    fieldParalysis  = new Map();
-    fieldProto      = new Map();
-    fieldNature     = new Map();
-    fieldCommander  = new Map();
-    fieldMega       = new Map();
+    yourField = new Set();
+    oppField = new Set();
+    fieldScarfs = new Map();
+    fieldParalysis = new Map();
+    fieldProto = new Map();
+    fieldNature = new Map();
+    fieldCommander = new Map();
+    fieldMega = new Map();
     fieldSpeedBoost = new Map();
-    fieldSpeedEV    = new Map();
+    fieldSpeedEV = new Map();
 
-    cond                  = { ...DEFAULT_CONDITIONS };
-    likelyMovesActive     = false;
+    cond = { ...DEFAULT_CONDITIONS };
+    likelyMovesActive = false;
     likelyAbilitiesActive = false;
-    likelyBuildsActive    = false;
-    goto('/');
+    likelyBuildsActive = false;
+    goto("/");
   }
 </script>
 
 <svelte:head>
   <title>Turn Order Calculator — Turnadus | Pokémon VGC &amp; Champions</title>
-  <meta name="description" content="Calculate Pokémon turn order for VGC and Pokémon Champions. Enter both teams, apply weather, terrain, and items to instantly see who moves first every turn." />
+  <meta
+    name="description"
+    content="Calculate Pokémon turn order for VGC and Pokémon Champions. Enter both teams, apply weather, terrain, and items to instantly see who moves first every turn."
+  />
   <meta property="og:title" content="Turn Order Calculator — Turnadus" />
-  <meta property="og:description" content="Calculate who goes first in any Pokémon Champions or VGC matchup. Real-time speed comparison with weather, terrain, and item support." />
+  <meta
+    property="og:description"
+    content="Calculate who goes first in any Pokémon Champions or VGC matchup. Real-time speed comparison with weather, terrain, and item support."
+  />
   <meta property="og:url" content="https://turnadus.com/game" />
 </svelte:head>
 
 <div class="page">
-
   <!-- Top bar -->
   <div class="top-bar">
     <button class="reset-btn" on:click={resetGame}>← New Game</button>
     <div class="top-bar-right">
       {#if likelyBuildsActive || likelyMovesActive || likelyAbilitiesActive}
-        <div class="reg-tabs" class:loading={!smogonReady} use:tooltip={"Switch Smogon usage data source"}>
+        <div
+          class="reg-tabs"
+          class:loading={!smogonReady}
+          use:tooltip={"Switch Smogon usage data source"}
+        >
           {#each GEN9_REGS as reg}
             <button
               class="reg-tab"
               class:active={selectedReg === reg.format}
-              on:click={() => changeReg(reg.format)}
-            >{reg.label}</button>
+              on:click={() => changeReg(reg.format)}>{reg.label}</button
+            >
           {/each}
         </div>
       {/if}
@@ -396,55 +496,71 @@
           use:tooltip={likelyBuildsActive
             ? "Showing most common EV spread, nature & item from Smogon usage stats — click to reset"
             : "Apply the most common EV spread, nature & item per Pokémon from Smogon usage stats"}
-          on:click={toggleLikelyBuilds}
-        >Usage Build</button>
+          on:click={toggleLikelyBuilds}>Usage Build</button
+        >
         <button
           class="reg-tab"
           class:active={likelyMovesActive}
-          use:tooltip={likelyMovesActive ? "Click to hide moves" : "Show top moves from Smogon usage stats for each fielded Pokémon"}
-          on:click={toggleLikelyMoves}
-        >Moves</button>
+          use:tooltip={likelyMovesActive
+            ? "Click to hide moves"
+            : "Show top moves from Smogon usage stats for each fielded Pokémon"}
+          on:click={toggleLikelyMoves}>Moves</button
+        >
         <button
           class="reg-tab"
           class:active={likelyAbilitiesActive}
-          use:tooltip={likelyAbilitiesActive ? "Showing top ability from usage stats — click to revert" : "Show the most commonly run ability per Pokémon from Smogon usage stats"}
-          on:click={toggleLikelyAbilities}
-        >Ability</button>
+          use:tooltip={likelyAbilitiesActive
+            ? "Showing top ability from usage stats — click to revert"
+            : "Show the most commonly run ability per Pokémon from Smogon usage stats"}
+          on:click={toggleLikelyAbilities}>Ability</button
+        >
       </div>
     </div>
   </div>
 
   <!-- Team rows -->
   <div class="teams">
-    {#each [
-      { side: 'you' as const, team: yourTeam, fieldSet: yourField, label: 'Your Team' },
-      { side: 'opp' as const, team: oppTeam,  fieldSet: oppField,  label: 'Opponent'  }
-    ] as { side, team, fieldSet, label }}
+    {#each [{ side: "you" as const, team: yourTeam, fieldSet: yourField, label: "Your Team" }, { side: "opp" as const, team: oppTeam, fieldSet: oppField, label: "Opponent" }] as { side, team, fieldSet, label }}
       <div class="team-row">
-        <span class="team-label" class:you={side === 'you'} class:opp={side === 'opp'}>
+        <span
+          class="team-label"
+          class:you={side === "you"}
+          class:opp={side === "opp"}
+        >
           {label}
           <span class="pick-hint">pick 2</span>
         </span>
         <div class="team-slots">
           {#each team as slot, i}
-            {@const slotKey   = `${side}-${i}`}
-            {@const megaIdx   = fieldMega.get(slotKey) ?? 0}
-            {@const activeMegaForm = slot && megaIdx > 0 ? slot.entry.megaForms[megaIdx - 1] : null}
-            {@const displayName  = activeMegaForm ? activeMegaForm.name  : slot?.entry.name ?? ''}
-            {@const displayTypes = activeMegaForm ? activeMegaForm.types : slot?.entry.types ?? []}
+            {@const slotKey = `${side}-${i}`}
+            {@const megaIdx = fieldMega.get(slotKey) ?? 0}
+            {@const activeMegaForm =
+              slot && megaIdx > 0 ? slot.entry.megaForms[megaIdx - 1] : null}
+            {@const displayName = activeMegaForm
+              ? activeMegaForm.name
+              : (slot?.entry.name ?? "")}
+            {@const displayTypes = activeMegaForm
+              ? activeMegaForm.types
+              : (slot?.entry.types ?? [])}
             <button
               class="tslot"
               class:has-mon={!!slot}
               class:on-field={fieldSet.has(i)}
-              class:side-you={side === 'you'}
-              class:side-opp={side === 'opp'}
+              class:side-you={side === "you"}
+              class:side-opp={side === "opp"}
               disabled={!slot}
               aria-pressed={fieldSet.has(i)}
-              aria-label={slot ? `${displayName} — ${fieldSet.has(i) ? 'on field, click to remove' : 'click to put on field'}` : 'Empty slot'}
+              aria-label={slot
+                ? `${displayName} — ${fieldSet.has(i) ? "on field, click to remove" : "click to put on field"}`
+                : "Empty slot"}
               on:click={() => toggleField(side, i)}
             >
               {#if slot}
-                <img src={spriteUrl(displayName)} alt={displayName} class="tslot-sprite" />
+                <img
+                  src={spriteUrl(displayName)}
+                  alt={displayName}
+                  class="tslot-sprite"
+                />
                 <span class="tslot-name">{displayName}</span>
                 <div class="tslot-types">
                   {#each displayTypes as t}
@@ -466,41 +582,53 @@
     <div class="cond-group">
       <span class="cond-group-label">Field</span>
       <div class="cond-group-btns">
-        <button class="cond-btn tr" class:active={cond.trickRoom}
+        <button
+          class="cond-btn tr"
+          class:active={cond.trickRoom}
           use:tooltip={"Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"}
-          on:click={() => cond = { ...cond, trickRoom: !cond.trickRoom }}>Trick Room</button>
-        <button class="cond-btn your" class:active={cond.yourTailwind}
+          on:click={() => (cond = { ...cond, trickRoom: !cond.trickRoom })}
+          >Trick Room</button
+        >
+        <button
+          class="cond-btn your"
+          class:active={cond.yourTailwind}
           use:tooltip={"Your Tailwind: doubles Speed for your side for 4 turns (×2)"}
-          on:click={() => cond = { ...cond, yourTailwind: !cond.yourTailwind }}>Your TW</button>
-        <button class="cond-btn opp" class:active={cond.oppTailwind}
+          on:click={() =>
+            (cond = { ...cond, yourTailwind: !cond.yourTailwind })}
+          >Your TW</button
+        >
+        <button
+          class="cond-btn opp"
+          class:active={cond.oppTailwind}
           use:tooltip={"Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"}
-          on:click={() => cond = { ...cond, oppTailwind: !cond.oppTailwind }}>Opp TW</button>
+          on:click={() => (cond = { ...cond, oppTailwind: !cond.oppTailwind })}
+          >Opp TW</button
+        >
       </div>
     </div>
     <div class="cond-group">
       <span class="cond-group-label">Weather</span>
       <div class="cond-group-btns">
-        {#each [
-          { key: 'rain'  as const, label: 'Rain',  tip: 'Rain: doubles Speed of Swift Swim users (Kingdra, Barraskewda, etc.)' },
-          { key: 'sun'   as const, label: 'Sun',   tip: 'Sun: doubles Speed of Chlorophyll users (Venusaur, Lilligant, etc.) and activates Protosynthesis' },
-          { key: 'sand'  as const, label: 'Sand',  tip: 'Sand: doubles Speed of Sand Rush users (Excadrill, Sandaconda, etc.)' },
-          { key: 'snow'  as const, label: 'Snow',  tip: 'Snow: doubles Speed of Slush Rush users (Beartic, Cetitan, etc.)' },
-        ] as btn}
-          <button class="cond-btn" class:active={cond[btn.key]}
-            use:tooltip={btn.tip} on:click={() => toggleWeather(btn.key)}>{btn.label}</button>
+        {#each [{ key: "rain" as const, label: "Rain", tip: "Rain: doubles Speed of Swift Swim users (Kingdra, Barraskewda, etc.)" }, { key: "sun" as const, label: "Sun", tip: "Sun: doubles Speed of Chlorophyll users (Venusaur, Lilligant, etc.) and activates Protosynthesis" }, { key: "sand" as const, label: "Sand", tip: "Sand: doubles Speed of Sand Rush users (Excadrill, Sandaconda, etc.)" }, { key: "snow" as const, label: "Snow", tip: "Snow: doubles Speed of Slush Rush users (Beartic, Cetitan, etc.)" }] as btn}
+          <button
+            class="cond-btn"
+            class:active={cond[btn.key]}
+            use:tooltip={btn.tip}
+            on:click={() => toggleWeather(btn.key)}>{btn.label}</button
+          >
         {/each}
       </div>
     </div>
     <div class="cond-group">
       <span class="cond-group-label">Terrain</span>
       <div class="cond-group-btns">
-        {#each [
-          { key: 'electric' as const, label: 'Electric', tip: 'Electric Terrain: doubles Speed of Surge Surfer users (Raichu-Alola) and activates Quark Drive' },
-          { key: 'grassy'   as const, label: 'Grassy',   tip: 'Grassy Terrain: gives Grassy Glide +1 priority. Halves damage from Earthquake/Bulldoze.' },
-          { key: 'psychic'  as const, label: 'Psychic',  tip: 'Psychic Terrain: blocks all +1 and higher priority moves targeting grounded Pokémon' },
-        ] as btn}
-          <button class="cond-btn" class:active={cond[btn.key]}
-            use:tooltip={btn.tip} on:click={() => toggleTerrain(btn.key)}>{btn.label}</button>
+        {#each [{ key: "electric" as const, label: "Electric", tip: "Electric Terrain: doubles Speed of Surge Surfer users (Raichu-Alola) and activates Quark Drive" }, { key: "grassy" as const, label: "Grassy", tip: "Grassy Terrain: gives Grassy Glide +1 priority. Halves damage from Earthquake/Bulldoze." }, { key: "psychic" as const, label: "Psychic", tip: "Psychic Terrain: blocks all +1 and higher priority moves targeting grounded Pokémon" }] as btn}
+          <button
+            class="cond-btn"
+            class:active={cond[btn.key]}
+            use:tooltip={btn.tip}
+            on:click={() => toggleTerrain(btn.key)}>{btn.label}</button
+          >
         {/each}
       </div>
     </div>
@@ -514,18 +642,31 @@
         {#if cond.trickRoom}<span class="tr-badge">Trick Room active</span>{/if}
       </span>
       {#if fieldRows.length === 0}
-        <span class="empty-hint">Click Pokémon above to put them on the field</span>
+        <span class="empty-hint"
+          >Click Pokémon above to put them on the field</span
+        >
       {/if}
     </div>
 
     {#if fieldRows.length > 0}
       <div class="speed-list">
         {#each fieldRows as row, i}
-          {@const activeMega = row.megaIndex > 0 ? row.megaForms[row.megaIndex - 1] : null}
-          {@const displayName = activeMega ? activeMega.name : row.slot.entry.name}
-          <div class="speed-row" class:side-you={row.side === 'you'} class:side-opp={row.side === 'opp'}>
+          {@const activeMega =
+            row.megaIndex > 0 ? row.megaForms[row.megaIndex - 1] : null}
+          {@const displayName = activeMega
+            ? activeMega.name
+            : row.slot.entry.name}
+          <div
+            class="speed-row"
+            class:side-you={row.side === "you"}
+            class:side-opp={row.side === "opp"}
+          >
             <span class="pos">{i + 1}</span>
-            <img src={spriteUrl(displayName)} alt={displayName} class="row-sprite" />
+            <img
+              src={spriteUrl(displayName)}
+              alt={displayName}
+              class="row-sprite"
+            />
 
             <div class="row-main">
               <div class="row-top">
@@ -533,49 +674,91 @@
                 <div class="row-badges">
                   {#if row.megaIndex > 0}
                     {@const mf = row.megaForms[row.megaIndex - 1]}
-                    <span class="badge mega-badge" use:tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}>{mf?.name ?? 'Mega'}</span>
+                    <span
+                      class="badge mega-badge"
+                      use:tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}
+                      >{mf?.name ?? "Mega"}</span
+                    >
                   {/if}
                   {#if row.weatherAbility}
-                    <span class="badge ability" class:ability-dim={!row.weatherTriggered}
-                      use:tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? ' ✓ active' : ' — inactive (no matching weather/terrain)'}`}
-                    >{row.weatherAbility}</span>
+                    <span
+                      class="badge ability"
+                      class:ability-dim={!row.weatherTriggered}
+                      use:tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? " ✓ active" : " — inactive (no matching weather/terrain)"}`}
+                      >{row.weatherAbility}</span
+                    >
                   {/if}
                   {#if row.protoBoost}
-                    <span class="badge proto-badge" use:tooltip={`${row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}: ×1.5 Speed when Speed is the boosted stat`}>{row.protoLabel}</span>
+                    <span
+                      class="badge proto-badge"
+                      use:tooltip={`${row.protoLabel === "QD ×1.5" ? "Quark Drive" : "Protosynthesis"}: ×1.5 Speed when Speed is the boosted stat`}
+                      >{row.protoLabel}</span
+                    >
                   {/if}
                   {#if row.commander}
-                    <span class="badge commander-badge" use:tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}>Cmd ×2</span>
+                    <span
+                      class="badge commander-badge"
+                      use:tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}
+                      >Cmd ×2</span
+                    >
                   {/if}
-                  {#if (row.side === 'you' && cond.yourTailwind) || (row.side === 'opp' && cond.oppTailwind)}
-                    <span class="badge tailwind" use:tooltip={"Tailwind: ×2 Speed for 4 turns"}>TW ×2</span>
+                  {#if (row.side === "you" && cond.yourTailwind) || (row.side === "opp" && cond.oppTailwind)}
+                    <span
+                      class="badge tailwind"
+                      use:tooltip={"Tailwind: ×2 Speed for 4 turns"}>TW ×2</span
+                    >
                   {/if}
                   {#if row.scarf}
-                    <span class="badge scarf-badge" use:tooltip={"Choice Scarf: ×1.5 Speed"}>Scarf ×1.5</span>
+                    <span
+                      class="badge scarf-badge"
+                      use:tooltip={"Choice Scarf: ×1.5 Speed"}>Scarf ×1.5</span
+                    >
                   {/if}
                   {#if row.paralysis}
-                    <span class="badge para-badge" use:tooltip={"Paralysis: ×0.5 Speed"}>PAR ×0.5</span>
+                    <span
+                      class="badge para-badge"
+                      use:tooltip={"Paralysis: ×0.5 Speed"}>PAR ×0.5</span
+                    >
                   {/if}
                   {#each row.priorityMoves as pm}
-                    {@const active = !cond.psychic && (!pm.requiresCondition || cond[pm.requiresCondition as keyof typeof cond])}
+                    {@const active =
+                      !cond.psychic &&
+                      (!pm.requiresCondition ||
+                        cond[pm.requiresCondition as keyof typeof cond])}
                     {@const tipText = cond.psychic
                       ? `${pm.name}: blocked by Psychic Terrain (priority moves don't work on grounded Pokémon)`
-                      : pm.requiresCondition && !cond[pm.requiresCondition as keyof typeof cond]
+                      : pm.requiresCondition &&
+                          !cond[pm.requiresCondition as keyof typeof cond]
                         ? `${pm.name}: only has +${pm.priority} priority under ${pm.requiresCondition} terrain`
-                        : `This Pokémon may know ${pm.name} — a +${pm.priority} priority move${pm.note ? ` (${pm.note})` : ''}`}
-                    <span class="badge priority-badge" class:suppressed={!active} use:tooltip={tipText}
-                    >{pm.name} {pm.priority > 0 ? '+' : ''}{pm.priority}</span>
+                        : `This Pokémon may know ${pm.name} — a +${pm.priority} priority move${pm.note ? ` (${pm.note})` : ""}`}
+                    <span
+                      class="badge priority-badge"
+                      class:suppressed={!active}
+                      use:tooltip={tipText}
+                      >{pm.name} {pm.priority > 0 ? "+" : ""}{pm.priority}</span
+                    >
                   {/each}
                   {#each row.priorityAbilities as pa}
-                    <span class="badge prio-ability-badge" use:tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</span>
+                    <span
+                      class="badge prio-ability-badge"
+                      use:tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</span
+                    >
                   {/each}
                   {#if likelyAbilitiesActive && smogonAbilities[row.slot.entry.id]}
                     {@const ab = smogonAbilities[row.slot.entry.id]}
-                    <span class="badge ability-likely-badge" use:tooltip={ab.desc}>{ab.name}</span>
+                    <span
+                      class="badge ability-likely-badge"
+                      use:tooltip={ab.desc}>{ab.name}</span
+                    >
                   {/if}
                   {#if likelyBuildsActive}
                     {@const build = smogonBuilds[row.slot.entry.id]}
-                    {#if build?.item && build.item !== 'Choice Scarf'}
-                      <span class="badge item-badge" use:tooltip={`Most common item (Smogon ${selectedReg}): ${build.item}`}>{build.item}</span>
+                    {#if build?.item && build.item !== "Choice Scarf"}
+                      <span
+                        class="badge item-badge"
+                        use:tooltip={`Most common item (Smogon ${selectedReg}): ${build.item}`}
+                        >{build.item}</span
+                      >
                     {/if}
                   {/if}
                 </div>
@@ -585,61 +768,105 @@
                 <!-- Nature: cycles = → + → - -->
                 <button
                   class="toggle-pill nature-pill"
-                  class:nature-pos={row.nature === '+'}
-                  class:nature-neu={row.nature === '='}
-                  class:nature-neg={row.nature === '-'}
+                  class:nature-pos={row.nature === "+"}
+                  class:nature-neu={row.nature === "="}
+                  class:nature-neg={row.nature === "-"}
                   on:click={() => cycleNature(row.key)}
                   use:tooltip={row.natureLocked
                     ? "Nature from pokepaste (known)"
                     : "Speed nature — click to cycle\n+ Positive (Timid/Jolly/Naive/Hasty): 252 EVs ×1.1 — max speed investment\n= Neutral: 0 EVs, no modifier — no speed investment\n− Negative (Brave/Quiet/Relaxed/Sassy): 0 EVs ×0.9 — TR min speed"}
-                >{row.nature === '+' ? '+' : row.nature === '=' ? '=' : '−'}Nat{#if likelyBuildsActive && !row.natureLocked}<span class="nature-assumed">*</span>{/if}</button>
+                  >{row.nature === "+"
+                    ? "+"
+                    : row.nature === "="
+                      ? "="
+                      : "−"}Nat{#if likelyBuildsActive && !row.natureLocked}<span
+                      class="nature-assumed">*</span
+                    >{/if}</button
+                >
 
                 <!-- Spe EV chip (shown when Likely Build is active) -->
                 {#if row.speedEV !== undefined}
-                  <span class="toggle-pill ev-pill"
+                  <span
+                    class="toggle-pill ev-pill"
                     use:tooltip={`Spe EVs from most common spread (Smogon ${selectedReg}): ${row.speedEV}`}
-                  >{row.speedEV} EVs</span>
+                    >{row.speedEV} EVs</span
+                  >
                 {/if}
 
                 <!-- Scarf -->
-                <label class="toggle-pill" class:active={row.scarf}
-                  use:tooltip={"Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time."}>
-                  <input type="checkbox" checked={row.scarf} on:change={() => toggleFieldScarf(row.key, row.side)} />
+                <label
+                  class="toggle-pill"
+                  class:active={row.scarf}
+                  use:tooltip={"Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time."}
+                >
+                  <input
+                    type="checkbox"
+                    checked={row.scarf}
+                    on:change={() => toggleFieldScarf(row.key, row.side)}
+                  />
                   Scarf
                 </label>
 
                 <!-- Paralysis -->
-                <label class="toggle-pill para" class:active={row.paralysis}
-                  use:tooltip={"Paralysis: multiplies Speed by ×0.5"}>
-                  <input type="checkbox" checked={row.paralysis} on:change={() => toggleFieldParalysis(row.key)} />
+                <label
+                  class="toggle-pill para"
+                  class:active={row.paralysis}
+                  use:tooltip={"Paralysis: multiplies Speed by ×0.5"}
+                >
+                  <input
+                    type="checkbox"
+                    checked={row.paralysis}
+                    on:change={() => toggleFieldParalysis(row.key)}
+                  />
                   PAR
                 </label>
 
                 <!-- Speed boost stages (Dragon Dance, Agility, etc.) -->
                 {#if row.canSpeedBoost}
-                  <button class="toggle-pill boost-pill" class:active={row.speedBoostStage > 0}
+                  <button
+                    class="toggle-pill boost-pill"
+                    class:active={row.speedBoostStage > 0}
                     on:click={() => cycleSpeedBoost(row.key, row.maxBoostStage)}
-                    use:tooltip={`Speed boost stages from moves (Dragon Dance, Agility, etc.).\nCurrent: +${row.speedBoostStage} stage${row.speedBoostStage !== 1 ? 's' : ''} (×${((2 + row.speedBoostStage) / 2).toFixed(1)})\nClick to cycle: 0 → +1 (×1.5) → +2 (×2.0) → 0`}>
-                    +{row.speedBoostStage > 0 ? row.speedBoostStage : '?'} Spd
+                    use:tooltip={`Speed boost stages from moves (Dragon Dance, Agility, etc.).\nCurrent: +${row.speedBoostStage} stage${row.speedBoostStage !== 1 ? "s" : ""} (×${((2 + row.speedBoostStage) / 2).toFixed(1)})\nClick to cycle: 0 → +1 (×1.5) → +2 (×2.0) → 0`}
+                  >
+                    +{row.speedBoostStage > 0 ? row.speedBoostStage : "?"} Spd
                   </button>
                 {/if}
 
                 <!-- Proto/Quark (only when condition is active) -->
                 {#if row.canProtoBoost}
-                  {@const protoName = row.protoLabel === 'QD ×1.5' ? 'Quark Drive' : 'Protosynthesis'}
-                  {@const protoTrigger = row.protoLabel === 'QD ×1.5' ? 'Electric Terrain' : 'Sun'}
-                  <label class="toggle-pill proto" class:active={row.protoBoost}
-                    use:tooltip={`${protoName}: ×1.5 Speed when Speed is the highest stat. Activates in ${protoTrigger}${row.protoCondActive ? ' ✓ active' : ''} or via Booster Energy. Toggle on if Speed is the boosted stat.`}>
-                    <input type="checkbox" checked={row.protoBoost} on:change={() => toggleFieldProto(row.key)} />
+                  {@const protoName =
+                    row.protoLabel === "QD ×1.5"
+                      ? "Quark Drive"
+                      : "Protosynthesis"}
+                  {@const protoTrigger =
+                    row.protoLabel === "QD ×1.5" ? "Electric Terrain" : "Sun"}
+                  <label
+                    class="toggle-pill proto"
+                    class:active={row.protoBoost}
+                    use:tooltip={`${protoName}: ×1.5 Speed when Speed is the highest stat. Activates in ${protoTrigger}${row.protoCondActive ? " ✓ active" : ""} or via Booster Energy. Toggle on if Speed is the boosted stat.`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={row.protoBoost}
+                      on:change={() => toggleFieldProto(row.key)}
+                    />
                     {row.protoLabel}
                   </label>
                 {/if}
 
                 <!-- Commander (Dondozo only) -->
                 {#if row.canCommander}
-                  <label class="toggle-pill commander-pill" class:active={row.commander}
-                    use:tooltip={"Commander: when Tatsugiri uses Commander, Dondozo gains +2 in all stats including Speed (×2 effective)"}>
-                    <input type="checkbox" checked={row.commander} on:change={() => toggleCommander(row.key)} />
+                  <label
+                    class="toggle-pill commander-pill"
+                    class:active={row.commander}
+                    use:tooltip={"Commander: when Tatsugiri uses Commander, Dondozo gains +2 in all stats including Speed (×2 effective)"}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={row.commander}
+                      on:change={() => toggleCommander(row.key)}
+                    />
                     Cmd
                   </label>
                 {/if}
@@ -651,16 +878,21 @@
                     class:active={row.megaIndex > 0}
                     use:tooltip={`Mega Evolution: ${row.megaForms[0].name} (Base Speed ${row.megaForms[0].baseSpe}). Click to toggle.`}
                     on:click={() => cycleMega(row.key, 1)}
-                  >{row.megaIndex > 0 ? row.megaForms[0].name : 'Mega'}</button>
+                    >{row.megaIndex > 0
+                      ? row.megaForms[0].name
+                      : "Mega"}</button
+                  >
                 {:else if row.megaForms.length > 1}
                   <button
                     class="toggle-pill mega-pill"
                     class:active={row.megaIndex > 0}
-                    use:tooltip={`Cycle Mega forms — ${row.megaForms.map(f => `${f.name} (Base ${f.baseSpe})`).join(' / ')}. Click to cycle.`}
+                    use:tooltip={`Cycle Mega forms — ${row.megaForms.map((f) => `${f.name} (Base ${f.baseSpe})`).join(" / ")}. Click to cycle.`}
                     on:click={() => cycleMega(row.key, row.megaForms.length)}
-                  >{row.megaIndex === 0 ? 'Mega X/Y' : row.megaForms[row.megaIndex - 1].name}</button>
+                    >{row.megaIndex === 0
+                      ? "Mega X/Y"
+                      : row.megaForms[row.megaIndex - 1].name}</button
+                  >
                 {/if}
-
               </div>
 
               <!-- Move list panel -->
@@ -681,8 +913,22 @@
   </div>
 </div>
 
+<div class="tooltip">
+  Speed stats are assumed to be for level 50, all 31 IV pokemon with no EVs
+  invested in speed. Enable the build button to see likely speed altering
+  natures as well as your own from the pokepaste.
+</div>
+
 <style>
   /* Top bar */
+  .tooltip {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    max-width: 50%;
+    margin-left: 0.5rem;
+  }
+
   .top-bar {
     display: flex;
     align-items: center;
@@ -704,7 +950,6 @@
     flex-shrink: 0;
   }
 
-
   .top-conds {
     display: flex;
     gap: 0.35rem;
@@ -722,11 +967,15 @@
     font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
     flex-shrink: 0;
   }
-  .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
-
+  .reset-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
 
   /* Conditions */
   .conditions-bar {
@@ -744,8 +993,12 @@
     flex: 1;
     padding: 0 1rem;
   }
-  .cond-group:first-child { padding-left: 0; }
-  .cond-group:last-child  { padding-right: 0; }
+  .cond-group:first-child {
+    padding-left: 0;
+  }
+  .cond-group:last-child {
+    padding-right: 0;
+  }
   .cond-group:not(:last-child) {
     border-right: 1px solid var(--border);
   }
@@ -770,14 +1023,21 @@
       align-items: stretch;
       gap: 0;
     }
+    .tooltip {
+      max-width: 100%;
+    }
     .cond-group {
       flex-direction: row;
       align-items: center;
       padding: 0.45rem 0;
       gap: 0.5rem;
     }
-    .cond-group:first-child { padding-top: 0; }
-    .cond-group:last-child  { padding-bottom: 0; }
+    .cond-group:first-child {
+      padding-top: 0;
+    }
+    .cond-group:last-child {
+      padding-bottom: 0;
+    }
     .cond-group:not(:last-child) {
       border-right: none;
       border-bottom: 1px solid var(--border);
@@ -807,11 +1067,19 @@
     cursor: pointer;
     white-space: nowrap;
     min-height: 44px;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s,
+      background 0.15s;
   }
-  .cond-btn:active { opacity: 0.8; }
+  .cond-btn:active {
+    opacity: 0.8;
+  }
   @media (hover: hover) {
-    .cond-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .cond-btn:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
   }
   .cond-btn.active {
     border-color: var(--accent);
@@ -849,7 +1117,11 @@
   }
 
   @media (min-width: 640px) {
-    .team-row { flex-direction: row; align-items: center; gap: 1rem; }
+    .team-row {
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
   }
 
   .team-label {
@@ -870,8 +1142,12 @@
     }
   }
 
-  .team-label.you { color: #4a9c41; }
-  .team-label.opp { color: #c94040; }
+  .team-label.you {
+    color: #4a9c41;
+  }
+  .team-label.opp {
+    color: #c94040;
+  }
 
   .pick-hint {
     font-weight: 400;
@@ -888,7 +1164,9 @@
   }
 
   @media (max-width: 600px) {
-    .team-slots { grid-template-columns: repeat(3, 1fr); }
+    .team-slots {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .tslot {
@@ -904,9 +1182,14 @@
     border-radius: var(--radius);
     cursor: pointer;
     overflow: hidden;
-    transition: border-color 0.15s, background 0.15s;
+    transition:
+      border-color 0.15s,
+      background 0.15s;
   }
-  .tslot:disabled { opacity: 0.3; cursor: not-allowed; }
+  .tslot:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
   .tslot.on-field.side-you {
     border-color: #4a9c41;
     background: color-mix(in srgb, #4a9c41 14%, var(--surface));
@@ -915,9 +1198,13 @@
     border-color: #c94040;
     background: color-mix(in srgb, #c94040 14%, var(--surface));
   }
-  .tslot:active:not(:disabled) { opacity: 0.8; }
+  .tslot:active:not(:disabled) {
+    opacity: 0.8;
+  }
   @media (hover: hover) {
-    .tslot.has-mon:not(:disabled):hover { border-color: var(--text-muted); }
+    .tslot.has-mon:not(:disabled):hover {
+      border-color: var(--text-muted);
+    }
   }
 
   .tslot-sprite {
@@ -937,7 +1224,10 @@
     color: var(--text-muted);
     margin-top: 0.1rem;
   }
-  .tslot-empty { color: var(--border); font-size: 1.2rem; }
+  .tslot-empty {
+    color: var(--border);
+    font-size: 1.2rem;
+  }
 
   .tslot-types {
     display: flex;
@@ -956,24 +1246,64 @@
   }
 
   /* Type colours */
-  .type-normal   { background: #9a9da1; }
-  .type-fire     { background: #e8622d; }
-  .type-water    { background: #4d8fe8; }
-  .type-electric { background: #e8c030; color: #1a1a1a; }
-  .type-grass    { background: #52b44b; }
-  .type-ice      { background: #62cec0; color: #1a1a1a; }
-  .type-fighting { background: #c03428; }
-  .type-poison   { background: #993399; }
-  .type-ground   { background: #d4a84b; color: #1a1a1a; }
-  .type-flying   { background: #7b8fe8; }
-  .type-psychic  { background: #e83880; }
-  .type-bug      { background: #8fa820; }
-  .type-rock     { background: #b8a038; color: #1a1a1a; }
-  .type-ghost    { background: #6060b0; }
-  .type-dragon   { background: #6038f8; }
-  .type-dark     { background: #503828; }
-  .type-steel    { background: #7090a0; }
-  .type-fairy    { background: #e87090; }
+  .type-normal {
+    background: #9a9da1;
+  }
+  .type-fire {
+    background: #e8622d;
+  }
+  .type-water {
+    background: #4d8fe8;
+  }
+  .type-electric {
+    background: #e8c030;
+    color: #1a1a1a;
+  }
+  .type-grass {
+    background: #52b44b;
+  }
+  .type-ice {
+    background: #62cec0;
+    color: #1a1a1a;
+  }
+  .type-fighting {
+    background: #c03428;
+  }
+  .type-poison {
+    background: #993399;
+  }
+  .type-ground {
+    background: #d4a84b;
+    color: #1a1a1a;
+  }
+  .type-flying {
+    background: #7b8fe8;
+  }
+  .type-psychic {
+    background: #e83880;
+  }
+  .type-bug {
+    background: #8fa820;
+  }
+  .type-rock {
+    background: #b8a038;
+    color: #1a1a1a;
+  }
+  .type-ghost {
+    background: #6060b0;
+  }
+  .type-dragon {
+    background: #6038f8;
+  }
+  .type-dark {
+    background: #503828;
+  }
+  .type-steel {
+    background: #7090a0;
+  }
+  .type-fairy {
+    background: #e87090;
+  }
 
   /* Speed section */
   .speed-section {
@@ -1010,9 +1340,15 @@
     border-radius: 100px;
   }
 
-  .empty-hint { font-size: 0.85rem; color: var(--text-muted); }
+  .empty-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
 
-  .speed-list { display: flex; flex-direction: column; }
+  .speed-list {
+    display: flex;
+    flex-direction: column;
+  }
 
   .speed-row {
     display: flex;
@@ -1022,9 +1358,15 @@
     border-bottom: 1px solid var(--border);
     border-left: 4px solid transparent;
   }
-  .speed-row:last-child { border-bottom: none; }
-  .speed-row.side-you { border-left-color: #4a9c41; }
-  .speed-row.side-opp { border-left-color: #c94040; }
+  .speed-row:last-child {
+    border-bottom: none;
+  }
+  .speed-row.side-you {
+    border-left-color: #4a9c41;
+  }
+  .speed-row.side-opp {
+    border-left-color: #c94040;
+  }
 
   .pos {
     font-size: 1.2rem;
@@ -1085,7 +1427,8 @@
   }
 
   .badge.ability {
-    color: #6cf5b8; border-color: #6cf5b8;
+    color: #6cf5b8;
+    border-color: #6cf5b8;
     background: color-mix(in srgb, #6cf5b8 10%, var(--surface));
   }
   .badge.ability.ability-dim {
@@ -1095,41 +1438,52 @@
     opacity: 0.45;
   }
   .badge.tailwind {
-    color: #4a9c41; border-color: #4a9c41;
+    color: #4a9c41;
+    border-color: #4a9c41;
     background: color-mix(in srgb, #4a9c41 10%, var(--surface));
   }
   .badge.scarf-badge {
-    color: #f5c96c; border-color: #f5c96c;
+    color: #f5c96c;
+    border-color: #f5c96c;
     background: color-mix(in srgb, #f5c96c 10%, var(--surface));
   }
   .badge.para-badge {
-    color: #f5a06c; border-color: #f5a06c;
+    color: #f5a06c;
+    border-color: #f5a06c;
     background: color-mix(in srgb, #f5a06c 10%, var(--surface));
   }
   .badge.priority-badge {
     font-size: 0.72rem;
-    color: #f56cc8; border-color: #f56cc8;
+    color: #f56cc8;
+    border-color: #f56cc8;
     background: color-mix(in srgb, #f56cc8 10%, var(--surface));
   }
   .badge.priority-badge.suppressed {
-    color: var(--text-muted); border-color: var(--border);
-    background: none; opacity: 0.45; text-decoration: line-through;
+    color: var(--text-muted);
+    border-color: var(--border);
+    background: none;
+    opacity: 0.45;
+    text-decoration: line-through;
   }
   .badge.prio-ability-badge {
     font-size: 0.72rem;
-    color: #c46cf5; border-color: #c46cf5;
+    color: #c46cf5;
+    border-color: #c46cf5;
     background: color-mix(in srgb, #c46cf5 10%, var(--surface));
   }
   .badge.mega-badge {
-    color: #f5d76c; border-color: #f5d76c;
+    color: #f5d76c;
+    border-color: #f5d76c;
     background: color-mix(in srgb, #f5d76c 10%, var(--surface));
   }
   .badge.proto-badge {
-    color: #6cf5e0; border-color: #6cf5e0;
+    color: #6cf5e0;
+    border-color: #6cf5e0;
     background: color-mix(in srgb, #6cf5e0 10%, var(--surface));
   }
   .badge.commander-badge {
-    color: #6ca5f5; border-color: #6ca5f5;
+    color: #6ca5f5;
+    border-color: #6ca5f5;
     background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
   }
 
@@ -1155,30 +1509,44 @@
     user-select: none;
     min-height: 36px;
     white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
   }
-  .toggle-pill input { display: none; }
-  .toggle-pill:active { opacity: 0.75; }
+  .toggle-pill input {
+    display: none;
+  }
+  .toggle-pill:active {
+    opacity: 0.75;
+  }
 
   .toggle-pill.active {
-    color: #f5c96c; border-color: #f5c96c;
+    color: #f5c96c;
+    border-color: #f5c96c;
     background: color-mix(in srgb, #f5c96c 10%, var(--surface));
   }
   .toggle-pill.para.active {
-    color: #f5a06c; border-color: #f5a06c;
+    color: #f5a06c;
+    border-color: #f5a06c;
     background: color-mix(in srgb, #f5a06c 10%, var(--surface));
   }
   .toggle-pill.proto.active {
-    color: #6cf5e0; border-color: #6cf5e0;
+    color: #6cf5e0;
+    border-color: #6cf5e0;
     background: color-mix(in srgb, #6cf5e0 10%, var(--surface));
   }
   .toggle-pill.commander-pill.active {
-    color: #6ca5f5; border-color: #6ca5f5;
+    color: #6ca5f5;
+    border-color: #6ca5f5;
     background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
   }
-  .toggle-pill.boost-pill { color: var(--text-muted); }
+  .toggle-pill.boost-pill {
+    color: var(--text-muted);
+  }
   .toggle-pill.boost-pill.active {
-    color: #f5d76c; border-color: #f5d76c;
+    color: #f5d76c;
+    border-color: #f5d76c;
     background: color-mix(in srgb, #f5d76c 10%, var(--surface));
   }
   /* Mega pill: gradient border */
@@ -1188,11 +1556,18 @@
     position: relative;
   }
   .mega-pill::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -1.5px;
     border-radius: var(--radius-sm);
-    background: linear-gradient(to right, #b0e000, #22cc55, #44ddee, #2255cc, #9933ee);
+    background: linear-gradient(
+      to right,
+      #b0e000,
+      #22cc55,
+      #44ddee,
+      #2255cc,
+      #9933ee
+    );
     z-index: -1;
   }
   .mega-pill.active {
@@ -1209,12 +1584,16 @@
     cursor: pointer;
   }
   .nature-pill.nature-pos {
-    color: #6cf587; border-color: #6cf587;
+    color: #6cf587;
+    border-color: #6cf587;
     background: color-mix(in srgb, #6cf587 10%, var(--surface));
   }
-  .nature-pill.nature-neu { color: var(--text-muted); }
+  .nature-pill.nature-neu {
+    color: var(--text-muted);
+  }
   .nature-pill.nature-neg {
-    color: #c94040; border-color: #c94040;
+    color: #c94040;
+    border-color: #c94040;
     background: color-mix(in srgb, #c94040 10%, var(--surface));
   }
 
@@ -1249,18 +1628,29 @@
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
   }
-  .reg-tab:last-child { border-right: none; }
-  .reg-tab:hover { color: var(--text); }
+  .reg-tab:last-child {
+    border-right: none;
+  }
+  .reg-tab:hover {
+    color: var(--text);
+  }
   .reg-tab.active {
     background: color-mix(in srgb, var(--accent) 15%, var(--surface));
     color: var(--accent);
   }
-  .reg-tabs.loading { opacity: 0.5; pointer-events: none; }
+  .reg-tabs.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
   /* Moves toggle pill */
-  .toggle-pill.moves-pill { color: var(--text-muted); }
+  .toggle-pill.moves-pill {
+    color: var(--text-muted);
+  }
   .toggle-pill.moves-pill.active {
     color: #a8d8a8;
     border-color: #a8d8a8;
@@ -1314,10 +1704,24 @@
 
   /* Mobile tightening */
   @media (max-width: 500px) {
-    .speed-row { gap: 0.4rem; padding: 0.5rem 0.6rem; }
-    .row-sprite { width: 48px; height: 48px; }
-    .row-name { font-size: 0.9rem; }
-    .row-speed { font-size: 1.35rem; min-width: 3rem; }
-    .pos { font-size: 1rem; width: 1.25rem; }
+    .speed-row {
+      gap: 0.4rem;
+      padding: 0.5rem 0.6rem;
+    }
+    .row-sprite {
+      width: 48px;
+      height: 48px;
+    }
+    .row-name {
+      font-size: 0.9rem;
+    }
+    .row-speed {
+      font-size: 1.35rem;
+      min-width: 3rem;
+    }
+    .pos {
+      font-size: 1rem;
+      width: 1.25rem;
+    }
   }
 </style>
