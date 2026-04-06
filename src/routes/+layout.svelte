@@ -57,7 +57,7 @@
     <img src="/c3.png" alt="" class="brand-icon" />
     <span class="brand-name-wrap">
       <SparklesText text="Turnadus" sparklesCount={5} class="brand-sparkles" />
-      <span class="brand-tagline">A VGC tool</span>
+      <span class="brand-tagline">Keep track of turn order</span>
     </span>
   </a>
 
@@ -186,7 +186,7 @@
             sparklesCount={5}
             class="brand-sparkles"
           />
-          <span class="brand-tagline">A VGC tool</span>
+          <span class="brand-tagline">Keep track of turn order</span>
         </span>
       </a>
       <button
