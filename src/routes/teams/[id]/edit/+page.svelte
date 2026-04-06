@@ -11,6 +11,7 @@
   import PokemonPicker from '$lib/components/PokemonPicker.svelte';
   import { buildAllTiers } from '$lib/speedtiers';
   import type { SpeedEntry } from '$lib/speedtiers';
+  import { parsePaste, resolvePaste } from '$lib/parsePaste';
 
   // ── Load team ────────────────────────────────────────────────────────────
   let team: SavedTeam | null = null;
@@ -206,6 +207,47 @@
   const STAT_KEYS: (keyof import('$lib/stores/teams').StatSpread)[] = ['hp','atk','def','spa','spd','spe'];
   const STAT_LABELS = ['HP','Atk','Def','SpA','SpD','Spe'];
 
+  // ── Import ────────────────────────────────────────────────────────────────
+  let showImportModal = false;
+  let importText = '';
+  let importError = '';
+  let importLoading = false;
+
+  async function doImport() {
+    importError = '';
+    importLoading = true;
+    try {
+      const text = await resolvePaste(importText);
+      const parsed = parsePaste(text, allEntries);
+      const filled = parsed.filter(Boolean);
+      if (!filled.length) {
+        importError = 'No matching Pokémon found — check the paste.';
+        return;
+      }
+      slots = parsed.map(s => s ? {
+        id:          s.entry.id,
+        name:        s.entry.name,
+        scarf:       s.scarf,
+        nature:      s.nature,
+        natureLocked: s.natureLocked ?? true,
+        item:        s.item,
+        ability:     s.ability,
+        teraType:    s.teraType,
+        level:       s.level,
+        evs:         s.evs,
+        ivs:         s.ivs,
+        moves:       s.moves,
+        nickname:    s.nickname,
+      } : null);
+      showImportModal = false;
+      importText = '';
+    } catch (e: any) {
+      importError = e?.message ?? 'Failed to fetch paste.';
+    } finally {
+      importLoading = false;
+    }
+  }
+
   // ── Export ────────────────────────────────────────────────────────────────
   let showExportModal = false;
   let exportText = '';
@@ -286,6 +328,29 @@
   />
 {/if}
 
+{#if showImportModal}
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+  <div class="modal-backdrop" on:click={() => { showImportModal = false; importError = ''; }}>
+    <div class="modal-box" on:click|stopPropagation>
+      <div class="modal-header">
+        <span class="modal-title">Import Poképaste</span>
+        <button class="modal-close" on:click={() => { showImportModal = false; importError = ''; }}>✕</button>
+      </div>
+      <textarea
+        class="export-textarea"
+        placeholder="Paste a Showdown team or pokepast.es URL…"
+        bind:value={importText}
+      ></textarea>
+      {#if importError}<p class="import-error">{importError}</p>{/if}
+      <div class="modal-actions">
+        <button class="save-btn" on:click={doImport} disabled={importLoading || !importText.trim()}>
+          {importLoading ? 'Importing…' : 'Import'}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
 {#if showExportModal}
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
   <div class="modal-backdrop" on:click={() => showExportModal = false}>
@@ -315,6 +380,7 @@
       </select>
       <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
+    <button class="export-btn" on:click={() => showImportModal = true}>Import</button>
     <button class="export-btn" on:click={exportPaste}>
       {exportCopied ? 'Copied!' : 'Export'}
     </button>
@@ -634,6 +700,15 @@
     font-family: monospace;
     resize: vertical;
     box-sizing: border-box;
+  }
+  .import-error {
+    color: #e55;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
   }
 
   /* Slots */

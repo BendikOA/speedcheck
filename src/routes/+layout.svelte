@@ -34,6 +34,22 @@
   }
 </script>
 
+<svelte:head>
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Turnadus",
+    "url": "https://turnadus.com",
+    "description": "Free Pokémon speed tier and turn order tool for VGC and Pokémon Champions. Build teams, check who goes first, and master speed tiers.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web Browser",
+    "inLanguage": "en",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "creator": { "@type": "Person", "name": "Codaclef" }
+  })}</script>`}
+</svelte:head>
+
 <nav>
   <a href="/" class="brand">
     <img

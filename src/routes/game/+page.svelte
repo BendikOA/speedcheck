@@ -364,7 +364,13 @@
   }
 </script>
 
-<svelte:head><title>Game — Turnadus</title></svelte:head>
+<svelte:head>
+  <title>Turn Order Calculator — Turnadus | Pokémon VGC &amp; Champions</title>
+  <meta name="description" content="Calculate Pokémon turn order for VGC and Pokémon Champions. Enter both teams, apply weather, terrain, and items to instantly see who moves first every turn." />
+  <meta property="og:title" content="Turn Order Calculator — Turnadus" />
+  <meta property="og:description" content="Calculate who goes first in any Pokémon Champions or VGC matchup. Real-time speed comparison with weather, terrain, and item support." />
+  <meta property="og:url" content="https://turnadus.com/game" />
+</svelte:head>
 
 <div class="page">
 

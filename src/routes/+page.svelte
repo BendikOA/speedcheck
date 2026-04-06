@@ -212,7 +212,13 @@
   }
 </script>
 
-<svelte:head><title>Pokémon Select — Turnadus</title></svelte:head>
+<svelte:head>
+  <title>Turnadus — Pokémon Speed & Turn Order Tool for VGC & Champions</title>
+  <meta name="description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
+  <meta property="og:title" content="Turnadus — Pokémon Speed & Turn Order Tool" />
+  <meta property="og:description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
+  <meta property="og:url" content="https://turnadus.com/" />
+</svelte:head>
 <svelte:window on:keydown={e => { if (e.key === 'Escape') { showImport = false; importError = ''; } }} />
 
 {#if pickerTarget}

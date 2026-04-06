@@ -74,7 +74,13 @@
   }
 </script>
 
-<svelte:head><title>Speed Tiers — Turnadus</title></svelte:head>
+<svelte:head>
+  <title>Pokémon Speed Tiers — Turnadus | VGC &amp; Pokémon Champions</title>
+  <meta name="description" content="Complete Pokémon speed tier list for VGC and Pokémon Champions. Every Pokémon's base and max speed stat, sortable and searchable. Know your speed benchmarks." />
+  <meta property="og:title" content="Pokémon Speed Tiers — Turnadus" />
+  <meta property="og:description" content="Full Pokémon speed tier list for VGC and Pokémon Champions. Base and max speeds for every Pokémon in the game." />
+  <meta property="og:url" content="https://turnadus.com/tiers" />
+</svelte:head>
 
 <div class="page">
   <!-- 1. Choose Pokémon -->

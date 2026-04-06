@@ -64,7 +64,13 @@
   function changeGen(g: GenNumber | null) { selectedGen = g; }
 </script>
 
-<svelte:head><title>Boost Tiers — Turnadus</title></svelte:head>
+<svelte:head>
+  <title>Boosted Speed Tiers — Turnadus | Scarf &amp; Stat Boost Reference</title>
+  <meta name="description" content="Pokémon speed tiers under every boost condition — Choice Scarf, Tailwind, stat stages, and more. Essential reference for VGC and Pokémon Champions players." />
+  <meta property="og:title" content="Boosted Speed Tiers — Turnadus" />
+  <meta property="og:description" content="See Pokémon speeds with Choice Scarf, Tailwind, and stat boosts applied. Built for VGC and Pokémon Champions players." />
+  <meta property="og:url" content="https://turnadus.com/boost-tiers" />
+</svelte:head>
 
 <div class="page">
   <div class="section-label">Boost Speed Tiers</div>
