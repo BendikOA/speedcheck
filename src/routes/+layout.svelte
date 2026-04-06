@@ -3,6 +3,7 @@
   import { browser, dev } from "$app/environment";
   import { page } from "$app/stores";
   import Tooltip from "$lib/components/Tooltip.svelte";
+  import SparklesText from "$lib/components/SparklesText.svelte";
   import { injectAnalytics } from "@vercel/analytics/sveltekit";
 
   injectAnalytics({ mode: dev ? "development" : "production" });
@@ -38,26 +39,26 @@
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Turnadus",
-    "url": "https://turnadus.com",
-    "description": "Free Pokémon speed tier and turn order tool for VGC and Pokémon Champions. Build teams, check who goes first, and master speed tiers.",
-    "applicationCategory": "GameApplication",
-    "operatingSystem": "Web Browser",
-    "inLanguage": "en",
-    "isAccessibleForFree": true,
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "creator": { "@type": "Person", "name": "Codaclef" }
+    name: "Turnadus",
+    url: "https://turnadus.com",
+    description:
+      "Free Pokémon speed tier and turn order tool for VGC and Pokémon Champions. Build teams, check who goes first, and master speed tiers.",
+    applicationCategory: "GameApplication",
+    operatingSystem: "Web Browser",
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    creator: { "@type": "Person", name: "Codaclef" },
   })}</script>`}
 </svelte:head>
 
 <nav>
   <a href="/" class="brand">
-    <img
-      src="https://play.pokemonshowdown.com/sprites/dex/tornadus.png"
-      alt=""
-      class="brand-icon"
-    />
-    Turnadus
+    <img src="/c3.png" alt="" class="brand-icon" />
+    <span class="brand-name-wrap">
+      <SparklesText text="Turnadus" sparklesCount={5} class="brand-sparkles" />
+      <span class="brand-tagline">A VGC tool</span>
+    </span>
   </a>
 
   <!-- Desktop nav links -->
@@ -66,14 +67,12 @@
     <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
     <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a
     >
-    <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}
-      >Boost Tiers</a
-    >
+    <!-- <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a> -->
     <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
   </div>
 
-  <!-- Desktop theme toggle -->
-  <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
+  <!-- Desktop theme toggle hidden -->
+  <!-- <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
     {#if dark}
       <svg
         width="18"
@@ -125,7 +124,7 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
     {/if}
-  </button>
+  </button> -->
 
   <!-- Mobile hamburger -->
   <button
@@ -180,12 +179,15 @@
   <nav class="drawer" aria-label="Mobile navigation">
     <div class="drawer-header">
       <a href="/" class="brand drawer-brand">
-        <img
-          src="https://play.pokemonshowdown.com/sprites/dex/tornadus.png"
-          alt=""
-          class="brand-icon"
-        />
-        Turnadus
+        <img src="/c3.png" alt="" class="brand-icon" />
+        <span class="brand-name-wrap">
+          <SparklesText
+            text="Turnadus"
+            sparklesCount={5}
+            class="brand-sparkles"
+          />
+          <span class="brand-tagline">A VGC tool</span>
+        </span>
       </a>
       <button
         class="drawer-close"
@@ -217,15 +219,13 @@
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a
       >
-      <a
-        href="/boost-tiers"
-        class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a
-      >
+      <!-- Boost Tiers hidden -->
       <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
     </div>
 
     <div class="drawer-footer">
-      <button class="mobile-theme-btn" on:click={toggleTheme}>
+      <!-- mobile theme toggle hidden -->
+      <!-- <button class="mobile-theme-btn" on:click={toggleTheme}>
         {#if dark}
           <svg
             width="16"
@@ -279,19 +279,9 @@
           </svg>
           Switch to dark mode
         {/if}
-      </button>
+      </button> -->
       <div class="drawer-kofi">
-        <span>Turnadus is free, no ads, built solo.</span>
-        <span
-          >If it helped you in a game, <a
-            href="https://ko-fi.com/T6T21XBBI8"
-            target="_blank"
-            rel="noopener"
-            >consider buying me a coffee on Ko-fi <span aria-hidden="true"
-              >☕</span
-            > ↗</a
-          ></span
-        >
+        Turnadus is free, no ads, built solo. If it helped you in a game, <a href="https://ko-fi.com/T6T21XBBI8" target="_blank" rel="noopener">consider buying me a coffee on Ko-fi ☕</a>
       </div>
     </div>
   </nav>
@@ -308,18 +298,11 @@
   role="complementary"
   aria-label="Support the developer"
 >
-  <span class="kofi-line">Turnadus is free, no ads, built solo.</span>
-  <span class="kofi-line"
-    >If it helped you in a game, <a
-      class="kofi-link"
-      href="https://ko-fi.com/T6T21XBBI8"
-      target="_blank"
-      rel="noopener"
-      >consider buying me a coffee on Ko-fi <span
-        class="kofi-cup"
-        aria-hidden="true">☕</span
-      ></a
-    ></span
+  Turnadus is a solo project and free to use — if it helped, <a
+    class="kofi-link"
+    href="https://ko-fi.com/T6T21XBBI8"
+    target="_blank"
+    rel="noopener">buy me a coffee on Ko-fi ☕</a
   >
 </div>
 
@@ -343,11 +326,7 @@
   .brand {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: -0.01em;
+    gap: 0.5rem;
     color: var(--text);
     margin-right: auto;
     white-space: nowrap;
@@ -355,11 +334,36 @@
     grid-column: 1;
   }
 
+  .brand-name-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  :global(.brand-sparkles .sparkles-label) {
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    text-shadow:
+      0 0 12px rgba(160, 86, 212, 0.6),
+      0 0 28px rgba(160, 86, 212, 0.25);
+  }
+
+  .brand-tagline {
+    font-family: var(--font);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
   .brand-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
     flex-shrink: 0;
+    margin-bottom: 0.25rem;
   }
 
   .nav-links {
@@ -436,7 +440,7 @@
     top: 0;
     left: 0;
     height: 100dvh;
-    width: min(82vw, 320px);
+    width: 80vw;
     z-index: 100;
     background: var(--surface);
     border-right: 1px solid var(--border);
@@ -487,9 +491,11 @@
   .drawer-links a {
     display: flex;
     align-items: center;
-    padding: 0 1.25rem;
-    height: 60px;
-    font-size: 1.05rem;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 1.3rem;
+    font-family: var(--font-heading);
     font-weight: 500;
     color: var(--text-muted);
     border-bottom: 1px solid var(--border);
@@ -504,7 +510,7 @@
   }
   .drawer-links a.active {
     color: var(--text);
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .drawer-footer {
@@ -535,24 +541,19 @@
   }
 
   .drawer-kofi {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.5rem;
     padding-bottom: max(1rem, var(--safe-bottom));
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     text-align: center;
-    align-items: center;
+    line-height: 1.6;
   }
   .drawer-kofi a {
-    color: var(--accent);
+    color: var(--text);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     min-height: unset;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
+    display: inline;
   }
   .drawer-kofi a:hover {
     color: var(--accent-hover);
@@ -605,12 +606,12 @@
     gap: 0.3rem;
   }
 
-  .kofi-line {
-    line-height: 1.5;
-  }
-  .kofi-cup {
-    font-size: 1.1rem;
-    line-height: 1;
+  @media (min-width: 640px) {
+    .kofi-banner {
+      flex-direction: row;
+      justify-content: center;
+      gap: 0.4rem;
+    }
   }
 
   .kofi-link {
@@ -619,7 +620,7 @@
     gap: 0.35rem;
     color: var(--text);
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-decoration: underline;
     text-underline-offset: 3px;
     min-height: unset;

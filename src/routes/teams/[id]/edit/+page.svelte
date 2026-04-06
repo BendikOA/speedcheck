@@ -9,6 +9,7 @@
   import { GEN_NUMBERS } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
   import PokemonPicker from '$lib/components/PokemonPicker.svelte';
+  import SearchCombobox from '$lib/components/SearchCombobox.svelte';
   import { buildAllTiers } from '$lib/speedtiers';
   import type { SpeedEntry } from '$lib/speedtiers';
   import { parsePaste, resolvePaste } from '$lib/parsePaste';
@@ -174,21 +175,7 @@
     return cached.filter(m => m.toLowerCase().includes(query.toLowerCase())).slice(0, 8);
   }
 
-  function searchItems(query: string): string[] {
-    if (query.length < 2) return [];
-    return allItems.filter(i => i.toLowerCase().includes(query.toLowerCase())).slice(0, 8);
-  }
-
-  let itemSuggestions: string[] = [];
-
-  function onItemInput(i: number, value: string) {
-    setField(i, 'item', value || undefined);
-    itemSuggestions = searchItems(value);
-    slots = [...slots];
-  }
-
   function pickItem(i: number, name: string) {
-    itemSuggestions = [];
     setField(i, 'item', name);
     setField(i, 'scarf', toId(name) === 'choicescarf');
   }
@@ -437,21 +424,16 @@
 
             <!-- Item -->
             {#if hasItems}
-              <div class="field-row autocomplete-wrap">
+              <div class="field-row">
                 <label class="field-label" for="field-{i}-item">Item</label>
-                <div class="autocomplete">
-                  <input id="field-{i}-item" class="field-input" value={slot.item ?? ''}
-                    on:input={e => onItemInput(i, e.currentTarget.value)}
-                    on:focus={() => itemSuggestions = searchItems(slot.item ?? '')}
-                    placeholder="e.g. Life Orb" />
-                  {#if itemSuggestions.length}
-                    <ul class="suggestions" role="listbox">
-                      {#each itemSuggestions as s}
-                        <li><button on:click={() => pickItem(i, s)}>{s}</button></li>
-                      {/each}
-                    </ul>
-                  {/if}
-                </div>
+                <SearchCombobox
+                  id="field-{i}-item"
+                  items={allItems}
+                  value={slot.item ?? ''}
+                  placeholder="e.g. Life Orb"
+                  on:input={e => setField(i, 'item', e.detail || undefined)}
+                  on:select={e => pickItem(i, e.detail)}
+                />
               </div>
             {/if}
 
@@ -532,22 +514,13 @@
             <div class="moves-block">
               <div class="stat-block-title">Moves</div>
               {#each [0,1,2,3] as mi}
-                <div class="autocomplete move-row">
-                  <input class="field-input" placeholder="Move {mi + 1}"
-                    value={moveSearch[mi]}
-                    on:input={e => setMove(i, mi, e.currentTarget.value)}
-                    on:focus={() => {
-                      if (moveSearch[mi].length >= 2)
-                        moveSuggestions[mi] = searchMoves(slot.id, moveSearch[mi]);
-                    }} />
-                  {#if moveSuggestions[mi]?.length}
-                    <ul class="suggestions" role="listbox">
-                      {#each moveSuggestions[mi] as s}
-                        <li><button on:click={() => pickMove(i, mi, s)}>{s}</button></li>
-                      {/each}
-                    </ul>
-                  {/if}
-                </div>
+                <SearchCombobox
+                  items={_moveCache.get(slot.id) ?? []}
+                  value={moveSearch[mi]}
+                  placeholder="Move {mi + 1}"
+                  on:input={e => { setMove(i, mi, e.detail); getLearnset(slot.id).then(moves => _moveCache.set(slot.id, moves)); }}
+                  on:select={e => pickMove(i, mi, e.detail)}
+                />
               {/each}
             </div>
           </div>
@@ -864,40 +837,6 @@
   .field-input:focus-visible { border-color: var(--accent); }
   .field-input.short { max-width: 80px; flex: none; }
 
-  /* Autocomplete */
-  .autocomplete-wrap { position: relative; }
-  .autocomplete { position: relative; flex: 1; }
-
-  .suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    z-index: 20;
-    list-style: none;
-    max-height: 180px;
-    overflow-y: auto;
-  }
-
-  .suggestions li button {
-    width: 100%;
-    padding: 0 0.7rem;
-    background: none;
-    border: none;
-    color: var(--text);
-    font-size: 0.85rem;
-    cursor: pointer;
-    text-align: left;
-    min-height: 44px;
-    justify-content: flex-start;
-    transition: background 0.1s;
-  }
-  .suggestions li button:hover { background: var(--border); }
-
   /* Stat block */
   .stat-block {
     display: flex;
@@ -956,7 +895,4 @@
     gap: 0.4rem;
   }
 
-  .move-row {
-    position: relative;
-  }
 </style>

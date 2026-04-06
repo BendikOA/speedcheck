@@ -672,10 +672,10 @@
   }
 
   .team-label.you {
-    color: #6c8ef5;
+    color: #4a9c41;
   }
   .team-label.opp {
-    color: #f56c6c;
+    color: #c94040;
   }
 
   .slots {
@@ -1099,15 +1099,15 @@
     color: #4caf7d;
   }
   .loss-btn {
-    color: #f56c6c;
+    color: #c94040;
   }
   .win-btn:hover {
     background: color-mix(in srgb, #4caf7d 15%, var(--surface));
     border-color: #4caf7d;
   }
   .loss-btn:hover {
-    background: color-mix(in srgb, #f56c6c 15%, var(--surface));
-    border-color: #f56c6c;
+    background: color-mix(in srgb, #c94040 15%, var(--surface));
+    border-color: #c94040;
   }
 
   .record-stat {
@@ -1367,10 +1367,10 @@
     border-bottom: none;
   }
   .preview-row.side-you {
-    border-left-color: #6c8ef5;
+    border-left-color: #4a9c41;
   }
   .preview-row.side-opp {
-    border-left-color: #f56c6c;
+    border-left-color: #c94040;
   }
 
   .preview-rank {

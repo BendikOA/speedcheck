@@ -82,8 +82,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    width: 480px;
-    max-width: 95vw;
+    width: min(680px, 90vw);
     max-height: 80vh;
     overflow: hidden;
     display: flex;
@@ -133,7 +132,7 @@
     font-size: 16px; /* prevents iOS zoom */
     flex-shrink: 0;
   }
-  .search:focus-visible { border-color: var(--accent); }
+  .search:focus-visible { border-color: var(--accent); outline: none; }
 
   .empty {
     padding: 2rem 1rem;

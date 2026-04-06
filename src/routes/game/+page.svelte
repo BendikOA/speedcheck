@@ -824,14 +824,14 @@
     background: color-mix(in srgb, #c46cf5 12%, var(--surface));
   }
   .cond-btn.your.active {
-    border-color: #6c8ef5;
-    color: #6c8ef5;
-    background: color-mix(in srgb, #6c8ef5 12%, var(--surface));
+    border-color: #4a9c41;
+    color: #4a9c41;
+    background: color-mix(in srgb, #4a9c41 12%, var(--surface));
   }
   .cond-btn.opp.active {
-    border-color: #f56c6c;
-    color: #f56c6c;
-    background: color-mix(in srgb, #f56c6c 12%, var(--surface));
+    border-color: #c94040;
+    color: #c94040;
+    background: color-mix(in srgb, #c94040 12%, var(--surface));
   }
 
   /* Team rows */
@@ -870,8 +870,8 @@
     }
   }
 
-  .team-label.you { color: #6c8ef5; }
-  .team-label.opp { color: #f56c6c; }
+  .team-label.you { color: #4a9c41; }
+  .team-label.opp { color: #c94040; }
 
   .pick-hint {
     font-weight: 400;
@@ -908,12 +908,12 @@
   }
   .tslot:disabled { opacity: 0.3; cursor: not-allowed; }
   .tslot.on-field.side-you {
-    border-color: #6c8ef5;
-    background: color-mix(in srgb, #6c8ef5 14%, var(--surface));
+    border-color: #4a9c41;
+    background: color-mix(in srgb, #4a9c41 14%, var(--surface));
   }
   .tslot.on-field.side-opp {
-    border-color: #f56c6c;
-    background: color-mix(in srgb, #f56c6c 14%, var(--surface));
+    border-color: #c94040;
+    background: color-mix(in srgb, #c94040 14%, var(--surface));
   }
   .tslot:active:not(:disabled) { opacity: 0.8; }
   @media (hover: hover) {
@@ -1023,8 +1023,8 @@
     border-left: 4px solid transparent;
   }
   .speed-row:last-child { border-bottom: none; }
-  .speed-row.side-you { border-left-color: #6c8ef5; }
-  .speed-row.side-opp { border-left-color: #f56c6c; }
+  .speed-row.side-you { border-left-color: #4a9c41; }
+  .speed-row.side-opp { border-left-color: #c94040; }
 
   .pos {
     font-size: 1.2rem;
@@ -1095,8 +1095,8 @@
     opacity: 0.45;
   }
   .badge.tailwind {
-    color: #6c8ef5; border-color: #6c8ef5;
-    background: color-mix(in srgb, #6c8ef5 10%, var(--surface));
+    color: #4a9c41; border-color: #4a9c41;
+    background: color-mix(in srgb, #4a9c41 10%, var(--surface));
   }
   .badge.scarf-badge {
     color: #f5c96c; border-color: #f5c96c;
@@ -1214,8 +1214,8 @@
   }
   .nature-pill.nature-neu { color: var(--text-muted); }
   .nature-pill.nature-neg {
-    color: #f56c6c; border-color: #f56c6c;
-    background: color-mix(in srgb, #f56c6c 10%, var(--surface));
+    color: #c94040; border-color: #c94040;
+    background: color-mix(in srgb, #c94040 10%, var(--surface));
   }
 
   .row-speed {
