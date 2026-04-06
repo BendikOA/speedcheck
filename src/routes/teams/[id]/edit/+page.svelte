@@ -592,7 +592,10 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
+    font-family: var(--font-heading);
+    font-weight: 600;
     font-size: 0.95rem;
+    letter-spacing: -0.01em;
     min-height: 44px;
   }
   .label-input:focus-visible { border-color: var(--accent); }
@@ -752,8 +755,10 @@
   }
 
   .slot-name {
+    font-family: var(--font-heading);
     font-weight: 600;
     font-size: 0.9rem;
+    letter-spacing: -0.005em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

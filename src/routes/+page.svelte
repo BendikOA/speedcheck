@@ -606,8 +606,10 @@
   }
 
   .page-title {
-    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text);
   }
 
@@ -663,8 +665,10 @@
   }
 
   .team-label {
+    font-family: var(--font-heading);
     font-weight: 700;
     font-size: 0.9rem;
+    letter-spacing: -0.005em;
   }
 
   .team-label.you {
@@ -975,6 +979,7 @@
   }
 
   .saved-label {
+    font-family: var(--font-heading);
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;

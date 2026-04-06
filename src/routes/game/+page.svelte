@@ -992,8 +992,10 @@
   }
 
   .section-title {
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.005em;
     display: flex;
     align-items: center;
     gap: 0.6rem;

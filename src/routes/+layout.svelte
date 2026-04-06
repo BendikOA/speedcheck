@@ -344,8 +344,10 @@
     display: flex;
     align-items: center;
     gap: 0.35rem;
+    font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
     color: var(--text);
     margin-right: auto;
     white-space: nowrap;
