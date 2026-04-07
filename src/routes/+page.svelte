@@ -196,8 +196,7 @@
       const slots = parsePaste(text, buildAllTiers(9));
       const filled = slots.filter(Boolean);
       if (!filled.length) {
-        importError =
-          "No matching Pokémon found — check the paste.";
+        importError = "No matching Pokémon found — check the paste.";
         return;
       }
       if (importSide === "you") yourTeam = slots;
@@ -214,12 +213,28 @@
 
 <svelte:head>
   <title>Turnadus — Pokémon Speed & Turn Order Tool for VGC & Champions</title>
-  <meta name="description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
-  <meta property="og:title" content="Turnadus — Pokémon Speed & Turn Order Tool" />
-  <meta property="og:description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
+  <meta
+    name="description"
+    content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first."
+  />
+  <meta
+    property="og:title"
+    content="Turnadus — Pokémon Speed & Turn Order Tool"
+  />
+  <meta
+    property="og:description"
+    content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first."
+  />
   <meta property="og:url" content="https://turnadus.com/" />
 </svelte:head>
-<svelte:window on:keydown={e => { if (e.key === 'Escape') { showImport = false; importError = ''; } }} />
+<svelte:window
+  on:keydown={(e) => {
+    if (e.key === "Escape") {
+      showImport = false;
+      importError = "";
+    }
+  }}
+/>
 
 {#if pickerTarget}
   <PokemonPicker
@@ -316,7 +331,18 @@
           <option value={g}>Gen {g}</option>
         {/each}
       </select>
-      <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg
+        class="select-chevron"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
+      >
     </div>
   </div>
 
@@ -337,8 +363,11 @@
                   <button class="slot-clear" on:click={() => clearSlot(side, i)}
                     >×</button
                   >
-                  <button class="slot-filled" on:click={() => openPicker(side, i)}
-                    aria-label="Change {slot.entry.name}">
+                  <button
+                    class="slot-filled"
+                    on:click={() => openPicker(side, i)}
+                    aria-label="Change {slot.entry.name}"
+                  >
                     <img
                       src={spriteUrl(slot.entry.name)}
                       alt=""
@@ -466,16 +495,33 @@
                   <button
                     class="saved-label"
                     title="Click to rename"
-                    on:click={() => { renamingId = team.id; renameValue = team.label; }}
+                    on:click={() => {
+                      renamingId = team.id;
+                      renameValue = team.label;
+                    }}
                   >
                     {team.label}
-                    <svg class="rename-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    <svg
+                      class="rename-icon"
+                      width="11"
+                      height="11"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                      />
+                      <path
+                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                      />
                     </svg>
                   </button>
                 {/if}
-                <span class="saved-gen">Gen {team.genNum}</span>
+
               </div>
               <div class="saved-slots">
                 {#each team.yourTeam.filter(Boolean) as slot}
@@ -588,7 +634,6 @@
                 </button>
               </div>
             </div>
-
           </div>
         {/each}
       </div>
@@ -637,7 +682,9 @@
     min-height: 44px;
     transition: border-color 0.15s;
   }
-  .gen-select:focus { border-color: var(--accent); }
+  .gen-select:focus {
+    border-color: var(--accent);
+  }
 
   .layout {
     display: grid;
@@ -672,7 +719,7 @@
   }
 
   .team-label.you {
-    color: #4a9c41;
+    color: #ffffff;
   }
   .team-label.opp {
     color: #c94040;
@@ -998,12 +1045,8 @@
     color: var(--text-muted);
     transition: opacity 0.15s;
   }
-  .saved-label:hover .rename-icon { opacity: 1; }
-
-  .saved-gen {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    flex-shrink: 0;
+  .saved-label:hover .rename-icon {
+    opacity: 1;
   }
 
   .saved-slots {
@@ -1145,7 +1188,6 @@
     opacity: 1;
     color: var(--text);
   }
-
 
   .saved-actions {
     display: flex;

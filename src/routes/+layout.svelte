@@ -3,7 +3,6 @@
   import { browser, dev } from "$app/environment";
   import { page } from "$app/stores";
   import Tooltip from "$lib/components/Tooltip.svelte";
-  import SparklesText from "$lib/components/SparklesText.svelte";
   import { injectAnalytics } from "@vercel/analytics/sveltekit";
 
   injectAnalytics({ mode: dev ? "development" : "production" });
@@ -53,23 +52,19 @@
 </svelte:head>
 
 <nav>
-  <a href="/" class="brand">
-    <img src="/c3.png" alt="" class="brand-icon" />
-    <span class="brand-name-wrap">
-      <SparklesText text="Turnadus" sparklesCount={5} class="brand-sparkles" />
-      <span class="brand-tagline">Keep track of turn order</span>
-    </span>
-  </a>
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <h2 class="brand-name">Turnadus</h2>
+    </a>
 
-  <!-- Desktop nav links -->
-  <div class="nav-links">
-    <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
-    <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
-    <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a
-    >
-    <!-- <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a> -->
-    <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
-  </div>
+    <!-- Desktop nav links -->
+    <div class="nav-links">
+      <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
+      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a>
+      <!-- <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a> -->
+      <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
+    </div>
 
   <!-- Desktop theme toggle hidden -->
   <!-- <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
@@ -166,6 +161,7 @@
       </svg>
     {/if}
   </button>
+  </div>
 </nav>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -179,15 +175,7 @@
   <nav class="drawer" aria-label="Mobile navigation">
     <div class="drawer-header">
       <a href="/" class="brand drawer-brand">
-        <img src="/c3.png" alt="" class="brand-icon" />
-        <span class="brand-name-wrap">
-          <SparklesText
-            text="Turnadus"
-            sparklesCount={5}
-            class="brand-sparkles"
-          />
-          <span class="brand-tagline">Keep track of turn order</span>
-        </span>
+        <span class="brand-name">Turnadus</span>
       </a>
       <button
         class="drawer-close"
@@ -281,7 +269,11 @@
         {/if}
       </button> -->
       <div class="drawer-kofi">
-        Turnadus is free, no ads, built solo. If it helped you in a game, <a href="https://ko-fi.com/T6T21XBBI8" target="_blank" rel="noopener">consider buying me a coffee on Ko-fi ☕</a>
+        Turnadus is free, no ads, built solo. If it helped you in a game, <a
+          href="https://ko-fi.com/T6T21XBBI8"
+          target="_blank"
+          rel="noopener">consider buying me a coffee on Ko-fi ☕</a
+        >
       </div>
     </div>
   </nav>
@@ -311,71 +303,48 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    padding: 0 1rem;
-    padding-left: max(1rem, var(--safe-left));
-    padding-right: max(1rem, var(--safe-right));
-    height: 52px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     flex-shrink: 0;
   }
 
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    height: 52px;
+    padding: 0 1rem;
+    padding-left: max(1rem, var(--safe-left));
+    padding-right: max(1rem, var(--safe-right));
+  }
+
   .brand {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     color: var(--text);
-    margin-right: auto;
     white-space: nowrap;
     min-height: 44px;
-    grid-column: 1;
   }
 
-  .brand-name-wrap {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
-
-  :global(.brand-sparkles .sparkles-label) {
-    font-size: 1.15rem;
+  .brand-name {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 800;
     letter-spacing: -0.02em;
-    text-shadow:
-      0 0 12px rgba(160, 86, 212, 0.6),
-      0 0 28px rgba(160, 86, 212, 0.25);
-  }
-
-  .brand-tagline {
-    font-family: var(--font);
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  .brand-icon {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-    flex-shrink: 0;
-    margin-bottom: 0.25rem;
+    color: var(--text);
   }
 
   .nav-links {
-    grid-column: 2;
     display: flex;
     align-items: center;
     gap: 0.25rem;
   }
 
   .theme-toggle {
-    grid-column: 3;
-    justify-self: end;
+    margin-left: auto;
   }
 
   nav a {
