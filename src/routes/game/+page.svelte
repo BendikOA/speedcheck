@@ -830,7 +830,7 @@
                   </label>
                 {/if}
 
-                <!-- −1 Speed stage (Icy Wind / Sticky Web) -->
+                <!-- Speed stages: −1 and +boost side by side -->
                 <label
                   class="toggle-pill speeddown"
                   class:active={row.speedDown}
@@ -843,6 +843,17 @@
                   />
                   −1 Spd
                 </label>
+
+                {#if row.canSpeedBoost}
+                  <button
+                    class="toggle-pill boost-pill"
+                    class:active={row.speedBoostStage > 0}
+                    on:click={() => cycleSpeedBoost(row.key, row.maxBoostStage)}
+                    use:tooltip={`Speed boost stages from moves (Dragon Dance, Agility, etc.).\nCurrent: +${row.speedBoostStage} stage${row.speedBoostStage !== 1 ? "s" : ""} (×${((2 + row.speedBoostStage) / 2).toFixed(1)})\nClick to cycle: 0 → +1 (×1.5) → +2 (×2.0) → 0`}
+                  >
+                    +{row.speedBoostStage || 1} Spd
+                  </button>
+                {/if}
 
                 <!-- Paralysis -->
                 <label
@@ -857,18 +868,6 @@
                   />
                   PAR
                 </label>
-
-                <!-- Speed boost stages (Dragon Dance, Agility, etc.) -->
-                {#if row.canSpeedBoost}
-                  <button
-                    class="toggle-pill boost-pill"
-                    class:active={row.speedBoostStage > 0}
-                    on:click={() => cycleSpeedBoost(row.key, row.maxBoostStage)}
-                    use:tooltip={`Speed boost stages from moves (Dragon Dance, Agility, etc.).\nCurrent: +${row.speedBoostStage} stage${row.speedBoostStage !== 1 ? "s" : ""} (×${((2 + row.speedBoostStage) / 2).toFixed(1)})\nClick to cycle: 0 → +1 (×1.5) → +2 (×2.0) → 0`}
-                  >
-                    +{row.speedBoostStage > 0 ? row.speedBoostStage : "?"} Spd
-                  </button>
-                {/if}
 
                 <!-- Proto/Quark (only when condition is active) -->
                 {#if row.canProtoBoost}
