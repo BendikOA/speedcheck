@@ -153,12 +153,19 @@
   // ── Per-field toggles ─────────────────────────────────────────────────────
   let fieldScarfs = new Map<string, boolean>();
   let fieldParalysis = new Map<string, boolean>();
+  let fieldSpeedDown = new Map<string, boolean>(); // −1 stage from Icy Wind / Sticky Web
   let fieldProto = new Map<string, boolean>();
   let fieldNature = new Map<string, NatureTier>();
   let fieldCommander = new Map<string, boolean>();
   let fieldMega = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
   let fieldSpeedBoost = new Map<string, number>(); // 0=off, 1=+1 stage, 2=+2 stages
   let fieldSpeedEV = new Map<string, number>(); // Spe EV from likely build (0-252)
+
+  /** Returns true if the item name is a mega stone (e.g. Charizardite X, Gengarite). */
+  function isMegaStone(item: string | undefined): boolean {
+    if (!item) return false;
+    return /ite( [XY])?$/i.test(item);
+  }
 
   function toggleFieldScarf(key: string, side: "you" | "opp") {
     const wasOn = fieldScarfs.get(key) ?? false;
@@ -171,6 +178,11 @@
   function toggleFieldParalysis(key: string) {
     fieldParalysis.set(key, !(fieldParalysis.get(key) ?? false));
     fieldParalysis = new Map(fieldParalysis);
+  }
+
+  function toggleFieldSpeedDown(key: string) {
+    fieldSpeedDown.set(key, !(fieldSpeedDown.get(key) ?? false));
+    fieldSpeedDown = new Map(fieldSpeedDown);
   }
 
   function toggleFieldProto(key: string) {
@@ -243,6 +255,8 @@
     canSpeedBoost: boolean;
     maxBoostStage: number;
     speedBoostStage: number;
+    speedDown: boolean;
+    hasMegaStone: boolean;
     priorityMoves: PriorityMove[];
     priorityAbilities: PriorityAbility[];
   };
@@ -323,6 +337,8 @@
           : getPriorityMoves(slot.entry.id);
 
       const speedEV = fieldSpeedEV.get(key);
+      const speedDown = fieldSpeedDown.get(key) ?? false;
+      const hasMegaStone = isMegaStone(slot.item);
 
       rows.push({
         key,
@@ -330,6 +346,8 @@
         slot,
         scarf,
         paralysis,
+        speedDown,
+        hasMegaStone,
         nature,
         natureLocked,
         canProtoBoost,
@@ -352,6 +370,7 @@
           {
             scarf,
             paralysis,
+            speedDown,
             protoBoost,
             commander,
             natureTier: nature,
@@ -795,18 +814,34 @@
                   >
                 {/if}
 
-                <!-- Scarf -->
+                <!-- Scarf — hidden when mega evolved or holding a mega stone -->
+                {#if row.megaIndex === 0 && !row.hasMegaStone}
+                  <label
+                    class="toggle-pill"
+                    class:active={row.scarf}
+                    use:tooltip={"Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time."}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={row.scarf}
+                      on:change={() => toggleFieldScarf(row.key, row.side)}
+                    />
+                    Scarf
+                  </label>
+                {/if}
+
+                <!-- −1 Speed stage (Icy Wind / Sticky Web) -->
                 <label
-                  class="toggle-pill"
-                  class:active={row.scarf}
-                  use:tooltip={"Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time."}
+                  class="toggle-pill speeddown"
+                  class:active={row.speedDown}
+                  use:tooltip={"−1 Speed stage from Icy Wind or Sticky Web (×2/3)"}
                 >
                   <input
                     type="checkbox"
-                    checked={row.scarf}
-                    on:change={() => toggleFieldScarf(row.key, row.side)}
+                    checked={row.speedDown}
+                    on:change={() => toggleFieldSpeedDown(row.key)}
                   />
-                  Scarf
+                  −1 Spd
                 </label>
 
                 <!-- Paralysis -->
@@ -1532,6 +1567,11 @@
     color: #f5a06c;
     border-color: #f5a06c;
     background: color-mix(in srgb, #f5a06c 10%, var(--surface));
+  }
+  .toggle-pill.speeddown.active {
+    color: #6cb8f5;
+    border-color: #6cb8f5;
+    background: color-mix(in srgb, #6cb8f5 10%, var(--surface));
   }
   .toggle-pill.proto.active {
     color: #6cf5e0;

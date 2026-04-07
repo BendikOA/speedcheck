@@ -183,6 +183,7 @@ export function calcEffectiveSpeed(
     megaIndex?:      number; // 0 = base, 1+ = mega form index into megaForms[]
     speedBoostStage?: number; // +1 = ×1.5, +2 = ×2.0
     speedEV?:        number; // when set, compute speed from EVs instead of precomputed values
+    speedDown?:      boolean; // −1 speed stage from Icy Wind / Sticky Web (×2/3)
   },
   cond: Conditions
 ): number {
@@ -225,6 +226,9 @@ export function calcEffectiveSpeed(
   // Tailwind ×2
   const tailwind = side === 'you' ? cond.yourTailwind : cond.oppTailwind;
   if (tailwind) speed = Math.floor(speed * 2);
+
+  // −1 speed stage (Icy Wind / Sticky Web) ×2/3
+  if (perPoke.speedDown) speed = Math.floor(speed * 2 / 3);
 
   // Paralysis ×0.5
   if (perPoke.paralysis) speed = Math.floor(speed * 0.5);
