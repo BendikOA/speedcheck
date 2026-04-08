@@ -19,31 +19,192 @@
 
   // Regulation M-A allowed Pokémon (Pokémon Champions)
   const REG_MA = new Set([
-    "venusaur","charizard","blastoise","beedrill","pidgeot","arbok","pikachu","raichu",
-    "clefable","ninetales","arcanine","alakazam","machamp","victreebel","slowbro","gengar",
-    "kangaskhan","starmie","pinsir","tauros","gyarados","ditto","vaporeon","jolteon",
-    "flareon","aerodactyl","snorlax","dragonite","meganium","typhlosion","feraligatr",
-    "ariados","ampharos","azumarill","politoed","espeon","umbreon","slowking","forretress",
-    "steelix","scizor","heracross","skarmory","houndoom","tyranitar","pelipper","gardevoir",
-    "sableye","aggron","medicham","manectric","sharpedo","camerupt","torkoal","altaria",
-    "milotic","castform","banette","chimecho","absol","glalie","torterra","infernape",
-    "empoleon","luxray","roserade","rampardos","bastiodon","lopunny","spiritomb","garchomp",
-    "lucario","hippowdon","toxicroak","abomasnow","weavile","rhyperior","leafeon","glaceon",
-    "gliscor","mamoswine","gallade","froslass","rotom","serperior","emboar","samurott",
-    "watchog","liepard","simisage","simisear","simipour","excadrill","audino","conkeldurr",
-    "whimsicott","krookodile","cofagrigus","garbodor","zoroark","reuniclus","vanilluxe",
-    "emolga","chandelure","beartic","stunfisk","golurk","hydreigon","volcarona","chesnaught",
-    "delphox","greninja","diggersby","talonflame","vivillon","floette","florges","pangoro",
-    "furfrou","meowstic","aegislash","aromatisse","slurpuff","clawitzer","heliolisk",
-    "tyrantrum","aurorus","sylveon","hawlucha","dedenne","goodra","klefki","trevenant",
-    "gourgeist","avalugg","noivern","decidueye","incineroar","primarina","toucannon",
-    "crabominable","lycanroc","toxapex","mudsdale","araquanid","salazzle","tsareena",
-    "oranguru","passimian","mimikyu","drampa","kommoo","corviknight","flapple","appletun",
-    "sandaconda","polteageist","hatterene","mrrime","runerigus","alcremie","morpeko",
-    "dragapult","wyrdeer","kleavor","basculegion","sneasler","meowscarada","skeledirge",
-    "quaquaval","maushold","garganacl","armarouge","ceruledge","bellibolt","scovillain",
-    "espathra","tinkaton","palafin","orthworm","glimmora","farigiraf","kingambit",
-    "sinistcha","archaludon","hydrapple",
+    "venusaur",
+    "charizard",
+    "blastoise",
+    "beedrill",
+    "pidgeot",
+    "arbok",
+    "pikachu",
+    "raichu",
+    "clefable",
+    "ninetales",
+    "arcanine",
+    "alakazam",
+    "machamp",
+    "victreebel",
+    "slowbro",
+    "gengar",
+    "kangaskhan",
+    "starmie",
+    "pinsir",
+    "tauros",
+    "gyarados",
+    "ditto",
+    "vaporeon",
+    "jolteon",
+    "flareon",
+    "aerodactyl",
+    "snorlax",
+    "dragonite",
+    "meganium",
+    "typhlosion",
+    "feraligatr",
+    "ariados",
+    "ampharos",
+    "azumarill",
+    "politoed",
+    "espeon",
+    "umbreon",
+    "slowking",
+    "forretress",
+    "steelix",
+    "scizor",
+    "heracross",
+    "skarmory",
+    "houndoom",
+    "tyranitar",
+    "pelipper",
+    "gardevoir",
+    "sableye",
+    "aggron",
+    "medicham",
+    "manectric",
+    "sharpedo",
+    "camerupt",
+    "torkoal",
+    "altaria",
+    "milotic",
+    "castform",
+    "banette",
+    "chimecho",
+    "absol",
+    "glalie",
+    "torterra",
+    "infernape",
+    "empoleon",
+    "luxray",
+    "roserade",
+    "rampardos",
+    "bastiodon",
+    "lopunny",
+    "spiritomb",
+    "garchomp",
+    "lucario",
+    "hippowdon",
+    "toxicroak",
+    "abomasnow",
+    "weavile",
+    "rhyperior",
+    "leafeon",
+    "glaceon",
+    "gliscor",
+    "mamoswine",
+    "gallade",
+    "froslass",
+    "rotom",
+    "serperior",
+    "emboar",
+    "samurott",
+    "watchog",
+    "liepard",
+    "simisage",
+    "simisear",
+    "simipour",
+    "excadrill",
+    "audino",
+    "conkeldurr",
+    "whimsicott",
+    "krookodile",
+    "cofagrigus",
+    "garbodor",
+    "zoroark",
+    "reuniclus",
+    "vanilluxe",
+    "emolga",
+    "chandelure",
+    "beartic",
+    "stunfisk",
+    "golurk",
+    "hydreigon",
+    "volcarona",
+    "chesnaught",
+    "delphox",
+    "greninja",
+    "diggersby",
+    "talonflame",
+    "vivillon",
+    "floette",
+    "florges",
+    "pangoro",
+    "furfrou",
+    "meowstic",
+    "aegislash",
+    "aromatisse",
+    "slurpuff",
+    "clawitzer",
+    "heliolisk",
+    "tyrantrum",
+    "aurorus",
+    "sylveon",
+    "hawlucha",
+    "dedenne",
+    "goodra",
+    "klefki",
+    "trevenant",
+    "gourgeist",
+    "avalugg",
+    "noivern",
+    "decidueye",
+    "incineroar",
+    "primarina",
+    "toucannon",
+    "crabominable",
+    "lycanroc",
+    "toxapex",
+    "mudsdale",
+    "araquanid",
+    "salazzle",
+    "tsareena",
+    "oranguru",
+    "passimian",
+    "mimikyu",
+    "drampa",
+    "kommoo",
+    "corviknight",
+    "flapple",
+    "appletun",
+    "sandaconda",
+    "polteageist",
+    "hatterene",
+    "mrrime",
+    "runerigus",
+    "alcremie",
+    "morpeko",
+    "dragapult",
+    "wyrdeer",
+    "kleavor",
+    "basculegion",
+    "sneasler",
+    "meowscarada",
+    "skeledirge",
+    "quaquaval",
+    "maushold",
+    "garganacl",
+    "armarouge",
+    "ceruledge",
+    "bellibolt",
+    "scovillain",
+    "espathra",
+    "tinkaton",
+    "palafin",
+    "orthworm",
+    "glimmora",
+    "farigiraf",
+    "kingambit",
+    "sinistcha",
+    "archaludon",
+    "hydrapple",
   ]);
 
   let genFilter: GenNumber | null = null; // null = all gens
@@ -59,7 +220,9 @@
   let allEntries: SpeedEntry[] = [];
   $: {
     const base = genFilter ? buildSpeedTiers(genFilter) : buildAllTiers(9);
-    allEntries = regMA ? base.filter((e: SpeedEntry) => REG_MA.has(e.id)) : base;
+    allEntries = regMA
+      ? base.filter((e: SpeedEntry) => REG_MA.has(e.id))
+      : base;
   }
 
   // Featured: usage-ordered top 100 for the selected gen (or gen 9 for "all")
@@ -356,8 +519,8 @@
       <button
         class="reg-ma-btn"
         class:active={regMA}
-        on:click={() => (regMA = !regMA)}
-      >Reg M-A</button>
+        on:click={() => (regMA = !regMA)}>Reg M-A</button
+      >
       <div class="select-wrap">
         <select
           class="gen-select"
@@ -372,18 +535,18 @@
             <option value={g}>Gen {g}</option>
           {/each}
         </select>
-      <svg
-        class="select-chevron"
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
-      >
+        <svg
+          class="select-chevron"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
+        >
       </div>
     </div>
   </div>
@@ -563,7 +726,6 @@
                     </svg>
                   </button>
                 {/if}
-
               </div>
               <div class="saved-slots">
                 {#each team.yourTeam.filter(Boolean) as slot}
@@ -716,7 +878,10 @@
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    transition:
+      border-color 0.15s,
+      color 0.15s,
+      background 0.15s;
     white-space: nowrap;
   }
   .reg-ma-btn:hover {
@@ -793,7 +958,7 @@
     color: #ffffff;
   }
   .team-label.opp {
-    color: #c94040;
+    color: #f68292;
   }
 
   .slots {
@@ -935,7 +1100,7 @@
     width: 100%;
     padding: 0.85rem 2rem;
     background: var(--accent);
-    color: #fff;
+    color: #06080f;
     border: none;
     border-radius: var(--radius);
     font-size: 1.05rem;
@@ -1270,7 +1435,7 @@
   .saved-load {
     padding: 0 1rem;
     background: var(--accent);
-    color: #fff;
+    color: #06080;
     border: none;
     border-radius: var(--radius-sm);
     font-size: 0.9rem;

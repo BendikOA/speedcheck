@@ -1179,16 +1179,17 @@
   }
 
   .team-label.you {
-    color: #4a9c41;
+    color: #9bc798;
   }
   .team-label.opp {
-    color: #c94040;
+    color: #f8a5b0;
   }
 
   .pick-hint {
     font-weight: 400;
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
   }
 
   .team-slots {
