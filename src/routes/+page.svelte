@@ -17,7 +17,37 @@
   import PokemonPicker from "$lib/components/PokemonPicker.svelte";
   import { loadSmogonOrder } from "$lib/smogonUsage";
 
+  // Regulation M-A allowed Pokémon (Pokémon Champions)
+  const REG_MA = new Set([
+    "venusaur","charizard","blastoise","beedrill","pidgeot","arbok","pikachu","raichu",
+    "clefable","ninetales","arcanine","alakazam","machamp","victreebel","slowbro","gengar",
+    "kangaskhan","starmie","pinsir","tauros","gyarados","ditto","vaporeon","jolteon",
+    "flareon","aerodactyl","snorlax","dragonite","meganium","typhlosion","feraligatr",
+    "ariados","ampharos","azumarill","politoed","espeon","umbreon","slowking","forretress",
+    "steelix","scizor","heracross","skarmory","houndoom","tyranitar","pelipper","gardevoir",
+    "sableye","aggron","medicham","manectric","sharpedo","camerupt","torkoal","altaria",
+    "milotic","castform","banette","chimecho","absol","glalie","torterra","infernape",
+    "empoleon","luxray","roserade","rampardos","bastiodon","lopunny","spiritomb","garchomp",
+    "lucario","hippowdon","toxicroak","abomasnow","weavile","rhyperior","leafeon","glaceon",
+    "gliscor","mamoswine","gallade","froslass","rotom","serperior","emboar","samurott",
+    "watchog","liepard","simisage","simisear","simipour","excadrill","audino","conkeldurr",
+    "whimsicott","krookodile","cofagrigus","garbodor","zoroark","reuniclus","vanilluxe",
+    "emolga","chandelure","beartic","stunfisk","golurk","hydreigon","volcarona","chesnaught",
+    "delphox","greninja","diggersby","talonflame","vivillon","floette","florges","pangoro",
+    "furfrou","meowstic","aegislash","aromatisse","slurpuff","clawitzer","heliolisk",
+    "tyrantrum","aurorus","sylveon","hawlucha","dedenne","goodra","klefki","trevenant",
+    "gourgeist","avalugg","noivern","decidueye","incineroar","primarina","toucannon",
+    "crabominable","lycanroc","toxapex","mudsdale","araquanid","salazzle","tsareena",
+    "oranguru","passimian","mimikyu","drampa","kommoo","corviknight","flapple","appletun",
+    "sandaconda","polteageist","hatterene","mrrime","runerigus","alcremie","morpeko",
+    "dragapult","wyrdeer","kleavor","basculegion","sneasler","meowscarada","skeledirge",
+    "quaquaval","maushold","garganacl","armarouge","ceruledge","bellibolt","scovillain",
+    "espathra","tinkaton","palafin","orthworm","glimmora","farigiraf","kingambit",
+    "sinistcha","archaludon","hydrapple",
+  ]);
+
   let genFilter: GenNumber | null = null; // null = all gens
+  let regMA = false; // Regulation M-A filter
   $: genNum = genFilter ?? (9 as GenNumber); // concrete gen for team state / saving
   let yourTeam: TeamSlot[] = Array(6).fill(null);
   let oppTeam: TeamSlot[] = Array(6).fill(null);
@@ -25,7 +55,12 @@
   let usageOrder: string[] = [];
 
   // When no gen filter, show all national dex Pokémon (gen 9 as widest set); otherwise gen-filtered
-  $: allEntries = genFilter ? buildSpeedTiers(genFilter) : buildAllTiers(9);
+  // Optionally narrow to Regulation M-A allowed Pokémon
+  let allEntries: SpeedEntry[] = [];
+  $: {
+    const base = genFilter ? buildSpeedTiers(genFilter) : buildAllTiers(9);
+    allEntries = regMA ? base.filter((e: SpeedEntry) => REG_MA.has(e.id)) : base;
+  }
 
   // Featured: usage-ordered top 100 for the selected gen (or gen 9 for "all")
   $: {
@@ -317,20 +352,26 @@
 <div class="page">
   <div class="page-header">
     <span class="page-title">Pokémon Select</span>
-    <div class="select-wrap">
-      <select
-        class="gen-select"
-        value={genFilter ?? ""}
-        on:change={(e) => {
-          const v = e.currentTarget.value;
-          changeGen(v === "" ? null : (+v as GenNumber));
-        }}
-      >
-        <option value="">All Gens</option>
-        {#each GEN_NUMBERS as g}
-          <option value={g}>Gen {g}</option>
-        {/each}
-      </select>
+    <div class="header-filters">
+      <button
+        class="reg-ma-btn"
+        class:active={regMA}
+        on:click={() => (regMA = !regMA)}
+      >Reg M-A</button>
+      <div class="select-wrap">
+        <select
+          class="gen-select"
+          value={genFilter ?? ""}
+          on:change={(e) => {
+            const v = e.currentTarget.value;
+            changeGen(v === "" ? null : (+v as GenNumber));
+          }}
+        >
+          <option value="">All Gens</option>
+          {#each GEN_NUMBERS as g}
+            <option value={g}>Gen {g}</option>
+          {/each}
+        </select>
       <svg
         class="select-chevron"
         width="12"
@@ -343,6 +384,7 @@
         stroke-linejoin="round"
         aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
       >
+      </div>
     </div>
   </div>
 
@@ -656,6 +698,35 @@
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--text);
+  }
+
+  .header-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .reg-ma-btn {
+    padding: 0 0.75rem;
+    min-height: 44px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .reg-ma-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+  .reg-ma-btn.active {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+    background: color-mix(in srgb, var(--accent-2) 10%, var(--surface));
   }
 
   .select-wrap {
