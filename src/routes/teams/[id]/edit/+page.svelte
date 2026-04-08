@@ -1,75 +1,80 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import { Dex } from '@pkmn/dex';
-  import { savedTeams } from '$lib/stores/savedTeams';
-  import type { SavedTeam, SavedTeamSlot } from '$lib/stores/savedTeams';
-  import type { GenNumber, NatureTier } from '$lib/speedtiers';
-  import { GEN_NUMBERS } from '$lib/speedtiers';
-  import { spriteUrl } from '$lib/sprites';
-  import PokemonPicker from '$lib/components/PokemonPicker.svelte';
-  import SearchCombobox from '$lib/components/SearchCombobox.svelte';
-  import { buildAllTiers } from '$lib/speedtiers';
-  import type { SpeedEntry } from '$lib/speedtiers';
-  import { parsePaste, resolvePaste } from '$lib/parsePaste';
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import { Dex } from "@pkmn/dex";
+  import { savedTeams } from "$lib/stores/savedTeams";
+  import type { SavedTeam, SavedTeamSlot } from "$lib/stores/savedTeams";
+  import type { GenNumber, NatureTier } from "$lib/speedtiers";
+  import { GEN_NUMBERS } from "$lib/speedtiers";
+  import { spriteUrl } from "$lib/sprites";
+  import PokemonPicker from "$lib/components/PokemonPicker.svelte";
+  import SearchCombobox from "$lib/components/SearchCombobox.svelte";
+  import { buildAllTiers } from "$lib/speedtiers";
+  import type { SpeedEntry } from "$lib/speedtiers";
+  import { parsePaste, resolvePaste } from "$lib/parsePaste";
 
   // ── Load team ────────────────────────────────────────────────────────────
   let team: SavedTeam | null = null;
   let slots: (SavedTeamSlot | null)[] = Array(6).fill(null);
-  let label = '';
+  let label = "";
   let genNum: GenNumber | null = null; // null = All Gens
 
   $: teamId = $page.params.id;
 
   onMount(() => {
-    const found = $savedTeams.find(t => t.id === teamId);
-    if (!found) { goto('/'); return; }
-    team  = found;
+    const found = $savedTeams.find((t) => t.id === teamId);
+    if (!found) {
+      goto("/");
+      return;
+    }
+    team = found;
     label = found.label;
     genNum = found.genNum;
-    slots = found.yourTeam.map(s => s ? { ...s } : null);
+    slots = found.yourTeam.map((s) => (s ? { ...s } : null));
   });
 
   // ── Gen-awareness (null = all gens, treat as gen 9 for flags) ────────────
-  $: g            = genNum ?? 9;
-  $: hasTera      = g >= 9;
-  $: hasAbility   = g >= 3;
-  $: hasItems     = g >= 2;
-  $: hasNatures   = g >= 3;
-  $: dvMode       = g <= 2;
-  $: ivMax        = dvMode ? 15 : 31;
-  $: allEntries   = buildAllTiers(9);
+  $: g = genNum ?? 9;
+  $: hasTera = g >= 9;
+  $: hasAbility = g >= 3;
+  $: hasItems = g >= 2;
+  $: hasNatures = g >= 3;
+  $: dvMode = g <= 2;
+  $: ivMax = dvMode ? 15 : 31;
+  $: allEntries = buildAllTiers(9);
 
   // ── Editing state ─────────────────────────────────────────────────────────
   let activeSlot: number | null = null;
   let showPicker = false;
-  let moveSearch: string[] = ['', '', '', ''];
+  let moveSearch: string[] = ["", "", "", ""];
   let moveSuggestions: string[][] = [[], [], [], []];
 
   function openSlot(i: number) {
     activeSlot = i;
-    moveSearch = slots[i]?.moves?.map(m => m) ?? ['', '', '', ''];
+    moveSearch = slots[i]?.moves?.map((m) => m) ?? ["", "", "", ""];
     moveSuggestions = [[], [], [], []];
   }
 
   function closeSlot() {
     activeSlot = null;
-    moveSearch = ['', '', '', ''];
+    moveSearch = ["", "", "", ""];
     moveSuggestions = [[], [], [], []];
   }
 
-  function openPicker() { showPicker = true; }
+  function openPicker() {
+    showPicker = true;
+  }
 
   function onPick(e: CustomEvent<SpeedEntry>) {
     if (activeSlot === null) return;
     const entry = e.detail;
     const abilities = getSpeciesAbilities(entry.id);
     slots[activeSlot] = {
-      id:      entry.id,
-      name:    entry.name,
-      scarf:   false,
-      nature:  '=' as NatureTier,
+      id: entry.id,
+      name: entry.name,
+      scarf: false,
+      nature: "=" as NatureTier,
       ability: abilities[0] ?? undefined,
     };
     slots = [...slots];
@@ -83,34 +88,63 @@
   }
 
   // ── Field updaters ────────────────────────────────────────────────────────
-  function setField<K extends keyof SavedTeamSlot>(i: number, key: K, value: SavedTeamSlot[K]) {
+  function setField<K extends keyof SavedTeamSlot>(
+    i: number,
+    key: K,
+    value: SavedTeamSlot[K],
+  ) {
     if (!slots[i]) return;
     slots[i] = { ...slots[i]!, [key]: value };
     slots = [...slots];
   }
 
-  function setEv(i: number, stat: keyof import('$lib/stores/teams').StatSpread, value: number) {
-    const evs = { hp:0, atk:0, def:0, spa:0, spd:0, spe:0, ...(slots[i]?.evs ?? {}) };
+  function setEv(
+    i: number,
+    stat: keyof import("$lib/stores/teams").StatSpread,
+    value: number,
+  ) {
+    const evs = {
+      hp: 0,
+      atk: 0,
+      def: 0,
+      spa: 0,
+      spd: 0,
+      spe: 0,
+      ...(slots[i]?.evs ?? {}),
+    };
     evs[stat] = Math.max(0, Math.min(252, value));
     // Clamp to 508 total
     const total = Object.values(evs).reduce((a, b) => a + b, 0);
     if (total > 508) evs[stat] = Math.max(0, evs[stat] - (total - 508));
-    setField(i, 'evs', evs);
+    setField(i, "evs", evs);
   }
 
-  function setIv(i: number, stat: keyof import('$lib/stores/teams').StatSpread, value: number) {
-    const ivs = { hp:31, atk:31, def:31, spa:31, spd:31, spe:31, ...(slots[i]?.ivs ?? {}) };
+  function setIv(
+    i: number,
+    stat: keyof import("$lib/stores/teams").StatSpread,
+    value: number,
+  ) {
+    const ivs = {
+      hp: 31,
+      atk: 31,
+      def: 31,
+      spa: 31,
+      spd: 31,
+      spe: 31,
+      ...(slots[i]?.ivs ?? {}),
+    };
     ivs[stat] = Math.max(0, Math.min(ivMax, value));
-    setField(i, 'ivs', ivs);
+    setField(i, "ivs", ivs);
   }
 
   function setMove(i: number, moveIdx: number, value: string) {
-    const moves = [...(slots[i]?.moves ?? ['', '', '', ''])];
+    const moves = [...(slots[i]?.moves ?? ["", "", "", ""])];
     moves[moveIdx] = value;
-    setField(i, 'moves', moves.filter(Boolean).length ? moves : undefined);
+    setField(i, "moves", moves.filter(Boolean).length ? moves : undefined);
     moveSearch[moveIdx] = value;
     moveSearch = [...moveSearch];
-    moveSuggestions[moveIdx] = value.length >= 2 ? searchMoves(slots[i]!.id, value) : [];
+    moveSuggestions[moveIdx] =
+      value.length >= 2 ? searchMoves(slots[i]!.id, value) : [];
     moveSuggestions = [...moveSuggestions];
   }
 
@@ -119,13 +153,13 @@
     moveSearch = [...moveSearch];
     moveSuggestions[moveIdx] = [];
     moveSuggestions = [...moveSuggestions];
-    const moves = [...(slots[i]?.moves ?? ['', '', '', ''])];
+    const moves = [...(slots[i]?.moves ?? ["", "", "", ""])];
     moves[moveIdx] = moveName;
-    setField(i, 'moves', moves);
+    setField(i, "moves", moves);
   }
 
   // ── Dex helpers ───────────────────────────────────────────────────────────
-  const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
   function getSpeciesAbilities(speciesId: string): string[] {
     const sp = Dex.species.get(speciesId);
@@ -136,7 +170,10 @@
   let learnsetCache = new Map<string, string[]>();
 
   onMount(async () => {
-    allItems = [...Dex.items.all()].filter(i => i.exists).map(i => i.name).sort();
+    allItems = [...Dex.items.all()]
+      .filter((i) => i.exists)
+      .map((i) => i.name)
+      .sort();
   });
 
   async function getLearnset(speciesId: string): Promise<string[]> {
@@ -161,75 +198,114 @@
     const cached = _moveCache.get(speciesId);
     if (!cached) {
       // Trigger async load, return empty for now
-      getLearnset(speciesId).then(moves => {
+      getLearnset(speciesId).then((moves) => {
         _moveCache.set(speciesId, moves);
         // trigger reactivity
         moveSuggestions = moveSuggestions.map((_, idx) =>
           moveSearch[idx].length >= 2
-            ? moves.filter(m => m.toLowerCase().includes(moveSearch[idx].toLowerCase())).slice(0, 8)
-            : []
+            ? moves
+                .filter((m) =>
+                  m.toLowerCase().includes(moveSearch[idx].toLowerCase()),
+                )
+                .slice(0, 8)
+            : [],
         );
       });
       return [];
     }
-    return cached.filter(m => m.toLowerCase().includes(query.toLowerCase())).slice(0, 8);
+    return cached
+      .filter((m) => m.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 8);
   }
 
   function pickItem(i: number, name: string) {
-    setField(i, 'item', name);
-    setField(i, 'scarf', toId(name) === 'choicescarf');
+    setField(i, "item", name);
+    setField(i, "scarf", toId(name) === "choicescarf");
   }
 
-  const NATURES: NatureTier[] = ['+', '=', '-'];
+  const NATURES: NatureTier[] = ["+", "=", "-"];
   const NATURE_LABELS: Record<NatureTier, string> = {
-    '+': '+ Speed (Timid/Jolly/Naive/Hasty)',
-    '=': '= Neutral',
-    '-': '− Speed (Brave/Quiet/Relaxed/Sassy)',
+    "+": "+ Speed (Timid/Jolly/Naive/Hasty)",
+    "=": "= Neutral",
+    "-": "− Speed (Brave/Quiet/Relaxed/Sassy)",
   };
-  const NATURE_EXPORT: Record<NatureTier, string> = { '+': 'Timid', '=': 'Hardy', '-': 'Brave' };
+  const NATURE_EXPORT: Record<NatureTier, string> = {
+    "+": "Timid",
+    "=": "Hardy",
+    "-": "Brave",
+  };
 
-  const TERA_TYPES = ['Normal','Fire','Water','Electric','Grass','Ice','Fighting','Poison','Ground',
-    'Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy'];
+  const TERA_TYPES = [
+    "Normal",
+    "Fire",
+    "Water",
+    "Electric",
+    "Grass",
+    "Ice",
+    "Fighting",
+    "Poison",
+    "Ground",
+    "Flying",
+    "Psychic",
+    "Bug",
+    "Rock",
+    "Ghost",
+    "Dragon",
+    "Dark",
+    "Steel",
+    "Fairy",
+  ];
 
-  const STAT_KEYS: (keyof import('$lib/stores/teams').StatSpread)[] = ['hp','atk','def','spa','spd','spe'];
-  const STAT_LABELS = ['HP','Atk','Def','SpA','SpD','Spe'];
+  const STAT_KEYS: (keyof import("$lib/stores/teams").StatSpread)[] = [
+    "hp",
+    "atk",
+    "def",
+    "spa",
+    "spd",
+    "spe",
+  ];
+  const STAT_LABELS = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"];
 
   // ── Import ────────────────────────────────────────────────────────────────
   let showImportModal = false;
-  let importText = '';
-  let importError = '';
+  let importText = "";
+  let importError = "";
   let importLoading = false;
 
   async function doImport() {
-    importError = '';
+    importError = "";
     importLoading = true;
     try {
       const text = await resolvePaste(importText);
       const parsed = parsePaste(text, allEntries);
       const filled = parsed.filter(Boolean);
       if (!filled.length) {
-        importError = 'No matching Pokémon found — check the paste.';
+        importError = "No matching Pokémon found — check the paste.";
         return;
       }
-      slots = parsed.map(s => s ? {
-        id:          s.entry.id,
-        name:        s.entry.name,
-        scarf:       s.scarf,
-        nature:      s.nature,
-        natureLocked: s.natureLocked ?? true,
-        item:        s.item,
-        ability:     s.ability,
-        teraType:    s.teraType,
-        level:       s.level,
-        evs:         s.evs,
-        ivs:         s.ivs,
-        moves:       s.moves,
-        nickname:    s.nickname,
-      } : null);
+      slots = parsed.map((s) =>
+        s
+          ? {
+              id: s.entry.id,
+              name: s.entry.name,
+              scarf: s.scarf,
+              nature: s.nature,
+              natureLocked: s.natureLocked ?? true,
+              item: s.item,
+              ability: s.ability,
+              teraType: s.teraType,
+              level: s.level,
+              evs: s.evs,
+              ivs: s.ivs,
+              moves: s.moves,
+              nickname: s.nickname,
+            }
+          : null,
+      );
       showImportModal = false;
-      importText = '';
+      importText = "";
     } catch (e: any) {
-      importError = e?.message ?? 'Failed to fetch paste.';
+      importError = e?.message ?? "Failed to fetch paste.";
     } finally {
       importLoading = false;
     }
@@ -237,7 +313,7 @@
 
   // ── Export ────────────────────────────────────────────────────────────────
   let showExportModal = false;
-  let exportText = '';
+  let exportText = "";
   let exportCopied = false;
 
   function generatePaste(): string {
@@ -245,7 +321,9 @@
     for (const slot of slots) {
       if (!slot) continue;
       const lines: string[] = [];
-      const namePart = slot.nickname ? `${slot.nickname} (${slot.name})` : slot.name;
+      const namePart = slot.nickname
+        ? `${slot.nickname} (${slot.name})`
+        : slot.name;
       lines.push(slot.item ? `${namePart} @ ${slot.item}` : namePart);
       if (slot.ability) lines.push(`Ability: ${slot.ability}`);
       if (slot.level && slot.level !== 50) lines.push(`Level: ${slot.level}`);
@@ -253,32 +331,32 @@
       if (slot.evs) {
         const ev = slot.evs;
         const parts: string[] = [];
-        if (ev.hp)  parts.push(`${ev.hp} HP`);
+        if (ev.hp) parts.push(`${ev.hp} HP`);
         if (ev.atk) parts.push(`${ev.atk} Atk`);
         if (ev.def) parts.push(`${ev.def} Def`);
         if (ev.spa) parts.push(`${ev.spa} SpA`);
         if (ev.spd) parts.push(`${ev.spd} SpD`);
         if (ev.spe) parts.push(`${ev.spe} Spe`);
-        if (parts.length) lines.push(`EVs: ${parts.join(' / ')}`);
+        if (parts.length) lines.push(`EVs: ${parts.join(" / ")}`);
       }
-      lines.push(`${NATURE_EXPORT[slot.nature ?? '=']} Nature`);
+      lines.push(`${NATURE_EXPORT[slot.nature ?? "="]} Nature`);
       if (slot.ivs) {
         const iv = slot.ivs;
         const parts: string[] = [];
-        if (iv.hp  !== 31) parts.push(`${iv.hp} HP`);
+        if (iv.hp !== 31) parts.push(`${iv.hp} HP`);
         if (iv.atk !== 31) parts.push(`${iv.atk} Atk`);
         if (iv.def !== 31) parts.push(`${iv.def} Def`);
         if (iv.spa !== 31) parts.push(`${iv.spa} SpA`);
         if (iv.spd !== 31) parts.push(`${iv.spd} SpD`);
         if (iv.spe !== 31) parts.push(`${iv.spe} Spe`);
-        if (parts.length) lines.push(`IVs: ${parts.join(' / ')}`);
+        if (parts.length) lines.push(`IVs: ${parts.join(" / ")}`);
       }
       for (const move of slot.moves ?? []) {
         if (move) lines.push(`- ${move}`);
       }
-      blocks.push(lines.join('\n'));
+      blocks.push(lines.join("\n"));
     }
-    return blocks.join('\n\n');
+    return blocks.join("\n\n");
   }
 
   async function exportPaste() {
@@ -286,7 +364,7 @@
     try {
       await navigator.clipboard.writeText(text);
       exportCopied = true;
-      setTimeout(() => exportCopied = false, 2000);
+      setTimeout(() => (exportCopied = false), 2000);
     } catch {
       exportText = text;
       showExportModal = true;
@@ -301,7 +379,7 @@
       genNum: genNum ?? 9,
       yourTeam: slots,
     });
-    goto('/');
+    goto("/");
   }
 </script>
 
@@ -311,17 +389,29 @@
   <PokemonPicker
     entries={allEntries}
     on:pick={onPick}
-    on:close={() => showPicker = false}
+    on:close={() => (showPicker = false)}
   />
 {/if}
 
 {#if showImportModal}
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="modal-backdrop" on:click={() => { showImportModal = false; importError = ''; }}>
+  <div
+    class="modal-backdrop"
+    on:click={() => {
+      showImportModal = false;
+      importError = "";
+    }}
+  >
     <div class="modal-box" on:click|stopPropagation>
       <div class="modal-header">
         <span class="modal-title">Import Poképaste</span>
-        <button class="modal-close" on:click={() => { showImportModal = false; importError = ''; }}>✕</button>
+        <button
+          class="modal-close"
+          on:click={() => {
+            showImportModal = false;
+            importError = "";
+          }}>✕</button
+        >
       </div>
       <textarea
         class="export-textarea"
@@ -330,8 +420,12 @@
       ></textarea>
       {#if importError}<p class="import-error">{importError}</p>{/if}
       <div class="modal-actions">
-        <button class="save-btn" on:click={doImport} disabled={importLoading || !importText.trim()}>
-          {importLoading ? 'Importing…' : 'Import'}
+        <button
+          class="save-btn"
+          on:click={doImport}
+          disabled={importLoading || !importText.trim()}
+        >
+          {importLoading ? "Importing…" : "Import"}
         </button>
       </div>
     </div>
@@ -340,14 +434,20 @@
 
 {#if showExportModal}
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="modal-backdrop" on:click={() => showExportModal = false}>
+  <div class="modal-backdrop" on:click={() => (showExportModal = false)}>
     <div class="modal-box" on:click|stopPropagation>
       <div class="modal-header">
         <span class="modal-title">Export Poképaste</span>
-        <button class="modal-close" on:click={() => showExportModal = false}>✕</button>
+        <button class="modal-close" on:click={() => (showExportModal = false)}
+          >✕</button
+        >
       </div>
-      <textarea class="export-textarea" readonly value={exportText}
-        on:focus={e => e.currentTarget.select()}></textarea>
+      <textarea
+        class="export-textarea"
+        readonly
+        value={exportText}
+        on:focus={(e) => e.currentTarget.select()}
+      ></textarea>
     </div>
   </div>
 {/if}
@@ -357,19 +457,37 @@
     <a href="/" class="back-btn">← Back</a>
     <input class="label-input" bind:value={label} placeholder="Team name…" />
     <div class="select-wrap">
-      <select class="gen-select"
-        value={genNum ?? ''}
-        on:change={e => { const v = e.currentTarget.value; genNum = v === '' ? null : +v as GenNumber; }}>
+      <select
+        class="gen-select"
+        value={genNum ?? ""}
+        on:change={(e) => {
+          const v = e.currentTarget.value;
+          genNum = v === "" ? null : (+v as GenNumber);
+        }}
+      >
         <option value="">All Gens</option>
         {#each GEN_NUMBERS as g}
           <option value={g}>Gen {g}</option>
         {/each}
       </select>
-      <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg
+        class="select-chevron"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
+      >
     </div>
-    <button class="export-btn" on:click={() => showImportModal = true}>Import</button>
+    <button class="export-btn" on:click={() => (showImportModal = true)}
+      >Import</button
+    >
     <button class="export-btn" on:click={exportPaste}>
-      {exportCopied ? 'Copied!' : 'Export'}
+      {exportCopied ? "Copied!" : "Export"}
     </button>
     <button class="save-btn" on:click={save}>Save</button>
   </div>
@@ -380,19 +498,42 @@
         <!-- Slot header -->
         <div class="slot-header">
           {#if slot}
-            <img src={spriteUrl(slot.name)} alt={slot.name} class="slot-sprite" />
+            <img
+              src={spriteUrl(slot.name)}
+              alt={slot.name}
+              class="slot-sprite"
+            />
             <div class="slot-title">
-              <span class="slot-name">{slot.nickname ? `${slot.nickname} (${slot.name})` : slot.name}</span>
-              <span class="slot-sub">{slot.item ?? 'No item'} · {slot.ability ?? 'No ability'}</span>
+              <span class="slot-name"
+                >{slot.nickname
+                  ? `${slot.nickname} (${slot.name})`
+                  : slot.name}</span
+              >
+              <span class="slot-sub"
+                >{slot.item ?? "No item"} · {slot.ability ?? "No ability"}</span
+              >
             </div>
             <div class="slot-header-btns">
-              <button class="slot-edit-btn" on:click={() => activeSlot === i ? closeSlot() : openSlot(i)}>
-                {activeSlot === i ? '▲' : '▼'}
+              <button
+                class="slot-edit-btn"
+                on:click={() => (activeSlot === i ? closeSlot() : openSlot(i))}
+              >
+                {activeSlot === i ? "▲" : "▼"}
               </button>
-              <button class="slot-clear-btn" aria-label="Remove" on:click={() => clearSlot(i)}>✕</button>
+              <button
+                class="slot-clear-btn"
+                aria-label="Remove"
+                on:click={() => clearSlot(i)}>✕</button
+              >
             </div>
           {:else}
-            <button class="slot-empty" on:click={() => { openSlot(i); openPicker(); }}>
+            <button
+              class="slot-empty"
+              on:click={() => {
+                openSlot(i);
+                openPicker();
+              }}
+            >
               <span class="plus">+</span>
               <span class="empty-label">Add Pokémon</span>
             </button>
@@ -404,22 +545,38 @@
           <div class="slot-editor">
             <div class="editor-row">
               <!-- Change species -->
-              <button class="change-species-btn" on:click={openPicker}>Change Species</button>
+              <button class="change-species-btn" on:click={openPicker}
+                >Change Species</button
+              >
             </div>
 
             <!-- Nickname -->
             <div class="field-row">
-              <label class="field-label" for="field-{i}-nickname">Nickname</label>
-              <input id="field-{i}-nickname" class="field-input" value={slot.nickname ?? ''} placeholder={slot.name}
-                on:input={e => setField(i, 'nickname', e.currentTarget.value || undefined)} />
+              <label class="field-label" for="field-{i}-nickname"
+                >Nickname</label
+              >
+              <input
+                id="field-{i}-nickname"
+                class="field-input"
+                value={slot.nickname ?? ""}
+                placeholder={slot.name}
+                on:input={(e) =>
+                  setField(i, "nickname", e.currentTarget.value || undefined)}
+              />
             </div>
 
             <!-- Level -->
             <div class="field-row">
               <label class="field-label" for="field-{i}-level">Level</label>
-              <input id="field-{i}-level" class="field-input short" type="number" min="1" max="100"
+              <input
+                id="field-{i}-level"
+                class="field-input short"
+                type="number"
+                min="1"
+                max="100"
                 value={slot.level ?? 50}
-                on:change={e => setField(i, 'level', +e.currentTarget.value)} />
+                on:change={(e) => setField(i, "level", +e.currentTarget.value)}
+              />
             </div>
 
             <!-- Item -->
@@ -429,10 +586,10 @@
                 <SearchCombobox
                   id="field-{i}-item"
                   items={allItems}
-                  value={slot.item ?? ''}
+                  value={slot.item ?? ""}
                   placeholder="e.g. Life Orb"
-                  on:input={e => setField(i, 'item', e.detail || undefined)}
-                  on:select={e => pickItem(i, e.detail)}
+                  on:input={(e) => setField(i, "item", e.detail || undefined)}
+                  on:select={(e) => pickItem(i, e.detail)}
                 />
               </div>
             {/if}
@@ -441,11 +598,21 @@
             {#if hasAbility}
               {@const abilities = getSpeciesAbilities(slot.id)}
               <div class="field-row">
-                <label class="field-label" for="field-{i}-ability">Ability</label>
-                <select id="field-{i}-ability" class="field-input"
-                  on:change={e => setField(i, 'ability', e.currentTarget.value)}>
+                <label class="field-label" for="field-{i}-ability"
+                  >Ability</label
+                >
+                <select
+                  id="field-{i}-ability"
+                  class="field-input"
+                  on:change={(e) =>
+                    setField(i, "ability", e.currentTarget.value)}
+                >
                   {#each abilities as ab}
-                    <option value={ab} selected={ab === (slot.ability ?? abilities[0])}>{ab}</option>
+                    <option
+                      value={ab}
+                      selected={ab === (slot.ability ?? abilities[0])}
+                      >{ab}</option
+                    >
                   {/each}
                 </select>
               </div>
@@ -454,10 +621,15 @@
             <!-- Tera Type -->
             {#if hasTera}
               <div class="field-row">
-                <label class="field-label" for="field-{i}-tera">Tera Type</label>
-                <select id="field-{i}-tera" class="field-input"
-                  value={slot.teraType ?? 'Normal'}
-                  on:change={e => setField(i, 'teraType', e.currentTarget.value)}>
+                <label class="field-label" for="field-{i}-tera">Tera Type</label
+                >
+                <select
+                  id="field-{i}-tera"
+                  class="field-input"
+                  value={slot.teraType ?? "Normal"}
+                  on:change={(e) =>
+                    setField(i, "teraType", e.currentTarget.value)}
+                >
                   {#each TERA_TYPES as t}
                     <option value={t}>{t}</option>
                   {/each}
@@ -469,9 +641,13 @@
             {#if hasNatures}
               <div class="field-row">
                 <label class="field-label" for="field-{i}-nature">Nature</label>
-                <select id="field-{i}-nature" class="field-input"
+                <select
+                  id="field-{i}-nature"
+                  class="field-input"
                   value={slot.nature}
-                  on:change={e => setField(i, 'nature', e.currentTarget.value as NatureTier)}>
+                  on:change={(e) =>
+                    setField(i, "nature", e.currentTarget.value as NatureTier)}
+                >
                   {#each NATURES as n}
                     <option value={n}>{NATURE_LABELS[n]}</option>
                   {/each}
@@ -483,29 +659,53 @@
             <div class="stat-block">
               <div class="stat-block-title">
                 EVs
-                <span class="ev-total" class:over={Object.values(slot.evs ?? {}).reduce((a,b)=>a+b,0) > 508}>
-                  {Object.values(slot.evs ?? {}).reduce((a,b)=>a+b,0)} / 508
+                <span
+                  class="ev-total"
+                  class:over={Object.values(slot.evs ?? {}).reduce(
+                    (a, b) => a + b,
+                    0,
+                  ) > 508}
+                >
+                  {Object.values(slot.evs ?? {}).reduce((a, b) => a + b, 0)} / 508
                 </span>
               </div>
               <div class="stat-grid">
                 {#each STAT_KEYS as stat, si}
-                  <label class="stat-label" for="ev-{i}-{stat}">{STAT_LABELS[si]}</label>
-                  <input id="ev-{i}-{stat}" class="stat-input" type="number" min="0" max="252"
+                  <label class="stat-label" for="ev-{i}-{stat}"
+                    >{STAT_LABELS[si]}</label
+                  >
+                  <input
+                    id="ev-{i}-{stat}"
+                    class="stat-input"
+                    type="number"
+                    min="0"
+                    max="252"
                     value={slot.evs?.[stat] ?? 0}
-                    on:change={e => setEv(i, stat, +e.currentTarget.value)} />
+                    on:change={(e) => setEv(i, stat, +e.currentTarget.value)}
+                  />
                 {/each}
               </div>
             </div>
 
             <!-- IVs / DVs -->
             <div class="stat-block">
-              <div class="stat-block-title">{dvMode ? 'DVs (0–15)' : 'IVs'}</div>
+              <div class="stat-block-title">
+                {dvMode ? "DVs (0–15)" : "IVs"}
+              </div>
               <div class="stat-grid">
                 {#each STAT_KEYS as stat, si}
-                  <label class="stat-label" for="iv-{i}-{stat}">{STAT_LABELS[si]}</label>
-                  <input id="iv-{i}-{stat}" class="stat-input" type="number" min="0" max={ivMax}
+                  <label class="stat-label" for="iv-{i}-{stat}"
+                    >{STAT_LABELS[si]}</label
+                  >
+                  <input
+                    id="iv-{i}-{stat}"
+                    class="stat-input"
+                    type="number"
+                    min="0"
+                    max={ivMax}
                     value={slot.ivs?.[stat] ?? ivMax}
-                    on:change={e => setIv(i, stat, +e.currentTarget.value)} />
+                    on:change={(e) => setIv(i, stat, +e.currentTarget.value)}
+                  />
                 {/each}
               </div>
             </div>
@@ -513,13 +713,18 @@
             <!-- Moves -->
             <div class="moves-block">
               <div class="stat-block-title">Moves</div>
-              {#each [0,1,2,3] as mi}
+              {#each [0, 1, 2, 3] as mi}
                 <SearchCombobox
                   items={_moveCache.get(slot.id) ?? []}
                   value={moveSearch[mi]}
                   placeholder="Move {mi + 1}"
-                  on:input={e => { setMove(i, mi, e.detail); getLearnset(slot.id).then(moves => _moveCache.set(slot.id, moves)); }}
-                  on:select={e => pickMove(i, mi, e.detail)}
+                  on:input={(e) => {
+                    setMove(i, mi, e.detail);
+                    getLearnset(slot.id).then((moves) =>
+                      _moveCache.set(slot.id, moves),
+                    );
+                  }}
+                  on:select={(e) => pickMove(i, mi, e.detail)}
                 />
               {/each}
             </div>
@@ -553,9 +758,14 @@
     font-size: 0.85rem;
     white-space: nowrap;
     min-height: 44px;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
-  .back-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  .back-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
 
   .label-input {
     flex: 1;
@@ -571,7 +781,9 @@
     letter-spacing: -0.01em;
     min-height: 44px;
   }
-  .label-input:focus-visible { border-color: var(--accent); }
+  .label-input:focus-visible {
+    border-color: var(--accent);
+  }
 
   .select-wrap {
     position: relative;
@@ -603,7 +815,7 @@
     background: var(--accent);
     border: none;
     border-radius: var(--radius-sm);
-    color: #fff;
+    color: #06080f;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -611,7 +823,9 @@
     white-space: nowrap;
     transition: background 0.15s;
   }
-  .save-btn:hover { background: var(--accent-hover); }
+  .save-btn:hover {
+    background: var(--accent-hover);
+  }
 
   .export-btn {
     padding: 0 0.85rem;
@@ -623,15 +837,20 @@
     cursor: pointer;
     min-height: 44px;
     white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
-  .export-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  .export-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
 
   /* Export / modal */
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 200;
     display: flex;
     align-items: center;
@@ -654,7 +873,10 @@
     align-items: center;
     justify-content: space-between;
   }
-  .modal-title { font-weight: 600; font-size: 1rem; }
+  .modal-title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
   .modal-close {
     background: none;
     border: none;
@@ -701,7 +923,9 @@
     overflow: hidden;
     transition: border-color 0.15s;
   }
-  .slot-card.active { border-color: var(--accent); }
+  .slot-card.active {
+    border-color: var(--accent);
+  }
 
   .slot-header {
     display: flex;
@@ -751,7 +975,8 @@
     flex-shrink: 0;
   }
 
-  .slot-edit-btn, .slot-clear-btn {
+  .slot-edit-btn,
+  .slot-clear-btn {
     padding: 0 0.7rem;
     background: none;
     border: 1px solid var(--border);
@@ -761,10 +986,18 @@
     font-size: 0.8rem;
     min-height: 44px;
     min-width: 44px;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
-  .slot-edit-btn:hover { color: var(--text); border-color: var(--text-muted); }
-  .slot-clear-btn:hover { color: var(--danger); border-color: var(--danger); }
+  .slot-edit-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+  .slot-clear-btn:hover {
+    color: var(--danger);
+    border-color: var(--danger);
+  }
 
   .slot-empty {
     flex: 1;
@@ -780,9 +1013,16 @@
     padding: 0;
     transition: color 0.15s;
   }
-  .slot-empty:hover { color: var(--text); }
-  .plus { font-size: 1.4rem; line-height: 1; }
-  .empty-label { font-size: 0.85rem; }
+  .slot-empty:hover {
+    color: var(--text);
+  }
+  .plus {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .empty-label {
+    font-size: 0.85rem;
+  }
 
   /* Editor */
   .slot-editor {
@@ -807,9 +1047,14 @@
     font-size: 0.85rem;
     cursor: pointer;
     min-height: 44px;
-    transition: color 0.15s, border-color 0.15s;
+    transition:
+      color 0.15s,
+      border-color 0.15s;
   }
-  .change-species-btn:hover { color: var(--text); border-color: var(--text-muted); }
+  .change-species-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
 
   .field-row {
     display: flex;
@@ -834,8 +1079,13 @@
     font-size: 0.85rem;
     min-height: 44px;
   }
-  .field-input:focus-visible { border-color: var(--accent); }
-  .field-input.short { max-width: 80px; flex: none; }
+  .field-input:focus-visible {
+    border-color: var(--accent);
+  }
+  .field-input.short {
+    max-width: 80px;
+    flex: none;
+  }
 
   /* Stat block */
   .stat-block {
@@ -855,8 +1105,14 @@
     gap: 0.5rem;
   }
 
-  .ev-total { font-weight: 400; text-transform: none; letter-spacing: 0; }
-  .ev-total.over { color: var(--danger); }
+  .ev-total {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .ev-total.over {
+    color: var(--danger);
+  }
 
   .stat-grid {
     display: grid;
@@ -865,7 +1121,9 @@
   }
 
   @media (max-width: 500px) {
-    .stat-grid { grid-template-columns: repeat(3, 1fr); }
+    .stat-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .stat-label {
@@ -886,7 +1144,9 @@
     text-align: center;
     min-height: 44px;
   }
-  .stat-input:focus-visible { border-color: var(--accent); }
+  .stat-input:focus-visible {
+    border-color: var(--accent);
+  }
 
   /* Moves */
   .moves-block {
@@ -894,5 +1154,4 @@
     flex-direction: column;
     gap: 0.4rem;
   }
-
 </style>

@@ -1193,7 +1193,7 @@
   .save-confirm {
     padding: 0.65rem 1rem;
     background: var(--accent);
-    color: #fff;
+    color: #06080f;
     border: none;
     border-radius: var(--radius);
     font-size: 0.9rem;
