@@ -65,6 +65,7 @@
       autocorrect="off"
       autocapitalize="off"
       spellcheck="false"
+      on:blur={() => search.set('')}
     />
 
     {#if $filtered.length === 0}
