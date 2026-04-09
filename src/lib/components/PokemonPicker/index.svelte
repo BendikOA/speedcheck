@@ -1,3 +1,29 @@
+<!--
+  PokemonPicker Component
+
+  A searchable modal overlay for selecting Pokemon from a list.
+
+  Used in:
+  - Main page (+page.svelte) for team building
+  - Team edit page (teams/[id]/edit/+page.svelte) for changing Pokemon
+
+  Features:
+  - Searchable input with real-time filtering
+  - Featured Pokemon section (top 100 by usage)
+  - Exclusion list to prevent selecting already chosen Pokemon
+  - Mobile-responsive bottom sheet design
+  - Keyboard navigation (Escape to close)
+
+  Props:
+  - entries: Full list of SpeedEntry objects
+  - featured: Optional featured entries to show first
+  - exclude: Array of Pokemon IDs to exclude from selection
+
+  Events:
+  - pick: Dispatches selected SpeedEntry
+  - close: Dispatches when modal should close
+-->
+
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
   import type { SpeedEntry } from '$lib/speedtiers';

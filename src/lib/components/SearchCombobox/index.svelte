@@ -1,3 +1,30 @@
+<!--
+  SearchCombobox Component
+
+  A searchable dropdown input component using bits-ui Combobox.
+
+  Used in:
+  - Team edit page (teams/[id]/edit/+page.svelte) for:
+    - Item selection
+    - Move selection
+
+  Features:
+  - Real-time filtering of options as user types
+  - Dropdown with keyboard navigation
+  - Custom styling with global CSS classes
+  - Controlled value binding
+
+  Props:
+  - items: Array of strings to filter from
+  - value: Current input value (controlled)
+  - placeholder: Placeholder text
+  - id: Optional input ID
+
+  Events:
+  - select: Dispatches when an item is selected from dropdown
+  - input: Dispatches on input changes
+-->
+
 <script lang="ts">
   import { Combobox } from "bits-ui";
   import { createEventDispatcher } from "svelte";
