@@ -2,7 +2,7 @@
   import "../app.css";
   import { browser, dev } from "$app/environment";
   import { page } from "$app/stores";
-  import Tooltip from "$lib/components/Tooltip.svelte";
+  import Tooltip from "$lib/components/Tooltip/index.svelte";
   import { injectAnalytics } from "@vercel/analytics/sveltekit";
 
   injectAnalytics({ mode: dev ? "development" : "production" });

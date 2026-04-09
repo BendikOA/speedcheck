@@ -14,7 +14,7 @@
   import type { TeamSlot } from "$lib/stores/teams";
   import { savedTeams } from "$lib/stores/savedTeams";
   import type { SavedTeam } from "$lib/stores/savedTeams";
-  import PokemonPicker from "$lib/components/PokemonPicker.svelte";
+  import PokemonPicker from "$lib/components/PokemonPicker/index.svelte";
   import { loadSmogonOrder } from "$lib/smogonUsage";
 
   // Regulation M-A allowed Pokémon (Pokémon Champions)
@@ -1435,7 +1435,7 @@
   .saved-load {
     padding: 0 1rem;
     background: var(--accent);
-    color: #06080;
+    color: #06080f;
     border: none;
     border-radius: var(--radius-sm);
     font-size: 0.9rem;

@@ -8,8 +8,8 @@
   import type { GenNumber, NatureTier } from "$lib/speedtiers";
   import { GEN_NUMBERS } from "$lib/speedtiers";
   import { spriteUrl } from "$lib/sprites";
-  import PokemonPicker from "$lib/components/PokemonPicker.svelte";
-  import SearchCombobox from "$lib/components/SearchCombobox.svelte";
+  import PokemonPicker from "$lib/components/PokemonPicker/index.svelte";
+  import SearchCombobox from "$lib/components/SearchCombobox/index.svelte";
   import { buildAllTiers } from "$lib/speedtiers";
   import type { SpeedEntry } from "$lib/speedtiers";
   import { parsePaste, resolvePaste } from "$lib/parsePaste";
@@ -588,8 +588,8 @@
                   items={allItems}
                   value={slot.item ?? ""}
                   placeholder="e.g. Life Orb"
-                  on:input={(e) => setField(i, "item", e.detail || undefined)}
-                  on:select={(e) => pickItem(i, e.detail)}
+                  on:input={(e: CustomEvent<string>) => setField(i, "item", e.detail || undefined)}
+                  on:select={(e: CustomEvent<string>) => pickItem(i, e.detail)}
                 />
               </div>
             {/if}
@@ -718,13 +718,13 @@
                   items={_moveCache.get(slot.id) ?? []}
                   value={moveSearch[mi]}
                   placeholder="Move {mi + 1}"
-                  on:input={(e) => {
+                  on:input={(e: CustomEvent<string>) => {
                     setMove(i, mi, e.detail);
                     getLearnset(slot.id).then((moves) =>
                       _moveCache.set(slot.id, moves),
                     );
                   }}
-                  on:select={(e) => pickMove(i, mi, e.detail)}
+                  on:select={(e: CustomEvent<string>) => pickMove(i, mi, e.detail)}
                 />
               {/each}
             </div>
