@@ -15,6 +15,8 @@
   import { savedTeams } from "$lib/stores/savedTeams";
   import type { SavedTeam } from "$lib/stores/savedTeams";
   import PokemonPicker from "$lib/components/PokemonPicker/index.svelte";
+  import Button from "$lib/components/ui/Button/index.svelte";
+  import Input from "$lib/components/ui/Input/index.svelte";
   import { loadSmogonOrder } from "$lib/smogonUsage";
 
   // Regulation M-A allowed Pokémon (Pokémon Champions)
@@ -604,19 +606,18 @@
       {/each}
 
       <div class="action-row">
-        <button class="start-btn" disabled={!canStart} on:click={startGame}>
+        <Button variant="primary" fullWidth={true} disabled={!canStart} onClick={startGame}>
           Start Game →
-        </button>
-        <button class="import-btn" on:click={() => (showImport = true)}
-          >Import Paste</button
-        >
+        </Button>
+        <Button variant="secondary" onClick={() => (showImport = true)}>
+          Import Paste
+        </Button>
         {#if canSave}
           {#if showSaveInput}
             <div class="save-row">
-              <input
+              <Input
                 id="save-label"
                 name="save-label"
-                class="save-input"
                 placeholder="Team name…"
                 bind:value={saveLabel}
                 on:keydown={(e) => e.key === "Enter" && saveCurrentTeam()}
@@ -680,9 +681,9 @@
             <div class="saved-top">
               <div class="saved-top-meta">
                 {#if renamingId === team.id}
-                  <input
+                  <Input
                     name="rename-team"
-                    class="rename-input"
+                    variant="accent"
                     bind:value={renameValue}
                     on:keydown={(e) => {
                       if (e.key === "Enter") {
@@ -1096,42 +1097,6 @@
     background: color-mix(in srgb, #f5c96c 12%, var(--surface));
   }
 
-  .start-btn {
-    width: 100%;
-    padding: 0.85rem 2rem;
-    background: var(--accent);
-    color: #06080f;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 52px;
-    transition:
-      background 0.15s,
-      opacity 0.15s;
-  }
-
-  @media (min-width: 600px) {
-    .start-btn {
-      width: auto;
-      align-self: flex-start;
-    }
-  }
-
-  .start-btn:active:not(:disabled) {
-    background: var(--accent-hover);
-  }
-  @media (hover: hover) {
-    .start-btn:hover:not(:disabled) {
-      background: var(--accent-hover);
-    }
-  }
-  .start-btn:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
-
   /* Action row: Start + Save */
   .action-row {
     display: flex;
@@ -1174,20 +1139,6 @@
     gap: 0.4rem;
     align-items: center;
     flex: 1;
-  }
-
-  .save-input {
-    flex: 1;
-    padding: 0.65rem 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 16px;
-    min-height: 44px;
-  }
-  .save-input:focus-visible {
-    border-color: var(--accent);
   }
 
   .save-confirm {
@@ -1472,28 +1423,6 @@
     }
   }
 
-  /* Import button */
-  .import-btn {
-    padding: 0.75rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    cursor: pointer;
-    min-height: 52px;
-    white-space: nowrap;
-    transition:
-      border-color 0.15s,
-      color 0.15s;
-  }
-  @media (hover: hover) {
-    .import-btn:hover {
-      color: var(--text);
-      border-color: var(--text-muted);
-    }
-  }
-
   /* Modal */
   .modal-backdrop {
     position: fixed;
@@ -1593,18 +1522,6 @@
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
-  }
-
-  .rename-input {
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 0 0.4rem;
-    background: var(--surface);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    min-height: 44px;
-    min-width: 8rem;
   }
 
   /* Speed preview sidebar */

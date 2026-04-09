@@ -1,0 +1,30 @@
+.input {
+  padding: 0.65rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 16px;
+  min-height: 44px;
+  transition: border-color 0.15s;
+}
+
+.input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Variants */
+.accent {
+  border-color: var(--accent);
+  padding: 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 8rem;
+  border-radius: var(--radius-sm);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

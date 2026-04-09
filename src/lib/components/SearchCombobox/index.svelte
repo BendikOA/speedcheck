@@ -26,6 +26,7 @@
 -->
 
 <script lang="ts">
+  import { items as itemsStore, value as valueStore, placeholder as placeholderStore, id as idStore, inputValue, filtered, onValueChange, onOpenChangeComplete } from './searchCombobox';
   import { Combobox } from "bits-ui";
   import { createEventDispatcher } from "svelte";
   import './styles.css';
@@ -37,30 +38,20 @@
   export let placeholder: string = "Search…";
   export let id: string | undefined = undefined;
 
+  $: $itemsStore = items;
+  $: $valueStore = value;
+  $: $placeholderStore = placeholder;
+  $: $idStore = id;
+  $: $inputValue = value;
+
   const dispatch = createEventDispatcher<{ select: string; input: string }>();
-
-  let inputValue = value;
-  $: inputValue = value;
-
-  $: filtered =
-    inputValue.length < 2
-      ? []
-      : items
-          .filter((item) =>
-            item.toLowerCase().includes(inputValue.toLowerCase())
-          )
-          .slice(0, 10);
 </script>
 
 <Combobox.Root
   type="single"
-  bind:value={inputValue}
-  onValueChange={(v) => {
-    if (v) dispatch("select", v);
-  }}
-  onOpenChangeComplete={(open) => {
-    if (!open) dispatch("input", inputValue);
-  }}
+  bind:value={$inputValue}
+  onValueChange={(v) => onValueChange(dispatch, v)}
+  onOpenChangeComplete={(open) => onOpenChangeComplete(dispatch, open, $inputValue)}
 >
   <Combobox.Input
     {id}
@@ -71,11 +62,11 @@
     spellcheck={false}
   />
 
-  {#if filtered.length > 0}
+  {#if $filtered.length > 0}
     <Combobox.Portal>
       <Combobox.Content class="cb-content" sideOffset={2}>
         <Combobox.Viewport class="cb-viewport">
-          {#each filtered as item (item)}
+          {#each $filtered as item (item)}
             <Combobox.Item value={item} label={item} class="cb-item">
               {#snippet children({ highlighted })}
                 <span class="cb-item-label">{item}</span>
