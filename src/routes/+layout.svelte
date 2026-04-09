@@ -10,9 +10,7 @@
   let dark = true;
   if (browser) {
     const saved = localStorage.getItem("theme");
-    dark = saved
-      ? saved === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    dark = saved ? saved === "dark" : true;
     document.documentElement.setAttribute(
       "data-theme",
       dark ? "dark" : "light",
