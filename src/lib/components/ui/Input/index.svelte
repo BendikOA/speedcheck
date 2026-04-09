@@ -12,7 +12,6 @@
   - variant: 'default' | 'accent' = 'default' (for different border colors)
   - id: string | undefined
   - name: string | undefined
-  - autocomplete: string | undefined
 -->
 
 <script lang="ts">
@@ -26,7 +25,6 @@
   export let variant: 'default' | 'accent' = 'default';
   export let id: string | undefined = undefined;
   export let name: string | undefined = undefined;
-  export let autocomplete: string | undefined = undefined;
 </script>
 
 <input
