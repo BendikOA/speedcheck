@@ -40,9 +40,13 @@ export const filtered = derived([search, available, featuredStore, excludeSet], 
 });
 
 export function pick(dispatch: any, entry: SpeedEntry) {
+  search.set('');
   dispatch('pick', entry);
 }
 
 export function onKeydown(dispatch: any, e: KeyboardEvent) {
-  if (e.key === 'Escape') dispatch('close');
+  if (e.key === 'Escape') {
+    search.set('');
+    dispatch('close');
+  }
 }

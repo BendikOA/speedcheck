@@ -44,6 +44,7 @@
   let inputEl: HTMLInputElement;
 
   onMount(() => {
+    search.set('');
     setTimeout(() => inputEl?.focus(), 80);
   });
 </script>
@@ -51,7 +52,7 @@
 <svelte:window on:keydown={(e) => onKeydown(dispatch, e)} />
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-<div class="overlay" on:click|self={() => dispatch('close')}>
+<div class="overlay" on:click|self={() => { search.set(''); dispatch('close'); }}>
   <div class="panel">
     <div class="panel-handle"></div>
     <input
@@ -65,7 +66,6 @@
       autocorrect="off"
       autocapitalize="off"
       spellcheck="false"
-      on:blur={() => search.set('')}
     />
 
     {#if $filtered.length === 0}
