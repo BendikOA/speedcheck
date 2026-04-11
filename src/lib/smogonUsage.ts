@@ -174,3 +174,69 @@ export async function loadSmogonBuilds(gen = 9, format?: string): Promise<UsageB
 export function getSmogonNature(usageData: UsageNatures, pokemonId: string): NatureTier | null {
   return usageData[pokemonId] ?? null;
 }
+
+// ── Champions (Limitless Reg M-A) data ────────────────────────────────────
+
+interface ChampionsPokemon {
+  usage:     number;
+  moves:     Record<string, number>;
+  abilities: Record<string, number>;
+  items:     Record<string, number>;
+}
+
+interface ChampionsMeta {
+  updated: string;
+  format:  string;
+  meta:    { tournaments: number; teamSlots: number; pokemonCount: number };
+  pokemon: Record<string, ChampionsPokemon>;
+}
+
+let championsMetaCache:    ChampionsMeta | null = null;
+let championsMetaInflight: Promise<ChampionsMeta> | null = null;
+
+async function loadChampionsMeta(): Promise<ChampionsMeta> {
+  if (championsMetaCache) return championsMetaCache;
+  if (championsMetaInflight) return championsMetaInflight;
+
+  championsMetaInflight = (async () => {
+    const res = await fetch('/champions-meta.json');
+    const data: ChampionsMeta = res.ok ? await res.json() : { updated: '', format: 'M-A', meta: { tournaments: 0, teamSlots: 0, pokemonCount: 0 }, pokemon: {} };
+    championsMetaCache = data;
+    return data;
+  })();
+
+  return championsMetaInflight;
+}
+
+export async function loadChampionsMoves(): Promise<UsageMoves> {
+  const meta   = await loadChampionsMeta();
+  const result: UsageMoves = {};
+  for (const [id, data] of Object.entries(meta.pokemon)) {
+    const top4 = Object.keys(data.moves).slice(0, 4);
+    if (top4.length) result[id] = top4;
+  }
+  return result;
+}
+
+export async function loadChampionsBuilds(): Promise<UsageBuilds> {
+  const meta   = await loadChampionsMeta();
+  const result: UsageBuilds = {};
+  for (const [id, data] of Object.entries(meta.pokemon)) {
+    const topItem = Object.keys(data.items)[0];
+    if (topItem) result[id] = { speEV: 0, nature: '=' as import('./speedtiers').NatureTier, item: topItem };
+  }
+  return result;
+}
+
+export async function loadChampionsAbilities(): Promise<UsageAbilities> {
+  const meta   = await loadChampionsMeta();
+  const result: UsageAbilities = {};
+  for (const [id, data] of Object.entries(meta.pokemon)) {
+    const entries = Object.entries(data.abilities);
+    if (!entries.length) continue;
+    const [name, count] = entries[0]; // already sorted desc by scraper
+    const pct = Math.round((count / data.usage) * 100);
+    result[id] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
+  }
+  return result;
+}
