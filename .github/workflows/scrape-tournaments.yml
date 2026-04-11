@@ -1,0 +1,31 @@
+name: Scrape Tournament Teams
+
+on:
+  schedule:
+    # Run daily at 06:00 UTC (good coverage for EU morning / overnight US)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # allow manual trigger from GitHub UI
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scrape Limitless VGC tournaments
+        run: node scripts/scrape-tournaments.mjs
+
+      - name: Commit updated data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/champions-meta.json
+          git diff --staged --quiet || git commit -m "chore: update Champions M-A meta [$(date -u +%Y-%m-%d)]"
+          git push

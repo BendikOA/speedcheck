@@ -27,6 +27,9 @@
     loadSmogonAbilities,
     loadSmogonMoves,
     loadSmogonBuilds,
+    loadChampionsMoves,
+    loadChampionsAbilities,
+    loadChampionsBuilds,
   } from "$lib/smogonUsage";
   import type {
     UsagePriorityMoves,
@@ -35,10 +38,11 @@
     UsageBuilds,
   } from "$lib/smogonUsage";
 
+  const CHAMPIONS_FORMAT = 'champions-ma';
+
   const GEN9_REGS = [
-    { label: "Reg I", format: "gen9vgc2026regi" },
-    { label: "Reg F", format: "gen9vgc2026regf" },
-    { label: "Reg G", format: "gen9vgc2025regg" },
+    { label: "Champions", format: CHAMPIONS_FORMAT },
+    { label: "Reg I",     format: "gen9vgc2026regi" },
   ];
 
   let priorityReady = false;
@@ -53,32 +57,42 @@
   let yourTeam: TeamSlot[] = Array(6).fill(null);
   let oppTeam: TeamSlot[] = Array(6).fill(null);
 
+  async function loadUsageData(format: string) {
+    if (format === CHAMPIONS_FORMAT) {
+      const [moves, abilities, builds] = await Promise.all([
+        loadChampionsMoves(),
+        loadChampionsAbilities(),
+        loadChampionsBuilds(),
+      ]);
+      smogonMoves         = moves;
+      smogonAbilities     = abilities;
+      smogonBuilds        = builds;
+      smogonPriorityMoves = {};
+    } else {
+      [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
+        await Promise.all([
+          loadSmogonPriorityMoves(9, format),
+          loadSmogonAbilities(9, format),
+          loadSmogonMoves(9, format),
+          loadSmogonBuilds(9, format),
+        ]);
+    }
+  }
+
   onMount(async () => {
     const state = get(teamState);
     yourTeam = state.yourTeam;
     oppTeam = state.oppTeam;
     await Promise.all([loadPriorityCache(), loadBoostCache()]);
     priorityReady = true;
-    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
-      await Promise.all([
-        loadSmogonPriorityMoves(9, selectedReg),
-        loadSmogonAbilities(9, selectedReg),
-        loadSmogonMoves(9, selectedReg),
-        loadSmogonBuilds(9, selectedReg),
-      ]);
+    await loadUsageData(selectedReg);
     smogonReady = true;
   });
 
   async function changeReg(format: string) {
     smogonReady = false;
     selectedReg = format;
-    [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
-      await Promise.all([
-        loadSmogonPriorityMoves(9, format),
-        loadSmogonAbilities(9, format),
-        loadSmogonMoves(9, format),
-        loadSmogonBuilds(9, format),
-      ]);
+    await loadUsageData(format);
     smogonReady = true;
     // Re-apply likely builds if active (data changed for new reg)
     if (likelyBuildsActive) {
@@ -108,9 +122,10 @@
   }
 
   // ── Usage-based toggles (declared early — used in toggleField) ───────────
-  let likelyMovesActive = false;
+  let likelyItemsActive     = false;
+  let likelyMovesActive     = false;
   let likelyAbilitiesActive = false;
-  let likelyBuildsActive = false;
+  let likelyBuildsActive    = false; // EV/Nature
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
@@ -407,10 +422,6 @@
     likelyMovesActive = !likelyMovesActive;
   }
 
-  function toggleLikelyAbilities() {
-    likelyAbilitiesActive = !likelyAbilitiesActive;
-  }
-
   function toggleLikelyBuilds() {
     if (likelyBuildsActive) {
       // Clear EV overrides; reset natures to neutral
@@ -467,9 +478,10 @@
     fieldSpeedEV = new Map();
 
     cond = { ...DEFAULT_CONDITIONS };
-    likelyMovesActive = false;
+    likelyItemsActive     = false;
+    likelyMovesActive     = false;
     likelyAbilitiesActive = false;
-    likelyBuildsActive = false;
+    likelyBuildsActive    = false;
     goto("/");
   }
 </script>
@@ -493,11 +505,11 @@
   <div class="top-bar">
     <button class="reset-btn" on:click={resetGame}>← New Game</button>
     <div class="top-bar-right">
-      {#if likelyBuildsActive || likelyMovesActive || likelyAbilitiesActive}
+      {#if likelyItemsActive || likelyMovesActive || likelyBuildsActive}
         <div
           class="reg-tabs"
           class:loading={!smogonReady}
-          use:tooltip={"Switch Smogon usage data source"}
+          use:tooltip={"Switch usage data source"}
         >
           {#each GEN9_REGS as reg}
             <button
@@ -511,30 +523,28 @@
       <div class="reg-tabs usage-tabs">
         <button
           class="reg-tab"
-          class:active={likelyBuildsActive}
-          use:tooltip={likelyBuildsActive
-            ? "Showing most common EV spread, nature & item from Smogon usage stats — click to reset"
-            : "Apply the most common EV spread, nature & item per Pokémon from Smogon usage stats"}
-          on:click={toggleLikelyBuilds}>Usage Build</button
+          class:active={likelyItemsActive}
+          use:tooltip={likelyItemsActive
+            ? "Hiding most common item — click to show"
+            : "Show most common item per Pokémon from usage stats"}
+          on:click={() => (likelyItemsActive = !likelyItemsActive)}>Items</button
         >
         <button
           class="reg-tab"
           class:active={likelyMovesActive}
           use:tooltip={likelyMovesActive
-            ? "Click to hide moves"
-            : "Show top moves from Smogon usage stats for each fielded Pokémon"}
+            ? "Hiding most common moves — click to show"
+            : "Show top 4 moves per Pokémon from usage stats"}
           on:click={toggleLikelyMoves}>Moves</button
         >
-        <!-- Reimplementing this when it works properly. currently broken.
-         <button
+        <button
           class="reg-tab"
-          class:active={likelyAbilitiesActive}
-          use:tooltip={likelyAbilitiesActive
-            ? "Showing top ability from usage stats — click to revert"
-            : "Show the most commonly run ability per Pokémon from Smogon usage stats"}
-          on:click={toggleLikelyAbilities}>Ability</button
+          class:active={likelyBuildsActive}
+          use:tooltip={likelyBuildsActive
+            ? "Reverting EV spread & nature — click to reset"
+            : "Apply most common EV spread & nature per Pokémon from usage stats"}
+          on:click={toggleLikelyBuilds}>EV/Nature</button
         >
-        -->
       </div>
     </div>
   </div>
@@ -772,12 +782,12 @@
                       use:tooltip={ab.desc}>{ab.name}</span
                     >
                   {/if}
-                  {#if likelyBuildsActive}
+                  {#if likelyItemsActive}
                     {@const build = smogonBuilds[row.slot.entry.id]}
                     {#if build?.item && build.item !== "Choice Scarf"}
                       <span
                         class="badge item-badge"
-                        use:tooltip={`Most common item (Smogon ${selectedReg}): ${build.item}`}
+                        use:tooltip={`Most common item (${selectedReg === CHAMPIONS_FORMAT ? 'Champions M-A' : 'Smogon ' + selectedReg}): ${build.item}`}
                         >{build.item}</span
                       >
                     {/if}
