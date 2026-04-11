@@ -14,6 +14,7 @@ const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 export interface MegaStats {
   id: string;
   name: string;
+  megaStone: string; // e.g. "Gengarite", "Charizardite X"
   baseSpe: number;
   maxSpeed: number;
   neutralSpeed: number;
@@ -93,13 +94,15 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
 
     // Collect all available mega forms (order: X before Y if both exist)
     const megaForms: MegaStats[] = [];
-    for (const suffix of ['mega', 'megax', 'megay']) {
+    for (const suffix of ['mega', 'megax', 'megay'] as const) {
       const megaSp = Dex.species.get(`${sp.id}${suffix}`);
       if (megaSp?.exists) {
         const megaSpe = megaSp.baseStats.spe;
+        const stone = sp.name + 'ite' + (suffix === 'megax' ? ' X' : suffix === 'megay' ? ' Y' : '');
         megaForms.push({
           id: megaSp.id,
           name: megaSp.name,
+          megaStone: stone,
           baseSpe: megaSpe,
           types: megaSp.types ?? types,
           maxSpeed:     gen.stats.calc('spe', megaSpe, 31, 252, 50, jolly),

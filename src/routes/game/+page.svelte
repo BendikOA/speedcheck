@@ -782,7 +782,14 @@
                       use:tooltip={ab.desc}>{ab.name}</span
                     >
                   {/if}
-                  {#if likelyItemsActive}
+                  {#if row.megaIndex > 0}
+                    {@const stone = row.megaForms[row.megaIndex - 1].megaStone}
+                    <span
+                      class="badge item-badge"
+                      use:tooltip={`Mega Stone: ${stone}`}
+                      >{stone}</span
+                    >
+                  {:else if likelyItemsActive}
                     {@const build = smogonBuilds[row.slot.entry.id]}
                     {#if build?.item && build.item !== "Choice Scarf"}
                       <span

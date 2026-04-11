@@ -18,6 +18,7 @@ function calcSpe(base: number, evs = 252, ivs = 31, level = 50) {
 export interface LZAMegaOverride {
   baseId: string;
   megas: Omit<MegaStats, 'maxSpeed' | 'neutralSpeed' | 'minSpeed'>[];
+  // megaStone must be specified explicitly for LZA megas (e.g. "Arcaninite")
 }
 
 // ── Fill these in when stats are officially released April 8 2026 ─────────────
