@@ -11,12 +11,15 @@
   import { parsePaste, resolvePaste } from "$lib/parsePaste";
   import { spriteUrl } from "$lib/sprites";
   import { teamState } from "$lib/stores/teams";
-  import type { TeamSlot } from "$lib/stores/teams";
+  import type { TeamSlot as TeamSlotData } from "$lib/stores/teams";
   import { savedTeams } from "$lib/stores/savedTeams";
   import type { SavedTeam } from "$lib/stores/savedTeams";
   import PokemonPicker from "$lib/components/PokemonPicker/index.svelte";
   import Button from "$lib/components/ui/Button/index.svelte";
   import Input from "$lib/components/ui/Input/index.svelte";
+  import TeamSlot from "$lib/components/ui/TeamSlot/index.svelte";
+  import SavedTeamCard from "$lib/components/ui/SavedTeamCard/index.svelte";
+  import TabGroup from "$lib/components/ui/TabGroup/index.svelte";
   import { loadSmogonOrder } from "$lib/smogonUsage";
 
   // Regulation M-A allowed Pokémon (Pokémon Champions)
@@ -212,8 +215,8 @@
   let genFilter: GenNumber | null = null; // null = all gens
   let regMA = false; // Regulation M-A filter
   $: genNum = genFilter ?? (9 as GenNumber); // concrete gen for team state / saving
-  let yourTeam: TeamSlot[] = Array(6).fill(null);
-  let oppTeam: TeamSlot[] = Array(6).fill(null);
+  let yourTeam: TeamSlotData[] = Array(6).fill(null);
+  let oppTeam: TeamSlotData[] = Array(6).fill(null);
   let pickerTarget: { side: "you" | "opp"; index: number } | null = null;
   let usageOrder: string[] = [];
 
@@ -329,7 +332,7 @@
 
   function saveCurrentTeam() {
     const label = saveLabel.trim() || `Team ${new Date().toLocaleDateString()}`;
-    const toSlot = (s: TeamSlot) =>
+    const toSlot = (s: TeamSlotData) =>
       s
         ? {
             id: s.entry.id,
@@ -377,9 +380,6 @@
     );
     oppTeam = Array(6).fill(null);
   }
-
-  let renamingId: string | null = null;
-  let renameValue = "";
 
   // ── Paste import ──────────────────────────────────────────────────────────
   let showImport = false;
@@ -467,18 +467,11 @@
         >
       </div>
 
-      <div class="import-side-tabs">
-        <button
-          class="side-tab"
-          class:active={importSide === "you"}
-          on:click={() => (importSide = "you")}>Your Team</button
-        >
-        <button
-          class="side-tab"
-          class:active={importSide === "opp"}
-          on:click={() => (importSide = "opp")}>Opponent</button
-        >
-      </div>
+      <TabGroup
+        tabs={[{ label: "Your Team", value: "you" }, { label: "Opponent", value: "opp" }]}
+        value={importSide}
+        on:change={(e) => (importSide = e.detail)}
+      />
 
       <textarea
         class="import-textarea"
@@ -565,41 +558,12 @@
           >
           <div class="slots">
             {#each team as slot, i}
-              <div class="slot">
-                {#if slot}
-                  <button class="slot-clear" on:click={() => clearSlot(side, i)}
-                    >×</button
-                  >
-                  <button
-                    class="slot-filled"
-                    on:click={() => openPicker(side, i)}
-                    aria-label="Change {slot.entry.name}"
-                  >
-                    <img
-                      src={spriteUrl(slot.entry.name)}
-                      alt=""
-                      class="slot-sprite"
-                    />
-                    <span class="slot-name">{slot.entry.name}</span>
-                    <span class="slot-spe">{slot.entry.baseSpe}</span>
-                  </button>
-                  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                  <div
-                    class="scarf-pill"
-                    class:active={slot.scarf}
-                    on:click|stopPropagation={() => toggleScarf(side, i)}
-                  >
-                    Scarf
-                  </div>
-                {:else}
-                  <button
-                    class="slot-empty"
-                    on:click={() => openPicker(side, i)}
-                  >
-                    <span class="plus">+</span>
-                  </button>
-                {/if}
-              </div>
+              <TeamSlot
+                {slot}
+                on:pick={() => openPicker(side, i)}
+                on:clear={() => clearSlot(side, i)}
+                on:scarf={() => toggleScarf(side, i)}
+              />
             {/each}
           </div>
         </div>
@@ -676,170 +640,7 @@
       <span class="saved-title">Saved Teams</span>
       <div class="saved-list">
         {#each $savedTeams as team (team.id)}
-          <div class="saved-row">
-            <!-- Top: label + gen + sprites -->
-            <div class="saved-top">
-              <div class="saved-top-meta">
-                {#if renamingId === team.id}
-                  <Input
-                    name="rename-team"
-                    variant="accent"
-                    bind:value={renameValue}
-                    on:keydown={(e) => {
-                      if (e.key === "Enter") {
-                        savedTeams.rename(team.id, renameValue);
-                        renamingId = null;
-                      }
-                      if (e.key === "Escape") renamingId = null;
-                    }}
-                    on:blur={() => {
-                      savedTeams.rename(team.id, renameValue);
-                      renamingId = null;
-                    }}
-                  />
-                {:else}
-                  <button
-                    class="saved-label"
-                    title="Click to rename"
-                    on:click={() => {
-                      renamingId = team.id;
-                      renameValue = team.label;
-                    }}
-                  >
-                    {team.label}
-                    <svg
-                      class="rename-icon"
-                      width="11"
-                      height="11"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path
-                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                      />
-                      <path
-                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                      />
-                    </svg>
-                  </button>
-                {/if}
-              </div>
-              <div class="saved-slots">
-                {#each team.yourTeam.filter(Boolean) as slot}
-                  <img
-                    src={spriteUrl(slot!.name)}
-                    alt={slot!.name}
-                    class="saved-sprite"
-                    title={slot!.name}
-                  />
-                {/each}
-              </div>
-            </div>
-
-            <!-- Bottom: record + actions on same row -->
-            <div class="saved-bottom">
-              <div class="saved-record">
-                {#if team.wins + team.losses > 0}
-                  <button
-                    class="record-reset"
-                    aria-label="Reset record"
-                    title="Reset win/loss record"
-                    on:click={() => savedTeams.resetRecord(team.id)}
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path
-                        d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
-                      /><path d="M3 3v5h5" />
-                    </svg>
-                  </button>
-                {/if}
-                <span class="record-stat">
-                  {team.wins}W {team.losses}L
-                  {#if team.wins + team.losses > 0}
-                    <span class="record-pct"
-                      >{Math.round(
-                        (team.wins / (team.wins + team.losses)) * 100,
-                      )}%</span
-                    >
-                  {/if}
-                </span>
-                <button
-                  class="record-btn win-btn"
-                  on:click={() => savedTeams.recordResult(team.id, "win")}
-                  >W</button
-                >
-                <button
-                  class="record-btn loss-btn"
-                  on:click={() => savedTeams.recordResult(team.id, "loss")}
-                  >L</button
-                >
-              </div>
-              <div class="saved-actions">
-                <button class="saved-load" on:click={() => loadTeam(team)}
-                  >Load</button
-                >
-                <a
-                  class="saved-edit"
-                  href="/teams/{team.id}/edit"
-                  aria-label="Edit team"
-                  title="Edit team"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path
-                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                    /><path
-                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                    />
-                  </svg>
-                </a>
-                <button
-                  class="saved-delete"
-                  aria-label="Delete team"
-                  title="Delete team"
-                  on:click={() => savedTeams.remove(team.id)}
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <polyline points="3 6 5 6 21 6" /><path
-                      d="M19 6l-1 14H6L5 6"
-                    /><path d="M10 11v6" /><path d="M14 11v6" /><path
-                      d="M9 6V4h6v2"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
+          <SavedTeamCard {team} on:load={(e) => loadTeam(e.detail)} />
         {/each}
       </div>
     </div>
@@ -974,129 +775,6 @@
     }
   }
 
-  .slot {
-    position: relative;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    min-height: 96px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .slot-empty {
-    width: 100%;
-    min-height: 96px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    border-radius: var(--radius);
-    font-size: 1.5rem;
-    transition:
-      background 0.1s,
-      color 0.1s;
-  }
-
-  .slot-empty:active {
-    background: var(--surface-2);
-  }
-  @media (hover: hover) {
-    .slot-empty:hover {
-      background: var(--surface-2);
-      color: var(--text);
-    }
-  }
-
-  .slot-filled {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    padding: 0.25rem;
-    width: 100%;
-    background: none;
-    border: none;
-    color: inherit;
-  }
-
-  .slot-sprite {
-    width: 56px;
-    height: 56px;
-    object-fit: contain;
-    image-rendering: pixelated;
-  }
-
-  .slot-name {
-    font-size: 0.72rem;
-    font-weight: 500;
-    text-align: center;
-    max-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    line-height: 1.2;
-  }
-
-  .slot-spe {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-  }
-
-  .slot-clear {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    z-index: 1;
-    /* Enlarge touch area */
-    padding: 0.5rem;
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  .slot-clear:active {
-    color: var(--danger);
-  }
-  @media (hover: hover) {
-    .slot-clear:hover {
-      color: var(--danger);
-    }
-  }
-
-  .scarf-pill {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    padding: 0.2rem 0.5rem;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 0.25rem;
-    transition:
-      color 0.15s,
-      border-color 0.15s,
-      background 0.15s;
-  }
-
-  .scarf-pill.active {
-    color: #f5c96c;
-    border-color: #f5c96c;
-    background: color-mix(in srgb, #f5c96c 12%, var(--surface));
-  }
-
   /* Action row: Start + Save */
   .action-row {
     display: flex;
@@ -1188,241 +866,6 @@
     gap: 0.5rem;
   }
 
-  /* Mobile: stacked layout */
-  .saved-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding: 0.75rem 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-
-  .saved-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .saved-top-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    flex: 1;
-  }
-
-  .saved-label {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    user-select: none;
-    background: none;
-    border: none;
-    color: var(--text);
-    padding: 0;
-    min-height: unset;
-    gap: 0.35rem;
-    justify-content: flex-start;
-  }
-  .rename-icon {
-    opacity: 0;
-    flex-shrink: 0;
-    color: var(--text-muted);
-    transition: opacity 0.15s;
-  }
-  .saved-label:hover .rename-icon {
-    opacity: 1;
-  }
-
-  .saved-slots {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0;
-    flex-shrink: 1;
-    min-width: 0;
-  }
-
-  .saved-sprite {
-    width: min(40px, calc((100vw - 14rem) / 6));
-    height: min(40px, calc((100vw - 14rem) / 6));
-    object-fit: contain;
-    image-rendering: pixelated;
-    flex-shrink: 1;
-  }
-
-  .saved-bottom {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .saved-record {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    flex: 1;
-  }
-
-  /* Desktop: restore original single-row layout */
-  @media (min-width: 600px) {
-    .saved-row {
-      flex-direction: row;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      padding: 0.6rem 0.85rem;
-    }
-    .saved-top {
-      display: contents; /* dissolve — children flow into parent row */
-    }
-    .saved-top-meta {
-      flex-direction: row;
-      align-items: center;
-      flex: unset;
-      gap: 0.75rem;
-    }
-    .saved-label {
-      min-width: 6rem;
-    }
-    .saved-slots {
-      display: flex;
-      flex-wrap: wrap;
-      grid-template-columns: unset;
-      flex: 1;
-      gap: 0.1rem;
-    }
-    .saved-sprite {
-      width: 32px;
-      height: 32px;
-    }
-    .saved-bottom {
-      flex: unset;
-      gap: 0.5rem;
-    }
-    .saved-record {
-      flex: unset;
-    }
-    .saved-actions {
-      margin-left: 0;
-    }
-  }
-
-  .record-btn {
-    padding: 0 0.75rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    min-height: 44px;
-    min-width: 44px;
-    transition:
-      background 0.1s,
-      color 0.1s,
-      border-color 0.1s;
-  }
-
-  .win-btn {
-    color: #4caf7d;
-  }
-  .loss-btn {
-    color: #c94040;
-  }
-  .win-btn:hover {
-    background: color-mix(in srgb, #4caf7d 15%, var(--surface));
-    border-color: #4caf7d;
-  }
-  .loss-btn:hover {
-    background: color-mix(in srgb, #c94040 15%, var(--surface));
-    border-color: #c94040;
-  }
-
-  .record-stat {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-    margin-right: 0.4rem;
-    white-space: nowrap;
-  }
-
-  .record-pct {
-    font-weight: 600;
-    color: var(--text);
-    margin-left: 0.2rem;
-  }
-
-  .record-reset {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0.5rem;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    min-height: 44px;
-    min-width: 44px;
-    border-radius: var(--radius-sm);
-    opacity: 0.5;
-    transition:
-      opacity 0.15s,
-      color 0.15s;
-  }
-  .record-reset:hover {
-    opacity: 1;
-    color: var(--text);
-  }
-
-  .saved-actions {
-    display: flex;
-    gap: 0.4rem;
-    flex-shrink: 0;
-    margin-left: auto;
-  }
-
-  .saved-load {
-    padding: 0 1rem;
-    background: var(--accent);
-    color: #06080f;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 44px;
-  }
-
-  .saved-edit,
-  .saved-delete {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    cursor: pointer;
-    min-height: 44px;
-    min-width: 44px;
-    transition:
-      color 0.15s,
-      border-color 0.15s;
-  }
-  @media (hover: hover) {
-    .saved-edit:hover {
-      color: var(--text);
-      border-color: var(--text-muted);
-    }
-    .saved-delete:hover {
-      color: var(--danger);
-      border-color: var(--danger);
-    }
-  }
-
   /* Modal */
   .modal-backdrop {
     position: fixed;
@@ -1470,30 +913,6 @@
   }
   .modal-close:hover {
     color: var(--text);
-  }
-
-  .import-side-tabs {
-    display: flex;
-    gap: 0.4rem;
-  }
-
-  .side-tab {
-    padding: 0 0.9rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    cursor: pointer;
-    min-height: 44px;
-    transition:
-      border-color 0.15s,
-      color 0.15s;
-  }
-  .side-tab.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
   }
 
   .import-textarea {

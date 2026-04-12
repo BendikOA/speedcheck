@@ -1,0 +1,27 @@
+.tab-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.tab {
+  padding: 0 0.9rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  min-height: 44px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.tab.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+}
+@media (hover: hover) {
+  .tab:not(.active):hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+}

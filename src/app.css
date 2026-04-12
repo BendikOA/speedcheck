@@ -24,6 +24,14 @@
   --font: 'Geist', 'Inter', system-ui, sans-serif;
   --font-heading: 'Instrument Sans', 'Inter', system-ui, sans-serif;
 
+  /* game boy pokemon palette — dark → light */
+  --gb-1: #17170D;
+  --gb-2: #30321D;
+  --gb-3: #484A35;
+  --gb-4: #71735E;
+  --gb-5: #929578;  /* bg */
+  --gb-hi: #E3EACE; /* contrast */
+
   /* Safe area insets for iOS notch / home bar */
   --safe-top:    env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
