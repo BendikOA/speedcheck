@@ -144,18 +144,6 @@
   margin-left: auto;
 }
 
-.saved-load {
-  padding: 0 1rem;
-  background: var(--gb-1);
-  color: #06080f;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-height: 44px;
-}
-
 .saved-edit,
 .saved-delete {
   display: flex;

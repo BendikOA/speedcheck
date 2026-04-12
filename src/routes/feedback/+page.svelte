@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import type { ActionData } from './$types';
+  import Button from '$lib/components/ui/Button/index.svelte';
 
   export let form: ActionData;
 
@@ -62,9 +63,9 @@
         <p class="error">{form.error}</p>
       {/if}
 
-      <button type="submit" class="submit-btn" disabled={submitting}>
+      <Button type="submit" variant="primary" disabled={submitting}>
         {submitting ? 'Sending…' : 'Send feedback'}
-      </button>
+      </Button>
     </form>
   {/if}
 </div>
@@ -169,26 +170,4 @@
     font-size: 0.95rem;
   }
 
-  .submit-btn {
-    align-self: flex-start;
-    background: var(--gb-1);
-    border: none;
-    border-radius: var(--radius);
-    color: var(--gb-5);
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding: 0 1.5rem;
-    min-height: 44px;
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-
-  .submit-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .submit-btn:not(:disabled):hover {
-    opacity: 0.85;
-  }
 </style>

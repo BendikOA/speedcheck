@@ -13,6 +13,7 @@
   import { buildAllTiers } from "$lib/speedtiers";
   import type { SpeedEntry } from "$lib/speedtiers";
   import { parsePaste, resolvePaste } from "$lib/parsePaste";
+  import Button from "$lib/components/ui/Button/index.svelte";
 
   // ── Load team ────────────────────────────────────────────────────────────
   let team: SavedTeam | null = null;
@@ -420,13 +421,9 @@
       ></textarea>
       {#if importError}<p class="import-error">{importError}</p>{/if}
       <div class="modal-actions">
-        <button
-          class="save-btn"
-          on:click={doImport}
-          disabled={importLoading || !importText.trim()}
-        >
+        <Button variant="primary" size="sm" disabled={importLoading || !importText.trim()} onClick={doImport}>
           {importLoading ? "Importing…" : "Import"}
-        </button>
+        </Button>
       </div>
     </div>
   </div>
@@ -483,13 +480,9 @@
         aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
       >
     </div>
-    <button class="export-btn" on:click={() => (showImportModal = true)}
-      >Import</button
-    >
-    <button class="export-btn" on:click={exportPaste}>
-      {exportCopied ? "Copied!" : "Export"}
-    </button>
-    <button class="save-btn" on:click={save}>Save</button>
+    <Button variant="secondary" size="sm" onClick={() => (showImportModal = true)}>Import</Button>
+    <Button variant="secondary" size="sm" onClick={exportPaste}>{exportCopied ? "Copied!" : "Export"}</Button>
+    <Button variant="primary" size="sm" onClick={save}>Save</Button>
   </div>
 
   <div class="slots-grid">
@@ -545,9 +538,7 @@
           <div class="slot-editor">
             <div class="editor-row">
               <!-- Change species -->
-              <button class="change-species-btn" on:click={openPicker}
-                >Change Species</button
-              >
+              <Button variant="secondary" size="sm" onClick={openPicker}>Change Species</Button>
             </div>
 
             <!-- Nickname -->
@@ -810,42 +801,6 @@
     transition: border-color 0.15s;
   }
 
-  .save-btn {
-    padding: 0 1.1rem;
-    background: var(--gb-1);
-    border: none;
-    border-radius: var(--radius-sm);
-    color: #06080f;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 44px;
-    white-space: nowrap;
-    transition: background 0.15s;
-  }
-  .save-btn:hover {
-    background: var(--gb-2);
-  }
-
-  .export-btn {
-    padding: 0 0.85rem;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
-    font-size: 0.85rem;
-    cursor: pointer;
-    min-height: 44px;
-    white-space: nowrap;
-    transition:
-      color 0.15s,
-      border-color 0.15s;
-  }
-  .export-btn:hover {
-    color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
-  }
-
   /* Export / modal */
   .modal-backdrop {
     position: fixed;
@@ -1038,23 +993,6 @@
     gap: 0.5rem;
   }
 
-  .change-species-btn {
-    padding: 0 0.85rem;
-    background: var(--gb-3);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
-    font-size: 0.85rem;
-    cursor: pointer;
-    min-height: 44px;
-    transition:
-      color 0.15s,
-      border-color 0.15s;
-  }
-  .change-species-btn:hover {
-    color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
-  }
 
   .field-row {
     display: flex;

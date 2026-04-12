@@ -21,6 +21,7 @@
   export let size: 'sm' | 'md' | 'lg' = 'md';
   export let disabled = false;
   export let fullWidth = false;
+  export let type: 'button' | 'submit' | 'reset' = 'button';
   export let onClick: () => void = () => {};
 </script>
 
@@ -28,6 +29,7 @@
   class="btn {variant} {size}"
   class:full-width={fullWidth}
   {disabled}
+  {type}
   on:click={onClick}
 >
   <slot>Button</slot>

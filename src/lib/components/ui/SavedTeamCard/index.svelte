@@ -4,6 +4,7 @@
   import { spriteUrl } from '$lib/sprites';
   import { savedTeams, type SavedTeam } from '$lib/stores/savedTeams';
   import Input from '$lib/components/ui/Input/index.svelte';
+  import Button from '$lib/components/ui/Button/index.svelte';
 
   export let team: SavedTeam;
 
@@ -96,7 +97,7 @@
     </div>
 
     <div class="saved-actions">
-      <button class="saved-load" on:click={() => dispatch('load', team)}>Load</button>
+      <Button variant="primary" size="sm" onClick={() => dispatch('load', team)}>Load</Button>
       <a class="saved-edit" href="/teams/{team.id}/edit" aria-label="Edit team" title="Edit team">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2"

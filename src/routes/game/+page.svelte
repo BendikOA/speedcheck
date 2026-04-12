@@ -45,11 +45,11 @@
     UsageMovesFull,
   } from "$lib/smogonUsage";
 
-  const CHAMPIONS_FORMAT = 'champions-ma';
+  const CHAMPIONS_FORMAT = "champions-ma";
 
   const GEN9_REGS = [
     { label: "Champions", format: CHAMPIONS_FORMAT },
-    { label: "Reg I",     format: "gen9vgc2026regi" },
+    { label: "Reg I", format: "gen9vgc2026regi" },
   ];
 
   let priorityReady = false;
@@ -68,18 +68,19 @@
 
   async function loadUsageData(format: string) {
     if (format === CHAMPIONS_FORMAT) {
-      const [moves, abilities, builds, abilitiesFull, movesFull] = await Promise.all([
-        loadChampionsMoves(),
-        loadChampionsAbilities(),
-        loadChampionsBuilds(),
-        loadChampionsAbilitiesFull(),
-        loadChampionsMovesFull(),
-      ]);
-      smogonMoves         = moves;
-      smogonAbilities     = abilities;
-      smogonBuilds        = builds;
-      champAbilitiesFull  = abilitiesFull;
-      champMovesFull      = movesFull;
+      const [moves, abilities, builds, abilitiesFull, movesFull] =
+        await Promise.all([
+          loadChampionsMoves(),
+          loadChampionsAbilities(),
+          loadChampionsBuilds(),
+          loadChampionsAbilitiesFull(),
+          loadChampionsMovesFull(),
+        ]);
+      smogonMoves = moves;
+      smogonAbilities = abilities;
+      smogonBuilds = builds;
+      champAbilitiesFull = abilitiesFull;
+      champMovesFull = movesFull;
       smogonPriorityMoves = {};
     } else {
       [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
@@ -90,7 +91,7 @@
           loadSmogonBuilds(9, format),
         ]);
       champAbilitiesFull = {};
-      champMovesFull     = {};
+      champMovesFull = {};
     }
   }
 
@@ -137,10 +138,10 @@
   }
 
   // ── Usage-based toggles (declared early — used in toggleField) ───────────
-  let likelyItemsActive     = false;
-  let likelyMovesActive     = false;
+  let likelyItemsActive = false;
+  let likelyMovesActive = false;
   let likelyAbilitiesActive = false;
-  let likelyBuildsActive    = false; // EV/Nature
+  let likelyBuildsActive = false; // EV/Nature
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
@@ -190,6 +191,7 @@
   let fieldMega = new Map<string, number>(); // 0=base, 1=mega/megaX, 2=megaY
   let fieldSpeedBoost = new Map<string, number>(); // 0=off, 1=+1 stage, 2=+2 stages
   let fieldSpeedEV = new Map<string, number>(); // Spe EV from likely build (0-252)
+  let fieldSpeedStage = new Map<string, number>(); // per-pokemon speed stage (negative allowed)
 
   /** Returns true if the item name is a mega stone (e.g. Charizardite X, Gengarite). */
   function isMegaStone(item: string | undefined): boolean {
@@ -202,8 +204,9 @@
     const slot = team[i];
     if (!slot) return;
     const newSlot = { ...slot, scarf: !slot.scarf };
-    if (side === "you") yourTeam = yourTeam.map((s, idx) => idx === i ? newSlot : s);
-    else oppTeam = oppTeam.map((s, idx) => idx === i ? newSlot : s);
+    if (side === "you")
+      yourTeam = yourTeam.map((s, idx) => (idx === i ? newSlot : s));
+    else oppTeam = oppTeam.map((s, idx) => (idx === i ? newSlot : s));
     // Also sync fieldScarfs if this slot is currently on the field
     const fieldSet = side === "you" ? yourField : oppField;
     if (fieldSet.has(i)) {
@@ -228,11 +231,6 @@
     fieldParalysis = new Map(fieldParalysis);
   }
 
-  function toggleFieldSpeedDown(key: string) {
-    fieldSpeedDown.set(key, !(fieldSpeedDown.get(key) ?? false));
-    fieldSpeedDown = new Map(fieldSpeedDown);
-  }
-
   function toggleFieldProto(key: string) {
     fieldProto.set(key, !(fieldProto.get(key) ?? false));
     fieldProto = new Map(fieldProto);
@@ -251,11 +249,9 @@
     fieldCommander = new Map(fieldCommander);
   }
 
-  function cycleSpeedBoost(key: string, maxStage: number) {
-    const cur = fieldSpeedBoost.get(key) ?? 0;
-    const next = cur >= maxStage ? 0 : cur + 1;
-    fieldSpeedBoost.set(key, next);
-    fieldSpeedBoost = new Map(fieldSpeedBoost);
+  function adjustSpeedStage(key: string, delta: number) {
+    fieldSpeedStage.set(key, (fieldSpeedStage.get(key) ?? 0) + delta);
+    fieldSpeedStage = new Map(fieldSpeedStage);
   }
 
   function cycleMega(key: string, numForms: number) {
@@ -304,6 +300,7 @@
     maxBoostStage: number;
     speedBoostStage: number;
     speedDown: boolean;
+    speedStage: number;
     hasMegaStone: boolean;
     priorityMoves: PriorityMove[];
     priorityAbilities: PriorityAbility[];
@@ -386,6 +383,7 @@
 
       const speedEV = fieldSpeedEV.get(key);
       const speedDown = fieldSpeedDown.get(key) ?? false;
+      const speedStage = fieldSpeedStage.get(key) ?? 0;
       const hasMegaStone = isMegaStone(slot.item);
 
       rows.push({
@@ -395,6 +393,7 @@
         scarf,
         paralysis,
         speedDown,
+        speedStage,
         hasMegaStone,
         nature,
         natureLocked,
@@ -412,22 +411,29 @@
         maxBoostStage,
         speedBoostStage,
         speedEV,
-        effectiveSpeed: calcEffectiveSpeed(
-          slot.entry,
-          side,
-          {
-            scarf,
-            paralysis,
-            speedDown,
-            protoBoost,
-            commander,
-            natureTier: nature,
-            megaIndex,
-            speedBoostStage,
-            speedEV,
-          },
-          cond,
-        ),
+        effectiveSpeed: (() => {
+          let spd = calcEffectiveSpeed(
+            slot.entry,
+            side,
+            {
+              scarf,
+              paralysis,
+              speedDown,
+              protoBoost,
+              commander,
+              natureTier: nature,
+              megaIndex,
+              speedBoostStage,
+              speedEV,
+            },
+            cond,
+          );
+          if (speedStage > 0)
+            spd = Math.floor(spd * (2 + speedStage) / 2);
+          else if (speedStage < 0)
+            spd = Math.floor(spd * 2 / (2 + Math.abs(speedStage)));
+          return spd;
+        })(),
         priorityMoves: effectivePriorityMoves,
         priorityAbilities: getPriorityAbilities(effectiveAbilities),
       });
@@ -511,10 +517,10 @@
     fieldSpeedEV = new Map();
 
     cond = { ...DEFAULT_CONDITIONS };
-    likelyItemsActive     = false;
-    likelyMovesActive     = false;
+    likelyItemsActive = false;
+    likelyMovesActive = false;
     likelyAbilitiesActive = false;
-    likelyBuildsActive    = false;
+    likelyBuildsActive = false;
     goto("/");
   }
 </script>
@@ -560,7 +566,8 @@
           use:tooltip={likelyAbilitiesActive
             ? "Hiding ability usage — click to show"
             : "Show ability usage per Pokémon from usage stats"}
-          on:click={() => (likelyAbilitiesActive = !likelyAbilitiesActive)}>Abilities</button
+          on:click={() => (likelyAbilitiesActive = !likelyAbilitiesActive)}
+          >Abilities</button
         >
         <button
           class="reg-tab"
@@ -568,7 +575,8 @@
           use:tooltip={likelyItemsActive
             ? "Hiding most common item — click to show"
             : "Show most common item per Pokémon from usage stats"}
-          on:click={() => (likelyItemsActive = !likelyItemsActive)}>Items</button
+          on:click={() => (likelyItemsActive = !likelyItemsActive)}
+          >Items</button
         >
         <button
           class="reg-tab"
@@ -649,8 +657,12 @@
                   <span class="tslot-name">{shortName(displayName)}</span>
                   <div class="tslot-stats">
                     <span class="tslot-spe">{slot.entry.baseSpe}</span>
-                    <Pill color="#f5c96c" active={slot.scarf} interactive
-                      on:click={() => toggleTSlotScarf(side, i)}>Scarf</Pill>
+                    <Pill
+                      color="#f5c96c"
+                      active={slot.scarf}
+                      interactive
+                      on:click={() => toggleTSlotScarf(side, i)}>Scarf</Pill
+                    >
                   </div>
                 </div>
               {/if}
@@ -723,7 +735,16 @@
     <div class="speed-header">
       <span class="section-title">
         Speed Order
-        {#if cond.trickRoom}<Pill color="#c46cf5">Trick Room active</Pill>{/if}
+        {#if cond.trickRoom}<Pill color="#c46cf5">Trick Room</Pill>{/if}
+        {#if cond.yourTailwind}<Pill
+            color="#52b44b"
+            tooltip={"Your Tailwind: ×2 Speed for your side"}>My Tailwind</Pill
+          >{/if}
+        {#if cond.oppTailwind}<Pill
+            color="#e8622d"
+            tooltip={"Opponent Tailwind: ×2 Speed for opponent's side"}
+            >Opp Tailwind</Pill
+          >{/if}
       </span>
       {#if fieldRows.length === 0}
         <span class="empty-hint"
@@ -758,25 +779,43 @@
                 <div class="row-badges">
                   {#if row.megaIndex > 0}
                     {@const mf = row.megaForms[row.megaIndex - 1]}
-                    <Pill color="#f5d76c" tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}>{mf?.name ?? "Mega"}</Pill>
+                    <Pill
+                      color="#f5d76c"
+                      tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}
+                      >{mf?.name ?? "Mega"}</Pill
+                    >
                   {/if}
                   {#if row.weatherAbility}
-                    <Pill color="#6cf5b8" active={row.weatherTriggered} tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? " ✓ active" : " — inactive (no matching weather/terrain)"}`}>{row.weatherAbility}</Pill>
+                    <Pill
+                      color="#6cf5b8"
+                      active={row.weatherTriggered}
+                      tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? " ✓ active" : " — inactive (no matching weather/terrain)"}`}
+                      >{row.weatherAbility}</Pill
+                    >
                   {/if}
                   {#if row.protoBoost}
-                    <Pill color="#6cf5e0" tooltip={`${row.protoLabel === "QD ×1.5" ? "Quark Drive" : "Protosynthesis"}: ×1.5 Speed when Speed is the boosted stat`}>{row.protoLabel}</Pill>
+                    <Pill
+                      color="#6cf5e0"
+                      tooltip={`${row.protoLabel === "QD ×1.5" ? "Quark Drive" : "Protosynthesis"}: ×1.5 Speed when Speed is the boosted stat`}
+                      >{row.protoLabel}</Pill
+                    >
                   {/if}
                   {#if row.commander}
-                    <Pill color="#6ca5f5" tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}>Cmd ×2</Pill>
-                  {/if}
-                  {#if (row.side === "you" && cond.yourTailwind) || (row.side === "opp" && cond.oppTailwind)}
-                    <Pill color="#4a9c41" tooltip={"Tailwind: ×2 Speed for 4 turns"}>TW ×2</Pill>
+                    <Pill
+                      color="#6ca5f5"
+                      tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}
+                      >Cmd ×2</Pill
+                    >
                   {/if}
                   {#if row.scarf}
-                    <Pill color="#f5c96c" tooltip={"Choice Scarf: ×1.5 Speed"}>Scarf ×1.5</Pill>
+                    <Pill color="#f5c96c" tooltip={"Choice Scarf: ×1.5 Speed"}
+                      >Scarf ×1.5</Pill
+                    >
                   {/if}
                   {#if row.paralysis}
-                    <Pill color="#f5a06c" tooltip={"Paralysis: ×0.5 Speed"}>PAR ×0.5</Pill>
+                    <Pill color="#f5a06c" tooltip={"Paralysis: ×0.5 Speed"}
+                      >PAR ×0.5</Pill
+                    >
                   {/if}
                   {#each row.priorityMoves as pm}
                     {@const active =
@@ -789,10 +828,18 @@
                           !cond[pm.requiresCondition as keyof typeof cond]
                         ? `${pm.name}: only has +${pm.priority} priority under ${pm.requiresCondition} terrain`
                         : `This Pokémon may know ${pm.name} — a +${pm.priority} priority move${pm.note ? ` (${pm.note})` : ""}`}
-                    <Pill color="#f56cc8" active={active} strikethrough={!active} tooltip={tipText}>{pm.name} {pm.priority > 0 ? "+" : ""}{pm.priority}</Pill>
+                    <Pill
+                      color="#f56cc8"
+                      {active}
+                      strikethrough={!active}
+                      tooltip={tipText}
+                      >{pm.name} {pm.priority > 0 ? "+" : ""}{pm.priority}</Pill
+                    >
                   {/each}
                   {#each row.priorityAbilities as pa}
-                    <Pill color="#c46cf5" tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</Pill>
+                    <Pill color="#c46cf5" tooltip={`${pa.name}: ${pa.effect}`}
+                      >{pa.name}</Pill
+                    >
                   {/each}
                   {#if likelyAbilitiesActive && smogonAbilities[row.slot.entry.id]}
                     {@const ab = smogonAbilities[row.slot.entry.id]}
@@ -800,11 +847,17 @@
                   {/if}
                   {#if row.megaIndex > 0}
                     {@const stone = row.megaForms[row.megaIndex - 1].megaStone}
-                    <Pill color="#a8c8ff" tooltip={`Mega Stone: ${stone}`}>{stone}</Pill>
+                    <Pill color="#a8c8ff" tooltip={`Mega Stone: ${stone}`}
+                      >{stone}</Pill
+                    >
                   {:else if likelyItemsActive}
                     {@const build = smogonBuilds[row.slot.entry.id]}
                     {#if build?.item && build.item !== "Choice Scarf"}
-                      <Pill color="#a8c8ff" tooltip={`Most common item (${selectedReg === CHAMPIONS_FORMAT ? 'Champions M-A' : 'Smogon ' + selectedReg}): ${build.item}`}>{build.item}</Pill>
+                      <Pill
+                        color="#a8c8ff"
+                        tooltip={`Most common item (${selectedReg === CHAMPIONS_FORMAT ? "Champions M-A" : "Smogon " + selectedReg}): ${build.item}`}
+                        >{build.item}</Pill
+                      >
                     {/if}
                   {/if}
                 </div>
@@ -842,7 +895,7 @@
                 <!-- Scarf — hidden when mega evolved or holding a mega stone -->
                 {#if row.megaIndex === 0 && !row.hasMegaStone}
                   <label
-                    class="toggle-pill"
+                    class="toggle-pill scarf-pill"
                     class:active={row.scarf}
                     use:tooltip={"Choice Scarf: multiplies Speed by ×1.5. Only one Scarf active per side at a time."}
                   >
@@ -855,34 +908,9 @@
                   </label>
                 {/if}
 
-                <!-- Speed stages: −1 and +boost side by side -->
-                <label
-                  class="toggle-pill speeddown"
-                  class:active={row.speedDown}
-                  use:tooltip={"−1 Speed stage from Icy Wind or Sticky Web (×2/3)"}
-                >
-                  <input
-                    type="checkbox"
-                    checked={row.speedDown}
-                    on:change={() => toggleFieldSpeedDown(row.key)}
-                  />
-                  −1 Spd
-                </label>
-
-                {#if row.canSpeedBoost}
-                  <button
-                    class="toggle-pill boost-pill"
-                    class:active={row.speedBoostStage > 0}
-                    on:click={() => cycleSpeedBoost(row.key, row.maxBoostStage)}
-                    use:tooltip={`Speed boost stages from moves (Dragon Dance, Agility, etc.).\nCurrent: +${row.speedBoostStage} stage${row.speedBoostStage !== 1 ? "s" : ""} (×${((2 + row.speedBoostStage) / 2).toFixed(1)})\nClick to cycle: 0 → +1 (×1.5) → +2 (×2.0) → 0`}
-                  >
-                    +{row.speedBoostStage || 1} Spd
-                  </button>
-                {/if}
-
                 <!-- Paralysis -->
                 <label
-                  class="toggle-pill para"
+                  class="toggle-pill para par-pill"
                   class:active={row.paralysis}
                   use:tooltip={"Paralysis: multiplies Speed by ×0.5"}
                 >
@@ -954,17 +982,30 @@
                       : row.megaForms[row.megaIndex - 1].name}</button
                   >
                 {/if}
+
+                <!-- Per-pokemon speed stage -->
+                <div class="stage-group">
+                  <button class="toggle-pill stage-btn" on:click={() => adjustSpeedStage(row.key, -1)} use:tooltip={"−1 Speed stage"}>Spe −</button>
+                  <button class="toggle-pill stage-btn" on:click={() => adjustSpeedStage(row.key, +1)} use:tooltip={"+1 Speed stage"}>Spe +</button>
+                  <span class="stage-val">Stage {row.speedStage > 0 ? `+${row.speedStage}` : row.speedStage}</span>
+                </div>
               </div>
 
               <!-- Abilities list panel -->
               {#if likelyAbilitiesActive}
-                {@const activeMega = row.megaIndex > 0 ? row.megaForms[row.megaIndex - 1] : null}
+                {@const activeMega =
+                  row.megaIndex > 0 ? row.megaForms[row.megaIndex - 1] : null}
                 {#if activeMega?.ability}
                   <div class="move-list">
                     <span
                       class="move-chip ability-chip"
-                      use:tooltip={[activeMega.ability, abilityDesc(activeMega.ability)].filter(Boolean).join(': ')}
-                    >{activeMega.ability}</span>
+                      use:tooltip={[
+                        activeMega.ability,
+                        abilityDesc(activeMega.ability),
+                      ]
+                        .filter(Boolean)
+                        .join(": ")}>{activeMega.ability}</span
+                    >
                   </div>
                 {:else}
                   {@const fullList = champAbilitiesFull[row.slot.entry.id]}
@@ -974,16 +1015,30 @@
                       {#each fullList as ab}
                         <span
                           class="move-chip ability-chip"
-                          use:tooltip={[ab.name, abilityDesc(ab.name), `${ab.pct}% of teams (${ab.count} recorded)`].filter(Boolean).join(' · ')}
-                        >{ab.name} <span class="move-pct">{ab.pct}%</span></span>
+                          use:tooltip={[
+                            ab.name,
+                            abilityDesc(ab.name),
+                            `${ab.pct}% of teams (${ab.count} recorded)`,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                          >{ab.name}
+                          <span class="move-pct">{ab.pct}%</span></span
+                        >
                       {/each}
                     </div>
                   {:else if topAbility}
                     <div class="move-list">
                       <span
                         class="move-chip ability-chip"
-                        use:tooltip={[topAbility.name, abilityDesc(topAbility.name), topAbility.desc].filter(Boolean).join(' · ')}
-                      >{topAbility.name}</span>
+                        use:tooltip={[
+                          topAbility.name,
+                          abilityDesc(topAbility.name),
+                          topAbility.desc,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}>{topAbility.name}</span
+                      >
                     </div>
                   {/if}
                 {/if}
@@ -996,8 +1051,15 @@
                     {@const moveFull = champMovesFull[row.slot.entry.id]?.[mi]}
                     <span
                       class="move-chip"
-                      use:tooltip={[moveSummary(move), moveFull ? `${moveFull.pct}% of teams` : ''].filter(Boolean).join(' · ')}
-                    >{move}{#if moveFull} <span class="move-pct">{moveFull.pct}%</span>{/if}</span>
+                      use:tooltip={[
+                        moveSummary(move),
+                        moveFull ? `${moveFull.pct}% of teams` : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                      >{move}{#if moveFull}
+                        <span class="move-pct">{moveFull.pct}%</span>{/if}</span
+                    >
                   {/each}
                 </div>
               {/if}
@@ -1010,20 +1072,31 @@
     {/if}
   </div>
 </div>
-
-<div class="tooltip">
-  Speed stats are assumed to be for level 50, all 31 IV pokemon with no EVs
-  invested in speed. Enable the build button to see likely speed altering
-  natures as well as your own from the pokepaste.
+<div class="tooltip-container">
+  <div class="tooltip">
+    Use the "Abilities", "Items", "Moves", and "EV/Nature" buttons in the top
+    right to show or hide the most common builds for each Pokémon from usage
+    stats.
+  </div>
+  <div class="tooltip">
+    Speed stats are assumed to be for level 50, all 31 IV pokemon with no EVs
+    invested in speed. Enable the build button to see likely speed altering
+    natures as well as your own from the pokepaste.
+  </div>
 </div>
 
 <style>
   /* Top bar */
+  .tooltip-container {
+    display: flex;
+    width: 100%;
+  }
+
   .tooltip {
     margin-top: 0.5rem;
     color: var(--gb-low-contrast);
     font-size: 0.8rem;
-    max-width: 50%;
+    max-width: 49%;
     margin-left: 0.5rem;
   }
 
@@ -1159,7 +1232,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-1);
     font-size: 0.82rem;
     font-weight: 500;
     cursor: pointer;
@@ -1175,29 +1248,22 @@
   }
   @media (hover: hover) {
     .cond-btn:hover {
-      color: var(--gb-2);
-      border-color: var(--gb-low-contrast);
+      border-color: var(--gb-1);
     }
   }
   .cond-btn.active {
+    background: var(--gb-1);
     border-color: var(--gb-1);
-    color: var(--gb-1);
-    background: color-mix(in srgb, var(--gb-1) 12%, var(--gb-4));
+    color: var(--gb-5);
   }
   .cond-btn.tr.active {
-    border-color: #c46cf5;
-    color: #c46cf5;
-    background: color-mix(in srgb, #c46cf5 12%, var(--gb-4));
+    color: var(--gb-5);
   }
   .cond-btn.your.active {
-    border-color: #4a9c41;
-    color: #4a9c41;
-    background: color-mix(in srgb, #4a9c41 12%, var(--gb-4));
+    color: var(--gb-5);
   }
   .cond-btn.opp.active {
-    border-color: #c94040;
-    color: #c94040;
-    background: color-mix(in srgb, #c94040 12%, var(--gb-4));
+    color: var(--gb-5);
   }
 
   /* Team rows */
@@ -1214,44 +1280,23 @@
     gap: 0.4rem;
   }
 
-  @media (min-width: 640px) {
-    .team-row {
-      flex-direction: row;
-      align-items: center;
-      gap: 1rem;
-    }
-  }
-
   .team-label {
-    font-size: 0.95rem;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
     font-weight: 700;
+    letter-spacing: -0.005em;
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
   }
 
-  @media (min-width: 640px) {
-    .team-label {
-      width: 100px;
-      flex-shrink: 0;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.1rem;
-    }
-  }
-
-  .team-label.you {
-    color: #9bc798;
-  }
-  .team-label.opp {
-    color: #f8a5b0;
-  }
-
   .pick-hint {
     font-weight: 400;
     color: var(--gb-low-contrast);
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 700;
+    margin-left: 4px;
+    opacity: 0.8``;
   }
 
   .team-slots {
@@ -1288,7 +1333,7 @@
     width: 100%;
     aspect-ratio: 150 / 132;
     box-sizing: border-box;
-    background: var(--gb-4);
+    background: transparent;
     border: 1px solid var(--gb-3);
     border-radius: 6px;
     cursor: pointer;
@@ -1300,20 +1345,17 @@
     opacity: 0.3;
     cursor: not-allowed;
   }
-  .tslot.on-field.side-you {
-    border-color: #4a9c41;
-    background: color-mix(in srgb, #4a9c41 14%, var(--gb-4));
-  }
-  .tslot.on-field.side-opp {
-    border-color: #c94040;
-    background: color-mix(in srgb, #c94040 14%, var(--gb-4));
+  .tslot.on-field {
+    border-color: var(--gb-1);
+    background: var(--gb-1);
   }
   .tslot:active:not(:disabled) {
     opacity: 0.8;
   }
   @media (hover: hover) {
     .tslot.has-mon:not(:disabled):hover {
-      border-color: var(--gb-low-contrast);
+      background: var(--gb-2);
+      border-color: var(--gb-2);
     }
   }
 
@@ -1331,12 +1373,13 @@
 
   .tslot-types {
     position: absolute;
-    bottom: 4px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 4px;
     z-index: 2;
+    opacity: 0.75;
   }
 
   .tslot-meta {
@@ -1479,6 +1522,15 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 500px) {
+    .section-title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+    }
   }
 
   .empty-hint {
@@ -1503,10 +1555,10 @@
     border-bottom: none;
   }
   .speed-row.side-you {
-    border-left-color: #4a9c41;
+    border-left-color: #52b44b;
   }
   .speed-row.side-opp {
-    border-left-color: #c94040;
+    border-left-color: #e8622d;
   }
 
   .pos {
@@ -1571,7 +1623,7 @@
     gap: 0.25rem;
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--gb-low-contrast);
+    color: var(--gb-1);
     cursor: pointer;
     padding: 0 0.6rem;
     background: var(--gb-4);
@@ -1597,15 +1649,14 @@
     border-color: #f5c96c;
     background: color-mix(in srgb, #f5c96c 10%, var(--gb-4));
   }
+  .toggle-pill.scarf-pill,
+  .toggle-pill.par-pill {
+    color: var(--gb-hi);
+  }
   .toggle-pill.para.active {
     color: #f5a06c;
     border-color: #f5a06c;
     background: color-mix(in srgb, #f5a06c 10%, var(--gb-4));
-  }
-  .toggle-pill.speeddown.active {
-    color: #6cb8f5;
-    border-color: #6cb8f5;
-    background: color-mix(in srgb, #6cb8f5 10%, var(--gb-4));
   }
   .toggle-pill.proto.active {
     color: #6cf5e0;
@@ -1616,14 +1667,6 @@
     color: #6ca5f5;
     border-color: #6ca5f5;
     background: color-mix(in srgb, #6ca5f5 10%, var(--gb-4));
-  }
-  .toggle-pill.boost-pill {
-    color: var(--gb-low-contrast);
-  }
-  .toggle-pill.boost-pill.active {
-    color: #f5d76c;
-    border-color: #f5d76c;
-    background: color-mix(in srgb, #f5d76c 10%, var(--gb-4));
   }
   /* Mega pill: gradient border */
   .mega-pill {
@@ -1653,24 +1696,36 @@
   }
 
   /* Nature pill cycles: + green / = grey / − red */
-  .nature-pill {
-    background: none;
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-  }
   .nature-pill.nature-pos {
     color: #6cf587;
     border-color: #6cf587;
     background: color-mix(in srgb, #6cf587 10%, var(--gb-4));
   }
   .nature-pill.nature-neu {
-    color: var(--gb-low-contrast);
+    color: var(--gb-1);
   }
   .nature-pill.nature-neg {
     color: #c94040;
     border-color: #c94040;
     background: color-mix(in srgb, #c94040 10%, var(--gb-4));
+  }
+
+  .stage-group {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .stage-btn {
+    color: var(--gb-1);
+  }
+  .stage-val {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--gb-1);
   }
 
   .row-speed {
@@ -1725,7 +1780,7 @@
 
   /* Moves toggle pill */
   .toggle-pill.moves-pill {
-    color: var(--gb-low-contrast);
+    color: var(--gb-1);
   }
   .toggle-pill.moves-pill.active {
     color: #a8d8a8;
@@ -1796,6 +1851,9 @@
     .pos {
       font-size: 1rem;
       width: 1.25rem;
+    }
+    .stage-group {
+      flex-basis: 100%;
     }
   }
 </style>

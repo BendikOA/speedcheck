@@ -54,21 +54,23 @@
 <nav>
   <div class="nav-inner">
     <a href="/" class="brand">
-      <h2 class="brand-name">Turnadus</h2>
+      <h2 class="brand-name">TURNADUS</h2>
     </a>
 
     <!-- Desktop nav links -->
     <div class="nav-links">
       <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
       <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
-      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a>
+      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
+        >All Tiers</a
+      >
       <!-- <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a> -->
       <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
       <!-- <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a> -->
     </div>
 
-  <!-- Desktop theme toggle hidden -->
-  <!-- <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
+    <!-- Desktop theme toggle hidden -->
+    <!-- <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
     {#if dark}
       <svg
         width="18"
@@ -122,46 +124,46 @@
     {/if}
   </button> -->
 
-  <!-- Mobile hamburger -->
-  <button
-    class="hamburger"
-    on:click={() => (menuOpen = !menuOpen)}
-    aria-label="Menu"
-    aria-expanded={menuOpen}
-  >
-    {#if menuOpen}
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-      >
-        <line x1="18" y1="6" x2="6" y2="18" /><line
-          x1="6"
-          y1="6"
-          x2="18"
-          y2="18"
-        />
-      </svg>
-    {:else}
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-      >
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-      </svg>
-    {/if}
-  </button>
+    <!-- Mobile hamburger -->
+    <button
+      class="hamburger"
+      on:click={() => (menuOpen = !menuOpen)}
+      aria-label="Menu"
+      aria-expanded={menuOpen}
+    >
+      {#if menuOpen}
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" /><line
+            x1="6"
+            y1="6"
+            x2="18"
+            y2="18"
+          />
+        </svg>
+      {:else}
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      {/if}
+    </button>
   </div>
 </nav>
 
@@ -332,7 +334,7 @@
   }
 
   .brand-name {
-    font-family: var(--font-heading);
+    font-family: "Early GameBoy", monospace;
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -350,19 +352,21 @@
   }
 
   nav a {
-    color: var(--gb-low-contrast);
+    color: color-mix(in srgb, var(--gb-hi) 55%, transparent);
     font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     white-space: nowrap;
     min-height: 44px;
     padding: 0 0.5rem;
   }
 
   nav a:hover {
-    color: var(--gb-2);
+    color: var(--gb-hi);
   }
   nav a.active {
-    color: var(--gb-2);
-    font-weight: 600;
+    color: var(--gb-hi);
+    font-weight: 700;
   }
 
   .theme-toggle {

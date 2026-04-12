@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 1.5px 4px;
+  padding: 0 4px 2px;
   border-radius: 100px;
   border: 1px solid var(--gb-3);
   font-size: 0.75rem;
@@ -11,20 +11,20 @@
   white-space: nowrap;
   user-select: none;
   line-height: 1;
-  color: var(--gb-low-contrast);
+  color: var(--gb-1);
   background: transparent;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 
 /* Colored state — set --pill-color on the element */
 .pill.colored {
-  color: var(--pill-color);
-  border-color: var(--pill-color);
-  background: color-mix(in srgb, var(--pill-color) 10%, var(--gb-4));
+  color: var(--gb-1);
+  background: var(--gb-4);
 }
 
 .pill.strikethrough {
   text-decoration: line-through;
+  background: transparent;
 }
 
 /* Interactive pills */

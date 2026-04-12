@@ -217,7 +217,7 @@
   $: genNum = genFilter ?? (9 as GenNumber); // concrete gen for team state / saving
   let yourTeam: TeamSlotData[] = Array(6).fill(null);
   let oppTeam: TeamSlotData[] = Array(6).fill(null);
-  let loadedTeamName: string = '';
+  let loadedTeamName: string = "";
   let pickerTarget: { side: "you" | "opp"; index: number } | null = null;
   let usageOrder: string[] = [];
 
@@ -357,7 +357,7 @@
   }
 
   function loadTeam(saved: SavedTeam) {
-    loadedTeamName = saved.label ?? '';
+    loadedTeamName = saved.label ?? "";
     // Use full national dex so legality filtering can't drop saved Pokémon
     const tiers = buildAllTiers(9);
     const byId = new Map(tiers.map((e) => [e.id, e]));
@@ -470,7 +470,10 @@
       </div>
 
       <TabGroup
-        tabs={[{ label: "Your Team", value: "you" }, { label: "Opponent", value: "opp" }]}
+        tabs={[
+          { label: "Your Team", value: "you" },
+          { label: "Opponent", value: "opp" },
+        ]}
         value={importSide}
         on:change={(e) => (importSide = e.detail as "you" | "opp")}
       />
@@ -489,20 +492,20 @@
       {/if}
 
       <div class="modal-actions">
-        <button
-          class="save-confirm"
-          on:click={doImport}
+        <Button
+          variant="primary"
+          size="sm"
           disabled={importLoading || !importText.trim()}
+          onClick={doImport}>{importLoading ? "Loading…" : "Import"}</Button
         >
-          {importLoading ? "Loading…" : "Import"}
-        </button>
-        <button
-          class="save-cancel"
-          on:click={() => {
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
             showImport = false;
             importError = "";
             importText = "";
-          }}>Cancel</button
+          }}>Cancel</Button
         >
       </div>
     </div>
@@ -553,9 +556,14 @@
     <div class="teams-col">
       {#each [{ side: "you" as const, team: yourTeam }, { side: "opp" as const, team: oppTeam }] as { side, team }}
         <div class="team-block">
-          <span class="team-label" class:you={side === "you"} class:opp={side === "opp"}>
+          <span
+            class="team-label"
+            class:you={side === "you"}
+            class:opp={side === "opp"}
+          >
             {#if side === "you"}
-              My Team{#if loadedTeamName} — <span class="team-label-name">{loadedTeamName}</span>{/if}
+              My Team{#if loadedTeamName}
+                <span class="team-label-name">{loadedTeamName}</span>{/if}
             {:else}
               Opponent
             {/if}
@@ -574,7 +582,12 @@
       {/each}
 
       <div class="action-row">
-        <Button variant="primary" fullWidth={true} disabled={!canStart} onClick={startGame}>
+        <Button
+          variant="primary"
+          fullWidth={true}
+          disabled={!canStart}
+          onClick={startGame}
+        >
           Start Game →
         </Button>
         <Button variant="secondary" onClick={() => (showImport = true)}>
@@ -588,23 +601,26 @@
                 name="save-label"
                 placeholder="Team name…"
                 bind:value={saveLabel}
-                on:keydown={(e) => (e as unknown as KeyboardEvent).key === "Enter" && saveCurrentTeam()}
+                on:keydown={(e) =>
+                  (e as unknown as KeyboardEvent).key === "Enter" &&
+                  saveCurrentTeam()}
                 autocomplete="off"
               />
-              <button class="save-confirm" on:click={saveCurrentTeam}
-                >Save</button
+              <Button variant="primary" size="sm" onClick={saveCurrentTeam}
+                >Save</Button
               >
-              <button
-                class="save-cancel"
-                on:click={() => {
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
                   showSaveInput = false;
                   saveLabel = "";
-                }}>✕</button
+                }}>✕</Button
               >
             </div>
           {:else}
-            <button class="save-btn" on:click={() => (showSaveInput = true)}
-              >Save Team</button
+            <Button variant="secondary" onClick={() => (showSaveInput = true)}
+              >Save Team</Button
             >
           {/if}
         {/if}
@@ -767,9 +783,10 @@
   .team-label-name {
     color: var(--gb-low-contrast);
     font-weight: 400;
+    padding-left: 8px;
   }
   .team-label.opp {
-    color: #f68292;
+    color: var(--gb-low-contrast);
   }
 
   .slots {
@@ -805,57 +822,11 @@
     }
   }
 
-  .save-btn {
-    padding: 0.75rem 1.25rem;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius);
-    color: var(--gb-low-contrast);
-    font-size: 0.95rem;
-    cursor: pointer;
-    min-height: 52px;
-    transition:
-      border-color 0.15s,
-      color 0.15s;
-    white-space: nowrap;
-  }
-
-  @media (hover: hover) {
-    .save-btn:hover {
-      color: var(--gb-2);
-      border-color: var(--gb-low-contrast);
-    }
-  }
-
   .save-row {
     display: flex;
     gap: 0.4rem;
     align-items: center;
     flex: 1;
-  }
-
-  .save-confirm {
-    padding: 0.65rem 1rem;
-    background: var(--gb-1);
-    color: #06080f;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 44px;
-    white-space: nowrap;
-  }
-
-  .save-cancel {
-    padding: 0.65rem 0.75rem;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius);
-    color: var(--gb-low-contrast);
-    font-size: 0.9rem;
-    cursor: pointer;
-    min-height: 44px;
   }
 
   /* Saved teams list */
@@ -964,6 +935,7 @@
     border: 1px solid var(--gb-3);
     border-radius: var(--radius);
     overflow: hidden;
+    color: var(--gb-hi);
   }
 
   .preview-title {
@@ -973,7 +945,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-hi);
     border-bottom: 1px solid var(--gb-3);
   }
 
@@ -996,14 +968,14 @@
     border-bottom: none;
   }
   .preview-row.side-you {
-    border-left-color: #4a9c41;
+    border-left-color: #52b44b;
   }
   .preview-row.side-opp {
-    border-left-color: #c94040;
+    border-left-color: #e8622d;
   }
 
   .preview-rank {
-    color: var(--gb-low-contrast);
+    color: var(--gb-hi);
     font-size: 0.75rem;
     width: 1rem;
     text-align: center;
@@ -1036,7 +1008,8 @@
   .preview-note {
     padding: 0.4rem 0.75rem;
     font-size: 0.7rem;
-    color: var(--gb-low-contrast);
-    border-top: 1px solid var(--gb-3);
+    color: var(--gb-hi);
+    opacity: 70%;
+    border-top: 1px solid var(--gb-5);
   }
 </style>

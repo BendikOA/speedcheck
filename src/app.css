@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Early GameBoy';
+  src: url('/Early GameBoy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -22,7 +30,7 @@
   --radius: 8px;
   --radius-sm: 4px;
   --font: 'Intel One Mono', monospace;
-  --font-heading: 'Instrument Sans', 'Inter', system-ui, sans-serif;
+  --font-heading: 'Intel One Mono', monospace;
   --font-mono: 'Intel One Mono', monospace;
 
   /* Safe area insets for iOS notch / home bar */
