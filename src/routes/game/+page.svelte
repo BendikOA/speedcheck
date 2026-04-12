@@ -22,6 +22,7 @@
   } from "$lib/priority";
   import type { PriorityMove, PriorityAbility } from "$lib/priority";
   import { tooltip } from "$lib/tooltip";
+  import Pill from "$lib/components/ui/Pill/index.svelte";
   import {
     loadSmogonPriorityMoves,
     loadSmogonAbilities,
@@ -670,7 +671,7 @@
     <div class="speed-header">
       <span class="section-title">
         Speed Order
-        {#if cond.trickRoom}<span class="tr-badge">Trick Room active</span>{/if}
+        {#if cond.trickRoom}<Pill color="#c46cf5">Trick Room active</Pill>{/if}
       </span>
       {#if fieldRows.length === 0}
         <span class="empty-hint"
@@ -705,51 +706,25 @@
                 <div class="row-badges">
                   {#if row.megaIndex > 0}
                     {@const mf = row.megaForms[row.megaIndex - 1]}
-                    <span
-                      class="badge mega-badge"
-                      use:tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}
-                      >{mf?.name ?? "Mega"}</span
-                    >
+                    <Pill color="#f5d76c" tooltip={`${mf?.name}: Base Speed ${mf?.baseSpe} (toggled via Mega button below)`}>{mf?.name ?? "Mega"}</Pill>
                   {/if}
                   {#if row.weatherAbility}
-                    <span
-                      class="badge ability"
-                      class:ability-dim={!row.weatherTriggered}
-                      use:tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? " ✓ active" : " — inactive (no matching weather/terrain)"}`}
-                      >{row.weatherAbility}</span
-                    >
+                    <Pill color="#6cf5b8" active={row.weatherTriggered} tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? " ✓ active" : " — inactive (no matching weather/terrain)"}`}>{row.weatherAbility}</Pill>
                   {/if}
                   {#if row.protoBoost}
-                    <span
-                      class="badge proto-badge"
-                      use:tooltip={`${row.protoLabel === "QD ×1.5" ? "Quark Drive" : "Protosynthesis"}: ×1.5 Speed when Speed is the boosted stat`}
-                      >{row.protoLabel}</span
-                    >
+                    <Pill color="#6cf5e0" tooltip={`${row.protoLabel === "QD ×1.5" ? "Quark Drive" : "Protosynthesis"}: ×1.5 Speed when Speed is the boosted stat`}>{row.protoLabel}</Pill>
                   {/if}
                   {#if row.commander}
-                    <span
-                      class="badge commander-badge"
-                      use:tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}
-                      >Cmd ×2</span
-                    >
+                    <Pill color="#6ca5f5" tooltip={"Commander: Tatsugiri entered Dondozo's mouth — +2 Speed stages (×2)"}>Cmd ×2</Pill>
                   {/if}
                   {#if (row.side === "you" && cond.yourTailwind) || (row.side === "opp" && cond.oppTailwind)}
-                    <span
-                      class="badge tailwind"
-                      use:tooltip={"Tailwind: ×2 Speed for 4 turns"}>TW ×2</span
-                    >
+                    <Pill color="#4a9c41" tooltip={"Tailwind: ×2 Speed for 4 turns"}>TW ×2</Pill>
                   {/if}
                   {#if row.scarf}
-                    <span
-                      class="badge scarf-badge"
-                      use:tooltip={"Choice Scarf: ×1.5 Speed"}>Scarf ×1.5</span
-                    >
+                    <Pill color="#f5c96c" tooltip={"Choice Scarf: ×1.5 Speed"}>Scarf ×1.5</Pill>
                   {/if}
                   {#if row.paralysis}
-                    <span
-                      class="badge para-badge"
-                      use:tooltip={"Paralysis: ×0.5 Speed"}>PAR ×0.5</span
-                    >
+                    <Pill color="#f5a06c" tooltip={"Paralysis: ×0.5 Speed"}>PAR ×0.5</Pill>
                   {/if}
                   {#each row.priorityMoves as pm}
                     {@const active =
@@ -762,41 +737,22 @@
                           !cond[pm.requiresCondition as keyof typeof cond]
                         ? `${pm.name}: only has +${pm.priority} priority under ${pm.requiresCondition} terrain`
                         : `This Pokémon may know ${pm.name} — a +${pm.priority} priority move${pm.note ? ` (${pm.note})` : ""}`}
-                    <span
-                      class="badge priority-badge"
-                      class:suppressed={!active}
-                      use:tooltip={tipText}
-                      >{pm.name} {pm.priority > 0 ? "+" : ""}{pm.priority}</span
-                    >
+                    <Pill color="#f56cc8" active={active} strikethrough={!active} tooltip={tipText}>{pm.name} {pm.priority > 0 ? "+" : ""}{pm.priority}</Pill>
                   {/each}
                   {#each row.priorityAbilities as pa}
-                    <span
-                      class="badge prio-ability-badge"
-                      use:tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</span
-                    >
+                    <Pill color="#c46cf5" tooltip={`${pa.name}: ${pa.effect}`}>{pa.name}</Pill>
                   {/each}
                   {#if likelyAbilitiesActive && smogonAbilities[row.slot.entry.id]}
                     {@const ab = smogonAbilities[row.slot.entry.id]}
-                    <span
-                      class="badge ability-likely-badge"
-                      use:tooltip={ab.desc}>{ab.name}</span
-                    >
+                    <Pill color="#d4a8ff" tooltip={ab.desc}>{ab.name}</Pill>
                   {/if}
                   {#if row.megaIndex > 0}
                     {@const stone = row.megaForms[row.megaIndex - 1].megaStone}
-                    <span
-                      class="badge item-badge"
-                      use:tooltip={`Mega Stone: ${stone}`}
-                      >{stone}</span
-                    >
+                    <Pill color="#a8c8ff" tooltip={`Mega Stone: ${stone}`}>{stone}</Pill>
                   {:else if likelyItemsActive}
                     {@const build = smogonBuilds[row.slot.entry.id]}
                     {#if build?.item && build.item !== "Choice Scarf"}
-                      <span
-                        class="badge item-badge"
-                        use:tooltip={`Most common item (${selectedReg === CHAMPIONS_FORMAT ? 'Champions M-A' : 'Smogon ' + selectedReg}): ${build.item}`}
-                        >{build.item}</span
-                      >
+                      <Pill color="#a8c8ff" tooltip={`Most common item (${selectedReg === CHAMPIONS_FORMAT ? 'Champions M-A' : 'Smogon ' + selectedReg}): ${build.item}`}>{build.item}</Pill>
                     {/if}
                   {/if}
                 </div>
@@ -1385,15 +1341,6 @@
     gap: 0.6rem;
   }
 
-  .tr-badge {
-    font-size: 0.78rem;
-    padding: 0.1rem 0.45rem;
-    background: color-mix(in srgb, #c46cf5 15%, var(--surface));
-    border: 1px solid #c46cf5;
-    color: #c46cf5;
-    border-radius: 100px;
-  }
-
   .empty-hint {
     font-size: 0.85rem;
     color: var(--text-muted);
@@ -1469,76 +1416,6 @@
     gap: 0.25rem;
     flex-wrap: wrap;
     align-items: center;
-  }
-
-  .badge {
-    font-size: 0.75rem;
-    padding: 2px 0.4rem;
-    border-radius: 100px;
-    border: 1px solid;
-    white-space: nowrap;
-    line-height: 1.4;
-  }
-
-  .badge.ability {
-    color: #6cf5b8;
-    border-color: #6cf5b8;
-    background: color-mix(in srgb, #6cf5b8 10%, var(--surface));
-  }
-  .badge.ability.ability-dim {
-    color: var(--text-muted);
-    border-color: var(--border);
-    background: none;
-    opacity: 0.45;
-  }
-  .badge.tailwind {
-    color: #4a9c41;
-    border-color: #4a9c41;
-    background: color-mix(in srgb, #4a9c41 10%, var(--surface));
-  }
-  .badge.scarf-badge {
-    color: #f5c96c;
-    border-color: #f5c96c;
-    background: color-mix(in srgb, #f5c96c 10%, var(--surface));
-  }
-  .badge.para-badge {
-    color: #f5a06c;
-    border-color: #f5a06c;
-    background: color-mix(in srgb, #f5a06c 10%, var(--surface));
-  }
-  .badge.priority-badge {
-    font-size: 0.72rem;
-    color: #f56cc8;
-    border-color: #f56cc8;
-    background: color-mix(in srgb, #f56cc8 10%, var(--surface));
-  }
-  .badge.priority-badge.suppressed {
-    color: var(--text-muted);
-    border-color: var(--border);
-    background: none;
-    opacity: 0.45;
-    text-decoration: line-through;
-  }
-  .badge.prio-ability-badge {
-    font-size: 0.72rem;
-    color: #c46cf5;
-    border-color: #c46cf5;
-    background: color-mix(in srgb, #c46cf5 10%, var(--surface));
-  }
-  .badge.mega-badge {
-    color: #f5d76c;
-    border-color: #f5d76c;
-    background: color-mix(in srgb, #f5d76c 10%, var(--surface));
-  }
-  .badge.proto-badge {
-    color: #6cf5e0;
-    border-color: #6cf5e0;
-    background: color-mix(in srgb, #6cf5e0 10%, var(--surface));
-  }
-  .badge.commander-badge {
-    color: #6ca5f5;
-    border-color: #6ca5f5;
-    background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
   }
 
   /* Toggle pills row */
@@ -1733,13 +1610,6 @@
     white-space: nowrap;
   }
 
-  /* Likely Abilities: top ability badge */
-  .badge.ability-likely-badge {
-    background: color-mix(in srgb, #d4a8ff 12%, transparent);
-    border: 1px solid color-mix(in srgb, #d4a8ff 40%, transparent);
-    color: #d4a8ff;
-  }
-
   /* Nature assumed marker */
   .nature-assumed {
     font-size: 0.7em;
@@ -1748,17 +1618,12 @@
     line-height: 0;
   }
 
-  /* Likely Build: EV pill and item badge */
+  /* Likely Build: EV pill */
   .toggle-pill.ev-pill {
     color: #a8c8ff;
     border-color: #a8c8ff;
     cursor: default;
     pointer-events: auto;
-  }
-  .badge.item-badge {
-    background: color-mix(in srgb, #a8c8ff 12%, transparent);
-    border: 1px solid color-mix(in srgb, #a8c8ff 40%, transparent);
-    color: #a8c8ff;
   }
 
   /* Mobile tightening */

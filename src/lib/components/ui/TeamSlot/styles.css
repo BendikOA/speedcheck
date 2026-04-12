@@ -92,22 +92,3 @@
     color: var(--danger);
   }
 }
-
-.scarf-pill {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  padding: 0.2rem 0.5rem;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  cursor: pointer;
-  user-select: none;
-  margin-bottom: 0.25rem;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-}
-.scarf-pill.active {
-  color: #f5c96c;
-  border-color: #f5c96c;
-  background: color-mix(in srgb, #f5c96c 12%, var(--surface));
-}

@@ -4,6 +4,7 @@
   import type { GenNumber, SpeedEntry } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
   import { loadSmogonOrder } from '$lib/smogonUsage';
+  import Pill from '$lib/components/ui/Pill/index.svelte';
 
   // ── Settings ──────────────────────────────────────────────────────────────
   let selectedGen: GenNumber | null = null;
@@ -169,8 +170,8 @@
         <img src={spriteUrl(a.entry.name)} alt={a.entry.name} class="sprite" />
         <span class="pname">{a.entry.name}</span>
         <div class="pills">
-          {#if a.nature !== '='}<span class="pill nature-pill" class:pos={a.nature === '+'} class:neg={a.nature === '-'}>{a.nature === '+' ? '+Spe' : '−Spe'}</span>{/if}
-          {#if a.scarf}<span class="pill scarf-pill">Scarf</span>{/if}
+          {#if a.nature !== '='}<Pill color={a.nature === '+' ? 'var(--accent-2)' : '#c94040'}>{a.nature === '+' ? '+Spe' : '−Spe'}</Pill>{/if}
+          {#if a.scarf}<Pill color="#f5c96c">Scarf</Pill>{/if}
         </div>
         {#if answered}
           <span class="reveal-speed">{a.speed}</span>
@@ -191,8 +192,8 @@
         <img src={spriteUrl(b.entry.name)} alt={b.entry.name} class="sprite" />
         <span class="pname">{b.entry.name}</span>
         <div class="pills">
-          {#if b.nature !== '='}<span class="pill nature-pill" class:pos={b.nature === '+'} class:neg={b.nature === '-'}>{b.nature === '+' ? '+Spe' : '−Spe'}</span>{/if}
-          {#if b.scarf}<span class="pill scarf-pill">Scarf</span>{/if}
+          {#if b.nature !== '='}<Pill color={b.nature === '+' ? 'var(--accent-2)' : '#c94040'}>{b.nature === '+' ? '+Spe' : '−Spe'}</Pill>{/if}
+          {#if b.scarf}<Pill color="#f5c96c">Scarf</Pill>{/if}
         </div>
         {#if answered}
           <span class="reveal-speed">{b.speed}</span>
@@ -404,17 +405,6 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-
-  .pill {
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 0.15rem 0.45rem;
-    border-radius: 100px;
-    border: 1px solid;
-  }
-  .nature-pill.pos { color: var(--accent-2); border-color: var(--accent-2); }
-  .nature-pill.neg { color: #c94040; border-color: #c94040; }
-  .scarf-pill { color: #f5c96c; border-color: #f5c96c; }
 
   .reveal-speed {
     position: absolute;

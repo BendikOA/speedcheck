@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import { spriteUrl } from "$lib/sprites";
   import type { TeamSlot } from "$lib/stores/teams";
+  import Pill from "$lib/components/ui/Pill/index.svelte";
 
   /** The current slot — null means empty */
   export let slot: TeamSlot;
@@ -26,14 +27,12 @@
       <span class="slot-name">{slot.entry.name}</span>
       <span class="slot-spe">{slot.entry.baseSpe}</span>
     </button>
-    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-    <div
-      class="scarf-pill"
-      class:active={slot.scarf}
-      on:click|stopPropagation={() => dispatch("scarf")}
-    >
-      Scarf
-    </div>
+    <Pill
+      color="#f5c96c"
+      active={slot.scarf}
+      interactive
+      on:click={(e) => { e.stopPropagation(); dispatch("scarf"); }}
+    >Scarf</Pill>
   {:else}
     <button class="slot-empty" on:click={() => dispatch("pick")}>
       <span class="plus">+</span>
