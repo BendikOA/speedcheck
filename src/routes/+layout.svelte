@@ -4,8 +4,10 @@
   import { page } from "$app/stores";
   import Tooltip from "$lib/components/Tooltip/index.svelte";
   import { injectAnalytics } from "@vercel/analytics/sveltekit";
+  import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
 
   injectAnalytics({ mode: dev ? "development" : "production" });
+  injectSpeedInsights();
 
   let dark = true;
   if (browser) {
