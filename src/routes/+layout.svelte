@@ -64,7 +64,7 @@
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a>
       <!-- <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a> -->
       <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
-      <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a>
+      <!-- <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a> -->
     </div>
 
   <!-- Desktop theme toggle hidden -->
@@ -210,7 +210,7 @@
       >
       <!-- Boost Tiers hidden -->
       <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a>
-      <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a>
+      <!-- <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a> -->
     </div>
 
     <div class="drawer-footer">

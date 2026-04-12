@@ -17,7 +17,9 @@ export const actions: Actions = {
       return fail(400, { error: 'Message is too long (max 5000 characters).' });
     }
 
-    const from    = name  ? `${name} via Turnadus <noreply@turnadus.com>` : 'Turnadus Feedback <noreply@turnadus.com>';
+    // Use Resend's shared sender until turnadus.com is verified in the Resend dashboard.
+    // Once verified, change to: noreply@turnadus.com
+    const from = 'Turnadus Feedback <onboarding@resend.dev>';
     const replyTo = email || undefined;
 
     const body = [

@@ -6,6 +6,7 @@ build/
 dist/
 improvements.md
 manualwork.md
+FEEDBACK_SETUP.md
 .env
 .env.*
 !.env.example

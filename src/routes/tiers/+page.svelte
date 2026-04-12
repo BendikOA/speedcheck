@@ -1,17 +1,32 @@
 <script lang="ts">
   import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
   import type { GenNumber } from '$lib/speedtiers';
+  import type { PageData } from './$types';
 
-  let selectedGen: GenNumber | null = null; // null = all
+  export let data: PageData;
+
+  type Filter = 'champions' | GenNumber | null;
+  let selected: Filter = null;
   let search = '';
   let scarf = false;
   let tailwind = false;
   let trickRoom = false;
   let paralysis = false;
 
-  $: allEntries = selectedGen ? buildSpeedTiers(selectedGen) : buildAllTiers(9);
-  $: hasNatures = selectedGen === null || selectedGen >= 3;
-  $: hasMegas   = selectedGen !== null && (selectedGen === 6 || selectedGen === 7);
+  const championsSet = new Set(data.championsIds);
+
+  function genFromFilter(f: Filter): GenNumber | null {
+    return f === 'champions' ? 9 : (f as GenNumber | null);
+  }
+
+  $: isChampions = selected === 'champions';
+  $: genNum = genFromFilter(selected);
+  $: baseEntries = isChampions ? buildAllTiers(9) : (genNum ? buildSpeedTiers(genNum) : buildAllTiers(9));
+  $: allEntries = isChampions
+    ? baseEntries.filter(e => championsSet.has(e.id))
+    : baseEntries;
+  $: hasNatures = isChampions || genNum === null || genNum >= 3;
+  $: hasMegas   = isChampions || (genNum !== null && (genNum === 6 || genNum === 7));
 
   type Row = {
     id: string;
@@ -68,8 +83,8 @@
     return rows;
   })();
 
-  function changeGen(g: GenNumber | null) {
-    selectedGen = g;
+  function changeFilter(f: Filter) {
+    selected = f;
     scarf = tailwind = trickRoom = paralysis = false;
   }
 </script>
@@ -99,11 +114,14 @@
   <div class="section-label">Variables</div>
   <div class="controls">
     <div class="gen-tabs scroll-x">
-      <button class="gen-tab" class:active={selectedGen === null} on:click={() => { selectedGen = null; scarf = tailwind = trickRoom = paralysis = false; }}>
+      <button class="gen-tab" class:active={selected === 'champions'} on:click={() => changeFilter('champions')}>
+        Champions
+      </button>
+      <button class="gen-tab" class:active={selected === null} on:click={() => changeFilter(null)}>
         All
       </button>
       {#each GEN_NUMBERS as g}
-        <button class="gen-tab" class:active={selectedGen === g} on:click={() => changeGen(g)}>
+        <button class="gen-tab" class:active={selected === g} on:click={() => changeFilter(g)}>
           Gen {g}
         </button>
       {/each}
