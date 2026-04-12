@@ -32,12 +32,16 @@
     loadChampionsMoves,
     loadChampionsAbilities,
     loadChampionsBuilds,
+    loadChampionsAbilitiesFull,
+    loadChampionsMovesFull,
   } from "$lib/smogonUsage";
   import type {
     UsagePriorityMoves,
     UsageAbilities,
     UsageMoves,
     UsageBuilds,
+    UsageAbilitiesFull,
+    UsageMovesFull,
   } from "$lib/smogonUsage";
 
   const CHAMPIONS_FORMAT = 'champions-ma';
@@ -54,6 +58,8 @@
   let smogonAbilities: UsageAbilities = {};
   let smogonMoves: UsageMoves = {};
   let smogonBuilds: UsageBuilds = {};
+  let champAbilitiesFull: UsageAbilitiesFull = {};
+  let champMovesFull: UsageMovesFull = {};
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -61,14 +67,18 @@
 
   async function loadUsageData(format: string) {
     if (format === CHAMPIONS_FORMAT) {
-      const [moves, abilities, builds] = await Promise.all([
+      const [moves, abilities, builds, abilitiesFull, movesFull] = await Promise.all([
         loadChampionsMoves(),
         loadChampionsAbilities(),
         loadChampionsBuilds(),
+        loadChampionsAbilitiesFull(),
+        loadChampionsMovesFull(),
       ]);
       smogonMoves         = moves;
       smogonAbilities     = abilities;
       smogonBuilds        = builds;
+      champAbilitiesFull  = abilitiesFull;
+      champMovesFull      = movesFull;
       smogonPriorityMoves = {};
     } else {
       [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
@@ -78,6 +88,8 @@
           loadSmogonMoves(9, format),
           loadSmogonBuilds(9, format),
         ]);
+      champAbilitiesFull = {};
+      champMovesFull     = {};
     }
   }
 
@@ -525,7 +537,7 @@
   <div class="top-bar">
     <button class="reset-btn" on:click={resetGame}>← New Game</button>
     <div class="top-bar-right">
-      {#if likelyItemsActive || likelyMovesActive || likelyBuildsActive}
+      {#if likelyAbilitiesActive || likelyItemsActive || likelyMovesActive || likelyBuildsActive}
         <div
           class="reg-tabs"
           class:loading={!smogonReady}
@@ -541,6 +553,14 @@
         </div>
       {/if}
       <div class="reg-tabs usage-tabs">
+        <button
+          class="reg-tab"
+          class:active={likelyAbilitiesActive}
+          use:tooltip={likelyAbilitiesActive
+            ? "Hiding ability usage — click to show"
+            : "Show ability usage per Pokémon from usage stats"}
+          on:click={() => (likelyAbilitiesActive = !likelyAbilitiesActive)}>Abilities</button
+        >
         <button
           class="reg-tab"
           class:active={likelyItemsActive}
@@ -935,11 +955,48 @@
                 {/if}
               </div>
 
+              <!-- Abilities list panel -->
+              {#if likelyAbilitiesActive}
+                {@const activeMega = row.megaIndex > 0 ? row.megaForms[row.megaIndex - 1] : null}
+                {#if activeMega?.ability}
+                  <div class="move-list">
+                    <span
+                      class="move-chip ability-chip"
+                      use:tooltip={`${activeMega.ability}: fixed ability for ${activeMega.name}`}
+                    >{activeMega.ability}</span>
+                  </div>
+                {:else}
+                  {@const fullList = champAbilitiesFull[row.slot.entry.id]}
+                  {@const topAbility = smogonAbilities[row.slot.entry.id]}
+                  {#if fullList?.length}
+                    <div class="move-list">
+                      {#each fullList as ab}
+                        <span
+                          class="move-chip ability-chip"
+                          use:tooltip={`${ab.name}: used in ${ab.pct}% of teams (${ab.count} recorded)`}
+                        >{ab.name} <span class="move-pct">{ab.pct}%</span></span>
+                      {/each}
+                    </div>
+                  {:else if topAbility}
+                    <div class="move-list">
+                      <span
+                        class="move-chip ability-chip"
+                        use:tooltip={topAbility.desc}
+                      >{topAbility.name}</span>
+                    </div>
+                  {/if}
+                {/if}
+              {/if}
+
               <!-- Move list panel -->
               {#if likelyMovesActive && smogonMoves[row.slot.entry.id]?.length}
                 <div class="move-list">
-                  {#each smogonMoves[row.slot.entry.id] as move}
-                    <span class="move-chip">{move}</span>
+                  {#each smogonMoves[row.slot.entry.id] as move, mi}
+                    {@const moveFull = champMovesFull[row.slot.entry.id]?.[mi]}
+                    <span
+                      class="move-chip"
+                      use:tooltip={moveFull ? `${move}: seen in ${moveFull.pct}% of teams` : move}
+                    >{move}{#if moveFull} <span class="move-pct">{moveFull.pct}%</span>{/if}</span>
                   {/each}
                 </div>
               {/if}
@@ -1690,6 +1747,16 @@
     color: var(--text-muted);
     background: var(--surface);
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .move-pct {
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+  .ability-chip {
+    border-color: color-mix(in srgb, #c46cf5 40%, var(--border));
   }
 
   /* Nature assumed marker */

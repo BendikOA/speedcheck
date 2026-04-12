@@ -6,6 +6,8 @@ export type UsagePriorityMoves = Record<string, string[]>;
 export type UsageAbilities     = Record<string, { name: string; desc: string }>;
 export type UsageMoves         = Record<string, string[]>; // top 4 move display names
 export type UsageBuilds        = Record<string, { speEV: number; nature: NatureTier; item: string }>;
+export type UsageAbilitiesFull = Record<string, Array<{ name: string; pct: number; count: number }>>;
+export type UsageMovesFull     = Record<string, Array<{ name: string; pct: number }>>;
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -237,6 +239,35 @@ export async function loadChampionsAbilities(): Promise<UsageAbilities> {
     const [name, count] = entries[0]; // already sorted desc by scraper
     const pct = Math.round((count / data.usage) * 100);
     result[id] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
+  }
+  return result;
+}
+
+export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> {
+  const meta   = await loadChampionsMeta();
+  const result: UsageAbilitiesFull = {};
+  for (const [id, data] of Object.entries(meta.pokemon)) {
+    const entries = Object.entries(data.abilities);
+    if (!entries.length) continue;
+    result[id] = entries.map(([name, count]) => ({
+      name,
+      count,
+      pct: Math.round((count / data.usage) * 100),
+    }));
+  }
+  return result;
+}
+
+export async function loadChampionsMovesFull(): Promise<UsageMovesFull> {
+  const meta   = await loadChampionsMeta();
+  const result: UsageMovesFull = {};
+  for (const [id, data] of Object.entries(meta.pokemon)) {
+    const entries = Object.entries(data.moves);
+    if (!entries.length) continue;
+    result[id] = entries.slice(0, 8).map(([name, count]) => ({
+      name,
+      pct: Math.round((count / data.usage) * 100),
+    }));
   }
   return result;
 }

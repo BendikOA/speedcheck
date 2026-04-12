@@ -22,9 +22,9 @@ const OUT    = resolve(__dir, '../static/champions-meta.json');
 const BASE_URL     = 'https://play.limitlesstcg.com/api';
 const GAME         = 'VGC';
 const FORMAT       = 'M-A';
-const TOP_N        = 10;    // top placements to capture per tournament
+const TOP_N        = 16;    // top placements to capture per tournament
 const MAX_TOURNEYS = 100;   // upper cap — will use however many exist
-const MIN_PLAYERS  = 16;    // skip tiny side events
+const MIN_PLAYERS  = 8;     // skip tiny side events
 const DELAY_MS     = 600;   // polite delay between requests
 
 const HEADERS = {

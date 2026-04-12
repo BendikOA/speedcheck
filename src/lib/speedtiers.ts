@@ -15,6 +15,7 @@ export interface MegaStats {
   id: string;
   name: string;
   megaStone: string; // e.g. "Gengarite", "Charizardite X"
+  ability: string;   // mega forms have exactly one fixed ability
   baseSpe: number;
   maxSpeed: number;
   neutralSpeed: number;
@@ -33,6 +34,16 @@ export interface SpeedEntry {
   types: string[];     // e.g. ['Water', 'Flying']
   megaForms: MegaStats[]; // all available mega forms (0 = none, 1 = one mega, 2 = X+Y)
 }
+
+/**
+ * Correct abilities for Champions-specific mega forms.
+ * @pkmn/dex carries stale base-form ability data for these — override manually.
+ * Key = mega form id (lowercase, no spaces), value = single fixed ability name.
+ */
+export const CHAMPIONS_MEGA_ABILITY: Record<string, string> = {
+  'floette-mega':    'Fairy Aura',
+  // Add others here as confirmed from the Champions game
+};
 
 // Abilities that double speed in a specific field condition
 export const WEATHER_ABILITY: Record<string, 'rain' | 'sun' | 'sand' | 'snow' | 'electric'> = {
@@ -99,10 +110,13 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
       if (megaSp?.exists) {
         const megaSpe = megaSp.baseStats.spe;
         const stone = sp.name + 'ite' + (suffix === 'megax' ? ' X' : suffix === 'megay' ? ' Y' : '');
+        const megaAbility = CHAMPIONS_MEGA_ABILITY[megaSp.id]
+          ?? (Object.values(megaSp.abilities).find(Boolean) ?? '') as string;
         megaForms.push({
           id: megaSp.id,
           name: megaSp.name,
           megaStone: stone,
+          ability: megaAbility,
           baseSpe: megaSpe,
           types: megaSp.types ?? types,
           maxSpeed:     gen.stats.calc('spe', megaSpe, 31, 252, 50, jolly),
