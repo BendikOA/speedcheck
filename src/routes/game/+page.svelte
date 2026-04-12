@@ -250,7 +250,8 @@
   }
 
   function adjustSpeedStage(key: string, delta: number) {
-    fieldSpeedStage.set(key, (fieldSpeedStage.get(key) ?? 0) + delta);
+    const cur = fieldSpeedStage.get(key) ?? 0;
+    fieldSpeedStage.set(key, Math.max(-6, Math.min(6, cur + delta)));
     fieldSpeedStage = new Map(fieldSpeedStage);
   }
 
