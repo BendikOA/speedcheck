@@ -21,8 +21,9 @@
 
   --radius: 8px;
   --radius-sm: 4px;
-  --font: 'Geist', 'Inter', system-ui, sans-serif;
+  --font: 'Intel One Mono', monospace;
   --font-heading: 'Instrument Sans', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Intel One Mono', monospace;
 
   /* game boy pokemon palette — dark → light */
   --gb-1: #17170D;

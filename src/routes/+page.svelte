@@ -470,7 +470,7 @@
       <TabGroup
         tabs={[{ label: "Your Team", value: "you" }, { label: "Opponent", value: "opp" }]}
         value={importSide}
-        on:change={(e) => (importSide = e.detail)}
+        on:change={(e) => (importSide = e.detail as "you" | "opp")}
       />
 
       <textarea
@@ -584,7 +584,7 @@
                 name="save-label"
                 placeholder="Team name…"
                 bind:value={saveLabel}
-                on:keydown={(e) => e.key === "Enter" && saveCurrentTeam()}
+                on:keydown={(e) => (e as unknown as KeyboardEvent).key === "Enter" && saveCurrentTeam()}
                 autocomplete="off"
               />
               <button class="save-confirm" on:click={saveCurrentTeam}
@@ -766,7 +766,13 @@
   .slots {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 0.4rem;
+    gap: 8px;
+  }
+
+  @media (min-width: 700px) {
+    .slots {
+      gap: 16px;
+    }
   }
 
   @media (max-width: 600px) {
