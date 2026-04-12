@@ -1,4 +1,4 @@
-import { RESEND_API_KEY, CONTACT_EMAIL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -31,12 +31,12 @@ export const actions: Actions = {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Authorization': `Bearer ${env.RESEND_API_KEY}`,
           'Content-Type':  'application/json',
         },
         body: JSON.stringify({
           from,
-          to:      [CONTACT_EMAIL],
+          to:      [env.CONTACT_EMAIL],
           ...(replyTo ? { reply_to: replyTo } : {}),
           subject: `[Turnadus Feedback] ${type}`,
           text:    body,
