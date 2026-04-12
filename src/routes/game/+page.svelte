@@ -23,6 +23,7 @@
   import type { PriorityMove, PriorityAbility } from "$lib/priority";
   import { tooltip } from "$lib/tooltip";
   import Pill from "$lib/components/ui/Pill/index.svelte";
+  import { displayName as shortName } from "$lib/displayName";
   import {
     loadSmogonPriorityMoves,
     loadSmogonAbilities,
@@ -181,6 +182,24 @@
   function isMegaStone(item: string | undefined): boolean {
     if (!item) return false;
     return /ite( [XY])?$/i.test(item);
+  }
+
+  function toggleTSlotScarf(side: "you" | "opp", i: number) {
+    const team = side === "you" ? yourTeam : oppTeam;
+    const slot = team[i];
+    if (!slot) return;
+    const newSlot = { ...slot, scarf: !slot.scarf };
+    if (side === "you") yourTeam = yourTeam.map((s, idx) => idx === i ? newSlot : s);
+    else oppTeam = oppTeam.map((s, idx) => idx === i ? newSlot : s);
+    // Also sync fieldScarfs if this slot is currently on the field
+    const fieldSet = side === "you" ? yourField : oppField;
+    if (fieldSet.has(i)) {
+      const key = `${side}-${i}`;
+      // Scarf is mutually exclusive per side — mirror toggleFieldScarf logic
+      fieldSet.forEach((fi) => fieldScarfs.set(`${side}-${fi}`, false));
+      if (newSlot.scarf) fieldScarfs.set(key, true);
+      fieldScarfs = new Map(fieldScarfs);
+    }
   }
 
   function toggleFieldScarf(key: string, side: "you" | "opp") {
@@ -574,35 +593,47 @@
             {@const displayTypes = activeMegaForm
               ? activeMegaForm.types
               : (slot?.entry.types ?? [])}
-            <button
-              class="tslot"
-              class:has-mon={!!slot}
-              class:on-field={fieldSet.has(i)}
-              class:side-you={side === "you"}
-              class:side-opp={side === "opp"}
-              disabled={!slot}
-              aria-pressed={fieldSet.has(i)}
-              aria-label={slot
-                ? `${displayName} — ${fieldSet.has(i) ? "on field, click to remove" : "click to put on field"}`
-                : "Empty slot"}
-              on:click={() => toggleField(side, i)}
-            >
+            <div class="tslot-wrapper">
+              <button
+                class="tslot"
+                class:has-mon={!!slot}
+                class:on-field={fieldSet.has(i)}
+                class:side-you={side === "you"}
+                class:side-opp={side === "opp"}
+                disabled={!slot}
+                aria-pressed={fieldSet.has(i)}
+                aria-label={slot
+                  ? `${displayName} — ${fieldSet.has(i) ? "on field, click to remove" : "click to put on field"}`
+                  : "Empty slot"}
+                on:click={() => toggleField(side, i)}
+              >
+                {#if slot}
+                  <img
+                    src={spriteUrl(displayName)}
+                    alt={displayName}
+                    class="tslot-sprite"
+                  />
+                  <div class="tslot-types">
+                    {#each displayTypes as t}
+                      <span class="type-pip type-{t.toLowerCase()}">{t}</span>
+                    {/each}
+                  </div>
+                {:else}
+                  <span class="tslot-empty">—</span>
+                {/if}
+              </button>
+
               {#if slot}
-                <img
-                  src={spriteUrl(displayName)}
-                  alt={displayName}
-                  class="tslot-sprite"
-                />
-                <span class="tslot-name">{displayName}</span>
-                <div class="tslot-types">
-                  {#each displayTypes as t}
-                    <span class="type-pip type-{t.toLowerCase()}">{t}</span>
-                  {/each}
+                <div class="tslot-meta">
+                  <span class="tslot-name">{shortName(displayName)}</span>
+                  <div class="tslot-stats">
+                    <span class="tslot-spe">{slot.entry.baseSpe}</span>
+                    <Pill color="#f5c96c" active={slot.scarf} interactive
+                      on:click={() => toggleTSlotScarf(side, i)}>Scarf</Pill>
+                  </div>
                 </div>
-              {:else}
-                <span class="tslot-empty">—</span>
               {/if}
-            </button>
+            </div>
           {/each}
         </div>
       </div>
@@ -1168,9 +1199,15 @@
   .team-slots {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 0.5rem;
+    gap: 8px;
     flex: 1;
     min-width: 0;
+  }
+
+  @media (min-width: 700px) {
+    .team-slots {
+      gap: 16px;
+    }
   }
 
   @media (max-width: 600px) {
@@ -1179,19 +1216,24 @@
     }
   }
 
-  .tslot {
+  .tslot-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .tslot {
+    position: relative;
     width: 100%;
-    height: 116px;
-    padding: 0.3rem 0.25rem;
+    aspect-ratio: 150 / 132;
+    box-sizing: border-box;
     background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    border-radius: 6px;
     cursor: pointer;
-    overflow: hidden;
     transition:
       border-color 0.15s,
       background 0.15s;
@@ -1218,40 +1260,80 @@
   }
 
   .tslot-sprite {
-    width: 54px;
-    height: 54px;
-    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 96px;
+    width: auto;
+    height: auto;
+    pointer-events: none;
     image-rendering: pixelated;
-    flex-shrink: 0;
   }
+
+  .tslot-types {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    z-index: 2;
+  }
+
+  .tslot-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+  }
+
   .tslot-name {
-    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    line-height: 130%;
     text-align: center;
-    max-width: 86px;
+    color: var(--text);
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--text-muted);
-    margin-top: 0.1rem;
   }
+
+  .tslot-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .tslot-spe {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
   .tslot-empty {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: var(--border);
     font-size: 1.2rem;
   }
 
-  .tslot-types {
-    display: flex;
-    gap: 2px;
-    margin-top: 2px;
-  }
-
   .type-pip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 26px;
+    padding: 0 6px;
     font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    padding: 1px 4px;
     border-radius: 3px;
+    box-sizing: border-box;
     color: #fff;
   }
 
