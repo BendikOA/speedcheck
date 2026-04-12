@@ -32,35 +32,35 @@
 
 /* Variants */
 .primary {
-  background: var(--accent);
+  background: var(--gb-1);
   color: #06080f;
 }
 
 .primary:active:not(:disabled) {
-  background: var(--accent-hover);
+  background: var(--gb-2);
 }
 
 @media (hover: hover) {
   .primary:hover:not(:disabled) {
-    background: var(--accent-hover);
+    background: var(--gb-2);
   }
 }
 
 .secondary {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
+  background: var(--gb-4);
+  border: 1px solid var(--gb-3);
+  color: var(--gb-low-contrast);
 }
 
 .secondary:active:not(:disabled) {
-  color: var(--text);
-  border-color: var(--text-muted);
+  color: var(--gb-2);
+  border-color: var(--gb-low-contrast);
 }
 
 @media (hover: hover) {
   .secondary:hover:not(:disabled) {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
 }
 

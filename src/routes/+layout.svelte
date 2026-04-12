@@ -305,8 +305,8 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
+    border-bottom: 1px solid var(--gb-3);
+    background: var(--gb-4);
     flex-shrink: 0;
   }
 
@@ -326,7 +326,7 @@
   .brand {
     display: flex;
     align-items: center;
-    color: var(--text);
+    color: var(--gb-2);
     white-space: nowrap;
     min-height: 44px;
   }
@@ -336,7 +336,7 @@
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: var(--text);
+    color: var(--gb-2);
   }
 
   .nav-links {
@@ -350,7 +350,7 @@
   }
 
   nav a {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.9rem;
     white-space: nowrap;
     min-height: 44px;
@@ -358,19 +358,19 @@
   }
 
   nav a:hover {
-    color: var(--text);
+    color: var(--gb-2);
   }
   nav a.active {
-    color: var(--text);
+    color: var(--gb-2);
     font-weight: 600;
   }
 
   .theme-toggle {
     margin-left: auto;
     background: none;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     padding: 0 0.6rem;
     min-height: 44px;
     cursor: pointer;
@@ -380,8 +380,8 @@
       border-color 0.15s;
   }
   .theme-toggle:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
 
   /* Hamburger — mobile only */
@@ -391,7 +391,7 @@
     justify-self: end;
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     padding: 0 0.25rem;
     min-height: 44px;
     cursor: pointer;
@@ -413,8 +413,8 @@
     height: 100dvh;
     width: 80vw;
     z-index: 100;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
+    background: var(--gb-4);
+    border-right: 1px solid var(--gb-3);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -426,14 +426,14 @@
     justify-content: space-between;
     padding: 0 1.25rem;
     height: 60px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--gb-3);
     flex-shrink: 0;
   }
 
   .drawer-brand {
     font-size: 1.05rem;
     font-weight: 700;
-    color: var(--text);
+    color: var(--gb-2);
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -443,7 +443,7 @@
   .drawer-close {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     cursor: pointer;
     padding: 0.25rem;
     display: flex;
@@ -468,24 +468,24 @@
     font-size: 1.3rem;
     font-family: var(--font-heading);
     font-weight: 500;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
+    color: var(--gb-low-contrast);
+    border-bottom: 1px solid var(--gb-3);
     min-height: unset;
     transition:
       background 0.1s,
       color 0.1s;
   }
   .drawer-links a:hover {
-    background: var(--surface-2);
-    color: var(--text);
+    background: var(--gb-3);
+    color: var(--gb-2);
   }
   .drawer-links a.active {
-    color: var(--text);
+    color: var(--gb-2);
     font-weight: 700;
   }
 
   .drawer-footer {
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--gb-3);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -497,8 +497,8 @@
     gap: 0.6rem;
     background: none;
     border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-muted);
+    border-bottom: 1px solid var(--gb-3);
+    color: var(--gb-low-contrast);
     font-size: 1rem;
     padding: 0 1.25rem;
     height: 56px;
@@ -507,27 +507,27 @@
     width: 100%;
   }
   .mobile-theme-btn:hover {
-    background: var(--surface-2);
-    color: var(--text);
+    background: var(--gb-3);
+    color: var(--gb-2);
   }
 
   .drawer-kofi {
     padding: 1rem 1.5rem;
     padding-bottom: max(1rem, var(--safe-bottom));
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     text-align: center;
     line-height: 1.6;
   }
   .drawer-kofi a {
-    color: var(--text);
+    color: var(--gb-2);
     font-weight: 600;
     font-size: 0.8rem;
     min-height: unset;
     display: inline;
   }
   .drawer-kofi a:hover {
-    color: var(--accent-hover);
+    color: var(--gb-2);
   }
 
   @media (max-width: 640px) {
@@ -565,12 +565,12 @@
 
   /* Ko-fi banner */
   .kofi-banner {
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--gb-3);
     padding: 0.85rem 1rem;
     padding-bottom: max(0.85rem, var(--safe-bottom));
     text-align: center;
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -589,7 +589,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    color: var(--text);
+    color: var(--gb-2);
     font-weight: 600;
     font-size: 0.9rem;
     text-decoration: underline;
@@ -597,6 +597,6 @@
     min-height: unset;
   }
   .kofi-link:hover {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 </style>

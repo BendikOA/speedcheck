@@ -24,6 +24,7 @@
   import { tooltip } from "$lib/tooltip";
   import Pill from "$lib/components/ui/Pill/index.svelte";
   import { displayName as shortName } from "$lib/displayName";
+  import { abilityDesc, moveSummary } from "$lib/dexInfo";
   import {
     loadSmogonPriorityMoves,
     loadSmogonAbilities,
@@ -962,7 +963,7 @@
                   <div class="move-list">
                     <span
                       class="move-chip ability-chip"
-                      use:tooltip={`${activeMega.ability}: fixed ability for ${activeMega.name}`}
+                      use:tooltip={[activeMega.ability, abilityDesc(activeMega.ability)].filter(Boolean).join(': ')}
                     >{activeMega.ability}</span>
                   </div>
                 {:else}
@@ -973,7 +974,7 @@
                       {#each fullList as ab}
                         <span
                           class="move-chip ability-chip"
-                          use:tooltip={`${ab.name}: used in ${ab.pct}% of teams (${ab.count} recorded)`}
+                          use:tooltip={[ab.name, abilityDesc(ab.name), `${ab.pct}% of teams (${ab.count} recorded)`].filter(Boolean).join(' · ')}
                         >{ab.name} <span class="move-pct">{ab.pct}%</span></span>
                       {/each}
                     </div>
@@ -981,7 +982,7 @@
                     <div class="move-list">
                       <span
                         class="move-chip ability-chip"
-                        use:tooltip={topAbility.desc}
+                        use:tooltip={[topAbility.name, abilityDesc(topAbility.name), topAbility.desc].filter(Boolean).join(' · ')}
                       >{topAbility.name}</span>
                     </div>
                   {/if}
@@ -995,7 +996,7 @@
                     {@const moveFull = champMovesFull[row.slot.entry.id]?.[mi]}
                     <span
                       class="move-chip"
-                      use:tooltip={moveFull ? `${move}: seen in ${moveFull.pct}% of teams` : move}
+                      use:tooltip={[moveSummary(move), moveFull ? `${moveFull.pct}% of teams` : ''].filter(Boolean).join(' · ')}
                     >{move}{#if moveFull} <span class="move-pct">{moveFull.pct}%</span>{/if}</span>
                   {/each}
                 </div>
@@ -1020,7 +1021,7 @@
   /* Top bar */
   .tooltip {
     margin-top: 0.5rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.8rem;
     max-width: 50%;
     margin-left: 0.5rem;
@@ -1057,10 +1058,10 @@
     padding: 0 0.9rem;
     height: 44px;
     box-sizing: border-box;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
@@ -1070,8 +1071,8 @@
     flex-shrink: 0;
   }
   .reset-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
 
   /* Conditions */
@@ -1097,7 +1098,7 @@
     padding-right: 0;
   }
   .cond-group:not(:last-child) {
-    border-right: 1px solid var(--border);
+    border-right: 1px solid var(--gb-3);
   }
 
   .cond-group-label {
@@ -1105,7 +1106,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 
   .cond-group-btns {
@@ -1137,7 +1138,7 @@
     }
     .cond-group:not(:last-child) {
       border-right: none;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--gb-3);
     }
     .cond-group-label {
       width: 4.5rem;
@@ -1155,10 +1156,10 @@
 
   .cond-btn {
     padding: 0.35rem 0.7rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.82rem;
     font-weight: 500;
     cursor: pointer;
@@ -1174,29 +1175,29 @@
   }
   @media (hover: hover) {
     .cond-btn:hover {
-      color: var(--text);
-      border-color: var(--text-muted);
+      color: var(--gb-2);
+      border-color: var(--gb-low-contrast);
     }
   }
   .cond-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+    border-color: var(--gb-1);
+    color: var(--gb-1);
+    background: color-mix(in srgb, var(--gb-1) 12%, var(--gb-4));
   }
   .cond-btn.tr.active {
     border-color: #c46cf5;
     color: #c46cf5;
-    background: color-mix(in srgb, #c46cf5 12%, var(--surface));
+    background: color-mix(in srgb, #c46cf5 12%, var(--gb-4));
   }
   .cond-btn.your.active {
     border-color: #4a9c41;
     color: #4a9c41;
-    background: color-mix(in srgb, #4a9c41 12%, var(--surface));
+    background: color-mix(in srgb, #4a9c41 12%, var(--gb-4));
   }
   .cond-btn.opp.active {
     border-color: #c94040;
     color: #c94040;
-    background: color-mix(in srgb, #c94040 12%, var(--surface));
+    background: color-mix(in srgb, #c94040 12%, var(--gb-4));
   }
 
   /* Team rows */
@@ -1248,7 +1249,7 @@
 
   .pick-hint {
     font-weight: 400;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 1rem;
     font-weight: 700;
   }
@@ -1287,8 +1288,8 @@
     width: 100%;
     aspect-ratio: 150 / 132;
     box-sizing: border-box;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: 6px;
     cursor: pointer;
     transition:
@@ -1301,18 +1302,18 @@
   }
   .tslot.on-field.side-you {
     border-color: #4a9c41;
-    background: color-mix(in srgb, #4a9c41 14%, var(--surface));
+    background: color-mix(in srgb, #4a9c41 14%, var(--gb-4));
   }
   .tslot.on-field.side-opp {
     border-color: #c94040;
-    background: color-mix(in srgb, #c94040 14%, var(--surface));
+    background: color-mix(in srgb, #c94040 14%, var(--gb-4));
   }
   .tslot:active:not(:disabled) {
     opacity: 0.8;
   }
   @media (hover: hover) {
     .tslot.has-mon:not(:disabled):hover {
-      border-color: var(--text-muted);
+      border-color: var(--gb-low-contrast);
     }
   }
 
@@ -1351,7 +1352,7 @@
     font-size: 16px;
     line-height: 130%;
     text-align: center;
-    color: var(--text);
+    color: var(--gb-2);
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1367,7 +1368,7 @@
   .tslot-spe {
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 
   .tslot-empty {
@@ -1375,7 +1376,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--border);
+    color: var(--gb-3);
     font-size: 1.2rem;
   }
 
@@ -1456,7 +1457,7 @@
 
   /* Speed section */
   .speed-section {
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
     overflow: hidden;
   }
@@ -1466,8 +1467,8 @@
     align-items: center;
     gap: 1rem;
     padding: 0.65rem 1rem;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    background: var(--gb-4);
+    border-bottom: 1px solid var(--gb-3);
   }
 
   .section-title {
@@ -1482,7 +1483,7 @@
 
   .empty-hint {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 
   .speed-list {
@@ -1495,7 +1496,7 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.6rem 1rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--gb-3);
     border-left: 4px solid transparent;
   }
   .speed-row:last-child {
@@ -1511,7 +1512,7 @@
   .pos {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     width: 1.5rem;
     text-align: center;
     flex-shrink: 0;
@@ -1570,11 +1571,11 @@
     gap: 0.25rem;
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     cursor: pointer;
     padding: 0 0.6rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
     user-select: none;
     min-height: 36px;
@@ -1594,35 +1595,35 @@
   .toggle-pill.active {
     color: #f5c96c;
     border-color: #f5c96c;
-    background: color-mix(in srgb, #f5c96c 10%, var(--surface));
+    background: color-mix(in srgb, #f5c96c 10%, var(--gb-4));
   }
   .toggle-pill.para.active {
     color: #f5a06c;
     border-color: #f5a06c;
-    background: color-mix(in srgb, #f5a06c 10%, var(--surface));
+    background: color-mix(in srgb, #f5a06c 10%, var(--gb-4));
   }
   .toggle-pill.speeddown.active {
     color: #6cb8f5;
     border-color: #6cb8f5;
-    background: color-mix(in srgb, #6cb8f5 10%, var(--surface));
+    background: color-mix(in srgb, #6cb8f5 10%, var(--gb-4));
   }
   .toggle-pill.proto.active {
     color: #6cf5e0;
     border-color: #6cf5e0;
-    background: color-mix(in srgb, #6cf5e0 10%, var(--surface));
+    background: color-mix(in srgb, #6cf5e0 10%, var(--gb-4));
   }
   .toggle-pill.commander-pill.active {
     color: #6ca5f5;
     border-color: #6ca5f5;
-    background: color-mix(in srgb, #6ca5f5 10%, var(--surface));
+    background: color-mix(in srgb, #6ca5f5 10%, var(--gb-4));
   }
   .toggle-pill.boost-pill {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
   .toggle-pill.boost-pill.active {
     color: #f5d76c;
     border-color: #f5d76c;
-    background: color-mix(in srgb, #f5d76c 10%, var(--surface));
+    background: color-mix(in srgb, #f5d76c 10%, var(--gb-4));
   }
   /* Mega pill: gradient border */
   .mega-pill {
@@ -1647,29 +1648,29 @@
   }
   .mega-pill.active {
     color: #f5c96c;
-    background: color-mix(in srgb, #f5c96c 10%, var(--surface));
+    background: color-mix(in srgb, #f5c96c 10%, var(--gb-4));
     background-clip: padding-box;
   }
 
   /* Nature pill cycles: + green / = grey / − red */
   .nature-pill {
     background: none;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
     cursor: pointer;
   }
   .nature-pill.nature-pos {
     color: #6cf587;
     border-color: #6cf587;
-    background: color-mix(in srgb, #6cf587 10%, var(--surface));
+    background: color-mix(in srgb, #6cf587 10%, var(--gb-4));
   }
   .nature-pill.nature-neu {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
   .nature-pill.nature-neg {
     color: #c94040;
     border-color: #c94040;
-    background: color-mix(in srgb, #c94040 10%, var(--surface));
+    background: color-mix(in srgb, #c94040 10%, var(--gb-4));
   }
 
   .row-speed {
@@ -1685,7 +1686,7 @@
   .reg-tabs {
     display: flex;
     gap: 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
     overflow: hidden;
     flex-shrink: 0;
@@ -1695,10 +1696,10 @@
   .reg-tab {
     padding: 0 0.75rem;
     height: 100%;
-    background: var(--surface);
+    background: var(--gb-4);
     border: none;
-    border-right: 1px solid var(--border);
-    color: var(--text-muted);
+    border-right: 1px solid var(--gb-3);
+    color: var(--gb-low-contrast);
     font-size: 0.82rem;
     font-weight: 500;
     cursor: pointer;
@@ -1711,11 +1712,11 @@
     border-right: none;
   }
   .reg-tab:hover {
-    color: var(--text);
+    color: var(--gb-2);
   }
   .reg-tab.active {
-    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
-    color: var(--accent);
+    background: color-mix(in srgb, var(--gb-1) 15%, var(--gb-4));
+    color: var(--gb-1);
   }
   .reg-tabs.loading {
     opacity: 0.5;
@@ -1724,12 +1725,12 @@
 
   /* Moves toggle pill */
   .toggle-pill.moves-pill {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
   .toggle-pill.moves-pill.active {
     color: #a8d8a8;
     border-color: #a8d8a8;
-    background: color-mix(in srgb, #a8d8a8 10%, var(--surface));
+    background: color-mix(in srgb, #a8d8a8 10%, var(--gb-4));
   }
 
   /* Move list panel */
@@ -1743,9 +1744,9 @@
     font-size: 0.78rem;
     padding: 0.15rem 0.55rem;
     border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    background: var(--surface);
+    border: 1px solid var(--gb-3);
+    color: var(--gb-low-contrast);
+    background: var(--gb-4);
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
@@ -1756,7 +1757,7 @@
     opacity: 0.6;
   }
   .ability-chip {
-    border-color: color-mix(in srgb, #c46cf5 40%, var(--border));
+    border-color: color-mix(in srgb, #c46cf5 40%, var(--gb-3));
   }
 
   /* Nature assumed marker */

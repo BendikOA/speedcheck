@@ -80,7 +80,7 @@
   }
 
   .subtitle {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.9rem;
     margin-bottom: 2rem;
   }
@@ -113,7 +113,7 @@
   label span {
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -125,10 +125,10 @@
   }
 
   input, select, textarea {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
-    color: var(--text);
+    color: var(--gb-2);
     padding: 0.6rem 0.85rem;
     width: 100%;
     transition: border-color 0.15s;
@@ -137,7 +137,7 @@
 
   input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: var(--text-muted);
+    border-color: var(--gb-low-contrast);
   }
 
   select {
@@ -161,7 +161,7 @@
   }
 
   .success-box {
-    background: color-mix(in srgb, var(--success) 12%, var(--surface));
+    background: color-mix(in srgb, var(--success) 12%, var(--gb-4));
     border: 1px solid var(--success);
     border-radius: var(--radius);
     color: var(--success);
@@ -171,10 +171,10 @@
 
   .submit-btn {
     align-self: flex-start;
-    background: var(--accent);
+    background: var(--gb-1);
     border: none;
     border-radius: var(--radius);
-    color: var(--bg);
+    color: var(--gb-5);
     font-weight: 600;
     font-size: 0.95rem;
     padding: 0 1.5rem;

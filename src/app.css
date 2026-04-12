@@ -6,32 +6,24 @@
 }
 
 :root {
-  /* Dark theme (default) */
-  --bg: #06080F;
-  --surface: #0f1118;
-  --surface-2: #161a24;
-  --border: #252a38;
-  --text: #ffffff;
-  --text-muted: #aaaaaa;
-  --accent: #F2F2F2;
-  --accent-hover: #abdbc3;
+  /* game boy pokemon palette — dark → light */
+  --gb-1: #17170D;
+  --gb-2: #30321D;
+  --gb-3: #484A35;
+  --gb-4: #71735E;
+  --gb-5: #929578;
+  --gb-hi: #E3EACE;
+  --gb-low-contrast: #505335;
+
   --accent-2: #4a9c41;
-  --danger: #f56c6c;
-  --success: #4a9c41;
+  --danger: #8b1a1a;
+  --success: #2d5c1e;
 
   --radius: 8px;
   --radius-sm: 4px;
   --font: 'Intel One Mono', monospace;
   --font-heading: 'Instrument Sans', 'Inter', system-ui, sans-serif;
   --font-mono: 'Intel One Mono', monospace;
-
-  /* game boy pokemon palette — dark → light */
-  --gb-1: #17170D;
-  --gb-2: #30321D;
-  --gb-3: #484A35;
-  --gb-4: #71735E;
-  --gb-5: #929578;  /* bg */
-  --gb-hi: #E3EACE; /* contrast */
 
   /* Safe area insets for iOS notch / home bar */
   --safe-top:    env(safe-area-inset-top, 0px);
@@ -40,26 +32,12 @@
   --safe-right:  env(safe-area-inset-right, 0px);
 }
 
-:root[data-theme="light"] {
-  --bg: #eff0f3;
-  --surface: #e2e4ec;
-  --surface-2: #d5d7e3;
-  --border: #c4c7d6;
-  --text: #0d0d0d;
-  --text-muted: #2a2a2a;
-  --accent: #ff8e3c;
-  --accent-hover: #e67828;
-  --danger: #cc2222;
-  --success: #1d8c40;
-}
-
 html {
   font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
+  background: var(--gb-5);
+  color: var(--gb-2);
   font-size: 15px;
   line-height: 1.5;
-  /* Prevent horizontal overflow on mobile */
   overflow-x: hidden;
 }
 
@@ -78,16 +56,23 @@ body {
 }
 
 a {
-  color: var(--accent);
+  color: var(--gb-1);
   text-decoration: none;
 }
 
-a:hover { color: var(--accent-hover); }
+a:hover { color: var(--gb-2); }
 
 /* Prevent iOS from zooming inputs — must be 16px or larger */
 input, select, textarea, button {
   font-family: inherit;
   font-size: 16px;
+}
+
+/* Global button defaults — gb-1 bg, gb-hi text */
+button {
+  background: var(--gb-1);
+  color: var(--gb-hi) !important;
+  border: 1px solid var(--gb-2);
 }
 
 /* Minimum 44×44px touch targets on all interactive elements */
@@ -101,7 +86,7 @@ button, label[role="button"], a {
 /* Keyboard focus ring — visible only for keyboard navigation */
 :focus { outline: none; }
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--gb-1);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }

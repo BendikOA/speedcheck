@@ -8,6 +8,8 @@
 
   /** The current slot — null means empty */
   export let slot: TeamSlot;
+  /** Highlight this slot (e.g. currently selected/active on the field) */
+  export let highlighted: boolean = false;
 
   const dispatch = createEventDispatcher<{
     pick: void;
@@ -17,7 +19,7 @@
 </script>
 
 <div class="slot-wrapper">
-  <div class="slot">
+  <div class="slot" class:highlighted>
     {#if slot}
       <button class="slot-clear" on:click={() => dispatch("clear")}>×</button>
       <button

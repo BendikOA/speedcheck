@@ -751,10 +751,10 @@
 
   .back-btn {
     padding: 0 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     white-space: nowrap;
     min-height: 44px;
@@ -763,18 +763,18 @@
       border-color 0.15s;
   }
   .back-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
 
   .label-input {
     flex: 1;
     min-width: 10rem;
     padding: 0 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--gb-2);
     font-family: var(--font-heading);
     font-weight: 600;
     font-size: 0.95rem;
@@ -782,7 +782,7 @@
     min-height: 44px;
   }
   .label-input:focus-visible {
-    border-color: var(--accent);
+    border-color: var(--gb-1);
   }
 
   .select-wrap {
@@ -794,16 +794,16 @@
     position: absolute;
     right: 0.6rem;
     pointer-events: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
   .gen-select {
     padding: 0 2rem 0 0.75rem;
     appearance: none;
     -webkit-appearance: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 0.85rem;
     min-height: 44px;
     cursor: pointer;
@@ -812,7 +812,7 @@
 
   .save-btn {
     padding: 0 1.1rem;
-    background: var(--accent);
+    background: var(--gb-1);
     border: none;
     border-radius: var(--radius-sm);
     color: #06080f;
@@ -824,15 +824,15 @@
     transition: background 0.15s;
   }
   .save-btn:hover {
-    background: var(--accent-hover);
+    background: var(--gb-2);
   }
 
   .export-btn {
     padding: 0 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     cursor: pointer;
     min-height: 44px;
@@ -842,8 +842,8 @@
       border-color 0.15s;
   }
   .export-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
 
   /* Export / modal */
@@ -858,8 +858,8 @@
     padding: 1rem;
   }
   .modal-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
     width: 100%;
     max-width: 520px;
@@ -880,7 +880,7 @@
   .modal-close {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 1rem;
     cursor: pointer;
     padding: 0.25rem;
@@ -890,10 +890,10 @@
     width: 100%;
     min-height: 220px;
     padding: 0.65rem 0.75rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
+    background: var(--gb-3);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 0.82rem;
     font-family: monospace;
     resize: vertical;
@@ -917,14 +917,14 @@
   }
 
   .slot-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
     overflow: hidden;
     transition: border-color 0.15s;
   }
   .slot-card.active {
-    border-color: var(--accent);
+    border-color: var(--gb-1);
   }
 
   .slot-header {
@@ -963,7 +963,7 @@
 
   .slot-sub {
     font-size: 0.78rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -979,9 +979,9 @@
   .slot-clear-btn {
     padding: 0 0.7rem;
     background: none;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     cursor: pointer;
     font-size: 0.8rem;
     min-height: 44px;
@@ -991,8 +991,8 @@
       border-color 0.15s;
   }
   .slot-edit-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
   .slot-clear-btn:hover {
     color: var(--danger);
@@ -1006,7 +1006,7 @@
     gap: 0.5rem;
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     cursor: pointer;
     font-size: 0.9rem;
     min-height: 48px;
@@ -1014,7 +1014,7 @@
     transition: color 0.15s;
   }
   .slot-empty:hover {
-    color: var(--text);
+    color: var(--gb-2);
   }
   .plus {
     font-size: 1.4rem;
@@ -1027,7 +1027,7 @@
   /* Editor */
   .slot-editor {
     padding: 0.85rem 0.85rem 1rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--gb-3);
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
@@ -1040,10 +1040,10 @@
 
   .change-species-btn {
     padding: 0 0.85rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
+    background: var(--gb-3);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     cursor: pointer;
     min-height: 44px;
@@ -1052,8 +1052,8 @@
       border-color 0.15s;
   }
   .change-species-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
 
   .field-row {
@@ -1064,7 +1064,7 @@
 
   .field-label {
     font-size: 0.82rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     width: 5.5rem;
     flex-shrink: 0;
   }
@@ -1072,15 +1072,15 @@
   .field-input {
     flex: 1;
     padding: 0 0.6rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
+    background: var(--gb-3);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 0.85rem;
     min-height: 44px;
   }
   .field-input:focus-visible {
-    border-color: var(--accent);
+    border-color: var(--gb-1);
   }
   .field-input.short {
     max-width: 80px;
@@ -1099,7 +1099,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1128,7 +1128,7 @@
 
   .stat-label {
     font-size: 0.72rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     text-align: center;
     display: block;
   }
@@ -1136,16 +1136,16 @@
   .stat-input {
     width: 100%;
     padding: 0.4rem 0.25rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
+    background: var(--gb-3);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 0.85rem;
     text-align: center;
     min-height: 44px;
   }
   .stat-input:focus-visible {
-    border-color: var(--accent);
+    border-color: var(--gb-1);
   }
 
   /* Moves */

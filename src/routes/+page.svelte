@@ -217,6 +217,7 @@
   $: genNum = genFilter ?? (9 as GenNumber); // concrete gen for team state / saving
   let yourTeam: TeamSlotData[] = Array(6).fill(null);
   let oppTeam: TeamSlotData[] = Array(6).fill(null);
+  let loadedTeamName: string = '';
   let pickerTarget: { side: "you" | "opp"; index: number } | null = null;
   let usageOrder: string[] = [];
 
@@ -356,6 +357,7 @@
   }
 
   function loadTeam(saved: SavedTeam) {
+    loadedTeamName = saved.label ?? '';
     // Use full national dex so legality filtering can't drop saved Pokémon
     const tiers = buildAllTiers(9);
     const byId = new Map(tiers.map((e) => [e.id, e]));
@@ -549,13 +551,15 @@
   <div class="layout">
     <!-- Teams -->
     <div class="teams-col">
-      {#each [{ side: "you" as const, team: yourTeam, label: "Your Team" }, { side: "opp" as const, team: oppTeam, label: "Opponent" }] as { side, team, label }}
+      {#each [{ side: "you" as const, team: yourTeam }, { side: "opp" as const, team: oppTeam }] as { side, team }}
         <div class="team-block">
-          <span
-            class="team-label"
-            class:you={side === "you"}
-            class:opp={side === "opp"}>{label}</span
-          >
+          <span class="team-label" class:you={side === "you"} class:opp={side === "opp"}>
+            {#if side === "you"}
+              My Team{#if loadedTeamName} — <span class="team-label-name">{loadedTeamName}</span>{/if}
+            {:else}
+              Opponent
+            {/if}
+          </span>
           <div class="slots">
             {#each team as slot, i}
               <TeamSlot
@@ -661,7 +665,7 @@
     font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: var(--text);
+    color: var(--gb-2);
   }
 
   .header-filters {
@@ -673,10 +677,10 @@
   .reg-ma-btn {
     padding: 0 0.75rem;
     min-height: 44px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
@@ -687,13 +691,13 @@
     white-space: nowrap;
   }
   .reg-ma-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low-contrast);
   }
   .reg-ma-btn.active {
     color: var(--accent-2);
     border-color: var(--accent-2);
-    background: color-mix(in srgb, var(--accent-2) 10%, var(--surface));
+    background: color-mix(in srgb, var(--accent-2) 10%, var(--gb-4));
   }
 
   .select-wrap {
@@ -705,23 +709,23 @@
     position: absolute;
     right: 0.6rem;
     pointer-events: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
   .gen-select {
     padding: 0 2rem 0 0.75rem;
     appearance: none;
     -webkit-appearance: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 0.85rem;
     cursor: pointer;
     min-height: 44px;
     transition: border-color 0.15s;
   }
   .gen-select:focus {
-    border-color: var(--accent);
+    border-color: var(--gb-1);
   }
 
   .layout {
@@ -757,7 +761,12 @@
   }
 
   .team-label.you {
-    color: #ffffff;
+    color: var(--gb-2);
+  }
+
+  .team-label-name {
+    color: var(--gb-low-contrast);
+    font-weight: 400;
   }
   .team-label.opp {
     color: #f68292;
@@ -798,10 +807,10 @@
 
   .save-btn {
     padding: 0.75rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.95rem;
     cursor: pointer;
     min-height: 52px;
@@ -813,8 +822,8 @@
 
   @media (hover: hover) {
     .save-btn:hover {
-      color: var(--text);
-      border-color: var(--text-muted);
+      color: var(--gb-2);
+      border-color: var(--gb-low-contrast);
     }
   }
 
@@ -827,7 +836,7 @@
 
   .save-confirm {
     padding: 0.65rem 1rem;
-    background: var(--accent);
+    background: var(--gb-1);
     color: #06080f;
     border: none;
     border-radius: var(--radius);
@@ -840,10 +849,10 @@
 
   .save-cancel {
     padding: 0.65rem 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.9rem;
     cursor: pointer;
     min-height: 44px;
@@ -852,7 +861,7 @@
   /* Saved teams list */
   .saved-section {
     margin-top: 2rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--gb-3);
     padding-top: 1.25rem;
   }
 
@@ -862,7 +871,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     margin-bottom: 0.75rem;
   }
 
@@ -885,8 +894,8 @@
   }
 
   .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
     width: 100%;
     max-width: 560px;
@@ -910,7 +919,7 @@
   .modal-close {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 1.1rem;
     cursor: pointer;
     min-height: 44px;
@@ -918,16 +927,16 @@
     padding: 0 0.75rem;
   }
   .modal-close:hover {
-    color: var(--text);
+    color: var(--gb-2);
   }
 
   .import-textarea {
     width: 100%;
     padding: 0.75rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
+    background: var(--gb-3);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 0.82rem;
     font-family: monospace;
     resize: vertical;
@@ -935,7 +944,7 @@
     line-height: 1.5;
   }
   .import-textarea:focus-visible {
-    border-color: var(--accent);
+    border-color: var(--gb-1);
   }
 
   .import-error {
@@ -951,8 +960,8 @@
 
   /* Speed preview sidebar */
   .preview-col {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
     overflow: hidden;
   }
@@ -964,8 +973,8 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
+    color: var(--gb-low-contrast);
+    border-bottom: 1px solid var(--gb-3);
   }
 
   .preview-list {
@@ -978,7 +987,7 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.25rem 0.6rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--gb-3);
     border-left: 3px solid transparent;
     font-size: 0.82rem;
   }
@@ -994,7 +1003,7 @@
   }
 
   .preview-rank {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.75rem;
     width: 1rem;
     text-align: center;
@@ -1027,7 +1036,7 @@
   .preview-note {
     padding: 0.4rem 0.75rem;
     font-size: 0.7rem;
-    color: var(--text-muted);
-    border-top: 1px solid var(--border);
+    color: var(--gb-low-contrast);
+    border-top: 1px solid var(--gb-3);
   }
 </style>

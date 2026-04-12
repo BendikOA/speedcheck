@@ -188,7 +188,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     margin-bottom: 0.5rem;
     margin-top: 1.25rem;
   }
@@ -198,17 +198,17 @@
   .search {
     width: 100%;
     padding: 0.75rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
-    color: var(--text);
+    color: var(--gb-2);
     font-size: 16px;
     outline: none;
     min-height: 48px;
     margin-bottom: 0.25rem;
   }
 
-  .search:focus-visible { border-color: var(--accent); }
+  .search:focus-visible { border-color: var(--gb-1); }
 
   .controls {
     display: flex;
@@ -229,10 +229,10 @@
 
   .gen-tab {
     padding: 0.45rem 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
@@ -242,13 +242,13 @@
 
   .gen-tab:active { opacity: 0.7; }
   @media (hover: hover) {
-    .gen-tab:hover { color: var(--text); border-color: var(--text-muted); }
+    .gen-tab:hover { color: var(--gb-2); border-color: var(--gb-low-contrast); }
   }
 
   .gen-tab.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border-color: var(--gb-1);
+    color: var(--gb-1);
+    background: color-mix(in srgb, var(--gb-1) 10%, var(--gb-4));
   }
 
   .toggles {
@@ -262,12 +262,12 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.45rem 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     user-select: none;
     min-height: 44px;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
@@ -277,16 +277,16 @@
   .toggle:active { opacity: 0.7; }
 
   .toggle.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border-color: var(--gb-1);
+    color: var(--gb-1);
+    background: color-mix(in srgb, var(--gb-1) 10%, var(--gb-4));
   }
 
   /* Table */
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius);
   }
 
@@ -297,33 +297,33 @@
   }
 
   thead th {
-    background: var(--surface);
+    background: var(--gb-4);
     padding: 0.6rem 0.75rem;
     text-align: left;
     font-weight: 600;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
+    color: var(--gb-low-contrast);
+    border-bottom: 1px solid var(--gb-3);
     white-space: nowrap;
   }
 
-  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--gb-3); }
   tbody tr:last-child { border-bottom: none; }
-  @media (hover: hover) { tbody tr:hover { background: var(--surface-2); } }
+  @media (hover: hover) { tbody tr:hover { background: var(--gb-3); } }
 
   td { padding: 0.45rem 0.75rem; }
 
-  .mega-row { background: color-mix(in srgb, var(--accent) 4%, transparent); }
-  .mega-row .name { color: var(--text-muted); font-style: italic; }
+  .mega-row { background: color-mix(in srgb, var(--gb-1) 4%, transparent); }
+  .mega-row .name { color: var(--gb-low-contrast); font-style: italic; }
 
-  .rank { color: var(--text-muted); font-size: 0.8rem; width: 2.5rem; }
+  .rank { color: var(--gb-low-contrast); font-size: 0.8rem; width: 2.5rem; }
   .name { font-weight: 500; }
-  .base { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .base { color: var(--gb-low-contrast); font-variant-numeric: tabular-nums; }
   .stat { font-variant-numeric: tabular-nums; font-weight: 500; }
   .max  { color: var(--success); }
-  .min  { color: var(--text-muted); }
+  .min  { color: var(--gb-low-contrast); }
   .col-speed { text-align: right; }
   .stat { text-align: right; }
   .base { text-align: right; }
@@ -336,6 +336,6 @@
   .count {
     margin-top: 0.6rem;
     font-size: 0.82rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 </style>

@@ -240,7 +240,7 @@
   }
 
   .empty-notice {
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.9rem;
     text-align: center;
     padding: 2rem 0;
@@ -262,7 +262,7 @@
 
   .subtitle {
     font-size: 0.88rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 
   .stats-box {
@@ -272,9 +272,9 @@
     flex-wrap: wrap;
   }
 
-  .stat { font-size: 0.85rem; color: var(--text-muted); }
-  .stat-val { font-weight: 700; color: var(--text); }
-  .streak { font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+  .stat { font-size: 0.85rem; color: var(--gb-low-contrast); }
+  .stat-val { font-weight: 700; color: var(--gb-2); }
+  .streak { font-size: 0.9rem; font-weight: 700; color: var(--gb-1); }
 
   .gen-tabs {
     display: flex;
@@ -288,10 +288,10 @@
 
   .gen-tab {
     padding: 0 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
@@ -300,9 +300,9 @@
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
   .gen-tab.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border-color: var(--gb-1);
+    color: var(--gb-1);
+    background: color-mix(in srgb, var(--gb-1) 10%, var(--gb-4));
   }
 
   .options {
@@ -316,10 +316,10 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.85rem;
     cursor: pointer;
     min-height: 44px;
@@ -328,9 +328,9 @@
   }
   .opt-toggle input { display: none; }
   .opt-toggle.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border-color: var(--gb-1);
+    color: var(--gb-1);
+    background: color-mix(in srgb, var(--gb-1) 10%, var(--gb-4));
   }
 
   /* Question */
@@ -353,8 +353,8 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 1.5rem 1rem;
-    background: var(--surface);
-    border: 2px solid var(--border);
+    background: var(--gb-4);
+    border: 2px solid var(--gb-3);
     border-radius: var(--radius);
     cursor: pointer;
     min-height: 160px;
@@ -364,8 +364,8 @@
 
   @media (hover: hover) {
     .choice:not(:disabled):hover {
-      border-color: var(--accent);
-      background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+      border-color: var(--gb-1);
+      background: color-mix(in srgb, var(--gb-1) 6%, var(--gb-4));
     }
   }
 
@@ -374,11 +374,11 @@
 
   .choice.correct {
     border-color: var(--success);
-    background: color-mix(in srgb, var(--success) 10%, var(--surface));
+    background: color-mix(in srgb, var(--success) 10%, var(--gb-4));
   }
   .choice.wrong {
     border-color: var(--danger);
-    background: color-mix(in srgb, var(--danger) 8%, var(--surface));
+    background: color-mix(in srgb, var(--danger) 8%, var(--gb-4));
   }
   .choice.reveal-correct {
     border-color: var(--success);
@@ -396,7 +396,7 @@
     font-size: 0.95rem;
     font-weight: 600;
     text-align: center;
-    color: var(--text);
+    color: var(--gb-2);
   }
 
   .pills {
@@ -413,7 +413,7 @@
     font-size: 1.1rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
   .choice.correct .reveal-speed { color: var(--success); }
 
@@ -422,24 +422,24 @@
     align-items: center;
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     flex-shrink: 0;
   }
 
   .tie-btn {
     align-self: center;
     padding: 0 1.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.9rem;
     cursor: pointer;
     min-height: 44px;
     transition: border-color 0.15s, color 0.15s;
   }
   @media (hover: hover) {
-    .tie-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .tie-btn:hover { color: var(--gb-2); border-color: var(--gb-low-contrast); }
   }
 
   .result {
@@ -449,13 +449,13 @@
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
   }
-  .result-correct { color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--surface)); }
-  .result-wrong   { color: var(--danger);  background: color-mix(in srgb, var(--danger)  8%,  var(--surface)); }
+  .result-correct { color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--gb-4)); }
+  .result-wrong   { color: var(--danger);  background: color-mix(in srgb, var(--danger)  8%,  var(--gb-4)); }
 
   .next-btn {
     align-self: center;
     padding: 0 2rem;
-    background: var(--accent);
+    background: var(--gb-1);
     border: none;
     border-radius: var(--radius-sm);
     color: #fff;
@@ -465,7 +465,7 @@
     min-height: 52px;
     transition: background 0.15s;
   }
-  .next-btn:hover { background: var(--accent-hover); }
+  .next-btn:hover { background: var(--gb-2); }
 
   .footer {
     display: flex;
@@ -477,15 +477,15 @@
 
   .best-streak {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
   }
 
   .reset-btn {
     padding: 0 0.85rem;
     background: none;
-    border: 1px solid var(--border);
+    border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: var(--gb-low-contrast);
     font-size: 0.82rem;
     cursor: pointer;
     min-height: 44px;
