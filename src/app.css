@@ -14,18 +14,18 @@
 }
 
 :root {
-  /* game boy pokemon palette — dark → light */
-  --gb-1: #17170D;
-  --gb-2: #30321D;
-  --gb-3: #484A35;
-  --gb-4: #71735E;
-  --gb-5: #929578;
-  --gb-hi: #E3EACE;
-  --gb-low: #505335;
+  /* dark blue-gray palette — light → dark */
+  --gb-1: #e4e6f0;
+  --gb-2: #8e96aa;
+  --gb-3: #272c40;
+  --gb-4: #0e1120;
+  --gb-5: #07090e;
+  --gb-hi: #e8eaf4;
+  --gb-low: #585d76;
 
   --accent-2: #4a9c41;
-  --danger: #8b1a1a;
-  --success: #2d5c1e;
+  --danger: #e04848;
+  --success: #3a9c30;
 
   --radius: 8px;
   --radius-sm: 4px;
@@ -76,11 +76,11 @@ input, select, textarea, button {
   font-size: 16px;
 }
 
-/* Global button defaults — gb-1 bg, gb-hi text */
+/* Global button defaults */
 button {
-  background: var(--gb-1);
-  color: var(--gb-hi) !important;
-  border: 1px solid var(--gb-2);
+  background: var(--gb-4);
+  color: var(--gb-hi);
+  border: 1px solid var(--gb-3);
 }
 
 /* Minimum 44×44px touch targets on all interactive elements */

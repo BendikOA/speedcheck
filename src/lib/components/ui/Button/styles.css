@@ -33,7 +33,7 @@
 /* Variants */
 .primary {
   background: var(--gb-1);
-  color: var(--gb-hi);
+  color: var(--gb-5);
 }
 
 .primary:active:not(:disabled) {
