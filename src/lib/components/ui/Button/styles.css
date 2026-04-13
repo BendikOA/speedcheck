@@ -54,15 +54,16 @@
 }
 
 .secondary:active:not(:disabled) {
-  color: var(--gb-2);
-  border: 2px solid var(--gb-hi);
-  border-color: var(--gb-hi);
+  background: var(--gb-3);
+  border-color: var(--gb-1);
+  color: var(--gb-hi);
 }
 
 @media (hover: hover) {
   .secondary:hover:not(:disabled) {
-    color: var(--gb-2);
+    background: var(--gb-4);
     border-color: var(--gb-low);
+    color: var(--gb-2);
   }
 }
 

@@ -742,13 +742,11 @@
     <div class="speed-header">
       <span class="section-title">
         Speed Order
-        {#if cond.trickRoom}<Pill color="#c46cf5">Trick Room</Pill>{/if}
+        {#if cond.trickRoom}<Pill>Trick Room</Pill>{/if}
         {#if cond.yourTailwind}<Pill
-            color="#52b44b"
             tooltip={"Your Tailwind: ×2 Speed for your side"}>My Tailwind</Pill
           >{/if}
         {#if cond.oppTailwind}<Pill
-            color="#e8622d"
             tooltip={"Opponent Tailwind: ×2 Speed for opponent's side"}
             >Opp Tailwind</Pill
           >{/if}
