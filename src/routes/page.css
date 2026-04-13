@@ -20,31 +20,6 @@
     gap: 0.5rem;
   }
 
-  .reg-ma-btn {
-    padding: 0 0.75rem;
-    min-height: 44px;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    color: var(--gb-low);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      border-color 0.15s,
-      color 0.15s,
-      background 0.15s;
-    white-space: nowrap;
-  }
-  .reg-ma-btn:hover {
-    color: var(--gb-2);
-    border-color: var(--gb-low);
-  }
-  .reg-ma-btn.active {
-    color: var(--accent-2);
-    border-color: var(--accent-2);
-    background: color-mix(in srgb, var(--accent-2) 10%, var(--gb-4));
-  }
 
   .select-wrap {
     position: relative;

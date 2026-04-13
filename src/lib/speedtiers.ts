@@ -25,6 +25,7 @@ export interface MegaStats {
 
 export interface SpeedEntry {
   id: string;
+  baseSpeciesId: string; // base species id, e.g. 'rotom' for 'rotomheat'
   name: string;
   baseSpe: number;
   maxSpeed: number;
@@ -132,7 +133,7 @@ function calcEntries(species: Iterable<any>, genNum: GenNumber): SpeedEntry[] {
     }
 
     entries.push({
-      id: sp.id, name: sp.name, baseSpe, abilities, types, megaForms,
+      id: sp.id, baseSpeciesId: toId(sp.baseSpecies), name: sp.name, baseSpe, abilities, types, megaForms,
       maxSpeed:     gen.stats.calc('spe', baseSpe, 31, 252, 50, jolly),
       neutralSpeed: gen.stats.calc('spe', baseSpe, 31,   0, 50, hardy),
       minSpeed:     gen.stats.calc('spe', baseSpe, 31,   0, 50, brave),

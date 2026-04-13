@@ -25,7 +25,7 @@
   $: genNum = genFromFilter(selected);
   $: baseEntries = isChampions ? buildAllTiers(9) : (genNum ? buildSpeedTiers(genNum) : buildAllTiers(9));
   $: allEntries = isChampions
-    ? baseEntries.filter(e => championsSet.has(e.id))
+    ? baseEntries.filter(e => championsSet.has(e.id) || championsSet.has(e.baseSpeciesId))
     : baseEntries;
   $: hasNatures = isChampions || genNum === null || genNum >= 3;
   $: hasMegas   = isChampions || (genNum !== null && (genNum === 6 || genNum === 7));

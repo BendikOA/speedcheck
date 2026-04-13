@@ -58,7 +58,30 @@
   let priorityReady = false;
   let smogonReady = false;
   let settingsOpen = false;
-  let selectedReg = GEN9_REGS[0].format;
+
+  // ── Persist settings to localStorage ──────────────────────────────────────
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem('game-settings');
+      if (raw) return JSON.parse(raw) as Record<string, unknown>;
+    } catch { /* ignore */ }
+    return {};
+  }
+  function saveSettings() {
+    try {
+      localStorage.setItem('game-settings', JSON.stringify({
+        selectedReg,
+        likelyAbilitiesActive,
+        likelyItemsActive,
+        likelyMovesActive,
+        likelyBuildsActive,
+      }));
+    } catch { /* ignore */ }
+  }
+  const _saved = loadSettings();
+
+  let selectedReg: string = (typeof _saved.selectedReg === 'string' ? _saved.selectedReg : null)
+    ?? GEN9_REGS[0].format;
   let smogonPriorityMoves: UsagePriorityMoves = {};
   let smogonAbilities: UsageAbilities = {};
   let smogonMoves: UsageMoves = {};
@@ -142,10 +165,13 @@
   }
 
   // ── Usage-based toggles (declared early — used in toggleField) ───────────
-  let likelyItemsActive = false;
-  let likelyMovesActive = false;
-  let likelyAbilitiesActive = false;
-  let likelyBuildsActive = false; // EV/Nature
+  let likelyItemsActive      = _saved.likelyItemsActive      === true;
+  let likelyMovesActive      = _saved.likelyMovesActive      === true;
+  let likelyAbilitiesActive  = _saved.likelyAbilitiesActive  === true;
+  let likelyBuildsActive     = _saved.likelyBuildsActive     === true; // EV/Nature
+
+  $: selectedReg, likelyAbilitiesActive, likelyItemsActive, likelyMovesActive, likelyBuildsActive,
+     saveSettings();
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
@@ -207,19 +233,20 @@
     const team = side === "you" ? yourTeam : oppTeam;
     const slot = team[i];
     if (!slot) return;
-    const newSlot = { ...slot, scarf: !slot.scarf };
-    if (side === "you")
-      yourTeam = yourTeam.map((s, idx) => (idx === i ? newSlot : s));
-    else oppTeam = oppTeam.map((s, idx) => (idx === i ? newSlot : s));
-    // Also sync fieldScarfs if this slot is currently on the field
+    const wasOn = slot.scarf;
+    // Scarf is mutually exclusive — clear all slots, then toggle this one
+    const newTeam = team.map((s, idx) => {
+      if (!s) return s;
+      if (idx === i) return { ...s, scarf: !wasOn };
+      return { ...s, scarf: false };
+    });
+    if (side === "you") yourTeam = newTeam;
+    else oppTeam = newTeam;
+    // Sync fieldScarfs for any fielded slots on this side
     const fieldSet = side === "you" ? yourField : oppField;
-    if (fieldSet.has(i)) {
-      const key = `${side}-${i}`;
-      // Scarf is mutually exclusive per side — mirror toggleFieldScarf logic
-      fieldSet.forEach((fi) => fieldScarfs.set(`${side}-${fi}`, false));
-      if (newSlot.scarf) fieldScarfs.set(key, true);
-      fieldScarfs = new Map(fieldScarfs);
-    }
+    fieldSet.forEach((fi) => fieldScarfs.set(`${side}-${fi}`, false));
+    if (!wasOn && fieldSet.has(i)) fieldScarfs.set(`${side}-${i}`, true);
+    fieldScarfs = new Map(fieldScarfs);
   }
 
   function toggleFieldScarf(key: string, side: "you" | "opp") {
@@ -325,7 +352,10 @@
       slot: NonNullable<TeamSlot>,
     ) => {
       const key = `${side}-${i}`;
-      const scarf = fieldScarfs.get(key) ?? false;
+      const megaIndex = fieldMega.get(key) ?? 0;
+      const hasMegaStone = isMegaStone(slot.item);
+      // Scarf is impossible when mega-evolved or holding a mega stone
+      const scarf = (megaIndex === 0 && !hasMegaStone) ? (fieldScarfs.get(key) ?? false) : false;
       const paralysis = fieldParalysis.get(key) ?? false;
       const nature = fieldNature.get(key) ?? "+";
       const commander = fieldCommander.get(key) ?? false;
@@ -343,7 +373,6 @@
 
       const canCommander = slot.entry.id === "dondozo";
       const megaForms = slot.entry.megaForms;
-      const megaIndex = fieldMega.get(key) ?? 0;
 
       // When likelyAbilitiesActive, narrow to the top-used ability only (stored as display name → convert to id)
       const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -389,7 +418,6 @@
       const speedEV = fieldSpeedEV.get(key);
       const speedDown = fieldSpeedDown.get(key) ?? false;
       const speedStage = fieldSpeedStage.get(key) ?? 0;
-      const hasMegaStone = isMegaStone(slot.item);
 
       rows.push({
         key,
@@ -665,12 +693,14 @@
                   <span class="tslot-name">{shortName(displayName)}</span>
                   <div class="tslot-stats">
                     <span class="tslot-spe">{slot.entry.baseSpe}</span>
-                    <Pill
-                      color="#f5c96c"
-                      active={slot.scarf}
-                      interactive
-                      on:click={() => toggleTSlotScarf(side, i)}>Scarf</Pill
-                    >
+                    {#if megaIdx === 0 && !isMegaStone(slot.item)}
+                      <Pill
+                        color="#f5c96c"
+                        active={slot.scarf}
+                        interactive
+                        on:click={() => toggleTSlotScarf(side, i)}>Scarf</Pill
+                      >
+                    {/if}
                   </div>
                 </div>
               {/if}
