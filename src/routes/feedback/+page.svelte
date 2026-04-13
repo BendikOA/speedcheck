@@ -3,6 +3,7 @@
   import { enhance } from '$app/forms';
   import type { ActionData } from './$types';
   import Button from '$lib/components/ui/Button/index.svelte';
+  import Input from '$lib/components/ui/Input/index.svelte';
 
   export let form: ActionData;
 
@@ -37,11 +38,11 @@
       <div class="row">
         <label>
           <span>Name <span class="optional">(optional)</span></span>
-          <input type="text" name="name" placeholder="Your name" autocomplete="name" maxlength="100" />
+          <Input name="name" placeholder="Your name" autocomplete="name" maxlength="100" />
         </label>
         <label>
           <span>Email <span class="optional">(optional, for replies)</span></span>
-          <input type="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="200" />
+          <Input type="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="200" />
         </label>
       </div>
 

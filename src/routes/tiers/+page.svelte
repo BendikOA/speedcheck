@@ -1,6 +1,7 @@
 <script lang="ts">
   import './styles.css';
   import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
+  import Input from '$lib/components/ui/Input/index.svelte';
   import type { GenNumber } from '$lib/speedtiers';
   import type { PageData } from './$types';
 
@@ -101,11 +102,11 @@
 <div class="page">
   <!-- 1. Choose Pokémon -->
   <div class="section-label">Choose Pokémon</div>
-  <input
+  <Input
     type="search"
     placeholder="Search all {allEntries.length} Pokémon…"
     bind:value={search}
-    class="search"
+    style="width: 100%; margin-bottom: 0.25rem"
     autocomplete="off"
     autocorrect="off"
     autocapitalize="off"

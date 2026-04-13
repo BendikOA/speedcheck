@@ -16,18 +16,6 @@
     margin-bottom: 0.25rem;
   }
 
-  .search {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius);
-    color: var(--gb-2);
-    font-size: 16px;
-    min-height: 48px;
-  }
-  .search:focus-visible { border-color: var(--gb-1); }
-
   .gen-tabs {
     display: flex;
     gap: 0.25rem;

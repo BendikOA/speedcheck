@@ -52,7 +52,7 @@
     letter-spacing: 0;
   }
 
-  input, select, textarea {
+  select, textarea {
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius);
@@ -63,7 +63,7 @@
     resize: vertical;
   }
 
-  input:focus, select:focus, textarea:focus {
+  select:focus, textarea:focus {
     outline: none;
     border-color: var(--gb-low);
   }

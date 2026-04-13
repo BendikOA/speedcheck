@@ -1,6 +1,7 @@
 <script lang="ts">
   import './styles.css';
   import { buildAllTiers, buildSpeedTiers, GEN_NUMBERS } from '$lib/speedtiers';
+  import Input from '$lib/components/ui/Input/index.svelte';
   import type { GenNumber } from '$lib/speedtiers';
 
   let selectedGen: GenNumber | null = null;
@@ -77,11 +78,11 @@
   <div class="section-label">Boost Speed Tiers</div>
   <p class="subtitle">Final speed values after common boosts — Dragon Dance, Agility, Tailwind, Scarf, etc.</p>
 
-  <input
+  <Input
     type="search"
     placeholder="Filter by Pokémon name…"
     bind:value={search}
-    class="search"
+    style="width: 100%"
     autocomplete="off"
     autocorrect="off"
     autocapitalize="off"

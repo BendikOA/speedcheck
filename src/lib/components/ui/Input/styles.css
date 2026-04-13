@@ -10,8 +10,9 @@
 }
 
 .input:focus-visible {
-  outline: none;
   border-color: var(--gb-1);
+  outline: 2px solid var(--gb-1);
+  outline-offset: 3px;
 }
 
 /* Variants */
