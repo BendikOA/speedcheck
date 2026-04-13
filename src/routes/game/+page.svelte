@@ -1073,26 +1073,15 @@
     {/if}
   </div>
 </div>
-<div class="tooltip-container">
-  <div class="tooltip">
-    Use the "Abilities", "Items", "Moves", and "EV/Nature" buttons in the top
-    right to show or hide the most common builds for each Pokémon from usage
-    stats.
-  </div>
   <div class="tooltip">
     Speed stats are assumed to be for level 50, all 31 IV pokemon with no EVs
     invested in speed. Enable the build button to see likely speed altering
     natures as well as your own from the pokepaste.
   </div>
-</div>
 
 <style>
-  /* Top bar */
-  .tooltip-container {
-    display: flex;
-    width: 100%;
-  }
 
+  /* Top bar */
   .tooltip {
     margin-top: 0.5rem;
     color: var(--gb-low-contrast);
@@ -1297,7 +1286,7 @@
     font-size: 0.85rem;
     font-weight: 700;
     margin-left: 4px;
-    opacity: 0.8``;
+    opacity: 0.8;
   }
 
   .team-slots {
@@ -1420,7 +1409,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--gb-3);
+    color: var(--gb-hi);
     font-size: 1.2rem;
   }
 
@@ -1536,7 +1525,8 @@
 
   .empty-hint {
     font-size: 0.85rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-hi);
+    opacity: 0.8;
   }
 
   .speed-list {

@@ -126,27 +126,6 @@
         </button>
       {/each}
     </div>
-
-    <div class="toggles">
-      {#if hasNatures}
-        <label class="toggle" class:active={scarf}>
-          <input type="checkbox" bind:checked={scarf} />
-          Scarf ×1.5
-        </label>
-      {/if}
-      <label class="toggle" class:active={tailwind}>
-        <input type="checkbox" bind:checked={tailwind} />
-        Tailwind ×2
-      </label>
-      <label class="toggle" class:active={paralysis}>
-        <input type="checkbox" bind:checked={paralysis} />
-        Paralysis ×0.5
-      </label>
-      <label class="toggle" class:active={trickRoom}>
-        <input type="checkbox" bind:checked={trickRoom} />
-        Trick Room
-      </label>
-    </div>
   </div>
 
   <!-- 3. Table -->
@@ -188,7 +167,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-hi);
     margin-bottom: 0.5rem;
     margin-top: 1.25rem;
   }
@@ -201,7 +180,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius);
-    color: var(--gb-2);
+    color: var(--gb-hi);
     font-size: 16px;
     outline: none;
     min-height: 48px;
@@ -232,7 +211,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-hi);
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
