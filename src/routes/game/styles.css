@@ -216,7 +216,7 @@
   }
   .tslot.on-field {
     border-color: var(--gb-1);
-    background: var(--gb-1);
+    background: var(--gb-3);
   }
   .tslot:active:not(:disabled) {
     opacity: 0.8;
@@ -685,8 +685,8 @@
     padding: 0.15rem 0.55rem;
     border-radius: 100px;
     border: 1px solid var(--gb-3);
-    color: var(--gb-low);
-    background: var(--gb-4);
+    color: var(--gb-hi);
+    background: var(--gb-5);
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
@@ -697,7 +697,8 @@
     opacity: 0.6;
   }
   .ability-chip {
-    border-color: color-mix(in srgb, #c46cf5 40%, var(--gb-3));
+    border-color: var(--gb-1);
+    color: var(--gb-1);
   }
 
   /* Nature assumed marker */
