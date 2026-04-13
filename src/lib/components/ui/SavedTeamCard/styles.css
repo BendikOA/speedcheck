@@ -100,7 +100,7 @@
 
 .record-stat {
   font-size: 0.82rem;
-  color: var(--gb-low);
+  color: var(--gb-hi);
   font-variant-numeric: tabular-nums;
   margin-right: 0.4rem;
   white-space: nowrap;

@@ -17,13 +17,13 @@
   align-items: center;
   justify-content: center;
   background: var(--gb-2);
-  border: 1px solid var(--gb-3);
+  border: 1px solid var(--gb-2);
   border-radius: 6px;
   transition: background 0.1s, border-color 0.1s;
 }
 
 .slot:has(.slot-filled:hover) {
-  background: var(--gb-3);
+  background: var(--gb-5);
 }
 
 .slot:has(.slot-filled:active) {
@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: var(--gb-3);
   border: none;
   color: var(--gb-low);
   cursor: pointer;
@@ -55,7 +55,7 @@
 }
 @media (hover: hover) {
   .slot-empty:hover {
-    background: var(--gb-3);
+    background: var(--gb-4);
     color: var(--gb-2);
   }
 }
@@ -63,7 +63,7 @@
 .slot-filled {
   position: absolute;
   inset: 0;
-  background: none;
+  background: var(--gb-2);
   border: none;
   cursor: pointer;
 }
@@ -95,7 +95,7 @@
   font-size: 16px;
   line-height: 130%;
   text-align: center;
-  color: var(--gb-low);
+  color: var(--gb-hi);
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
