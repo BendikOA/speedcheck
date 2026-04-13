@@ -687,6 +687,21 @@
     pointer-events: none;
   }
 
+  @media (max-width: 480px) {
+    .reg-tab {
+      padding: 0 0.45rem;
+      font-size: 0.73rem;
+    }
+    .reg-tabs {
+      height: 40px;
+    }
+    .reset-btn {
+      padding: 0 0.65rem;
+      font-size: 0.8rem;
+      height: 40px;
+    }
+  }
+
   /* Moves toggle pill */
   .toggle-pill.moves-pill {
     color: var(--gb-1);

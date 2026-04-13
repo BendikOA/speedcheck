@@ -269,7 +269,7 @@ nav {
     padding-bottom: max(0.85rem, var(--safe-bottom));
     text-align: center;
     font-size: 0.9rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -288,7 +288,7 @@ nav {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    color: var(--gb-2);
+    color: var(--gb-hi);
     font-weight: 600;
     font-size: 0.9rem;
     text-decoration: underline;
