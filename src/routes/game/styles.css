@@ -20,41 +20,95 @@
     margin-left: auto;
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
   }
 
-  /* Usage tabs group never wraps internally on any screen size */
-  .usage-tabs {
+  /* Settings gear */
+  .settings-anchor {
+    position: relative;
     flex-shrink: 0;
   }
 
-  .top-conds {
+  .gear-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gb-3);
+    background: var(--gb-4);
+    color: var(--gb-low);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  .gear-btn.active,
+  .gear-btn:focus-visible {
+    color: var(--gb-1);
+    border-color: var(--gb-1);
+    background: var(--gb-3);
+    outline: none;
+  }
+  @media (hover: hover) {
+    .gear-btn:not(.active):hover {
+      color: var(--gb-2);
+      border-color: var(--gb-low);
+    }
+  }
+
+  .settings-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+  }
+
+  .settings-popup {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 100;
+    background: var(--gb-4);
+    border: 1px solid var(--gb-3);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .settings-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gb-low);
+    margin: 0;
+  }
+
+  .settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .settings-options :global(.btn) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .settings-options.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+.top-conds {
     display: flex;
     gap: 0.35rem;
     flex-wrap: wrap;
   }
 
-  .reset-btn {
-    padding: 0 0.9rem;
-    height: 44px;
-    box-sizing: border-box;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    color: var(--gb-low);
-    font-size: 0.85rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition:
-      color 0.15s,
-      border-color 0.15s;
-    flex-shrink: 0;
-  }
-  .reset-btn:hover {
-    color: var(--gb-2);
-    border-color: var(--gb-low);
-  }
 
   /* Conditions */
   .conditions-bar {
@@ -607,61 +661,16 @@
     flex-shrink: 0;
   }
 
-  /* Regulation tabs */
-  .reg-tabs {
+
+  /* Usage tabs */
+  .usage-tabs {
     display: flex;
-    gap: 0;
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
+    gap: 0.3rem;
     flex-shrink: 0;
-    height: 44px;
-    box-sizing: border-box;
-  }
-  .reg-tab {
-    padding: 0 0.75rem;
-    height: 100%;
-    background: var(--gb-4);
-    border: none;
-    border-right: 1px solid var(--gb-3);
-    color: var(--gb-low);
-    font-size: 0.82rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition:
-      color 0.15s,
-      background 0.15s;
-  }
-  .reg-tab:last-child {
-    border-right: none;
-  }
-  .reg-tab:hover {
-    color: var(--gb-2);
-  }
-  .reg-tab.active {
-    background: color-mix(in srgb, var(--gb-1) 15%, var(--gb-4));
-    color: var(--gb-1);
-  }
-  .reg-tabs.loading {
-    opacity: 0.5;
-    pointer-events: none;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
-  @media (max-width: 480px) {
-    .reg-tab {
-      padding: 0 0.45rem;
-      font-size: 0.73rem;
-    }
-    .reg-tabs {
-      height: 40px;
-    }
-    .reset-btn {
-      padding: 0 0.65rem;
-      font-size: 0.8rem;
-      height: 40px;
-    }
-  }
 
   /* Moves toggle pill */
   .toggle-pill.moves-pill {

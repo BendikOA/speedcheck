@@ -172,7 +172,7 @@
         <span class="pname">{a.entry.name}</span>
         <div class="pills">
           {#if a.nature !== '='}<Pill color={a.nature === '+' ? 'var(--accent-2)' : '#c94040'}>{a.nature === '+' ? '+Spe' : '−Spe'}</Pill>{/if}
-          {#if a.scarf}<Pill color="#f5c96c">Scarf</Pill>{/if}
+          {#if a.scarf}<Pill color="#f5c96c" variant="alt">Scarf</Pill>{/if}
         </div>
         {#if answered}
           <span class="reveal-speed">{a.speed}</span>

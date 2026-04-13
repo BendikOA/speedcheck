@@ -25,6 +25,7 @@
   import { tooltip } from "$lib/tooltip";
   import Pill from "$lib/components/ui/Pill/index.svelte";
   import Button from "$lib/components/ui/Button/index.svelte";
+  import { GearSixIcon } from "phosphor-svelte";
   import { displayName as shortName } from "$lib/displayName";
   import { abilityDesc, moveSummary } from "$lib/dexInfo";
   import {
@@ -56,6 +57,7 @@
 
   let priorityReady = false;
   let smogonReady = false;
+  let settingsOpen = false;
   let selectedReg = GEN9_REGS[0].format;
   let smogonPriorityMoves: UsagePriorityMoves = {};
   let smogonAbilities: UsageAbilities = {};
@@ -545,58 +547,61 @@
 <div class="page">
   <!-- Top bar -->
   <div class="top-bar">
-    <button class="reset-btn" on:click={resetGame}>← New Game</button>
+    <Button variant="primary" size="sm" onClick={resetGame}>← New Game</Button>
     <div class="top-bar-right">
-      {#if likelyAbilitiesActive || likelyItemsActive || likelyMovesActive || likelyBuildsActive}
-        <div
-          class="reg-tabs"
-          class:loading={!smogonReady}
-          use:tooltip={"Switch usage data source"}
-        >
-          {#each GEN9_REGS as reg}
-            <button
-              class="reg-tab"
-              class:active={selectedReg === reg.format}
-              on:click={() => changeReg(reg.format)}>{reg.label}</button
-            >
-          {/each}
-        </div>
-      {/if}
-      <div class="reg-tabs usage-tabs">
+      <!-- Settings gear -->
+      <div class="settings-anchor">
         <button
-          class="reg-tab"
-          class:active={likelyAbilitiesActive}
-          use:tooltip={likelyAbilitiesActive
-            ? "Hiding ability usage — click to show"
-            : "Show ability usage per Pokémon from usage stats"}
-          on:click={() => (likelyAbilitiesActive = !likelyAbilitiesActive)}
-          >Abilities</button
+          class="gear-btn"
+          class:active={settingsOpen}
+          use:tooltip={"Settings"}
+          on:click={() => (settingsOpen = !settingsOpen)}
+          aria-label="Settings"
         >
-        <button
-          class="reg-tab"
-          class:active={likelyItemsActive}
-          use:tooltip={likelyItemsActive
-            ? "Hiding most common item — click to show"
-            : "Show most common item per Pokémon from usage stats"}
-          on:click={() => (likelyItemsActive = !likelyItemsActive)}
-          >Items</button
-        >
-        <button
-          class="reg-tab"
-          class:active={likelyMovesActive}
-          use:tooltip={likelyMovesActive
-            ? "Hiding most common moves — click to show"
-            : "Show top 4 moves per Pokémon from usage stats"}
-          on:click={toggleLikelyMoves}>Moves</button
-        >
-        <button
-          class="reg-tab"
-          class:active={likelyBuildsActive}
-          use:tooltip={likelyBuildsActive
-            ? "Reverting EV spread & nature — click to reset"
-            : "Apply most common EV spread & nature per Pokémon from usage stats"}
-          on:click={toggleLikelyBuilds}>EV/Nature</button
-        >
+          <GearSixIcon size={18} weight="bold" />
+        </button>
+
+        {#if settingsOpen}
+          <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+          <div class="settings-backdrop" on:click={() => (settingsOpen = false)}></div>
+          <div class="settings-popup">
+            <p class="settings-label">Show in results</p>
+            <div class="settings-options">
+              <Button
+                variant="toggle"
+                active={likelyAbilitiesActive}
+                onClick={() => (likelyAbilitiesActive = !likelyAbilitiesActive)}
+                >Abilities</Button
+              >
+              <Button
+                variant="toggle"
+                active={likelyItemsActive}
+                onClick={() => (likelyItemsActive = !likelyItemsActive)}
+                >Items</Button
+              >
+              <Button
+                variant="toggle"
+                active={likelyMovesActive}
+                onClick={toggleLikelyMoves}>Moves</Button
+              >
+              <Button
+                variant="toggle"
+                active={likelyBuildsActive}
+                onClick={toggleLikelyBuilds}>EV/Nature</Button
+              >
+            </div>
+            <p class="settings-label">Usage data source</p>
+            <div class="settings-options" class:loading={!smogonReady}>
+              {#each GEN9_REGS as reg}
+                <Button
+                  variant="toggle"
+                  active={selectedReg === reg.format}
+                  onClick={() => changeReg(reg.format)}>{reg.label}</Button
+                >
+              {/each}
+            </div>
+          </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -794,6 +799,7 @@
                     <Pill
                       color="#6cf5b8"
                       active={row.weatherTriggered}
+                      strikethrough={!row.weatherTriggered}
                       tooltip={`${row.weatherAbility}: ×2 Speed${row.weatherTriggered ? " ✓ active" : " — inactive (no matching weather/terrain)"}`}
                       >{row.weatherAbility}</Pill
                     >
@@ -813,7 +819,7 @@
                     >
                   {/if}
                   {#if row.scarf}
-                    <Pill color="#f5c96c" tooltip={"Choice Scarf: ×1.5 Speed"}
+                    <Pill color="#f5c96c" variant="alt" tooltip={"Choice Scarf: ×1.5 Speed"}
                       >Scarf ×1.5</Pill
                     >
                   {/if}
@@ -846,13 +852,13 @@
                       >{pa.name}</Pill
                     >
                   {/each}
-                  {#if likelyAbilitiesActive && smogonAbilities[row.slot.entry.id]}
+                  {#if likelyAbilitiesActive && smogonAbilities[row.slot.entry.id] && smogonAbilities[row.slot.entry.id].name !== row.weatherAbility}
                     {@const ab = smogonAbilities[row.slot.entry.id]}
                     <Pill color="#d4a8ff" tooltip={ab.desc}>{ab.name}</Pill>
                   {/if}
                   {#if row.megaIndex > 0}
                     {@const stone = row.megaForms[row.megaIndex - 1].megaStone}
-                    <Pill color="#a8c8ff" tooltip={`Mega Stone: ${stone}`}
+                    <Pill color="#a8c8ff" variant="alt" tooltip={`Mega Stone: ${stone}`}
                       >{stone}</Pill
                     >
                   {:else if likelyItemsActive}
@@ -860,6 +866,7 @@
                     {#if build?.item && build.item !== "Choice Scarf"}
                       <Pill
                         color="#a8c8ff"
+                        variant="alt"
                         tooltip={`Most common item (${selectedReg === CHAMPIONS_FORMAT ? "Champions M-A" : "Smogon " + selectedReg}): ${build.item}`}
                         >{build.item}</Pill
                       >

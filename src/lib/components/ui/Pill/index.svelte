@@ -6,6 +6,9 @@
    *  When omitted the pill renders in muted/neutral style. */
   export let color: string | null = null;
 
+  /** 'primary' = dark fill + light text (default). 'alt' = light background + colored text/border. */
+  export let variant: 'primary' | 'alt' = 'primary';
+
   /** Set to false to render muted even when a color is supplied (e.g. inactive toggle). */
   export let active: boolean = true;
 
@@ -23,7 +26,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <span
-  class="pill"
+  class="pill {variant}"
   class:colored={showColor}
   class:interactive
   class:strikethrough
