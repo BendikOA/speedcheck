@@ -1,5 +1,7 @@
 <script lang="ts">
+  import './styles.css';
   import { buildAllTiers, buildSpeedTiers, GEN_NUMBERS } from '$lib/speedtiers';
+  import Input from '$lib/components/ui/Input/index.svelte';
   import type { GenNumber } from '$lib/speedtiers';
 
   let selectedGen: GenNumber | null = null;
@@ -76,11 +78,11 @@
   <div class="section-label">Boost Speed Tiers</div>
   <p class="subtitle">Final speed values after common boosts — Dragon Dance, Agility, Tailwind, Scarf, etc.</p>
 
-  <input
+  <Input
     type="search"
     placeholder="Filter by Pokémon name…"
     bind:value={search}
-    class="search"
+    style="width: 100%"
     autocomplete="off"
     autocorrect="off"
     autocapitalize="off"
@@ -125,116 +127,3 @@
   <p class="count">{tiers.length} speed thresholds</p>
 </div>
 
-<style>
-  .page { display: flex; flex-direction: column; gap: 0.75rem; }
-
-  .section-label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 0;
-  }
-
-  .subtitle {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: -0.25rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .search {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 16px;
-    min-height: 48px;
-  }
-  .search:focus-visible { border-color: var(--accent); }
-
-  .gen-tabs {
-    display: flex;
-    gap: 0.25rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  .gen-tabs::-webkit-scrollbar { display: none; }
-
-  .gen-tab {
-    padding: 0 0.85rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-height: 44px;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-  }
-  .gen-tab.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
-  }
-
-  .table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-  }
-
-  thead th {
-    background: var(--surface);
-    padding: 0.6rem 0.75rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-
-  tbody tr { border-bottom: 1px solid var(--border); }
-  tbody tr:last-child { border-bottom: none; }
-  @media (hover: hover) { tbody tr:hover { background: var(--surface-2); } }
-
-  td { padding: 0.45rem 0.75rem; }
-
-  .rank       { color: var(--text-muted); font-size: 0.8rem; width: 2rem; }
-  .final-speed { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1rem; color: var(--success); }
-  .boost-label { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; }
-  .base        { font-variant-numeric: tabular-nums; color: var(--text-muted); }
-  .nature      { font-size: 0.8rem; white-space: nowrap; }
-  .nature-pos  { color: var(--accent-2); }
-  .nature-neu  { color: var(--text-muted); }
-  .notes       { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; }
-  .pokemon-list {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    max-width: 320px;
-    white-space: normal;
-    line-height: 1.5;
-  }
-
-  .count {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-  }
-</style>

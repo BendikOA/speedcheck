@@ -4,8 +4,8 @@
   flex-direction: column;
   gap: 0.85rem;
   padding: 0.75rem 0.85rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--gb-4);
+  border: 1px solid var(--gb-3);
   border-radius: var(--radius);
 }
 
@@ -30,7 +30,7 @@
   user-select: none;
   background: none;
   border: none;
-  color: var(--text);
+  color: var(--gb-2);
   padding: 0;
   min-height: unset;
   gap: 0.35rem;
@@ -41,7 +41,7 @@
 .rename-icon {
   opacity: 0;
   flex-shrink: 0;
-  color: var(--text-muted);
+  color: var(--gb-low);
   transition: opacity 0.15s;
 }
 .saved-label:hover .rename-icon {
@@ -57,11 +57,7 @@
 }
 
 .saved-sprite {
-  width: min(40px, calc((100vw - 14rem) / 6));
-  height: min(40px, calc((100vw - 14rem) / 6));
-  object-fit: contain;
-  image-rendering: pixelated;
-  flex-shrink: 1;
+  flex-shrink: 0;
 }
 
 .saved-bottom {
@@ -80,8 +76,8 @@
 .record-btn {
   padding: 0 0.75rem;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: 1px solid var(--gb-3);
+  background: var(--gb-4);
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
@@ -93,25 +89,25 @@
 .loss-btn { color: #c94040; }
 @media (hover: hover) {
   .win-btn:hover {
-    background: color-mix(in srgb, #4caf7d 15%, var(--surface));
+    background: color-mix(in srgb, #4caf7d 15%, var(--gb-4));
     border-color: #4caf7d;
   }
   .loss-btn:hover {
-    background: color-mix(in srgb, #c94040 15%, var(--surface));
+    background: color-mix(in srgb, #c94040 15%, var(--gb-4));
     border-color: #c94040;
   }
 }
 
 .record-stat {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--gb-hi);
   font-variant-numeric: tabular-nums;
   margin-right: 0.4rem;
   white-space: nowrap;
 }
 .record-pct {
   font-weight: 600;
-  color: var(--text);
+  color: var(--gb-2);
   margin-left: 0.2rem;
 }
 
@@ -122,7 +118,7 @@
   padding: 0 0.5rem;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--gb-low);
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
@@ -133,7 +129,7 @@
 @media (hover: hover) {
   .record-reset:hover {
     opacity: 1;
-    color: var(--text);
+    color: var(--gb-2);
   }
 }
 
@@ -144,28 +140,16 @@
   margin-left: auto;
 }
 
-.saved-load {
-  padding: 0 1rem;
-  background: var(--accent);
-  color: #06080f;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-height: 44px;
-}
-
 .saved-edit,
 .saved-delete {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 0.75rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--gb-4);
+  border: 1px solid var(--gb-3);
   border-radius: var(--radius-sm);
-  color: var(--text-muted);
+  color: var(--gb-low);
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
@@ -175,8 +159,8 @@
 @media (hover: hover) {
   .saved-edit:hover,
   .saved-delete:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low);
   }
 }
 
@@ -206,10 +190,7 @@
     flex: 1;
     gap: 0.1rem;
   }
-  .saved-sprite {
-    width: 32px;
-    height: 32px;
-  }
+
   .saved-bottom {
     flex: unset;
     gap: 0.5rem;

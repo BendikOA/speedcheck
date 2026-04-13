@@ -11,8 +11,8 @@
 }
 
 .panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--gb-1);
+  border: 1px solid var(--gb-2);
   border-radius: var(--radius);
   width: min(680px, 90vw);
   max-height: 80vh;
@@ -53,7 +53,7 @@
   display: none;
   width: 36px;
   height: 4px;
-  background: var(--border);
+  background: var(--gb-2);
   border-radius: 2px;
   margin: 10px auto 6px;
   flex-shrink: 0;
@@ -65,16 +65,17 @@
   padding: 0.85rem 1rem;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
+  border-bottom: 1px solid var(--gb-2);
+  color: var(--gb-hi);
   font-size: 16px; /* prevents iOS zoom */
   flex-shrink: 0;
+  background-color: var(--gb-3);
 }
-.search:focus-visible { border-color: var(--accent); outline: none; }
+.search:focus-visible { border-color: var(--gb-hi); outline: none; }
 
 .empty {
   padding: 2rem 1rem;
-  color: var(--text-muted);
+  color: var(--gb-low);
   font-size: 0.9rem;
   text-align: center;
 }
@@ -86,6 +87,7 @@
   -webkit-overflow-scrolling: touch;
   flex: 1;
   align-content: start;
+  background-color: var(--gb-3);
 }
 
 @media (max-width: 400px) {
@@ -100,8 +102,8 @@
   min-height: 60px;
   background: none;
   border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
+  border-bottom: 1px solid var(--gb-2);
+  color: var(--gb-hi);
   text-align: left;
   cursor: pointer;
   transition: background 0.1s;
@@ -109,10 +111,10 @@
   justify-content: flex-start;
 }
 
-.result:active { background: var(--surface-2); }
+.result:active { background: var(--gb-2); }
 
 @media (hover: hover) {
-  .result:hover { background: var(--surface-2); }
+  .result:hover { background: var(--gb-2); }
 }
 
 .sprite {
@@ -136,7 +138,7 @@
 
 .rspe {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--gb-hi) 80%, transparent);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }

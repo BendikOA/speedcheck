@@ -5,23 +5,23 @@
 
 .tab {
   padding: 0 0.9rem;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: var(--gb-3);
+  border: 1px solid var(--gb-3);
   border-radius: var(--radius-sm);
-  color: var(--text-muted);
+  color: var(--gb-low);
   font-size: 0.9rem;
   cursor: pointer;
   min-height: 44px;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 .tab.active {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border-color: var(--gb-1);
+  color: var(--gb-1);
+  background: color-mix(in srgb, var(--gb-1) 10%, var(--gb-4));
 }
 @media (hover: hover) {
   .tab:not(.active):hover {
-    color: var(--text);
-    border-color: var(--text-muted);
+    color: var(--gb-2);
+    border-color: var(--gb-low);
   }
 }

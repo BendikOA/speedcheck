@@ -1,22 +1,23 @@
 .input {
   padding: 0.65rem 0.85rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--gb-4);
+  border: 1px solid var(--gb-3);
   border-radius: var(--radius);
-  color: var(--text);
+  color: var(--gb-2);
   font-size: 16px;
   min-height: 44px;
   transition: border-color 0.15s;
 }
 
 .input:focus-visible {
-  outline: none;
-  border-color: var(--accent);
+  border-color: var(--gb-1);
+  outline: 2px solid var(--gb-1);
+  outline-offset: 3px;
 }
 
 /* Variants */
 .accent {
-  border-color: var(--accent);
+  border-color: var(--gb-1);
   padding: 0 0.4rem;
   font-size: 0.95rem;
   font-weight: 600;

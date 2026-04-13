@@ -2,7 +2,7 @@
   import './styles.css';
   import { tooltip as tooltipAction } from '$lib/tooltip';
 
-  /** Accent color — any valid CSS color string, e.g. "#f5c96c" or "var(--accent)".
+  /** Accent color — any valid CSS color string, e.g. "#f5c96c" or "var(--gb-1)".
    *  When omitted the pill renders in muted/neutral style. */
   export let color: string | null = null;
 

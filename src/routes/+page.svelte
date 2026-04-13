@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "./page.css";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import {
@@ -217,6 +218,7 @@
   $: genNum = genFilter ?? (9 as GenNumber); // concrete gen for team state / saving
   let yourTeam: TeamSlotData[] = Array(6).fill(null);
   let oppTeam: TeamSlotData[] = Array(6).fill(null);
+  let loadedTeamName: string = "";
   let pickerTarget: { side: "you" | "opp"; index: number } | null = null;
   let usageOrder: string[] = [];
 
@@ -356,6 +358,7 @@
   }
 
   function loadTeam(saved: SavedTeam) {
+    loadedTeamName = saved.label ?? "";
     // Use full national dex so legality filtering can't drop saved Pokémon
     const tiers = buildAllTiers(9);
     const byId = new Map(tiers.map((e) => [e.id, e]));
@@ -468,7 +471,10 @@
       </div>
 
       <TabGroup
-        tabs={[{ label: "Your Team", value: "you" }, { label: "Opponent", value: "opp" }]}
+        tabs={[
+          { label: "Your Team", value: "you" },
+          { label: "Opponent", value: "opp" },
+        ]}
         value={importSide}
         on:change={(e) => (importSide = e.detail as "you" | "opp")}
       />
@@ -487,20 +493,20 @@
       {/if}
 
       <div class="modal-actions">
-        <button
-          class="save-confirm"
-          on:click={doImport}
+        <Button
+          variant="primary"
+          size="sm"
           disabled={importLoading || !importText.trim()}
+          onClick={doImport}>{importLoading ? "Loading…" : "Import"}</Button
         >
-          {importLoading ? "Loading…" : "Import"}
-        </button>
-        <button
-          class="save-cancel"
-          on:click={() => {
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
             showImport = false;
             importError = "";
             importText = "";
-          }}>Cancel</button
+          }}>Cancel</Button
         >
       </div>
     </div>
@@ -549,13 +555,20 @@
   <div class="layout">
     <!-- Teams -->
     <div class="teams-col">
-      {#each [{ side: "you" as const, team: yourTeam, label: "Your Team" }, { side: "opp" as const, team: oppTeam, label: "Opponent" }] as { side, team, label }}
+      {#each [{ side: "you" as const, team: yourTeam }, { side: "opp" as const, team: oppTeam }] as { side, team }}
         <div class="team-block">
           <span
             class="team-label"
             class:you={side === "you"}
-            class:opp={side === "opp"}>{label}</span
+            class:opp={side === "opp"}
           >
+            {#if side === "you"}
+              My Team{#if loadedTeamName}
+                <span class="team-label-name">{loadedTeamName}</span>{/if}
+            {:else}
+              Opponent
+            {/if}
+          </span>
           <div class="slots">
             {#each team as slot, i}
               <TeamSlot
@@ -570,7 +583,12 @@
       {/each}
 
       <div class="action-row">
-        <Button variant="primary" fullWidth={true} disabled={!canStart} onClick={startGame}>
+        <Button
+          variant="primary"
+          fullWidth={true}
+          disabled={!canStart}
+          onClick={startGame}
+        >
           Start Game →
         </Button>
         <Button variant="secondary" onClick={() => (showImport = true)}>
@@ -584,23 +602,26 @@
                 name="save-label"
                 placeholder="Team name…"
                 bind:value={saveLabel}
-                on:keydown={(e) => (e as unknown as KeyboardEvent).key === "Enter" && saveCurrentTeam()}
+                on:keydown={(e) =>
+                  (e as unknown as KeyboardEvent).key === "Enter" &&
+                  saveCurrentTeam()}
                 autocomplete="off"
               />
-              <button class="save-confirm" on:click={saveCurrentTeam}
-                >Save</button
+              <Button variant="primary" size="sm" onClick={saveCurrentTeam}
+                >Save</Button
               >
-              <button
-                class="save-cancel"
-                on:click={() => {
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
                   showSaveInput = false;
                   saveLabel = "";
-                }}>✕</button
+                }}>✕</Button
               >
             </div>
           {:else}
-            <button class="save-btn" on:click={() => (showSaveInput = true)}
-              >Save Team</button
+            <Button variant="secondary" onClick={() => (showSaveInput = true)}
+              >Save Team</Button
             >
           {/if}
         {/if}
@@ -647,387 +668,3 @@
   {/if}
 </div>
 
-<style>
-  .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-    gap: 1rem;
-  }
-
-  .page-title {
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-
-  .header-filters {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .reg-ma-btn {
-    padding: 0 0.75rem;
-    min-height: 44px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      border-color 0.15s,
-      color 0.15s,
-      background 0.15s;
-    white-space: nowrap;
-  }
-  .reg-ma-btn:hover {
-    color: var(--text);
-    border-color: var(--text-muted);
-  }
-  .reg-ma-btn.active {
-    color: var(--accent-2);
-    border-color: var(--accent-2);
-    background: color-mix(in srgb, var(--accent-2) 10%, var(--surface));
-  }
-
-  .select-wrap {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-  }
-  .select-chevron {
-    position: absolute;
-    right: 0.6rem;
-    pointer-events: none;
-    color: var(--text-muted);
-  }
-  .gen-select {
-    padding: 0 2rem 0 0.75rem;
-    appearance: none;
-    -webkit-appearance: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 0.85rem;
-    cursor: pointer;
-    min-height: 44px;
-    transition: border-color 0.15s;
-  }
-  .gen-select:focus {
-    border-color: var(--accent);
-  }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 220px;
-    gap: 2rem;
-    align-items: start;
-  }
-
-  @media (max-width: 700px) {
-    .layout {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .teams-col {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .team-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .team-label {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: -0.005em;
-  }
-
-  .team-label.you {
-    color: #ffffff;
-  }
-  .team-label.opp {
-    color: #f68292;
-  }
-
-  .slots {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
-  }
-
-  @media (min-width: 700px) {
-    .slots {
-      gap: 16px;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .slots {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* Action row: Start + Save */
-  .action-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  @media (min-width: 600px) {
-    .action-row {
-      flex-direction: row;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-  }
-
-  .save-btn {
-    padding: 0.75rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    cursor: pointer;
-    min-height: 52px;
-    transition:
-      border-color 0.15s,
-      color 0.15s;
-    white-space: nowrap;
-  }
-
-  @media (hover: hover) {
-    .save-btn:hover {
-      color: var(--text);
-      border-color: var(--text-muted);
-    }
-  }
-
-  .save-row {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-    flex: 1;
-  }
-
-  .save-confirm {
-    padding: 0.65rem 1rem;
-    background: var(--accent);
-    color: #06080f;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 44px;
-    white-space: nowrap;
-  }
-
-  .save-cancel {
-    padding: 0.65rem 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    cursor: pointer;
-    min-height: 44px;
-  }
-
-  /* Saved teams list */
-  .saved-section {
-    margin-top: 2rem;
-    border-top: 1px solid var(--border);
-    padding-top: 1.25rem;
-  }
-
-  .saved-title {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-  }
-
-  .saved-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  /* Modal */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 1rem;
-  }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 560px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.25rem;
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .modal-title {
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    cursor: pointer;
-    min-height: 44px;
-    min-width: 44px;
-    padding: 0 0.75rem;
-  }
-  .modal-close:hover {
-    color: var(--text);
-  }
-
-  .import-textarea {
-    width: 100%;
-    padding: 0.75rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 0.82rem;
-    font-family: monospace;
-    resize: vertical;
-    outline: none;
-    line-height: 1.5;
-  }
-  .import-textarea:focus-visible {
-    border-color: var(--accent);
-  }
-
-  .import-error {
-    font-size: 0.85rem;
-    color: var(--danger);
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-  }
-
-  /* Speed preview sidebar */
-  .preview-col {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .preview-title {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .preview-list {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .preview-row {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.25rem 0.6rem;
-    border-bottom: 1px solid var(--border);
-    border-left: 3px solid transparent;
-    font-size: 0.82rem;
-  }
-
-  .preview-row:last-child {
-    border-bottom: none;
-  }
-  .preview-row.side-you {
-    border-left-color: #4a9c41;
-  }
-  .preview-row.side-opp {
-    border-left-color: #c94040;
-  }
-
-  .preview-rank {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    width: 1rem;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .preview-sprite {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    image-rendering: pixelated;
-    flex-shrink: 0;
-  }
-
-  .preview-name {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .preview-speed {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.82rem;
-    flex-shrink: 0;
-  }
-
-  .preview-note {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    border-top: 1px solid var(--border);
-  }
-</style>
