@@ -689,6 +689,19 @@
     gap: 0.3rem;
     padding: 0.35rem 0.1rem 0.1rem;
   }
+
+  @media (max-width: 500px) {
+    .move-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .move-chip {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
   .move-chip {
     font-size: 0.78rem;
     padding: 0.15rem 0.55rem;

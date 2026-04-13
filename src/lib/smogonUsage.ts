@@ -249,7 +249,20 @@ export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> 
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const entries = Object.entries(data.abilities);
     if (!entries.length) continue;
-    result[id] = entries.map(([name, count]) => ({
+    // Deduplicate by normalized name (raw data has mixed-case duplicates)
+    const merged = new Map<string, { name: string; count: number }>();
+    for (const [name, count] of entries) {
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const existing = merged.get(key);
+      if (existing) {
+        existing.count += count;
+        // Keep whichever capitalisation has the higher individual count
+        if (count > existing.count - count) existing.name = name;
+      } else {
+        merged.set(key, { name, count });
+      }
+    }
+    result[id] = Array.from(merged.values()).map(({ name, count }) => ({
       name,
       count,
       pct: Math.round((count / data.usage) * 100),
