@@ -8,7 +8,7 @@
   background: var(--gb-3);
   border: 1px solid var(--gb-3);
   border-radius: var(--radius-sm);
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   font-size: 0.9rem;
   cursor: pointer;
   min-height: 44px;
@@ -22,6 +22,6 @@
 @media (hover: hover) {
   .tab:not(.active):hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 }

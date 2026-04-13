@@ -8,7 +8,7 @@
   }
 
   .subtitle {
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.9rem;
     margin-bottom: 2rem;
   }
@@ -41,7 +41,7 @@
   label span {
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -65,7 +65,7 @@
 
   input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 
   select {

@@ -74,7 +74,7 @@
 
 .empty {
   padding: 2rem 1rem;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   font-size: 0.9rem;
   text-align: center;
 }

@@ -59,7 +59,7 @@
 
   .gen-tab:active { opacity: 0.7; }
   @media (hover: hover) {
-    .gen-tab:hover { color: var(--gb-2); border-color: var(--gb-low-contrast); }
+    .gen-tab:hover { color: var(--gb-2); border-color: var(--gb-low); }
   }
 
   .gen-tab.active {
@@ -84,7 +84,7 @@
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 0.85rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     user-select: none;
     min-height: 44px;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
@@ -121,7 +121,7 @@
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     border-bottom: 1px solid var(--gb-3);
     white-space: nowrap;
   }
@@ -133,14 +133,14 @@
   td { padding: 0.45rem 0.75rem; }
 
   .mega-row { background: color-mix(in srgb, var(--gb-1) 4%, transparent); }
-  .mega-row .name { color: var(--gb-low-contrast); font-style: italic; }
+  .mega-row .name { color: var(--gb-low); font-style: italic; }
 
-  .rank { color: var(--gb-low-contrast); font-size: 0.8rem; width: 2.5rem; }
+  .rank { color: var(--gb-low); font-size: 0.8rem; width: 2.5rem; }
   .name { font-weight: 500; }
-  .base { color: var(--gb-low-contrast); font-variant-numeric: tabular-nums; }
+  .base { color: var(--gb-low); font-variant-numeric: tabular-nums; }
   .stat { font-variant-numeric: tabular-nums; font-weight: 500; }
   .max  { color: var(--success); }
-  .min  { color: var(--gb-low-contrast); }
+  .min  { color: var(--gb-low); }
   .col-speed { text-align: right; }
   .stat { text-align: right; }
   .base { text-align: right; }
@@ -153,5 +153,5 @@
   .count {
     margin-top: 0.6rem;
     font-size: 0.82rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }

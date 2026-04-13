@@ -69,7 +69,7 @@ nav {
     background: none;
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     padding: 0 0.6rem;
     min-height: 44px;
     cursor: pointer;
@@ -80,7 +80,7 @@ nav {
   }
   .theme-toggle:hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 
   /* Hamburger — mobile only */
@@ -90,7 +90,7 @@ nav {
     justify-self: end;
     background: none;
     border: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     padding: 0 0.25rem;
     min-height: 44px;
     cursor: pointer;
@@ -142,7 +142,7 @@ nav {
   .drawer-close {
     background: none;
     border: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     cursor: pointer;
     padding: 0.25rem;
     display: flex;
@@ -167,7 +167,7 @@ nav {
     font-size: 1.3rem;
     font-family: var(--font-heading);
     font-weight: 500;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     border-bottom: 1px solid var(--gb-3);
     min-height: unset;
     transition:
@@ -197,7 +197,7 @@ nav {
     background: none;
     border: none;
     border-bottom: 1px solid var(--gb-3);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 1rem;
     padding: 0 1.25rem;
     height: 56px;
@@ -214,7 +214,7 @@ nav {
     padding: 1rem 1.5rem;
     padding-bottom: max(1rem, var(--safe-bottom));
     font-size: 0.8rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     text-align: center;
     line-height: 1.6;
   }
@@ -296,5 +296,5 @@ nav {
     min-height: unset;
   }
   .kofi-link:hover {
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }

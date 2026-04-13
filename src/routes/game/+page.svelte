@@ -24,6 +24,7 @@
   import type { PriorityMove, PriorityAbility } from "$lib/priority";
   import { tooltip } from "$lib/tooltip";
   import Pill from "$lib/components/ui/Pill/index.svelte";
+  import Button from "$lib/components/ui/Button/index.svelte";
   import { displayName as shortName } from "$lib/displayName";
   import { abilityDesc, moveSummary } from "$lib/dexInfo";
   import {
@@ -680,27 +681,29 @@
     <div class="cond-group">
       <span class="cond-group-label">Field</span>
       <div class="cond-group-btns">
-        <button
-          class="cond-btn tr"
-          class:active={cond.trickRoom}
-          use:tooltip={"Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"}
-          on:click={() => (cond = { ...cond, trickRoom: !cond.trickRoom })}
-          >Trick Room</button
+        <Button
+          variant="toggle"
+          class="cond-btn"
+          active={cond.trickRoom}
+          tooltip={"Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"}
+          onClick={() => (cond = { ...cond, trickRoom: !cond.trickRoom })}
+          >Trick Room</Button
         >
-        <button
-          class="cond-btn your"
-          class:active={cond.yourTailwind}
-          use:tooltip={"Your Tailwind: doubles Speed for your side for 4 turns (×2)"}
-          on:click={() =>
-            (cond = { ...cond, yourTailwind: !cond.yourTailwind })}
-          >Your TW</button
+        <Button
+          variant="toggle"
+          class="cond-btn"
+          active={cond.yourTailwind}
+          tooltip={"Your Tailwind: doubles Speed for your side for 4 turns (×2)"}
+          onClick={() => (cond = { ...cond, yourTailwind: !cond.yourTailwind })}
+          >Your TW</Button
         >
-        <button
-          class="cond-btn opp"
-          class:active={cond.oppTailwind}
-          use:tooltip={"Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"}
-          on:click={() => (cond = { ...cond, oppTailwind: !cond.oppTailwind })}
-          >Opp TW</button
+        <Button
+          variant="toggle"
+          class="cond-btn"
+          active={cond.oppTailwind}
+          tooltip={"Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"}
+          onClick={() => (cond = { ...cond, oppTailwind: !cond.oppTailwind })}
+          >Opp TW</Button
         >
       </div>
     </div>
@@ -708,11 +711,12 @@
       <span class="cond-group-label">Weather</span>
       <div class="cond-group-btns">
         {#each [{ key: "rain" as const, label: "Rain", tip: "Rain: doubles Speed of Swift Swim users (Kingdra, Barraskewda, etc.)" }, { key: "sun" as const, label: "Sun", tip: "Sun: doubles Speed of Chlorophyll users (Venusaur, Lilligant, etc.) and activates Protosynthesis" }, { key: "sand" as const, label: "Sand", tip: "Sand: doubles Speed of Sand Rush users (Excadrill, Sandaconda, etc.)" }, { key: "snow" as const, label: "Snow", tip: "Snow: doubles Speed of Slush Rush users (Beartic, Cetitan, etc.)" }] as btn}
-          <button
+          <Button
+            variant="toggle"
             class="cond-btn"
-            class:active={cond[btn.key]}
-            use:tooltip={btn.tip}
-            on:click={() => toggleWeather(btn.key)}>{btn.label}</button
+            active={cond[btn.key]}
+            tooltip={btn.tip}
+            onClick={() => toggleWeather(btn.key)}>{btn.label}</Button
           >
         {/each}
       </div>
@@ -721,11 +725,12 @@
       <span class="cond-group-label">Terrain</span>
       <div class="cond-group-btns">
         {#each [{ key: "electric" as const, label: "Electric", tip: "Electric Terrain: doubles Speed of Surge Surfer users (Raichu-Alola) and activates Quark Drive" }, { key: "grassy" as const, label: "Grassy", tip: "Grassy Terrain: gives Grassy Glide +1 priority. Halves damage from Earthquake/Bulldoze." }, { key: "psychic" as const, label: "Psychic", tip: "Psychic Terrain: blocks all +1 and higher priority moves targeting grounded Pokémon" }] as btn}
-          <button
+          <Button
+            variant="toggle"
             class="cond-btn"
-            class:active={cond[btn.key]}
-            use:tooltip={btn.tip}
-            on:click={() => toggleTerrain(btn.key)}>{btn.label}</button
+            active={cond[btn.key]}
+            tooltip={btn.tip}
+            onClick={() => toggleTerrain(btn.key)}>{btn.label}</Button
           >
         {/each}
       </div>

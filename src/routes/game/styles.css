@@ -2,7 +2,7 @@
   /* Top bar */
   .tooltip {
     margin-top: 0.5rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.8rem;
     max-width: 49%;
     margin-left: 0.5rem;
@@ -42,7 +42,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
@@ -53,7 +53,7 @@
   }
   .reset-btn:hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 
   /* Conditions */
@@ -87,7 +87,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }
 
   .cond-group-btns {
@@ -135,45 +135,6 @@
     }
   }
 
-  .cond-btn {
-    padding: 0.35rem 0.7rem;
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm);
-    color: var(--gb-1);
-    font-size: 0.82rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    min-height: 44px;
-    transition:
-      border-color 0.15s,
-      color 0.15s,
-      background 0.15s;
-  }
-  .cond-btn:active {
-    opacity: 0.8;
-  }
-  @media (hover: hover) {
-    .cond-btn:hover {
-      border-color: var(--gb-1);
-    }
-  }
-  .cond-btn.active {
-    background: var(--gb-1);
-    border-color: var(--gb-1);
-    color: var(--gb-5);
-  }
-  .cond-btn.tr.active {
-    color: var(--gb-5);
-  }
-  .cond-btn.your.active {
-    color: var(--gb-5);
-  }
-  .cond-btn.opp.active {
-    color: var(--gb-5);
-  }
-
   /* Team rows */
   .teams {
     display: flex;
@@ -200,7 +161,7 @@
 
   .pick-hint {
     font-weight: 400;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.85rem;
     font-weight: 700;
     margin-left: 4px;
@@ -319,7 +280,7 @@
   .tslot-spe {
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }
 
   .tslot-empty {
@@ -473,7 +434,7 @@
   .pos {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     width: 1.5rem;
     text-align: center;
     flex-shrink: 0;
@@ -663,7 +624,7 @@
     background: var(--gb-4);
     border: none;
     border-right: 1px solid var(--gb-3);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.82rem;
     font-weight: 500;
     cursor: pointer;
@@ -724,7 +685,7 @@
     padding: 0.15rem 0.55rem;
     border-radius: 100px;
     border: 1px solid var(--gb-3);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     background: var(--gb-4);
     white-space: nowrap;
     display: inline-flex;

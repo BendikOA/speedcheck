@@ -37,6 +37,6 @@
 @media (hover: hover) {
   .pill.interactive:not(.colored):hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 }

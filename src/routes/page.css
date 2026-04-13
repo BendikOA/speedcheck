@@ -26,7 +26,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
@@ -38,7 +38,7 @@
   }
   .reg-ma-btn:hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
   .reg-ma-btn.active {
     color: var(--accent-2);
@@ -55,7 +55,7 @@
     position: absolute;
     right: 0.6rem;
     pointer-events: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }
   .gen-select {
     padding: 0 2rem 0 0.75rem;
@@ -111,12 +111,12 @@
   }
 
   .team-label-name {
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-weight: 400;
     padding-left: 8px;
   }
   .team-label.opp {
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }
 
   .slots {
@@ -172,7 +172,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     margin-bottom: 0.75rem;
   }
 
@@ -220,7 +220,7 @@
   .modal-close {
     background: none;
     border: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 1.1rem;
     cursor: pointer;
     min-height: 44px;

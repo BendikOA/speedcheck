@@ -44,7 +44,7 @@
   justify-content: center;
   background: none;
   border: none;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   cursor: pointer;
   border-radius: 6px;
   font-size: 1.5rem;
@@ -95,7 +95,7 @@
   font-size: 16px;
   line-height: 130%;
   text-align: center;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -111,7 +111,7 @@
 .slot-spe {
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
 }
 
 .slot-clear {
@@ -120,7 +120,7 @@
   right: 0;
   background: none;
   border: none;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;

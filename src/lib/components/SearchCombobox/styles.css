@@ -14,7 +14,7 @@
 }
 
 :global(.cb-input::placeholder) {
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
 }
 
 :global(.cb-input:focus) {

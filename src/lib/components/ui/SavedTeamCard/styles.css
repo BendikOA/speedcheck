@@ -41,7 +41,7 @@
 .rename-icon {
   opacity: 0;
   flex-shrink: 0;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   transition: opacity 0.15s;
 }
 .saved-label:hover .rename-icon {
@@ -57,11 +57,7 @@
 }
 
 .saved-sprite {
-  width: min(40px, calc((100vw - 14rem) / 6));
-  height: min(40px, calc((100vw - 14rem) / 6));
-  object-fit: contain;
-  image-rendering: pixelated;
-  flex-shrink: 1;
+  flex-shrink: 0;
 }
 
 .saved-bottom {
@@ -104,7 +100,7 @@
 
 .record-stat {
   font-size: 0.82rem;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   font-variant-numeric: tabular-nums;
   margin-right: 0.4rem;
   white-space: nowrap;
@@ -122,7 +118,7 @@
   padding: 0 0.5rem;
   background: none;
   border: none;
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
@@ -153,7 +149,7 @@
   background: var(--gb-4);
   border: 1px solid var(--gb-3);
   border-radius: var(--radius-sm);
-  color: var(--gb-low-contrast);
+  color: var(--gb-low);
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
@@ -164,7 +160,7 @@
   .saved-edit:hover,
   .saved-delete:hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 }
 
@@ -194,10 +190,7 @@
     flex: 1;
     gap: 0.1rem;
   }
-  .saved-sprite {
-    width: 32px;
-    height: 32px;
-  }
+
   .saved-bottom {
     flex: unset;
     gap: 0.5rem;

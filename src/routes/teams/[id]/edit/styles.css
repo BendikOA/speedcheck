@@ -16,7 +16,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.85rem;
     white-space: nowrap;
     min-height: 44px;
@@ -26,7 +26,7 @@
   }
   .back-btn:hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
 
   .label-input {
@@ -56,7 +56,7 @@
     position: absolute;
     right: 0.6rem;
     pointer-events: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }
   .gen-select {
     padding: 0 2rem 0 0.75rem;
@@ -106,7 +106,7 @@
   .modal-close {
     background: none;
     border: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 1rem;
     cursor: pointer;
     padding: 0.25rem;
@@ -189,7 +189,7 @@
 
   .slot-sub {
     font-size: 0.78rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -207,7 +207,7 @@
     background: none;
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     cursor: pointer;
     font-size: 0.8rem;
     min-height: 44px;
@@ -218,7 +218,7 @@
   }
   .slot-edit-btn:hover {
     color: var(--gb-2);
-    border-color: var(--gb-low-contrast);
+    border-color: var(--gb-low);
   }
   .slot-clear-btn:hover {
     color: var(--danger);
@@ -232,7 +232,7 @@
     gap: 0.5rem;
     background: none;
     border: none;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     cursor: pointer;
     font-size: 0.9rem;
     min-height: 48px;
@@ -273,7 +273,7 @@
 
   .field-label {
     font-size: 0.82rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     width: 5.5rem;
     flex-shrink: 0;
   }
@@ -308,7 +308,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -337,7 +337,7 @@
 
   .stat-label {
     font-size: 0.72rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     text-align: center;
     display: block;
   }

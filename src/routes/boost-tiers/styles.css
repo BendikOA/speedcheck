@@ -5,13 +5,13 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     margin-bottom: 0;
   }
 
   .subtitle {
     font-size: 0.85rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     margin-top: -0.25rem;
     margin-bottom: 0.25rem;
   }
@@ -43,7 +43,7 @@
     background: var(--gb-4);
     border: 1px solid var(--gb-3);
     border-radius: var(--radius-sm);
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
@@ -78,7 +78,7 @@
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     border-bottom: 1px solid var(--gb-3);
     white-space: nowrap;
   }
@@ -89,17 +89,17 @@
 
   td { padding: 0.45rem 0.75rem; }
 
-  .rank       { color: var(--gb-low-contrast); font-size: 0.8rem; width: 2rem; }
+  .rank       { color: var(--gb-low); font-size: 0.8rem; width: 2rem; }
   .final-speed { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1rem; color: var(--success); }
-  .boost-label { font-size: 0.82rem; color: var(--gb-low-contrast); white-space: nowrap; }
-  .base        { font-variant-numeric: tabular-nums; color: var(--gb-low-contrast); }
+  .boost-label { font-size: 0.82rem; color: var(--gb-low); white-space: nowrap; }
+  .base        { font-variant-numeric: tabular-nums; color: var(--gb-low); }
   .nature      { font-size: 0.8rem; white-space: nowrap; }
   .nature-pos  { color: var(--accent-2); }
-  .nature-neu  { color: var(--gb-low-contrast); }
-  .notes       { font-size: 0.82rem; color: var(--gb-low-contrast); white-space: nowrap; }
+  .nature-neu  { color: var(--gb-low); }
+  .notes       { font-size: 0.82rem; color: var(--gb-low); white-space: nowrap; }
   .pokemon-list {
     font-size: 0.82rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
     max-width: 320px;
     white-space: normal;
     line-height: 1.5;
@@ -107,5 +107,5 @@
 
   .count {
     font-size: 0.82rem;
-    color: var(--gb-low-contrast);
+    color: var(--gb-low);
   }
