@@ -1,9 +1,13 @@
+/* ── Visibility helpers ── */
+.desktop-only { display: none !important; }
+.mobile-only  { display: flex; }
+
 /* Mobile: stacked layout */
 .saved-row {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  padding: 0.75rem 0.85rem;
+  gap: 0.6rem;
+  padding: 0.65rem 0.75rem;
   background: var(--gb-4);
   border: 1px solid var(--gb-3);
   border-radius: var(--radius);
@@ -20,6 +24,7 @@
   flex-direction: column;
   gap: 0.15rem;
   flex: 1;
+  min-width: 0;
 }
 
 .saved-label {
@@ -37,6 +42,10 @@
   justify-content: flex-start;
   display: flex;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 .rename-icon {
   opacity: 0;
@@ -60,32 +69,33 @@
   flex-shrink: 0;
 }
 
+/* ── Bottom row ── */
 .saved-bottom {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .saved-record {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  flex: 1;
+  gap: 0.25rem;
+  flex-shrink: 0;
 }
 
 .record-btn {
-  padding: 0 0.75rem;
+  padding: 0;
   border-radius: var(--radius-sm);
   border: 1px solid var(--gb-3);
   background: var(--gb-4);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 52px;
+  min-width: 52px;
   transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
-.win-btn { color: #4caf7d; }
+.win-btn  { color: #4caf7d; }
 .loss-btn { color: #c94040; }
 @media (hover: hover) {
   .win-btn:hover {
@@ -99,11 +109,11 @@
 }
 
 .record-stat {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--gb-hi);
   font-variant-numeric: tabular-nums;
-  margin-right: 0.4rem;
   white-space: nowrap;
+  padding: 0 0.15rem;
 }
 .record-pct {
   font-weight: 600;
@@ -115,16 +125,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.35rem;
   padding: 0 0.5rem;
   background: none;
   border: none;
   color: var(--gb-low);
   cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 36px;
+  min-width: 36px;
   border-radius: var(--radius-sm);
-  opacity: 0.5;
+  opacity: 0.6;
   transition: opacity 0.15s, color 0.15s;
+  font-size: 0.8rem;
 }
 @media (hover: hover) {
   .record-reset:hover {
@@ -133,11 +145,13 @@
   }
 }
 
+/* ── Action buttons ── */
 .saved-actions {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.5rem;
   flex-shrink: 0;
   margin-left: auto;
+  align-items: center;
 }
 
 .saved-edit,
@@ -145,27 +159,83 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 0.75rem;
+  gap: 0.35rem;
+  padding: 0 0.6rem;
   background: var(--gb-4);
   border: 1px solid var(--gb-3);
   border-radius: var(--radius-sm);
   color: var(--gb-low);
   cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 36px;
+  min-width: 36px;
   transition: color 0.15s, border-color 0.15s;
   text-decoration: none;
+  font-size: 0.8rem;
 }
 @media (hover: hover) {
-  .saved-edit:hover,
-  .saved-delete:hover {
+  .saved-edit:hover  { color: var(--gb-2); border-color: var(--gb-low); }
+  .saved-delete:hover { color: #c94040; border-color: #c94040; }
+}
+
+/* Gear button */
+.saved-gear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--gb-4);
+  border: 1px solid var(--gb-3);
+  border-radius: var(--radius-sm);
+  color: var(--gb-low);
+  cursor: pointer;
+  min-height: 52px;
+  min-width: 52px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.saved-gear.gear-active {
+  color: var(--gb-2);
+  border-color: var(--gb-low);
+  background: var(--gb-3);
+}
+@media (hover: hover) {
+  .saved-gear:hover {
     color: var(--gb-2);
     border-color: var(--gb-low);
   }
 }
 
-/* Desktop: single-row layout */
+/* ── Gear tray (mobile secondary actions) ── */
+.gear-tray {
+  display: flex;
+  gap: 0.35rem;
+  border-top: 1px solid var(--gb-3);
+  padding-top: 0.5rem;
+}
+
+.gear-tray .saved-edit,
+.gear-tray .saved-delete,
+.gear-tray .record-reset {
+  flex: 1;
+  justify-content: center;
+  min-height: 44px;
+  font-size: 0.82rem;
+  padding: 0 0.5rem;
+  opacity: 1;
+}
+
+/* Reset in tray needs border to look like a button */
+.gear-tray .record-reset {
+  border: 1px solid var(--gb-3);
+  background: var(--gb-4);
+  border-radius: var(--radius-sm);
+  color: var(--gb-low);
+}
+
+/* ── Desktop: single-row layout ── */
 @media (min-width: 600px) {
+  .desktop-only { display: flex !important; }
+  .mobile-only  { display: none !important; }
+
   .saved-row {
     flex-direction: row;
     align-items: center;
@@ -190,15 +260,44 @@
     flex: 1;
     gap: 0.1rem;
   }
-
   .saved-bottom {
     flex: unset;
     gap: 0.5rem;
   }
   .saved-record {
     flex: unset;
+    gap: 0.3rem;
   }
   .saved-actions {
     margin-left: 0;
+    gap: 0.4rem;
+  }
+  .record-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.75rem;
+    font-size: 0.85rem;
+  }
+  .record-reset {
+    min-height: 44px;
+    min-width: 44px;
+    border: none;
+    background: none;
+    border-radius: var(--radius-sm);
+  }
+  .saved-gear {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.75rem;
+  }
+  .saved-edit,
+  .saved-delete {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.75rem;
+  }
+  .record-stat {
+    font-size: 0.82rem;
+    margin-right: 0.4rem;
   }
 }

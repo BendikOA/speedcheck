@@ -161,12 +161,14 @@
     min-height: 56px;
   }
 
-  .slot-sprite {
+  .edit-sprite {
     width: 48px;
     height: 48px;
     object-fit: contain;
     image-rendering: pixelated;
     flex-shrink: 0;
+    position: static;
+    transform: none;
   }
 
   .slot-title {
