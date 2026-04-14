@@ -1,0 +1,62 @@
+.teams-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ── Section shells ── */
+.teams-section,
+.saved-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.saved-section {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gb-3);
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gb-low);
+  margin: 0;
+}
+
+.section-meta {
+  font-size: 0.72rem;
+  color: var(--gb-low);
+}
+
+/* ── Lists ── */
+.teams-list,
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Empty states ── */
+.teams-empty {
+  font-size: 0.85rem;
+  color: var(--gb-low);
+  margin: 0;
+}
+
+.teams-empty a {
+  color: var(--gb-hi);
+  text-decoration: underline;
+}

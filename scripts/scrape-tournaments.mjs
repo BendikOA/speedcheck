@@ -16,16 +16,19 @@ import { writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const __dir  = dirname(fileURLToPath(import.meta.url));
-const OUT    = resolve(__dir, '../static/champions-meta.json');
+const __dir        = dirname(fileURLToPath(import.meta.url));
+const OUT          = resolve(__dir, '../static/champions-meta.json');
+const OUT_TEAMS    = resolve(__dir, '../static/recent-teams.json');
 
 const BASE_URL     = 'https://play.limitlesstcg.com/api';
 const GAME         = 'VGC';
-const FORMAT       = 'M-A';
-const TOP_N        = 16;    // top placements to capture per tournament
-const MAX_TOURNEYS = 100;   // upper cap — will use however many exist
-const MIN_PLAYERS  = 8;     // skip tiny side events
-const DELAY_MS     = 600;   // polite delay between requests
+const FORMAT          = 'M-A';
+const TOP_N           = 16;    // top placements to capture per tournament (usage stats)
+const MAX_TOURNEYS    = 2000;  // failsafe cap — if hit, newest tournaments win (oldest age out)
+const MIN_PLAYERS     = 8;     // skip tiny side events
+const DELAY_MS        = 600;   // polite delay between requests (~20 min at cap, well within GH Actions 6h limit)
+const RECENT_TOP_N    = 10;    // most recent tournaments to feature on /teams
+const RECENT_TEAMS_N  = 8;     // top placements to store per tournament
 
 const HEADERS = {
   'User-Agent': 'speedcheck-vgc-tool/1.0 (open-source, daily aggregator)',
@@ -55,7 +58,7 @@ async function scrape() {
   let page = 1;
   const allTourneys = [];
 
-  while (allTourneys.length < MAX_TOURNEYS) {
+  while (true) {
     const batch = await api(`/tournaments?game=${GAME}&format=${FORMAT}&limit=50&page=${page}`);
     if (!batch.length) break;
     allTourneys.push(...batch);
@@ -64,12 +67,23 @@ async function scrape() {
     await sleep(DELAY_MS);
   }
 
+  // Sort newest-first, then apply cap — oldest tournaments age out if cap is ever reached
+  allTourneys.sort((a, b) => b.date.localeCompare(a.date));
+  const capped = allTourneys.length > MAX_TOURNEYS;
+  if (capped) {
+    allTourneys.splice(MAX_TOURNEYS);
+    console.log(`Cap of ${MAX_TOURNEYS} reached — keeping ${MAX_TOURNEYS} most recent tournaments`);
+  }
+
   const eligible = allTourneys.filter(t => t.players >= MIN_PLAYERS);
-  console.log(`${allTourneys.length} total → ${eligible.length} with ≥${MIN_PLAYERS} players\n`);
+  console.log(`${allTourneys.length} total${capped ? ` (capped)` : ''} → ${eligible.length} with ≥${MIN_PLAYERS} players\n`);
 
   // 2. Per-pokemon aggregation maps
   // pokemonStats[id] = { usage, moves: {name: count}, abilities: {name: count}, items: {name: count} }
   const pokemonStats = {};
+
+  // Raw tournament data collected for recent-teams.json
+  const rawTournaments = [];
 
   let tournamentCount = 0;
   let teamSlots       = 0;
@@ -86,6 +100,30 @@ async function scrape() {
         .filter(p => p.placing && p.decklist?.length === 6)
         .sort((a, b) => a.placing - b.placing)
         .slice(0, TOP_N);
+
+      // Collect raw team data for recent-teams output
+      const topTeams = top.slice(0, RECENT_TEAMS_N).map(player => ({
+        placement: player.placing,
+        player:    player.name ?? player.player ?? 'Unknown',
+        country:   player.country ?? null,
+        pokemon:   player.decklist.map(pk => ({
+          id:      pk.id,
+          name:    pk.name ?? pk.id,
+          item:    pk.item ?? null,
+          ability: pk.ability ?? null,
+          tera:    pk.tera ?? null,
+          moves:   pk.attacks ?? [],
+        })),
+      }));
+
+      rawTournaments.push({
+        id:      t.id,
+        name:    t.name,
+        date,
+        format:  t.format ?? FORMAT,
+        players: t.players,
+        teams:   topTeams,
+      });
 
       for (const player of top) {
         for (const pk of player.decklist) {
@@ -138,6 +176,23 @@ async function scrape() {
   writeFileSync(OUT, JSON.stringify(output, null, 2));
   console.log(`\nWrote ${OUT}`);
   console.log(`${tournamentCount} tournaments · ${teamSlots} pokemon appearances · ${Object.keys(sortedPokemon).length} unique pokemon`);
+
+  // 5. Write recent-teams.json — 10 most recent tournaments by date
+  //    Tiebreak within the same date: larger tournament first.
+  const recentTournaments = rawTournaments
+    .sort((a, b) => b.date.localeCompare(a.date) || b.players - a.players)
+    .slice(0, RECENT_TOP_N);
+
+  const recentOutput = {
+    updated:     new Date().toISOString().slice(0, 10),
+    source:      'play.limitlesstcg.com/api',
+    game:        GAME,
+    format:      FORMAT,
+    tournaments: recentTournaments,
+  };
+
+  writeFileSync(OUT_TEAMS, JSON.stringify(recentOutput, null, 2));
+  console.log(`Wrote ${OUT_TEAMS} (${recentTournaments.length} most recent tournaments)`);
 }
 
 function sortDesc(obj) {

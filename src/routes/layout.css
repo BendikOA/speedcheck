@@ -110,7 +110,7 @@ nav {
     top: 0;
     left: 0;
     height: 100dvh;
-    width: 80vw;
+    width: min(72vw, 280px);
     z-index: 100;
     background: var(--gb-4);
     border-right: 1px solid var(--gb-3);
@@ -164,7 +164,7 @@ nav {
     justify-content: center;
     width: 100%;
     padding: 1rem 1.25rem;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-family: var(--font-heading);
     font-weight: 500;
     color: var(--gb-low);
@@ -179,7 +179,8 @@ nav {
     color: var(--gb-2);
   }
   .drawer-links a.active {
-    color: var(--gb-2);
+    background: var(--gb-hi);
+    color: var(--gb-5);
     font-weight: 700;
   }
 
@@ -211,12 +212,15 @@ nav {
   }
 
   .drawer-kofi {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
     padding-bottom: max(1rem, var(--safe-bottom));
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--gb-low);
     text-align: center;
     line-height: 1.6;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
   }
   .drawer-kofi a {
     color: var(--gb-2);

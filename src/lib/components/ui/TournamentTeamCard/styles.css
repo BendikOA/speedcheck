@@ -1,0 +1,243 @@
+.tc-card {
+  background: var(--gb-4);
+  border: 1px solid var(--gb-3);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.tc-card.expanded {
+  border-color: var(--gb-low);
+}
+
+/* ── Header ── */
+.tc-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  width: 100%;
+  /* right padding reserves space for the absolute chevron */
+  padding: 0.65rem 2rem 0.65rem 0.85rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  min-height: unset;
+}
+@media (hover: hover) {
+  .tc-header:hover {
+    background: color-mix(in srgb, var(--gb-3) 30%, transparent);
+  }
+}
+
+/* Chevron — absolute top-right, never participates in layout */
+.tc-chevron {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  color: var(--gb-low);
+  transition: transform 0.2s;
+}
+.tc-card.expanded .tc-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Text meta block (player + tourney) ── */
+.tc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.tc-player-block {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.tc-placing {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--gb-hi);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.tc-player {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--gb-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.tc-country {
+  font-size: 0.75rem;
+  color: var(--gb-low);
+  flex-shrink: 0;
+}
+
+.tc-tourney {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.tc-tourney-name {
+  font-size: 0.78rem;
+  color: var(--gb-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tc-tourney-meta {
+  font-size: 0.72rem;
+  color: var(--gb-low);
+  white-space: nowrap;
+}
+
+/* ── Sprites ── */
+/* Mobile: own row, sprites at natural size, never fighting text */
+.tc-sprites {
+  display: flex;
+  gap: 0;
+}
+
+.tc-sprite {
+  flex-shrink: 0;
+}
+
+/* ── Desktop: single row at 560px+ ── */
+@media (min-width: 560px) {
+  .tc-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding-right: 2.2rem; /* still leaves room for chevron */
+  }
+
+  .tc-meta {
+    flex: 1; /* text takes remaining space, sprites stay at natural width */
+  }
+}
+
+/* ── Expanded details ── */
+.tc-details {
+  padding: 0 0.85rem 0.85rem;
+  border-top: 1px solid var(--gb-3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.tc-pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  padding-top: 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .tc-pokemon-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 720px) {
+  .tc-pokemon-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.tc-pokemon {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.tc-pokemon-header {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.tc-pokemon-name-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tc-pokemon-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--gb-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tc-tera {
+  font-size: 0.68rem;
+  color: var(--gb-hi);
+}
+
+.tc-pokemon-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.tc-detail-line {
+  font-size: 0.72rem;
+  color: var(--gb-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tc-ability {
+  color: var(--gb-low);
+}
+
+.tc-moves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.tc-moves li {
+  font-size: 0.72rem;
+  color: var(--gb-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tc-moves li::before {
+  content: '— ';
+  color: var(--gb-low);
+}
+
+/* ── Actions ── */
+.tc-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}

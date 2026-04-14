@@ -60,7 +60,8 @@
 
     <!-- Desktop nav links -->
     <div class="nav-links">
-      <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
+      <a href="/" class:active={$page.url.pathname === "/"}>Builder</a>
+      <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
       <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a
@@ -206,7 +207,8 @@
     </div>
 
     <div class="drawer-links">
-      <a href="/" class:active={$page.url.pathname === "/"}>Teams</a>
+      <a href="/" class:active={$page.url.pathname === "/"}>Builder</a>
+      <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
       <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a
