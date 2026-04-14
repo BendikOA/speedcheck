@@ -495,7 +495,7 @@
             <img
               src={spriteUrl(slot.name)}
               alt={slot.name}
-              class="slot-sprite"
+              class="edit-sprite"
             />
             <div class="slot-title">
               <span class="slot-name"
