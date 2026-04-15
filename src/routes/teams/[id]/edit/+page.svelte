@@ -450,7 +450,7 @@
   </div>
 {/if}
 
-<div class="page">
+<div class="edit-page">
   <div class="toolbar">
     <a href="/" class="back-btn">← Back</a>
     <input class="label-input" bind:value={label} placeholder="Team name…" />
@@ -663,7 +663,7 @@
               </div>
               <div class="stat-grid">
                 {#each STAT_KEYS as stat, si}
-                  <label class="stat-label" for="ev-{i}-{stat}"
+                  <label class="edit-stat-label" for="ev-{i}-{stat}"
                     >{STAT_LABELS[si]}</label
                   >
                   <input
@@ -686,7 +686,7 @@
               </div>
               <div class="stat-grid">
                 {#each STAT_KEYS as stat, si}
-                  <label class="stat-label" for="iv-{i}-{stat}"
+                  <label class="edit-stat-label" for="iv-{i}-{stat}"
                     >{STAT_LABELS[si]}</label
                   >
                   <input

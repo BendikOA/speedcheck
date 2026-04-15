@@ -4,6 +4,23 @@ export function spriteUrl(name: string): string {
   return Sprites.getPokemon(name).url;
 }
 
+export function staticSpriteUrl(name: string): string {
+  return Sprites.getPokemon(name, { gen: 'gen5' }).url;
+}
+
+/**
+ * Returns an inline style string for a held item icon (24×24 sprite sheet).
+ */
+export function itemIconStyle(name: string): string {
+  const raw = Icons.getItem(name).style;
+  const match = raw.match(/background:transparent url\(([^)]+)\) no-repeat scroll (-?\d+px -?\d+px)/);
+  if (match) {
+    const [, url, pos] = match;
+    return `display:inline-block;width:24px;height:24px;image-rendering:pixelated;background-image:url(${url});background-repeat:no-repeat;background-position:${pos};`;
+  }
+  return raw;
+}
+
 const PS_SHEET = 'https://play.pokemonshowdown.com/sprites/pokemonicons-sheet.png';
 const LOCAL_SHEET = '/pokemonicons-sheet.png';
 

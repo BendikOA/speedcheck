@@ -25,7 +25,8 @@
   import { tooltip } from "$lib/tooltip";
   import Pill from "$lib/components/ui/Pill/index.svelte";
   import Button from "$lib/components/ui/Button/index.svelte";
-  import { GearSixIcon } from "phosphor-svelte";
+  import { GearSixIcon, SwordIcon } from "phosphor-svelte";
+  import DamageCalc from "$lib/components/DamageCalc/index.svelte";
   import { displayName as shortName } from "$lib/displayName";
   import { abilityDesc, moveSummary } from "$lib/dexInfo";
   import {
@@ -58,6 +59,7 @@
   let priorityReady = false;
   let smogonReady = false;
   let settingsOpen = false;
+  let calcOpen = false;
 
   // ── Persist settings to localStorage ──────────────────────────────────────
   function loadSettings() {
@@ -577,6 +579,17 @@
   <div class="top-bar">
     <Button variant="primary" size="sm" onClick={resetGame}>← New Game</Button>
     <div class="top-bar-right">
+      <!-- Damage calculator -->
+      <button
+        class="gear-btn"
+        class:active={calcOpen}
+        use:tooltip={"Damage Calculator"}
+        on:click={() => (calcOpen = !calcOpen)}
+        aria-label="Damage Calculator"
+      >
+        <SwordIcon size={18} weight="bold" />
+      </button>
+
       <!-- Settings gear -->
       <div class="settings-anchor">
         <button
@@ -1119,4 +1132,15 @@
     invested in speed. Enable the build button to see likely speed altering
     natures as well as your own from the pokepaste.
   </div>
+
+{#if calcOpen}
+  <DamageCalc
+    {yourTeam}
+    {oppTeam}
+    {cond}
+    {smogonMoves}
+    {champMovesFull}
+    onclose={() => (calcOpen = false)}
+  />
+{/if}
 
