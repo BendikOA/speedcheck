@@ -60,10 +60,13 @@
 
     <!-- Desktop nav links -->
     <div class="nav-links">
-      <a href="/" class:active={$page.url.pathname === "/"}>Builder</a>
+      <a href="/" class:active={$page.url.pathname === "/"}>Pregame</a>
+      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+      <a href="/build" class:active={$page.url.pathname === "/build"}
+        >Teambuilder</a
+      >
       <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
       <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
-      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a
       >
@@ -208,15 +211,18 @@
     </div>
 
     <div class="drawer-links">
-      <a href="/" class:active={$page.url.pathname === "/"}>Builder</a>
+      <a href="/" class:active={$page.url.pathname === "/"}>Pregame</a>
+      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+      <a href="/build" class:active={$page.url.pathname === "/build"}
+        >Teambuilder</a
+      >
       <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
       <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
-      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a
       >
       <!-- Boost Tiers hidden -->
-     <!--  <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a> -->
+      <!--  <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a> -->
       <!-- <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a> -->
     </div>
 
@@ -306,4 +312,3 @@
     rel="noopener">buy me a coffee on Ko-fi ☕</a
   >
 </div>
-

@@ -103,7 +103,7 @@
       <Button variant="primary" size="sm" onClick={() => dispatch('load', team)}>Load</Button>
 
       <!-- Edit + Delete: always visible on desktop -->
-      <a class="saved-edit desktop-only" href="/teams/{team.id}/edit" aria-label="Edit team" title="Edit team">
+      <a class="saved-edit desktop-only" href="/build?id={team.id}" aria-label="Edit team" title="Edit team">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
@@ -148,7 +148,7 @@
   <!-- Gear tray: mobile only, shown when gear is open -->
   {#if gearOpen}
     <div class="gear-tray mobile-only">
-      <a class="saved-edit" href="/teams/{team.id}/edit" aria-label="Edit team">
+      <a class="saved-edit" href="/build?id={team.id}" aria-label="Edit team">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
