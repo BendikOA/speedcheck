@@ -62,13 +62,6 @@
   let calcOpen = false;
 
   // ── Persist settings to localStorage ──────────────────────────────────────
-  function loadSettings() {
-    try {
-      const raw = localStorage.getItem('game-settings');
-      if (raw) return JSON.parse(raw) as Record<string, unknown>;
-    } catch { /* ignore */ }
-    return {};
-  }
   function saveSettings() {
     try {
       localStorage.setItem('game-settings', JSON.stringify({
@@ -80,10 +73,8 @@
       }));
     } catch { /* ignore */ }
   }
-  const _saved = loadSettings();
 
-  let selectedReg: string = (typeof _saved.selectedReg === 'string' ? _saved.selectedReg : null)
-    ?? GEN9_REGS[0].format;
+  let selectedReg: string = GEN9_REGS[0].format;
   let smogonPriorityMoves: UsagePriorityMoves = {};
   let smogonAbilities: UsageAbilities = {};
   let smogonMoves: UsageMoves = {};
@@ -125,6 +116,20 @@
   }
 
   onMount(async () => {
+    // Load persisted settings first — must happen before loadUsageData
+    try {
+      const raw = localStorage.getItem('game-settings');
+      if (raw) {
+        const saved = JSON.parse(raw) as Record<string, unknown>;
+        if (typeof saved.selectedReg === 'string') selectedReg = saved.selectedReg;
+        if (saved.likelyItemsActive     === true) likelyItemsActive     = true;
+        if (saved.likelyMovesActive     === true) likelyMovesActive     = true;
+        if (saved.likelyAbilitiesActive === true) likelyAbilitiesActive = true;
+        if (saved.likelyBuildsActive    === true) likelyBuildsActive    = true;
+      }
+    } catch { /* ignore */ }
+    _settingsLoaded = true;
+
     const state = get(teamState);
     yourTeam = state.yourTeam;
     oppTeam = state.oppTeam;
@@ -167,13 +172,16 @@
   }
 
   // ── Usage-based toggles (declared early — used in toggleField) ───────────
-  let likelyItemsActive      = _saved.likelyItemsActive      === true;
-  let likelyMovesActive      = _saved.likelyMovesActive      === true;
-  let likelyAbilitiesActive  = _saved.likelyAbilitiesActive  === true;
-  let likelyBuildsActive     = _saved.likelyBuildsActive     === true; // EV/Nature
+  let likelyItemsActive      = false;
+  let likelyMovesActive      = false;
+  let likelyAbilitiesActive  = false;
+  let likelyBuildsActive     = false; // EV/Nature
 
-  $: selectedReg, likelyAbilitiesActive, likelyItemsActive, likelyMovesActive, likelyBuildsActive,
-     saveSettings();
+  let _settingsLoaded = false;
+  $: if (_settingsLoaded) {
+    selectedReg, likelyAbilitiesActive, likelyItemsActive, likelyMovesActive, likelyBuildsActive;
+    saveSettings();
+  }
 
   // ── Field selection ────────────────────────────────────────────────────────
   let yourField = new Set<number>();
