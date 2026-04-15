@@ -99,7 +99,7 @@
   <meta property="og:url" content="https://turnadus.com/tiers" />
 </svelte:head>
 
-<div class="page">
+<div class="tiers-page">
   <!-- 1. Choose Pokémon -->
   <div class="section-label">Choose Pokémon</div>
   <Input

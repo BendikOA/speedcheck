@@ -116,7 +116,7 @@
 
 <svelte:head><title>Speed Quiz — Turnadus</title></svelte:head>
 
-<div class="page">
+<div class="quiz-page">
   <div class="header">
     <div>
       <h1 class="title">Speed Quiz</h1>

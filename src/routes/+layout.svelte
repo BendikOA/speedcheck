@@ -62,6 +62,7 @@
     <div class="nav-links">
       <a href="/" class:active={$page.url.pathname === "/"}>Builder</a>
       <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
+      <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
       <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a
@@ -209,6 +210,7 @@
     <div class="drawer-links">
       <a href="/" class:active={$page.url.pathname === "/"}>Builder</a>
       <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
+      <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
       <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
       <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
         >All Tiers</a

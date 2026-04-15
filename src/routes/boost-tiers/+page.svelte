@@ -74,7 +74,7 @@
   <meta property="og:url" content="https://turnadus.com/boost-tiers" />
 </svelte:head>
 
-<div class="page">
+<div class="boost-page">
   <div class="section-label">Boost Speed Tiers</div>
   <p class="subtitle">Final speed values after common boosts — Dragon Dance, Agility, Tailwind, Scarf, etc.</p>
 

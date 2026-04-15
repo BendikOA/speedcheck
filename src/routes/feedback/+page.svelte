@@ -15,7 +15,7 @@
   <meta name="robots" content="noindex" />
 </svelte:head>
 
-<div class="page">
+<div class="feedback-page">
   <h1>Feedback</h1>
   <p class="subtitle">Bug reports, suggestions, or anything else — all appreciated.</p>
 

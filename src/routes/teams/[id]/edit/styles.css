@@ -1,4 +1,4 @@
-.page {
+.edit-page {
     max-width: 720px;
     margin: 0 auto;
   }
@@ -337,7 +337,7 @@
     }
   }
 
-  .stat-label {
+  .edit-stat-label {
     font-size: 0.72rem;
     color: var(--gb-low);
     text-align: center;

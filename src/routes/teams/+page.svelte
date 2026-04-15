@@ -14,7 +14,6 @@
     team: TournamentTeam;
   }
 
-  // Pick the winner (placement 1) from each tournament
   $: tournamentWinners = (recentTeams?.tournaments ?? []).reduce<TournamentWinner[]>((acc, t) => {
     const team = t.teams.find(tm => tm.placement === 1) ?? t.teams[0];
     if (team) acc.push({ tournament: t, team });
@@ -23,12 +22,13 @@
 </script>
 
 <svelte:head>
-  <title>Teams — Speedcheck</title>
+  <title>Teams — Turnadus | VGC &amp; Pokémon Champions</title>
+  <meta name="description" content="Top tournament teams for VGC and Pokémon Champions." />
 </svelte:head>
 
 <div class="teams-page">
 
-  <!-- ── Tournament Teams ─────────────────────────────────── -->
+  <!-- ── Tournament Teams ──────────────────────────────── -->
   <section class="teams-section">
     <div class="section-header">
       <h2 class="section-title">Top Tournament Teams</h2>
@@ -40,9 +40,9 @@
     </div>
 
     {#if !recentTeams}
-      <p class="teams-empty">No tournament data available yet. Run the scraper to populate this page.</p>
+      <p class="teams-empty">No tournament data available yet.</p>
     {:else if tournamentWinners.length === 0}
-      <p class="teams-empty">No tournaments found in the last 30 days.</p>
+      <p class="teams-empty">No tournaments found.</p>
     {:else}
       <div class="teams-list">
         {#each tournamentWinners as { tournament, team }}
@@ -64,7 +64,7 @@
     </div>
 
     {#if $savedTeams.length === 0}
-      <p class="teams-empty">No saved teams yet. Build a team on the <a href="/">home page</a> or save one from above.</p>
+      <p class="teams-empty">No saved teams yet. Build a team on the <a href="/">home page</a>.</p>
     {:else}
       <div class="saved-list">
         {#each $savedTeams as team (team.id)}
