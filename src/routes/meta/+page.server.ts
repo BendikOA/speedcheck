@@ -1,5 +1,4 @@
 import type { PageServerLoad } from './$types';
-import { CHAMPIONS_ROSTER } from '$lib/championsRoster';
 import { Dex } from '@pkmn/dex';
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -100,7 +99,9 @@ export const load: PageServerLoad = async ({ fetch }): Promise<MetaPageData> => 
   const gen9Dex = Dex.forGen(9);
   const entries: MetaEntry[] = [];
 
-  for (const id of CHAMPIONS_ROSTER) {
+  // Use the meta JSON's own pokemon keys — covers all forms (regional, mega, rotom, etc.)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const id of Object.keys(championsMeta.pokemon as any)) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const rawData = (championsMeta.pokemon as any)[id];
     const species = gen9Dex.species.get(id);
