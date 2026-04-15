@@ -7,6 +7,7 @@ export type TeamSlot = {
   entry:        SpeedEntry;
   scarf:        boolean;
   nature:       NatureTier;
+  natureName?:  string;
   natureLocked?: boolean;
   // Full paste data (optional — only present when imported from a pokepaste or loaded from a saved team)
   item?:        string;

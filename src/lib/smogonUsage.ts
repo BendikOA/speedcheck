@@ -271,6 +271,20 @@ export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> 
   return result;
 }
 
+/** Aggregate item usage counts across all pokemon → sorted list of item names (most used first). */
+export async function loadChampionsItemUsage(): Promise<string[]> {
+  const meta = await loadChampionsMeta();
+  const totals: Record<string, number> = {};
+  for (const data of Object.values(meta.pokemon)) {
+    for (const [item, count] of Object.entries(data.items)) {
+      totals[item] = (totals[item] ?? 0) + count;
+    }
+  }
+  return Object.entries(totals)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name]) => name);
+}
+
 export async function loadChampionsMovesFull(): Promise<UsageMovesFull> {
   const meta   = await loadChampionsMeta();
   const result: UsageMovesFull = {};

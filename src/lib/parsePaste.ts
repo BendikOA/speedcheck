@@ -76,6 +76,7 @@ export function parsePaste(text: string, entries: SpeedEntry[]): TeamSlot[] {
     const scarf = toId(item) === 'choicescarf';
 
     let nature: NatureTier    = '=';
+    let natureName: string | undefined;
     let ability: string | undefined;
     let teraType: string | undefined;
     let level: number | undefined;
@@ -103,6 +104,7 @@ export function parsePaste(text: string, entries: SpeedEntry[]): TeamSlot[] {
 
       else if ((m = line.match(/^(\w+)\s+Nature$/i))) {
         const nat = m[1].toLowerCase();
+        natureName = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
         nature = SPEED_POS.has(nat) ? '+' : SPEED_NEG.has(nat) ? '-' : '=';
       }
 
@@ -114,6 +116,7 @@ export function parsePaste(text: string, entries: SpeedEntry[]): TeamSlot[] {
       entry,
       scarf,
       nature,
+      natureName,
       natureLocked: true,
       item:     item     || undefined,
       ability,

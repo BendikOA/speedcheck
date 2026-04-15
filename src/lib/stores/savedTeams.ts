@@ -10,6 +10,7 @@ export interface SavedTeamSlot {
   name:          string;
   scarf:         boolean;
   nature:        NatureTier;
+  natureName?:   string;    // full nature name e.g. "Adamant"; derives nature tier
   natureLocked?: boolean;
   item?:         string;
   ability?:      string;
