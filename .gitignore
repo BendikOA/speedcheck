@@ -2,7 +2,7 @@
 .claude/
 .vercel/
 node_modules/
-build/
+/build/
 dist/
 improvements.md
 manualwork.md
