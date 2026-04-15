@@ -1,9 +1,2765 @@
 {
-  "updated": "2026-04-14",
+  "updated": "2026-04-15",
   "source": "play.limitlesstcg.com/api",
   "game": "VGC",
   "format": "M-A",
   "tournaments": [
+    {
+      "id": "69ddc3a848d465883f713282",
+      "name": "HeroicTitan’s VGC Battle Arena",
+      "date": "2026-04-15",
+      "format": "M-A",
+      "players": 85,
+      "teams": [
+        {
+          "placement": 1,
+          "player": "QueerCrocodile",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "gardevoir",
+              "name": "Gardevoir",
+              "item": "Gardevoirite",
+              "ability": "Trace",
+              "tera": null,
+              "moves": [
+                "Hyper Voice",
+                "Psychic",
+                "Trick Room",
+                "Protect"
+              ]
+            },
+            {
+              "id": "primarina",
+              "name": "Primarina",
+              "item": "Leftovers",
+              "ability": "Liquid Voice",
+              "tera": null,
+              "moves": [
+                "Hyper Voice",
+                "Moonblast",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "whimsicott",
+              "name": "Whimsicott",
+              "item": "Focus Sash",
+              "ability": "Prankster",
+              "tera": null,
+              "moves": [
+                "Tailwind",
+                "Moonblast",
+                "Encore",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Close Combat",
+                "Dire Claw",
+                "Fake Out",
+                "Protect"
+              ]
+            },
+            {
+              "id": "arcanine-hisui",
+              "name": "Hisuian Arcanine",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Flare Blitz",
+                "Extreme Speed",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Protect",
+                "Sucker Punch",
+                "Iron Head"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 2,
+          "player": "Clintoap",
+          "country": "IT",
+          "pokemon": [
+            {
+              "id": "umbreon",
+              "name": "Umbreon",
+              "item": "Leftovers",
+              "ability": "Inner Focus",
+              "tera": null,
+              "moves": [
+                "Foul Play",
+                "Snarl",
+                "Yawn",
+                "Detect"
+              ]
+            },
+            {
+              "id": "charizard",
+              "name": "Charizard",
+              "item": "Charizardite Y",
+              "ability": "Solar Power",
+              "tera": null,
+              "moves": [
+                "Solar Beam",
+                "Air Slash",
+                "Heat Wave",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Close Combat",
+                "Dire Claw",
+                "Coaching",
+                "Fake Out"
+              ]
+            },
+            {
+              "id": "dragapult",
+              "name": "Dragapult",
+              "item": "Dragon Fang",
+              "ability": "Clear Body",
+              "tera": null,
+              "moves": [
+                "Dragon Darts",
+                "Phantom Force",
+                "Protect",
+                "Sucker Punch"
+              ]
+            },
+            {
+              "id": "whimsicott",
+              "name": "Whimsicott",
+              "item": "Focus Sash",
+              "ability": "Prankster",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Sunny Day",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "lucario",
+              "name": "Lucario",
+              "item": "Lucarionite",
+              "ability": "Inner Focus",
+              "tera": null,
+              "moves": [
+                "Meteor Mash",
+                "Detect",
+                "Bullet Punch",
+                "Close Combat"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 3,
+          "player": "Diego G",
+          "country": "PE",
+          "pokemon": [
+            {
+              "id": "floette-mega",
+              "name": "Mega Floette",
+              "item": "Floettite",
+              "ability": "Fairy Aura",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Dazzling Gleam",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "tyranitar-mega",
+              "name": "Mega Tyranitar",
+              "item": "Tyranitarite",
+              "ability": "Sand Stream",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Knock Off",
+                "Low Kick",
+                "Protect"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Swift Swim",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Last Respects",
+                "Flip Turn",
+                "Aqua Jet"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Chople Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Flare Blitz",
+                "Parting Shot",
+                "Helping Hand"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Rage Powder",
+                "Trick Room",
+                "Life Dew"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Close Combat",
+                "Dire Claw",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 4,
+          "player": "Cartman",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "charizard",
+              "name": "Charizard",
+              "item": "Charizardite Y",
+              "ability": "Blaze",
+              "tera": null,
+              "moves": [
+                "Heat Wave",
+                "Air Slash",
+                "Weather Ball",
+                "Protect"
+              ]
+            },
+            {
+              "id": "venusaur",
+              "name": "Venusaur",
+              "item": "Focus Sash",
+              "ability": "Chlorophyll",
+              "tera": "Grass",
+              "moves": [
+                "Energy Ball",
+                "Sludge Bomb",
+                "Sleep Powder",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Garchompite",
+              "ability": "Rough Skin",
+              "tera": "Dragon",
+              "moves": [
+                "Earthquake",
+                "Rock Slide",
+                "Dragon Claw",
+                "Protect"
+              ]
+            },
+            {
+              "id": "orthworm",
+              "name": "Orthworm",
+              "item": "Sitrus Berry",
+              "ability": "Earth Eater",
+              "tera": "Steel",
+              "moves": [
+                "Body Press",
+                "Heavy Slam",
+                "Helping Hand",
+                "Shed Tail"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Chople Berry",
+              "ability": "Intimidate",
+              "tera": "Fire",
+              "moves": [
+                "Fake Out",
+                "Parting Shot",
+                "Flare Blitz",
+                "Throat Chop"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Adaptability",
+              "tera": null,
+              "moves": [
+                "Flip Turn",
+                "Aqua Jet",
+                "Wave Crash",
+                "Last Respects"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 5,
+          "player": "Draxolotl",
+          "country": "DE",
+          "pokemon": [
+            {
+              "id": "froslass-mega",
+              "name": "Mega Froslass",
+              "item": "Froslassite",
+              "ability": "Cursed Body",
+              "tera": null,
+              "moves": [
+                "Blizzard",
+                "Shadow Ball",
+                "Protect",
+                "Aurora Veil"
+              ]
+            },
+            {
+              "id": "arcanine-hisui",
+              "name": "Hisuian Arcanine",
+              "item": "Lum Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Rock Slide",
+                "Protect",
+                "Extreme Speed"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Choice Scarf",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Thunderbolt",
+                "Hydro Pump",
+                "Volt Switch",
+                "Electroweb"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Occa Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Trick Room",
+                "Imprison",
+                "Rage Powder"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Protect",
+                "Low Kick"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Close Combat",
+                "Protect",
+                "Dire Claw"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 6,
+          "player": "HeroicTitan",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "floette-mega",
+              "name": "Mega Floette",
+              "item": "Floettite",
+              "ability": "Fairy Aura",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Dazzling Gleam",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "scizor",
+              "name": "Scizor",
+              "item": "Scizorite",
+              "ability": "Technician",
+              "tera": null,
+              "moves": [
+                "Bullet Punch",
+                "Bug Bite",
+                "Swords Dance",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Throat Chop",
+                "Flare Blitz",
+                "Fake Out",
+                "Parting Shot"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "maushold",
+              "name": "Maushold",
+              "item": "Chople Berry",
+              "ability": "Friend Guard",
+              "tera": null,
+              "moves": [
+                "Super Fang",
+                "Follow Me",
+                "Taunt",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Soft Sand",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Stomping Tantrum",
+                "Earthquake",
+                "Dragon Claw",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 7,
+          "player": "Molegod",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "araquanid",
+              "name": "Araquanid",
+              "item": "Leftovers",
+              "ability": "Water Bubble",
+              "tera": null,
+              "moves": [
+                "Liquidation",
+                "Lunge",
+                "Leech Life",
+                "Protect"
+              ]
+            },
+            {
+              "id": "torkoal",
+              "name": "Torkoal",
+              "item": "Charcoal",
+              "ability": "Drought",
+              "tera": null,
+              "moves": [
+                "Heat Wave",
+                "Eruption",
+                "Earth Power",
+                "Protect"
+              ]
+            },
+            {
+              "id": "oranguru",
+              "name": "Oranguru",
+              "item": "Colbur Berry",
+              "ability": "Inner Focus",
+              "tera": null,
+              "moves": [
+                "Trick Room",
+                "Instruct",
+                "Foul Play",
+                "Protect"
+              ]
+            },
+            {
+              "id": "abomasnow",
+              "name": "Abomasnow",
+              "item": "Abomasite",
+              "ability": "Snow Warning",
+              "tera": null,
+              "moves": [
+                "Blizzard",
+                "Giga Drain",
+                "Weather Ball",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Flare Blitz",
+                "Darkest Lariat",
+                "Parting Shot"
+              ]
+            },
+            {
+              "id": "sylveon",
+              "name": "Sylveon",
+              "item": "Fairy Feather",
+              "ability": "Pixilate",
+              "tera": null,
+              "moves": [
+                "Hyper Voice",
+                "Shadow Ball",
+                "Calm Mind",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 8,
+          "player": "DJGamer511",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "Focus Sash",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Close Combat",
+                "Dire Claw",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kangaskhan",
+              "name": "Kangaskhan",
+              "item": "Kangaskhanite",
+              "ability": "Scrappy",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Double-Edge",
+                "Sucker Punch",
+                "Protect"
+              ]
+            },
+            {
+              "id": "talonflame",
+              "name": "Talonflame",
+              "item": "Sharp Beak",
+              "ability": "Gale Wings",
+              "tera": null,
+              "moves": [
+                "Brave Bird",
+                "Tailwind",
+                "Protect",
+                "Flare Blitz"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "White Herb",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Stomping Tantrum",
+                "Protect"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Choice Scarf",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Hydro Pump",
+                "Thunderbolt",
+                "Electroweb",
+                "Dark Pulse"
+              ]
+            },
+            {
+              "id": "sylveon",
+              "name": "Sylveon",
+              "item": "Sitrus Berry",
+              "ability": "Pixilate",
+              "tera": null,
+              "moves": [
+                "Hyper Voice",
+                "Hyper Beam",
+                "Quick Attack",
+                "Protect"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "69dbc00178b359b789d6049b",
+      "name": "TARTAN TAKEDOWN #27 - [CHAMPIONS]",
+      "date": "2026-04-14",
+      "format": "M-A",
+      "players": 64,
+      "teams": [
+        {
+          "placement": 1,
+          "player": "Tabs11",
+          "country": "GB",
+          "pokemon": [
+            {
+              "id": "dragonite",
+              "name": "Dragonite",
+              "item": "Dragoninite",
+              "ability": "Multiscale",
+              "tera": null,
+              "moves": [
+                "Draco Meteor",
+                "Hurricane",
+                "Thunder",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Close Combat",
+                "Dire Claw",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Swords Dance",
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Rage Powder",
+                "Life Dew",
+                "Trick Room"
+              ]
+            },
+            {
+              "id": "pelipper",
+              "name": "Pelipper",
+              "item": "Focus Sash",
+              "ability": "Keen Eye",
+              "tera": null,
+              "moves": [
+                "Weather Ball",
+                "Hurricane",
+                "Protect",
+                "Tailwind"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Swift Swim",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Aqua Jet",
+                "Flip Turn",
+                "Last Respects"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 2,
+          "player": "Olymak",
+          "country": "IT",
+          "pokemon": [
+            {
+              "id": "gengar-mega",
+              "name": "Mega Gengar",
+              "item": "Gengarite",
+              "ability": "Shadow Tag",
+              "tera": null,
+              "moves": [
+                "Shadow Ball",
+                "Sludge Bomb",
+                "Perish Song",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Low Kick",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": "Dark",
+              "moves": [
+                "Matcha Gotcha",
+                "Trick Room",
+                "Rage Powder",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Chople Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Protect",
+                "Parting Shot",
+                "Fake Out"
+              ]
+            },
+            {
+              "id": "kommo-o",
+              "name": "Kommo-o",
+              "item": "Leftovers",
+              "ability": "Overcoat",
+              "tera": null,
+              "moves": [
+                "Clanging Scales",
+                "Aura Sphere",
+                "Clangorous Soul",
+                "Protect"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Tailwind",
+                "Dual Wingbeat",
+                "Rock Slide",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 3,
+          "player": "NonoVGC",
+          "country": "FR",
+          "pokemon": [
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Dire Claw",
+                "Close Combat",
+                "Protect"
+              ]
+            },
+            {
+              "id": "floette-mega",
+              "name": "Mega Floette",
+              "item": "Floettite",
+              "ability": "Flower Veil",
+              "tera": null,
+              "moves": [
+                "Dazzling Gleam",
+                "Moonblast",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "maushold",
+              "name": "Maushold",
+              "item": "Chople Berry",
+              "ability": "Friend Guard",
+              "tera": null,
+              "moves": [
+                "Follow Me",
+                "Super Fang",
+                "Helping Hand",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Iron Head",
+                "Protect"
+              ]
+            },
+            {
+              "id": "delphox",
+              "name": "Delphox",
+              "item": "Delphoxite",
+              "ability": "Blaze",
+              "tera": null,
+              "moves": [
+                "Heat Wave",
+                "Psychic",
+                "Encore",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 4,
+          "player": "jameskbostock",
+          "country": "GB",
+          "pokemon": [
+            {
+              "id": "dragonite",
+              "name": "Dragonite",
+              "item": "Dragoninite",
+              "ability": "Multiscale",
+              "tera": null,
+              "moves": [
+                "Hurricane",
+                "Draco Meteor",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "pelipper",
+              "name": "Pelipper",
+              "item": "Focus Sash",
+              "ability": "Drizzle",
+              "tera": null,
+              "moves": [
+                "Weather Ball",
+                "Hurricane",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Mystic Water",
+              "ability": "Swift Swim",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Last Respects",
+                "Aqua Jet",
+                "Protect"
+              ]
+            },
+            {
+              "id": "archaludon",
+              "name": "Archaludon",
+              "item": "Magnet",
+              "ability": "Sturdy",
+              "tera": null,
+              "moves": [
+                "Electro Shot",
+                "Draco Meteor",
+                "Flash Cannon",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Rage Powder",
+                "Matcha Gotcha",
+                "Life Dew",
+                "Trick Room"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Dire Claw",
+                "Close Combat",
+                "Fake Out",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 5,
+          "player": "QuelloScarso",
+          "country": null,
+          "pokemon": [
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Adaptability",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Flip Turn",
+                "Aqua Jet",
+                "Last Respects"
+              ]
+            },
+            {
+              "id": "arcanine",
+              "name": "Arcanine",
+              "item": "Leftovers",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Burn Up",
+                "Snarl",
+                "Will-O-Wisp",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Rage Powder",
+                "Life Dew",
+                "Protect"
+              ]
+            },
+            {
+              "id": "scizor-mega",
+              "name": "Mega Scizor",
+              "item": "Scizorite",
+              "ability": "Technician",
+              "tera": null,
+              "moves": [
+                "Bullet Punch",
+                "Dual Wingbeat",
+                "Swords Dance",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Close Combat",
+                "Gunk Shot",
+                "Fake Out",
+                "Protect"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 6,
+          "player": "qwertzu7002",
+          "country": "DE",
+          "pokemon": [
+            {
+              "id": "gardevoir",
+              "name": "Gardevoir",
+              "item": "Gardevoirite",
+              "ability": "Telepathy",
+              "tera": null,
+              "moves": [
+                "Hyper Voice",
+                "Psychic",
+                "Trick Room",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Soft Sand",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Stomping Tantrum",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Dire Claw",
+                "Close Combat",
+                "Protect"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Choice Scarf",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Hydro Pump",
+                "Volt Switch",
+                "Electroweb",
+                "Will-O-Wisp"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Tailwind",
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Flare Blitz",
+                "Throat Chop",
+                "Parting Shot"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 7,
+          "player": "4lphabet",
+          "country": null,
+          "pokemon": [
+            {
+              "id": "floette",
+              "name": "Floette",
+              "item": "Floettite",
+              "ability": "Flower Veil",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Dazzling Gleam",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "delphox",
+              "name": "Delphox",
+              "item": "Delphoxite",
+              "ability": "Blaze",
+              "tera": null,
+              "moves": [
+                "Heat Wave",
+                "Psychic",
+                "Encore",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Sitrus Berry",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Rock Slide",
+                "Dragon Claw",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Close Combat",
+                "Dire Claw",
+                "Fake Out",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Leftovers",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Throat Chop",
+                "Fake Out",
+                "Parting Shot"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Chople Berry",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Iron Head",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 8,
+          "player": "Zango",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "talonflame",
+              "name": "Talonflame",
+              "item": "Focus Sash",
+              "ability": "Gale Wings",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Will-O-Wisp",
+                "Protect",
+                "Tailwind"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": "Fighting",
+              "moves": [
+                "Fake Out",
+                "Dire Claw",
+                "Close Combat",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Sitrus Berry",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Rock Slide",
+                "Protect",
+                "Swords Dance"
+              ]
+            },
+            {
+              "id": "froslass",
+              "name": "Froslass",
+              "item": "Froslassite",
+              "ability": "Cursed Body",
+              "tera": "Ice",
+              "moves": [
+                "Protect",
+                "Aurora Veil",
+                "Blizzard",
+                "Shadow Ball"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Choice Scarf",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Trick",
+                "Thunderbolt",
+                "Volt Switch",
+                "Hydro Pump"
+              ]
+            },
+            {
+              "id": "vanilluxe",
+              "name": "Vanilluxe",
+              "item": "Leftovers",
+              "ability": "Snow Warning",
+              "tera": "Ice",
+              "moves": [
+                "Protect",
+                "Aurora Veil",
+                "Blizzard",
+                "Freeze-Dry"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "69d41dcd800d329be2e74139",
+      "name": "SNT First Pokémon Champions Tournament",
+      "date": "2026-04-14",
+      "format": "M-A",
+      "players": 64,
+      "teams": [
+        {
+          "placement": 1,
+          "player": "Gotou",
+          "country": "JP",
+          "pokemon": [
+            {
+              "id": "floette-mega",
+              "name": "Mega Floette",
+              "item": "Floettite",
+              "ability": "Flower Veil",
+              "tera": null,
+              "moves": [
+                "Dazzling Gleam",
+                "Draining Kiss",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "maushold",
+              "name": "Maushold",
+              "item": "Chople Berry",
+              "ability": "Friend Guard",
+              "tera": null,
+              "moves": [
+                "Follow Me",
+                "Taunt",
+                "Super Fang",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "White Herb",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Earthquake",
+                "Dragon Claw",
+                "Protect"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Choice Scarf",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Thunderbolt",
+                "Volt Switch",
+                "Hydro Pump",
+                "Electroweb"
+              ]
+            },
+            {
+              "id": "aegislash",
+              "name": "Aegislash",
+              "item": "Spell Tag",
+              "ability": "Stance Change",
+              "tera": null,
+              "moves": [
+                "Poltergeist",
+                "Shadow Sneak",
+                "Iron Head",
+                "King's Shield"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "Focus Sash",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Dire Claw",
+                "Close Combat",
+                "Throat Chop",
+                "Fake Out"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 2,
+          "player": "Mal",
+          "country": "GB",
+          "pokemon": [
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Snarl",
+                "Flare Blitz",
+                "Parting Shot",
+                "Fake Out"
+              ]
+            },
+            {
+              "id": "glimmora",
+              "name": "Glimmora",
+              "item": "Glimmoranite",
+              "ability": "Toxic Debris",
+              "tera": null,
+              "moves": [
+                "Power Gem",
+                "Sludge Bomb",
+                "Earth Power",
+                "Spiky Shield"
+              ]
+            },
+            {
+              "id": "whimsicott",
+              "name": "Whimsicott",
+              "item": "Focus Sash",
+              "ability": "Prankster",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Encore",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Choice Scarf",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Stomping Tantrum",
+                "Rock Slide"
+              ]
+            },
+            {
+              "id": "corviknight",
+              "name": "Corviknight",
+              "item": "Leftovers",
+              "ability": "Mirror Armor",
+              "tera": null,
+              "moves": [
+                "Brave Bird",
+                "Body Press",
+                "Iron Defense",
+                "Tailwind"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Magnet",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Thunderbolt",
+                "Hydro Pump",
+                "Electroweb",
+                "Will-O-Wisp"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 3,
+          "player": "slimeslatt25",
+          "country": "CA",
+          "pokemon": [
+            {
+              "id": "floette-mega",
+              "name": "Mega Floette",
+              "item": "Floettite",
+              "ability": "Flower Veil",
+              "tera": null,
+              "moves": [
+                "Dazzling Gleam",
+                "Moonblast",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "delphox-mega",
+              "name": "Mega Delphox",
+              "item": "Delphoxite",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Heat Wave",
+                "Psychic",
+                "Substitute",
+                "Protect"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "maushold",
+              "name": "Maushold",
+              "item": "Chople Berry",
+              "ability": "Friend Guard",
+              "tera": null,
+              "moves": [
+                "Follow Me",
+                "Super Fang",
+                "Taunt",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "White Herb",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Rock Slide",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Flare Blitz",
+                "Throat Chop",
+                "Parting Shot"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 4,
+          "player": "TheOnlyHunt",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Adaptability",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Flip Turn",
+                "Last Respects",
+                "Aqua Jet"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Aerodactylite",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "floette",
+              "name": "Floette",
+              "item": "Floettite",
+              "ability": "Flower Veil",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Dazzling Gleam",
+                "Protect",
+                "Calm Mind"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Iron Head",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Rage Powder",
+                "Strength Sap",
+                "Trick Room"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Close Combat",
+                "Dire Claw",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 5,
+          "player": "Lyfix",
+          "country": "FR",
+          "pokemon": [
+            {
+              "id": "gengar-mega",
+              "name": "Mega Gengar",
+              "item": "Gengarite",
+              "ability": "Shadow Tag",
+              "tera": null,
+              "moves": [
+                "Shadow Ball",
+                "Sludge Bomb",
+                "Disable",
+                "Protect"
+              ]
+            },
+            {
+              "id": "whimsicott",
+              "name": "Whimsicott",
+              "item": "Focus Sash",
+              "ability": "Prankster",
+              "tera": null,
+              "moves": [
+                "Moonblast",
+                "Tailwind",
+                "Encore",
+                "Protect"
+              ]
+            },
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Sitrus Berry",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Hydro Pump",
+                "Thunderbolt",
+                "Will-O-Wisp",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "White Herb",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Rock Slide",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Chople Berry",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Iron Head",
+                "Protect"
+              ]
+            },
+            {
+              "id": "corviknight",
+              "name": "Corviknight",
+              "item": "Leftovers",
+              "ability": "Mirror Armor",
+              "tera": null,
+              "moves": [
+                "Brave Bird",
+                "Roost",
+                "Iron Defense",
+                "Body Press"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 6,
+          "player": "Hari",
+          "country": "FR",
+          "pokemon": [
+            {
+              "id": "aggron-mega",
+              "name": "Mega Aggron",
+              "item": "Aggronite",
+              "ability": "Sturdy",
+              "tera": null,
+              "moves": [
+                "Heavy Slam",
+                "Body Press",
+                "Iron Defense",
+                "Protect"
+              ]
+            },
+            {
+              "id": "gengar-mega",
+              "name": "Mega Gengar",
+              "item": "Gengarite",
+              "ability": "Cursed Body",
+              "tera": null,
+              "moves": [
+                "Shadow Ball",
+                "Disable",
+                "Perish Song",
+                "Protect"
+              ]
+            },
+            {
+              "id": "politoed",
+              "name": "Politoed",
+              "item": "Leftovers",
+              "ability": "Drizzle",
+              "tera": null,
+              "moves": [
+                "Weather Ball",
+                "Encore",
+                "Perish Song",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Throat Chop",
+                "Parting Shot",
+                "Fake Out",
+                "Protect"
+              ]
+            },
+            {
+              "id": "palafin",
+              "name": "Palafin",
+              "item": "Mystic Water",
+              "ability": "Zero to Hero",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Ice Punch",
+                "Jet Punch",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Colbur Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Trick Room",
+                "Rage Powder",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 7,
+          "player": "Pane",
+          "country": "ES",
+          "pokemon": [
+            {
+              "id": "meganium",
+              "name": "Meganium",
+              "item": "Meganiumite",
+              "ability": "Overgrow",
+              "tera": null,
+              "moves": [
+                "Solar Beam",
+                "Dazzling Gleam",
+                "Weather Ball",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Chople Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Throat Chop",
+                "Parting Shot",
+                "Fake Out"
+              ]
+            },
+            {
+              "id": "politoed",
+              "name": "Politoed",
+              "item": "Sitrus Berry",
+              "ability": "Drizzle",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Weather Ball",
+                "Perish Song",
+                "Ice Beam"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Adaptability",
+              "tera": null,
+              "moves": [
+                "Flip Turn",
+                "Aqua Jet",
+                "Last Respects",
+                "Wave Crash"
+              ]
+            },
+            {
+              "id": "archaludon",
+              "name": "Archaludon",
+              "item": "Leftovers",
+              "ability": "Stamina",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Draco Meteor",
+                "Electro Shot",
+                "Flash Cannon"
+              ]
+            },
+            {
+              "id": "lucario",
+              "name": "Lucario",
+              "item": "Lucarionite",
+              "ability": "Inner Focus",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Aura Sphere",
+                "Meteor Mash",
+                "Vacuum Wave"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 8,
+          "player": "DanyaleMV",
+          "country": "VE",
+          "pokemon": [
+            {
+              "id": "pelipper",
+              "name": "Pelipper",
+              "item": "Focus Sash",
+              "ability": "Drizzle",
+              "tera": null,
+              "moves": [
+                "Weather Ball",
+                "Ice Beam",
+                "Wide Guard",
+                "Hurricane"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Iron Head",
+                "Kowtow Cleave",
+                "Protect",
+                "Sucker Punch"
+              ]
+            },
+            {
+              "id": "palafin",
+              "name": "Palafin",
+              "item": "Sitrus Berry",
+              "ability": "Zero to Hero",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Drain Punch",
+                "Bulk Up",
+                "Jet Punch"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Quick Claw",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Shadow Ball",
+                "Life Dew",
+                "Rage Powder"
+              ]
+            },
+            {
+              "id": "slowbro",
+              "name": "Slowbro",
+              "item": "Mental Herb",
+              "ability": "Oblivious",
+              "tera": null,
+              "moves": [
+                "Light Screen",
+                "Trick Room",
+                "Body Press",
+                "Psychic"
+              ]
+            },
+            {
+              "id": "aggron-mega",
+              "name": "Mega Aggron",
+              "item": "Aggronite",
+              "ability": "Filter",
+              "tera": null,
+              "moves": [
+                "Heavy Slam",
+                "Protect",
+                "Body Press",
+                "Iron Defense"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "69dd433578b359b789d61615",
+      "name": "Champions Weekly (Flashback Fight Night)",
+      "date": "2026-04-14",
+      "format": "M-A",
+      "players": 26,
+      "teams": [
+        {
+          "placement": 1,
+          "player": "WillyVGC",
+          "country": "CA",
+          "pokemon": [
+            {
+              "id": "gengar-mega",
+              "name": "Mega Gengar",
+              "item": "Gengarite",
+              "ability": "Shadow Tag",
+              "tera": null,
+              "moves": [
+                "Shadow Ball",
+                "Sludge Bomb",
+                "Nasty Plot",
+                "Protect"
+              ]
+            },
+            {
+              "id": "maushold",
+              "name": "Maushold",
+              "item": "Lum Berry",
+              "ability": "Friend Guard",
+              "tera": null,
+              "moves": [
+                "Super Fang",
+                "Follow Me",
+                "Taunt",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Chople Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Flare Blitz",
+                "Throat Chop",
+                "Parting Shot"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Rage Powder",
+                "Life Dew",
+                "Trick Room"
+              ]
+            },
+            {
+              "id": "corviknight",
+              "name": "Corviknight",
+              "item": "Leftovers",
+              "ability": "Mirror Armor",
+              "tera": null,
+              "moves": [
+                "Iron Head",
+                "Body Press",
+                "Iron Defense",
+                "Roost"
+              ]
+            },
+            {
+              "id": "palafin",
+              "name": "Palafin",
+              "item": "Mystic Water",
+              "ability": "Zero to Hero",
+              "tera": null,
+              "moves": [
+                "Jet Punch",
+                "Wave Crash",
+                "Flip Turn",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 2,
+          "player": "CArlosP",
+          "country": "CO",
+          "pokemon": [
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Bright Powder",
+              "ability": "Sand Veil",
+              "tera": null,
+              "moves": [
+                "Dragon Claw",
+                "Protect",
+                "Iron Head",
+                "Earthquake"
+              ]
+            },
+            {
+              "id": "tyranitar-mega",
+              "name": "Mega Tyranitar",
+              "item": "Tyranitarite",
+              "ability": "Sand Stream",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "High Horsepower",
+                "Knock Off",
+                "Protect"
+              ]
+            },
+            {
+              "id": "excadrill",
+              "name": "Excadrill",
+              "item": "Focus Sash",
+              "ability": "Sand Rush",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Rock Slide",
+                "Protect",
+                "Iron Head"
+              ]
+            },
+            {
+              "id": "milotic",
+              "name": "Milotic",
+              "item": "Leftovers",
+              "ability": "Competitive",
+              "tera": null,
+              "moves": [
+                "Recover",
+                "Scald",
+                "Icy Wind",
+                "Ice Beam"
+              ]
+            },
+            {
+              "id": "rotom-heat",
+              "name": "Heat Rotom",
+              "item": "Passho Berry",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Eerie Impulse",
+                "Overheat",
+                "Volt Switch",
+                "Thunderbolt"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Shadow Ball",
+                "Trick Room",
+                "Rage Powder",
+                "Matcha Gotcha"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 3,
+          "player": "ChosenPig32",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "froslass-mega",
+              "name": "Mega Froslass",
+              "item": "Froslassite",
+              "ability": "Cursed Body",
+              "tera": null,
+              "moves": [
+                "Blizzard",
+                "Shadow Ball",
+                "Nasty Plot",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Hard Stone",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Rock Slide",
+                "Protect"
+              ]
+            },
+            {
+              "id": "talonflame",
+              "name": "Talonflame",
+              "item": "Sharp Beak",
+              "ability": "Gale Wings",
+              "tera": null,
+              "moves": [
+                "Dual Wingbeat",
+                "Flare Blitz",
+                "Tailwind",
+                "Upper Hand"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Close Combat",
+                "Dire Claw",
+                "Fake Out",
+                "Protect"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Black Glasses",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Kowtow Cleave",
+                "Sucker Punch",
+                "Swords Dance",
+                "Protect"
+              ]
+            },
+            {
+              "id": "sinistcha",
+              "name": "Sinistcha",
+              "item": "Sitrus Berry",
+              "ability": "Hospitality",
+              "tera": null,
+              "moves": [
+                "Matcha Gotcha",
+                "Rage Powder",
+                "Imprison",
+                "Trick Room"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 4,
+          "player": "Papilio c",
+          "country": null,
+          "pokemon": [
+            {
+              "id": "gengar",
+              "name": "Gengar",
+              "item": "Gengarite",
+              "ability": "Cursed Body",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Shadow Ball",
+                "Perish Song",
+                "Disable"
+              ]
+            },
+            {
+              "id": "politoed",
+              "name": "Politoed",
+              "item": "Leftovers",
+              "ability": "Drizzle",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Weather Ball",
+                "Encore",
+                "Perish Song"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Lum Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Fake Out",
+                "Throat Chop",
+                "Parting Shot"
+              ]
+            },
+            {
+              "id": "dragonite",
+              "name": "Dragonite",
+              "item": "Dragoninite",
+              "ability": "Multiscale",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Hurricane",
+                "Dragon Pulse",
+                "Tailwind"
+              ]
+            },
+            {
+              "id": "archaludon",
+              "name": "Archaludon",
+              "item": "Chople Berry",
+              "ability": "Stamina",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Electro Shot",
+                "Flash Cannon",
+                "Draco Meteor"
+              ]
+            },
+            {
+              "id": "orthworm",
+              "name": "Orthworm",
+              "item": "Sitrus Berry",
+              "ability": "Earth Eater",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Iron Defense",
+                "Body Press",
+                "Shed Tail"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 5,
+          "player": "Hitmonjon",
+          "country": null,
+          "pokemon": [
+            {
+              "id": "farigiraf",
+              "name": "Farigiraf",
+              "item": "Mental Herb",
+              "ability": "Armor Tail",
+              "tera": "Normal",
+              "moves": [
+                "Psychic",
+                "Hyper Voice",
+                "Nasty Plot",
+                "Trick Room"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Darkest Lariat",
+                "Close Combat",
+                "Flare Blitz"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Choice Scarf",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Rock Slide",
+                "Stomping Tantrum"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "White Herb",
+              "ability": "Adaptability",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Last Respects",
+                "Aqua Jet",
+                "Phantom Force"
+              ]
+            },
+            {
+              "id": "corviknight",
+              "name": "Corviknight",
+              "item": "Occa Berry",
+              "ability": "Mirror Armor",
+              "tera": null,
+              "moves": [
+                "Brave Bird",
+                "Iron Head",
+                "Tailwind",
+                "Roost"
+              ]
+            },
+            {
+              "id": "meganium",
+              "name": "Meganium",
+              "item": "Meganiumite",
+              "ability": "Overgrow",
+              "tera": null,
+              "moves": [
+                "Dazzling Gleam",
+                "Weather Ball",
+                "Protect",
+                "Solar Beam"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 6,
+          "player": "Maggrosbeat",
+          "country": "FR",
+          "pokemon": [
+            {
+              "id": "floette-mega",
+              "name": "Mega Floette",
+              "item": "Floettite",
+              "ability": "Fairy Aura",
+              "tera": null,
+              "moves": [
+                "Dazzling Gleam",
+                "Moonblast",
+                "Calm Mind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "delphox-mega",
+              "name": "Mega Delphox",
+              "item": "Delphoxite",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Heat Wave",
+                "Psychic",
+                "Substitute",
+                "Protect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Fake Out",
+                "Throat Chop",
+                "Parting Shot"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Unnerve",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Choice Scarf",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Dragon Claw",
+                "Rock Slide",
+                "Iron Head"
+              ]
+            },
+            {
+              "id": "kingambit",
+              "name": "Kingambit",
+              "item": "Chople Berry",
+              "ability": "Defiant",
+              "tera": null,
+              "moves": [
+                "Sucker Punch",
+                "Iron Head",
+                "Low Kick",
+                "Protect"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 7,
+          "player": "Foxyteau",
+          "country": "FR",
+          "pokemon": [
+            {
+              "id": "kangaskhan",
+              "name": "Kangaskhan",
+              "item": "Kangaskhanite",
+              "ability": "Early Bird",
+              "tera": null,
+              "moves": [
+                "Double-Edge",
+                "Sucker Punch",
+                "Low Kick",
+                "Fake Out"
+              ]
+            },
+            {
+              "id": "aerodactyl",
+              "name": "Aerodactyl",
+              "item": "Focus Sash",
+              "ability": "Rock Head",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Dual Wingbeat",
+                "Tailwind",
+                "Protect"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "White Herb",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Earthquake",
+                "Stomping Tantrum",
+                "Dragon Claw",
+                "Protect"
+              ]
+            },
+            {
+              "id": "basculegion",
+              "name": "Basculegion",
+              "item": "Choice Scarf",
+              "ability": "Adaptability",
+              "tera": null,
+              "moves": [
+                "Wave Crash",
+                "Last Respects",
+                "Flip Turn",
+                "Aqua Jet"
+              ]
+            },
+            {
+              "id": "sylveon",
+              "name": "Sylveon",
+              "item": "Leftovers",
+              "ability": "Pixilate",
+              "tera": null,
+              "moves": [
+                "Hyper Voice",
+                "Quick Attack",
+                "Calm Mind",
+                "Detect"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Flare Blitz",
+                "Darkest Lariat",
+                "Parting Shot",
+                "Fake Out"
+              ]
+            }
+          ]
+        },
+        {
+          "placement": 8,
+          "player": "lookitsryan",
+          "country": "US",
+          "pokemon": [
+            {
+              "id": "rotom-wash",
+              "name": "Wash Rotom",
+              "item": "Leftovers",
+              "ability": "Levitate",
+              "tera": null,
+              "moves": [
+                "Pain Split",
+                "Thunderbolt",
+                "Will-O-Wisp",
+                "Hydro Pump"
+              ]
+            },
+            {
+              "id": "sneasler",
+              "name": "Sneasler",
+              "item": "White Herb",
+              "ability": "Unburden",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Rock Tomb",
+                "Dire Claw",
+                "Close Combat"
+              ]
+            },
+            {
+              "id": "incineroar",
+              "name": "Incineroar",
+              "item": "Sitrus Berry",
+              "ability": "Intimidate",
+              "tera": null,
+              "moves": [
+                "Fake Out",
+                "Flare Blitz",
+                "Parting Shot",
+                "Darkest Lariat"
+              ]
+            },
+            {
+              "id": "charizard",
+              "name": "Charizard",
+              "item": "Charizardite Y",
+              "ability": "Blaze",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Solar Beam",
+                "Heat Wave",
+                "Weather Ball"
+              ]
+            },
+            {
+              "id": "venusaur",
+              "name": "Venusaur",
+              "item": "Focus Sash",
+              "ability": "Chlorophyll",
+              "tera": null,
+              "moves": [
+                "Protect",
+                "Leaf Storm",
+                "Sludge Bomb",
+                "Sleep Powder"
+              ]
+            },
+            {
+              "id": "garchomp",
+              "name": "Garchomp",
+              "item": "Choice Scarf",
+              "ability": "Rough Skin",
+              "tera": null,
+              "moves": [
+                "Rock Slide",
+                "Earthquake",
+                "Poison Jab",
+                "Dragon Claw"
+              ]
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "69dd61af48d465883f712db3",
       "name": "˗ˋˏ❤︎ˎˊ˗ PokePoke Champions Cup",
@@ -2081,7 +4837,7 @@
     },
     {
       "id": "69da6b3548d465883f70f9c8",
-      "name": "VGCA Battle #25",
+      "name": "VGCA Battle Hall #25",
       "date": "2026-04-13",
       "format": "M-A",
       "players": 83,
@@ -3451,2762 +6207,6 @@
                 "Freeze-Dry",
                 "Encore",
                 "Protect"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "69c6845ad478313a15a33e79",
-      "name": "Pokepal Smackdown #136 (Champions) (Reg M-A)",
-      "date": "2026-04-13",
-      "format": "M-A",
-      "players": 69,
-      "teams": [
-        {
-          "placement": 1,
-          "player": "miniman",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "gardevoir-mega",
-              "name": "Mega Gardevoir",
-              "item": "Gardevoirite",
-              "ability": "Telepathy",
-              "tera": null,
-              "moves": [
-                "Hyper Voice",
-                "Psychic",
-                "Trick Room",
-                "Protect"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Chople Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Throat Chop",
-                "Flare Blitz",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Rage Powder",
-                "Trick Room",
-                "Protect"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "White Herb",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Dragon Claw",
-                "Rock Slide",
-                "Protect"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Focus Sash",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Taunt",
-                "Tailwind",
-                "Protect"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Kowtow Cleave",
-                "Sucker Punch",
-                "Iron Head",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 2,
-          "player": "StoneStormVGC",
-          "country": "CL",
-          "pokemon": [
-            {
-              "id": "glimmora",
-              "name": "Glimmora",
-              "item": "Glimmoranite",
-              "ability": "Toxic Debris",
-              "tera": null,
-              "moves": [
-                "Power Gem",
-                "Sludge Bomb",
-                "Earth Power",
-                "Spiky Shield"
-              ]
-            },
-            {
-              "id": "kommo-o",
-              "name": "Kommo-o",
-              "item": "Leftovers",
-              "ability": "Soundproof",
-              "tera": null,
-              "moves": [
-                "Clanging Scales",
-                "Aura Sphere",
-                "Clangorous Soul",
-                "Protect"
-              ]
-            },
-            {
-              "id": "arcanine",
-              "name": "Arcanine",
-              "item": "Shuca Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Temper Flare",
-                "Extreme Speed",
-                "Will-O-Wisp",
-                "Morning Sun"
-              ]
-            },
-            {
-              "id": "tsareena",
-              "name": "Tsareena",
-              "item": "White Herb",
-              "ability": "Queenly Majesty",
-              "tera": null,
-              "moves": [
-                "Trop Kick",
-                "Triple Axel",
-                "U-turn",
-                "Protect"
-              ]
-            },
-            {
-              "id": "primarina",
-              "name": "Primarina",
-              "item": "Sitrus Berry",
-              "ability": "Liquid Voice",
-              "tera": null,
-              "moves": [
-                "Draining Kiss",
-                "Hyper Voice",
-                "Calm Mind",
-                "Protect"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Chople Berry",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Assurance",
-                "Iron Head",
-                "Sucker Punch",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 3,
-          "player": "CherryBallad",
-          "country": "CA",
-          "pokemon": [
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Choice Scarf",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Stomping Tantrum",
-                "Breaking Swipe",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "gardevoir-mega",
-              "name": "Mega Gardevoir",
-              "item": "Gardevoirite",
-              "ability": "Pixilate",
-              "tera": null,
-              "moves": [
-                "Hyper Voice",
-                "Moonblast",
-                "Protect",
-                "Trick Room"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Moonblast",
-                "Tailwind",
-                "Encore",
-                "Taunt"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "White Herb",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Close Combat",
-                "Dire Claw",
-                "Acrobatics",
-                "Protect"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Sucker Punch",
-                "Kowtow Cleave",
-                "Swords Dance",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Rage Powder",
-                "Trick Room",
-                "Life Dew"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 4,
-          "player": "zlockbag1869",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Focus Sash",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Protect",
-                "Tailwind"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Helping Hand",
-                "Parting Shot",
-                "Flare Blitz"
-              ]
-            },
-            {
-              "id": "floette-mega",
-              "name": "Mega Floette",
-              "item": "Floettite",
-              "ability": "Flower Veil",
-              "tera": null,
-              "moves": [
-                "Dazzling Gleam",
-                "Moonblast",
-                "Light of Ruin",
-                "Protect"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Choice Scarf",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Last Respects",
-                "Flip Turn",
-                "Liquidation",
-                "Wave Crash"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Haban Berry",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Dragon Claw",
-                "Rock Slide",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "White Herb",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Close Combat",
-                "Dire Claw",
-                "Rock Tomb",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 5,
-          "player": "Itivgc",
-          "country": null,
-          "pokemon": [
-            {
-              "id": "milotic",
-              "name": "Milotic",
-              "item": "Mystic Water",
-              "ability": "Competitive",
-              "tera": null,
-              "moves": [
-                "Scald",
-                "Ice Beam",
-                "Protect",
-                "Icy Wind"
-              ]
-            },
-            {
-              "id": "floette-mega",
-              "name": "Mega Floette",
-              "item": "Floettite",
-              "ability": "Fairy Aura",
-              "tera": null,
-              "moves": [
-                "Calm Mind",
-                "Dazzling Gleam",
-                "Moonblast",
-                "Protect"
-              ]
-            },
-            {
-              "id": "farigiraf",
-              "name": "Farigiraf",
-              "item": "Mental Herb",
-              "ability": "Armor Tail",
-              "tera": null,
-              "moves": [
-                "Trick Room",
-                "Hyper Voice",
-                "Helping Hand",
-                "Psychic"
-              ]
-            },
-            {
-              "id": "drampa",
-              "name": "Drampa",
-              "item": "Drampanite",
-              "ability": "Cloud Nine",
-              "tera": null,
-              "moves": [
-                "Hyper Voice",
-                "Draco Meteor",
-                "Earth Power",
-                "Protect"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Encore",
-                "Moonblast",
-                "Tailwind"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Darkest Lariat",
-                "Flare Blitz",
-                "Parting Shot"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 6,
-          "player": "pokeplayer32199",
-          "country": null,
-          "pokemon": [
-            {
-              "id": "farigiraf",
-              "name": "Farigiraf",
-              "item": "Colbur Berry",
-              "ability": "Armor Tail",
-              "tera": null,
-              "moves": [
-                "Dazzling Gleam",
-                "Trick Room",
-                "Protect",
-                "Expanding Force"
-              ]
-            },
-            {
-              "id": "pangoro",
-              "name": "Pangoro",
-              "item": "Quick Claw",
-              "ability": "Scrappy",
-              "tera": null,
-              "moves": [
-                "Close Combat",
-                "Detect",
-                "Parting Shot",
-                "Darkest Lariat"
-              ]
-            },
-            {
-              "id": "meowstic",
-              "name": "Meowstic",
-              "item": "Mental Herb",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Reflect",
-                "Light Screen",
-                "Psychic",
-                "Psychic Terrain"
-              ]
-            },
-            {
-              "id": "goodra-hisui",
-              "name": "Hisuian Goodra",
-              "item": "Leftovers",
-              "ability": "Sap Sipper",
-              "tera": null,
-              "moves": [
-                "Thunderbolt",
-                "Flash Cannon",
-                "Body Press",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sylveon",
-              "name": "Sylveon",
-              "item": "Fairy Feather",
-              "ability": "Pixilate",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Hyper Voice",
-                "Shadow Ball",
-                "Psychic"
-              ]
-            },
-            {
-              "id": "tyranitar",
-              "name": "Tyranitar",
-              "item": "Tyranitarite",
-              "ability": "Sand Stream",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Knock Off",
-                "Protect",
-                "Low Kick"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 7,
-          "player": "DatGuyJimmeh",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "charizard",
-              "name": "Charizard",
-              "item": "Charizardite X",
-              "ability": "Tough Claws",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Dragon Claw",
-                "Dragon Dance",
-                "Protect"
-              ]
-            },
-            {
-              "id": "milotic",
-              "name": "Milotic",
-              "item": "Leftovers",
-              "ability": "Marvel Scale",
-              "tera": null,
-              "moves": [
-                "Scald",
-                "Icy Wind",
-                "Life Dew",
-                "Protect"
-              ]
-            },
-            {
-              "id": "tinkaton",
-              "name": "Tinkaton",
-              "item": "Metal Coat",
-              "ability": "Own Tempo",
-              "tera": null,
-              "moves": [
-                "Gigaton Hammer",
-                "Play Rough",
-                "Fake Out",
-                "Encore"
-              ]
-            },
-            {
-              "id": "tyranitar",
-              "name": "Tyranitar",
-              "item": "Shuca Berry",
-              "ability": "Sand Stream",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Knock Off",
-                "Ice Punch",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Rage Powder",
-                "Trick Room",
-                "Strength Sap"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Mental Herb",
-              "ability": "Rock Head",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Tailwind",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 8,
-          "player": "Ayden24B",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "floette-mega",
-              "name": "Mega Floette",
-              "item": "Floettite",
-              "ability": "Fairy Aura",
-              "tera": null,
-              "moves": [
-                "Moonblast",
-                "Dazzling Gleam",
-                "Light of Ruin",
-                "Protect"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Choice Scarf",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Wave Crash",
-                "Last Respects",
-                "Flip Turn",
-                "Aqua Jet"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Leftovers",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Throat Chop",
-                "Fake Out",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Life Dew",
-                "Trick Room",
-                "Rage Powder"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Focus Sash",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Tailwind",
-                "Protect"
-              ]
-            },
-            {
-              "id": "aggron",
-              "name": "Aggron",
-              "item": "Aggronite",
-              "ability": "Sturdy",
-              "tera": null,
-              "moves": [
-                "Body Press",
-                "Iron Defense",
-                "Payback",
-                "Protect"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "69dbdda978b359b789d60767",
-      "name": "Intimidators Champions Challenge #1 - REG M-A",
-      "date": "2026-04-13",
-      "format": "M-A",
-      "players": 31,
-      "teams": [
-        {
-          "placement": 1,
-          "player": "Italo M",
-          "country": "BR",
-          "pokemon": [
-            {
-              "id": "primarina",
-              "name": "Primarina",
-              "item": "Leftovers",
-              "ability": "Liquid Voice",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Calm Mind",
-                "Hyper Voice",
-                "Moonblast"
-              ]
-            },
-            {
-              "id": "tyranitar",
-              "name": "Tyranitar",
-              "item": "Tyranitarite",
-              "ability": "Sand Stream",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Knock Off",
-                "Rock Slide",
-                "Snarl"
-              ]
-            },
-            {
-              "id": "kommo-o",
-              "name": "Kommo-o",
-              "item": "Dragon Fang",
-              "ability": "Overcoat",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Clangorous Soul",
-                "Clanging Scales",
-                "Aura Sphere"
-              ]
-            },
-            {
-              "id": "gengar",
-              "name": "Gengar",
-              "item": "Gengarite",
-              "ability": "Cursed Body",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Icy Wind",
-                "Shadow Ball",
-                "Sludge Bomb"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Trick Room",
-                "Rage Powder",
-                "Life Dew",
-                "Matcha Gotcha"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Shuca Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Helping Hand",
-                "Parting Shot",
-                "Flare Blitz"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 2,
-          "player": "Sergio Rubiano",
-          "country": "CO",
-          "pokemon": [
-            {
-              "id": "lucario-mega",
-              "name": "Mega Lucario",
-              "item": "Lucarionite",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Close Combat",
-                "Bullet Punch",
-                "Extreme Speed",
-                "Protect"
-              ]
-            },
-            {
-              "id": "arcanine",
-              "name": "Arcanine",
-              "item": "Shuca Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Will-O-Wisp",
-                "Extreme Speed",
-                "Snarl"
-              ]
-            },
-            {
-              "id": "rotom-wash",
-              "name": "Wash Rotom",
-              "item": "Leftovers",
-              "ability": "Levitate",
-              "tera": null,
-              "moves": [
-                "Volt Switch",
-                "Thunderbolt",
-                "Protect",
-                "Hydro Pump"
-              ]
-            },
-            {
-              "id": "ninetales-alola",
-              "name": "Alolan Ninetales",
-              "item": "Focus Sash",
-              "ability": "Snow Warning",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Moonblast",
-                "Blizzard",
-                "Aurora Veil"
-              ]
-            },
-            {
-              "id": "dragonite-mega",
-              "name": "Mega Dragonite",
-              "item": "Dragoninite",
-              "ability": "Multiscale",
-              "tera": null,
-              "moves": [
-                "Dragon Pulse",
-                "Tailwind",
-                "Hurricane",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Rage Powder",
-                "Matcha Gotcha",
-                "Life Dew",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 3,
-          "player": "Rahzar",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "dragonite",
-              "name": "Dragonite",
-              "item": "Silk Scarf",
-              "ability": "Inner Focus",
-              "tera": null,
-              "moves": [
-                "Extreme Speed",
-                "Outrage",
-                "Thunder Punch",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "pelipper",
-              "name": "Pelipper",
-              "item": "Choice Scarf",
-              "ability": "Drizzle",
-              "tera": null,
-              "moves": [
-                "Weather Ball",
-                "Hurricane",
-                "Icy Wind",
-                "Ice Beam"
-              ]
-            },
-            {
-              "id": "archaludon",
-              "name": "Archaludon",
-              "item": "Leftovers",
-              "ability": "Stamina",
-              "tera": null,
-              "moves": [
-                "Electro Shot",
-                "Dragon Pulse",
-                "Aura Sphere",
-                "Protect"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Mystic Water",
-              "ability": "Swift Swim",
-              "tera": null,
-              "moves": [
-                "Wave Crash",
-                "Last Respects",
-                "Aqua Jet",
-                "Protect"
-              ]
-            },
-            {
-              "id": "gengar",
-              "name": "Gengar",
-              "item": "Focus Sash",
-              "ability": "Cursed Body",
-              "tera": null,
-              "moves": [
-                "Sludge Bomb",
-                "Shadow Ball",
-                "Sludge Wave",
-                "Protect"
-              ]
-            },
-            {
-              "id": "scizor-mega",
-              "name": "Mega Scizor",
-              "item": "Scizorite",
-              "ability": "Technician",
-              "tera": null,
-              "moves": [
-                "Bullet Punch",
-                "Bug Bite",
-                "Close Combat",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 4,
-          "player": "Jackson L",
-          "country": "BR",
-          "pokemon": [
-            {
-              "id": "venusaur",
-              "name": "Venusaur",
-              "item": "Focus Sash",
-              "ability": "Chlorophyll",
-              "tera": null,
-              "moves": [
-                "Energy Ball",
-                "Sleep Powder",
-                "Sludge Bomb",
-                "Protect"
-              ]
-            },
-            {
-              "id": "charizard",
-              "name": "Charizard",
-              "item": "Charizardite Y",
-              "ability": "Solar Power",
-              "tera": null,
-              "moves": [
-                "Weather Ball",
-                "Heat Wave",
-                "Solar Beam",
-                "Protect"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Throat Chop",
-                "Parting Shot",
-                "Fake Out"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Chople Berry",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Low Kick",
-                "Kowtow Cleave",
-                "Sucker Punch",
-                "Protect"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Leftovers",
-              "ability": "Pressure",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Tailwind",
-                "Wide Guard"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Choice Scarf",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Dragon Claw",
-                "Rock Slide",
-                "Shadow Claw"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 5,
-          "player": "Pedro Soares",
-          "country": "BR",
-          "pokemon": [
-            {
-              "id": "aggron-mega",
-              "name": "Mega Aggron",
-              "item": "Aggronite",
-              "ability": "Sturdy",
-              "tera": null,
-              "moves": [
-                "Body Press",
-                "Heavy Slam",
-                "Iron Defense",
-                "Protect"
-              ]
-            },
-            {
-              "id": "oranguru",
-              "name": "Oranguru",
-              "item": "Mental Herb",
-              "ability": "Inner Focus",
-              "tera": null,
-              "moves": [
-                "Foul Play",
-                "Instruct",
-                "Trick Room",
-                "Play Rough"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Chople Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Flare Blitz",
-                "Darkest Lariat",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Rage Powder",
-                "Life Dew",
-                "Trick Room"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "Focus Sash",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Close Combat",
-                "Dire Claw",
-                "Protect"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Choice Scarf",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Flip Turn",
-                "Aqua Jet",
-                "Wave Crash",
-                "Last Respects"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 6,
-          "player": "phan7oom",
-          "country": "NL",
-          "pokemon": [
-            {
-              "id": "floette-mega",
-              "name": "Mega Floette",
-              "item": "Floettite",
-              "ability": "Fairy Aura",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Dazzling Gleam",
-                "Draining Kiss",
-                "Calm Mind"
-              ]
-            },
-            {
-              "id": "ninetales-alola",
-              "name": "Alolan Ninetales",
-              "item": "Focus Sash",
-              "ability": "Snow Warning",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Blizzard",
-                "Aurora Veil",
-                "Encore"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Throat Chop",
-                "Flare Blitz",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Leftovers",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Trick Room",
-                "Matcha Gotcha",
-                "Life Dew",
-                "Rage Powder"
-              ]
-            },
-            {
-              "id": "aggron-mega",
-              "name": "Mega Aggron",
-              "item": "Aggronite",
-              "ability": "Sturdy",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Iron Defense",
-                "Heavy Slam",
-                "Body Press"
-              ]
-            },
-            {
-              "id": "palafin",
-              "name": "Palafin",
-              "item": "Mystic Water",
-              "ability": "Zero to Hero",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Close Combat",
-                "Wave Crash",
-                "Jet Punch"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 7,
-          "player": "mulletboygames",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Lum Berry",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Dragon Claw",
-                "Earthquake",
-                "Protect",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "politoed",
-              "name": "Politoed",
-              "item": "Sitrus Berry",
-              "ability": "Drizzle",
-              "tera": null,
-              "moves": [
-                "Weather Ball",
-                "Protect",
-                "Icy Wind",
-                "Helping Hand"
-              ]
-            },
-            {
-              "id": "archaludon",
-              "name": "Archaludon",
-              "item": "Leftovers",
-              "ability": "Stamina",
-              "tera": null,
-              "moves": [
-                "Draco Meteor",
-                "Electro Shot",
-                "Protect",
-                "Flash Cannon"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "Focus Sash",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Close Combat",
-                "Dire Claw",
-                "Fake Out",
-                "Protect"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Choice Scarf",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Flip Turn",
-                "Last Respects",
-                "Wave Crash",
-                "Aqua Jet"
-              ]
-            },
-            {
-              "id": "gengar-mega",
-              "name": "Mega Gengar",
-              "item": "Gengarite",
-              "ability": "Cursed Body",
-              "tera": null,
-              "moves": [
-                "Disable",
-                "Protect",
-                "Shadow Ball",
-                "Sludge Bomb"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 8,
-          "player": "SaintRez",
-          "country": "BR",
-          "pokemon": [
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Soft Sand",
-              "ability": "Sand Veil",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Dragon Claw",
-                "Protect",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "charizard",
-              "name": "Charizard",
-              "item": "Charizardite Y",
-              "ability": "Solar Power",
-              "tera": null,
-              "moves": [
-                "Heat Wave",
-                "Solar Beam",
-                "Weather Ball",
-                "Protect"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Moonblast",
-                "Tailwind",
-                "Encore"
-              ]
-            },
-            {
-              "id": "farigiraf",
-              "name": "Farigiraf",
-              "item": "Mental Herb",
-              "ability": "Armor Tail",
-              "tera": null,
-              "moves": [
-                "Trick Room",
-                "Helping Hand",
-                "Psychic Noise",
-                "Protect"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Will-O-Wisp",
-                "Fake Out",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "aggron",
-              "name": "Aggron",
-              "item": "Aggronite",
-              "ability": "Sturdy",
-              "tera": null,
-              "moves": [
-                "Body Press",
-                "Iron Defense",
-                "Heavy Slam",
-                "Protect"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "69d7eb93c734cfa1af2b61a1",
-      "name": "The Dark League champions pop up! 5$usd",
-      "date": "2026-04-13",
-      "format": "M-A",
-      "players": 12,
-      "teams": [
-        {
-          "placement": 1,
-          "player": "6nerox",
-          "country": "MX",
-          "pokemon": [
-            {
-              "id": "delphox",
-              "name": "Delphox",
-              "item": "Delphoxite",
-              "ability": "Magician",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Heat Wave",
-                "Psychic",
-                "Substitute"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Choice Scarf",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Wave Crash",
-                "Last Respects",
-                "Flip Turn",
-                "Aqua Jet"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Kowtow Cleave",
-                "Sucker Punch",
-                "Swords Dance"
-              ]
-            },
-            {
-              "id": "dragonite",
-              "name": "Dragonite",
-              "item": "Lum Berry",
-              "ability": "Multiscale",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Scale Shot",
-                "Haze",
-                "Extreme Speed"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "Focus Sash",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Close Combat",
-                "Dire Claw",
-                "Fake Out"
-              ]
-            },
-            {
-              "id": "clefable",
-              "name": "Clefable",
-              "item": "Sitrus Berry",
-              "ability": "Unaware",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Moonblast",
-                "Follow Me",
-                "Helping Hand"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 2,
-          "player": "gagartoo",
-          "country": "AR",
-          "pokemon": [
-            {
-              "id": "floette",
-              "name": "Floette",
-              "item": "Floettite",
-              "ability": "Flower Veil",
-              "tera": null,
-              "moves": [
-                "Moonblast",
-                "Dazzling Gleam",
-                "Calm Mind",
-                "Protect"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Chople Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Throat Chop",
-                "Parting Shot",
-                "Fake Out"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Life Dew",
-                "Rage Powder",
-                "Trick Room"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Focus Sash",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Tailwind",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "White Herb",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Close Combat",
-                "Dire Claw",
-                "Fake Out",
-                "Protect"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Kowtow Cleave",
-                "Sucker Punch",
-                "Low Kick",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 3,
-          "player": "Fabricio19jr",
-          "country": "PE",
-          "pokemon": [
-            {
-              "id": "crabominable",
-              "name": "Crabominable",
-              "item": "Crabominite",
-              "ability": "Iron Fist",
-              "tera": "Fighting",
-              "moves": [
-                "Drain Punch",
-                "Ice Hammer",
-                "Match Punch",
-                "Thunder Punch"
-              ]
-            },
-            {
-              "id": "torkoal",
-              "name": "Torkoal",
-              "item": "Charcoal",
-              "ability": "Drought",
-              "tera": null,
-              "moves": [
-                "Eruption",
-                "Heat Wave",
-                "Earth Power",
-                "Weather Ball"
-              ]
-            },
-            {
-              "id": "armarouge",
-              "name": "Armarouge",
-              "item": "Lum Berry",
-              "ability": "Flash Fire",
-              "tera": null,
-              "moves": [
-                "Meteor Beam",
-                "Trick Room",
-                "Psychic",
-                "Armor Cannon"
-              ]
-            },
-            {
-              "id": "gallade",
-              "name": "Gallade",
-              "item": "White Herb",
-              "ability": "Sharpness",
-              "tera": null,
-              "moves": [
-                "Sacred Sword",
-                "Psycho Cut",
-                "Wide Guard",
-                "Trick Room"
-              ]
-            },
-            {
-              "id": "maushold",
-              "name": "Maushold",
-              "item": "Focus Sash",
-              "ability": "Friend Guard",
-              "tera": null,
-              "moves": [
-                "Population Bomb",
-                "Follow Me",
-                "Taunt",
-                "Protect"
-              ]
-            },
-            {
-              "id": "farigiraf",
-              "name": "Farigiraf",
-              "item": "Sitrus Berry",
-              "ability": "Armor Tail",
-              "tera": null,
-              "moves": [
-                "Hyper Voice",
-                "Psychic",
-                "Psychic Noise",
-                "Trick Room"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 4,
-          "player": "krudy",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "delphox-mega",
-              "name": "Mega Delphox",
-              "item": "Delphoxite",
-              "ability": "Levitate",
-              "tera": null,
-              "moves": [
-                "Psychic",
-                "Nasty Plot",
-                "Heat Wave",
-                "Protect"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Roseli Berry",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Scale Shot",
-                "Poison Jab",
-                "Swords Dance"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Focus Sash",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Wide Guard",
-                "Tailwind"
-              ]
-            },
-            {
-              "id": "orthworm",
-              "name": "Orthworm",
-              "item": "Sitrus Berry",
-              "ability": "Earth Eater",
-              "tera": null,
-              "moves": [
-                "Body Press",
-                "Shed Tail",
-                "Heavy Slam",
-                "Iron Defense"
-              ]
-            },
-            {
-              "id": "gardevoir",
-              "name": "Gardevoir",
-              "item": "Kasib Berry",
-              "ability": "Telepathy",
-              "tera": null,
-              "moves": [
-                "Calm Mind",
-                "Psychic",
-                "Thunderbolt",
-                "Dazzling Gleam"
-              ]
-            },
-            {
-              "id": "gyarados",
-              "name": "Gyarados",
-              "item": "Leftovers",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Helping Hand",
-                "Taunt",
-                "Waterfall",
-                "Icy Wind"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 5,
-          "player": "SolraK",
-          "country": "CO",
-          "pokemon": [
-            {
-              "id": "froslass-mega",
-              "name": "Mega Froslass",
-              "item": "Froslassite",
-              "ability": "Cursed Body",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Blizzard",
-                "Shadow Ball",
-                "Nasty Plot"
-              ]
-            },
-            {
-              "id": "milotic",
-              "name": "Milotic",
-              "item": "Leftovers",
-              "ability": "Competitive",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Muddy Water",
-                "Icy Wind",
-                "Flip Turn"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Focus Sash",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Dragon Claw",
-                "Stomping Tantrum",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "White Herb",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Close Combat",
-                "Dire Claw",
-                "Fake Out"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Rage Powder",
-                "Matcha Gotcha",
-                "Life Dew",
-                "Trick Room"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Kowtow Cleave",
-                "Iron Head",
-                "Sucker Punch"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 6,
-          "player": "TDL | iyla sutherland",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "gengar-mega",
-              "name": "Mega Gengar",
-              "item": "Gengarite",
-              "ability": "Shadow Tag",
-              "tera": null,
-              "moves": [
-                "Disable",
-                "Perish Song",
-                "Protect",
-                "Sludge Wave"
-              ]
-            },
-            {
-              "id": "politoed",
-              "name": "Politoed",
-              "item": "Mystic Water",
-              "ability": "Drizzle",
-              "tera": null,
-              "moves": [
-                "Weather Ball",
-                "Perish Song",
-                "Protect",
-                "Encore"
-              ]
-            },
-            {
-              "id": "corviknight",
-              "name": "Corviknight",
-              "item": "Sharp Beak",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Bulk Up",
-                "Body Press",
-                "Brave Bird"
-              ]
-            },
-            {
-              "id": "archaludon",
-              "name": "Archaludon",
-              "item": "White Herb",
-              "ability": "Stamina",
-              "tera": null,
-              "moves": [
-                "Electro Shot",
-                "Protect",
-                "Draco Meteor",
-                "Flash Cannon"
-              ]
-            },
-            {
-              "id": "mimikyu",
-              "name": "Mimikyu",
-              "item": "Sitrus Berry",
-              "ability": "Disguise",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Play Rough",
-                "Shadow Sneak",
-                "Endure"
-              ]
-            },
-            {
-              "id": "milotic",
-              "name": "Milotic",
-              "item": "Leftovers",
-              "ability": "Competitive",
-              "tera": null,
-              "moves": [
-                "Scald",
-                "Ice Beam",
-                "Recover",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 7,
-          "player": "Galius",
-          "country": "IT",
-          "pokemon": [
-            {
-              "id": "tyranitar",
-              "name": "Tyranitar",
-              "item": "Tyranitarite",
-              "ability": "Sand Stream",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Knock Off",
-                "Protect",
-                "Dragon Dance"
-              ]
-            },
-            {
-              "id": "arcanine",
-              "name": "Arcanine",
-              "item": "Shuca Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Flare Blitz",
-                "Will-O-Wisp",
-                "Extreme Speed",
-                "Protect"
-              ]
-            },
-            {
-              "id": "farigiraf",
-              "name": "Farigiraf",
-              "item": "Sitrus Berry",
-              "ability": "Armor Tail",
-              "tera": null,
-              "moves": [
-                "Psychic",
-                "Trick Room",
-                "Hyper Voice",
-                "Ally Switch"
-              ]
-            },
-            {
-              "id": "conkeldurr",
-              "name": "Conkeldurr",
-              "item": "White Herb",
-              "ability": "Iron Fist",
-              "tera": null,
-              "moves": [
-                "Drain Punch",
-                "Mach Punch",
-                "Protect",
-                "Poison Jab"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Choice Scarf",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Dragon Claw",
-                "Stomping Tantrum",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "sylveon",
-              "name": "Sylveon",
-              "item": "Leftovers",
-              "ability": "Cute Charm",
-              "tera": null,
-              "moves": [
-                "Hyper Voice",
-                "Yawn",
-                "Helping Hand",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 8,
-          "player": "Dexter Morgan",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "pikachu",
-              "name": "Pikachu",
-              "item": "Choice Scarf",
-              "ability": "Static",
-              "tera": "Electric",
-              "moves": [
-                "Thunder",
-                "Surf",
-                "Grass Knot",
-                "Quick Attack"
-              ]
-            },
-            {
-              "id": "gengar",
-              "name": "Gengar",
-              "item": "Focus Sash",
-              "ability": "Cursed Body",
-              "tera": "Ghost",
-              "moves": [
-                "Shadow Ball",
-                "Sludge Wave",
-                "Icy Wind",
-                "Destiny Bond"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": "Dark",
-              "moves": [
-                "Swords Dance",
-                "Sucker Punch",
-                "Kowtow Cleave",
-                "Protect"
-              ]
-            },
-            {
-              "id": "clefable",
-              "name": "Clefable",
-              "item": "Sitrus Berry",
-              "ability": "Unaware",
-              "tera": "Fairy",
-              "moves": [
-                "Follow Me",
-                "Helping Hand",
-                "Moonblast",
-                "Protect"
-              ]
-            },
-            {
-              "id": "delphox",
-              "name": "Delphox",
-              "item": "Lum Berry",
-              "ability": "Blaze",
-              "tera": "Fire",
-              "moves": [
-                "Heat Wave",
-                "Substitute",
-                "Psychic",
-                "Protect"
-              ]
-            },
-            {
-              "id": "dragonite",
-              "name": "Dragonite",
-              "item": "Dragonnite",
-              "ability": "Multiscale",
-              "tera": "Dragon",
-              "moves": [
-                "Scale Shot",
-                "Extreme Speed",
-                "Haze",
-                "Protect"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "69d9eb9a78b359b789d5e62f",
-      "name": "Red Panda Rumble! Quickfire VGC Reg M-A Tour",
-      "date": "2026-04-13",
-      "format": "M-A",
-      "players": 8,
-      "teams": [
-        {
-          "placement": 1,
-          "player": "Blueberrybolt1",
-          "country": "CA",
-          "pokemon": [
-            {
-              "id": "hydreigon",
-              "name": "Hydreigon",
-              "item": "Choice Scarf",
-              "ability": "Levitate",
-              "tera": null,
-              "moves": [
-                "Dark Pulse",
-                "Draco Meteor",
-                "Earth Power",
-                "Flash Cannon"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Sitrus Berry",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Matcha Gotcha",
-                "Trick Room",
-                "Strength Sap",
-                "Rage Powder"
-              ]
-            },
-            {
-              "id": "tyranitar",
-              "name": "Tyranitar",
-              "item": "Chople Berry",
-              "ability": "Sand Stream",
-              "tera": null,
-              "moves": [
-                "Dragon Dance",
-                "Knock Off",
-                "Rock Slide",
-                "Protect"
-              ]
-            },
-            {
-              "id": "excadrill",
-              "name": "Excadrill",
-              "item": "Focus Sash",
-              "ability": "Sand Rush",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Rock Slide",
-                "Swords Dance",
-                "Protect"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Leftovers",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Moonblast",
-                "Encore",
-                "Tailwind",
-                "Sunny Day"
-              ]
-            },
-            {
-              "id": "charizard",
-              "name": "Charizard",
-              "item": "Charizardite Y",
-              "ability": "Blaze",
-              "tera": null,
-              "moves": [
-                "Weather Ball",
-                "Heat Wave",
-                "Protect",
-                "Solar Beam"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 2,
-          "player": "SimplyRobin",
-          "country": "GB",
-          "pokemon": [
-            {
-              "id": "charizard",
-              "name": "Charizard",
-              "item": "Charizardite Y",
-              "ability": "Solar Power",
-              "tera": null,
-              "moves": [
-                "Flamethrower",
-                "Solar Beam",
-                "Heat Wave",
-                "Protect"
-              ]
-            },
-            {
-              "id": "typhlosion-hisui",
-              "name": "Hisuian Typhlosion",
-              "item": "Choice Scarf",
-              "ability": "Frisk",
-              "tera": null,
-              "moves": [
-                "Focus Blast",
-                "Heat Wave",
-                "Shadow Ball",
-                "Eruption"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Leftovers",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Darkest Lariat",
-                "Parting Shot",
-                "Fake Out",
-                "Protect"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Soft Sand",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Dragon Claw",
-                "Protect",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Moonblast",
-                "Tailwind",
-                "Taunt",
-                "Helping Hand"
-              ]
-            },
-            {
-              "id": "venusaur",
-              "name": "Venusaur",
-              "item": "Mental Herb",
-              "ability": "Chlorophyll",
-              "tera": null,
-              "moves": [
-                "Sludge Bomb",
-                "Energy Ball",
-                "Sleep Powder",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 3,
-          "player": "Lukhco",
-          "country": "BR",
-          "pokemon": [
-            {
-              "id": "torkoal",
-              "name": "Torkoal",
-              "item": "Charcoal",
-              "ability": "Drought",
-              "tera": null,
-              "moves": [
-                "Eruption",
-                "Earth Power",
-                "Yawn",
-                "Protect"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Throat Chop",
-                "Fake Out",
-                "Flare Blitz",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Soft Sand",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Stomping Tantrum",
-                "Rock Slide",
-                "Dragon Claw"
-              ]
-            },
-            {
-              "id": "venusaur",
-              "name": "Venusaur",
-              "item": "Leftovers",
-              "ability": "Chlorophyll",
-              "tera": null,
-              "moves": [
-                "Sludge Bomb",
-                "Weather Ball",
-                "Energy Ball",
-                "Protect"
-              ]
-            },
-            {
-              "id": "dragonite",
-              "name": "Dragonite",
-              "item": "Dragoninite",
-              "ability": "Multiscale",
-              "tera": null,
-              "moves": [
-                "Thunderbolt",
-                "Dragon Pulse",
-                "Hurricane",
-                "Protect"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Encore",
-                "Tailwind",
-                "Moonblast",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 4,
-          "player": "redpandavgc",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Flare Blitz",
-                "Darkest Lariat",
-                "Parting Shot"
-              ]
-            },
-            {
-              "id": "glimmora",
-              "name": "Glimmora",
-              "item": "Glimmoranite",
-              "ability": "Toxic Debris",
-              "tera": null,
-              "moves": [
-                "Sludge Bomb",
-                "Ancient Power",
-                "Mortal Spin",
-                "Spiky Shield"
-              ]
-            },
-            {
-              "id": "charizard",
-              "name": "Charizard",
-              "item": "Charizardite Y",
-              "ability": "Solar Power",
-              "tera": null,
-              "moves": [
-                "Heat Wave",
-                "Air Slash",
-                "Weather Ball",
-                "Protect"
-              ]
-            },
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": null,
-              "moves": [
-                "Moonblast",
-                "Tailwind",
-                "Cotton Spore",
-                "Encore"
-              ]
-            },
-            {
-              "id": "basculegion",
-              "name": "Basculegion",
-              "item": "Choice Scarf",
-              "ability": "Adaptability",
-              "tera": null,
-              "moves": [
-                "Wave Crash",
-                "Aqua Jet",
-                "Flip Turn",
-                "Last Respects"
-              ]
-            },
-            {
-              "id": "farigiraf",
-              "name": "Farigiraf",
-              "item": "Leftovers",
-              "ability": "Armor Tail",
-              "tera": null,
-              "moves": [
-                "Hyper Voice",
-                "Psychic",
-                "Trick Room",
-                "Helping Hand"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 5,
-          "player": "BySergi023",
-          "country": "ES",
-          "pokemon": [
-            {
-              "id": "whimsicott",
-              "name": "Whimsicott",
-              "item": "Focus Sash",
-              "ability": "Prankster",
-              "tera": "Grass",
-              "moves": [
-                "Tailwind",
-                "Taunt",
-                "Encore",
-                "Moonblast"
-              ]
-            },
-            {
-              "id": "gyarados",
-              "name": "Gyarados",
-              "item": "Gyaradosite",
-              "ability": "Intimidate",
-              "tera": "Water",
-              "moves": [
-                "Protect",
-                "Thunder Wave",
-                "Waterfall",
-                "Crunch"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": "Fire",
-              "moves": [
-                "Fake Out",
-                "Parting Shot",
-                "Flare Blitz",
-                "Throat Chop"
-              ]
-            },
-            {
-              "id": "dragapult",
-              "name": "Dragapult",
-              "item": "White Herb",
-              "ability": "Clear Body",
-              "tera": "Dragon",
-              "moves": [
-                "Draco Meteor",
-                "Shadow Ball",
-                "Will-O-Wisp",
-                "Psychic Fangs"
-              ]
-            },
-            {
-              "id": "gengar",
-              "name": "Gengar",
-              "item": "Gengarite",
-              "ability": "Cursed Body",
-              "tera": "Ghost",
-              "moves": [
-                "Protect",
-                "Perish Song",
-                "Disable",
-                "Shadow Ball"
-              ]
-            },
-            {
-              "id": "kingambit",
-              "name": "Kingambit",
-              "item": "Black Glasses",
-              "ability": "Defiant",
-              "tera": "Dark",
-              "moves": [
-                "Iron Head",
-                "Sucker Punch",
-                "Kowtow Cleave",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 6,
-          "player": "GloriWasHere",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "froslass-mega",
-              "name": "Mega Froslass",
-              "item": "Froslassite",
-              "ability": "Cursed Body",
-              "tera": null,
-              "moves": [
-                "Aurora Veil",
-                "Blizzard",
-                "Shadow Ball",
-                "Protect"
-              ]
-            },
-            {
-              "id": "rotom-frost",
-              "name": "Frost Rotom",
-              "item": "Choice Scarf",
-              "ability": "Levitate",
-              "tera": null,
-              "moves": [
-                "Blizzard",
-                "Electroweb",
-                "Thunderbolt",
-                "Volt Switch"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "White Herb",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Stomping Tantrum",
-                "Dragon Claw",
-                "Protect"
-              ]
-            },
-            {
-              "id": "aegislash",
-              "name": "Aegislash",
-              "item": "Leftovers",
-              "ability": "Stance Change",
-              "tera": null,
-              "moves": [
-                "Wide Guard",
-                "King's Shield",
-                "Poltergeist",
-                "Iron Head"
-              ]
-            },
-            {
-              "id": "aerodactyl",
-              "name": "Aerodactyl",
-              "item": "Focus Sash",
-              "ability": "Unnerve",
-              "tera": null,
-              "moves": [
-                "Rock Slide",
-                "Dual Wingbeat",
-                "Protect",
-                "Tailwind"
-              ]
-            },
-            {
-              "id": "clefable",
-              "name": "Clefable",
-              "item": "Sitrus Berry",
-              "ability": "Unaware",
-              "tera": null,
-              "moves": [
-                "Follow Me",
-                "Moonblast",
-                "Helping Hand",
-                "Protect"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 7,
-          "player": "ChampBraeden",
-          "country": "US",
-          "pokemon": [
-            {
-              "id": "aerodactyl-mega",
-              "name": "Mega Aerodactyl",
-              "item": "Aerodactylite",
-              "ability": "Tough Claws",
-              "tera": null,
-              "moves": [
-                "Protect",
-                "Dual Wingbeat",
-                "Rock Slide",
-                "Tailwind"
-              ]
-            },
-            {
-              "id": "incineroar",
-              "name": "Incineroar",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Parting Shot",
-                "Flare Blitz",
-                "Darkest Lariat"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "Soft Sand",
-              "ability": "Rough Skin",
-              "tera": null,
-              "moves": [
-                "Earthquake",
-                "Stomping Tantrum",
-                "Dragon Claw",
-                "Rock Slide"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "Focus Sash",
-              "ability": "Unburden",
-              "tera": null,
-              "moves": [
-                "Fake Out",
-                "Coaching",
-                "Close Combat",
-                "Dire Claw"
-              ]
-            },
-            {
-              "id": "rotom-wash",
-              "name": "Wash Rotom",
-              "item": "Choice Scarf",
-              "ability": "Levitate",
-              "tera": null,
-              "moves": [
-                "Thunderbolt",
-                "Volt Switch",
-                "Hydro Pump",
-                "Helping Hand"
-              ]
-            },
-            {
-              "id": "sinistcha",
-              "name": "Sinistcha",
-              "item": "Leftovers",
-              "ability": "Hospitality",
-              "tera": null,
-              "moves": [
-                "Rage Powder",
-                "Strength Sap",
-                "Matcha Gotcha",
-                "Shadow Ball"
-              ]
-            }
-          ]
-        },
-        {
-          "placement": 8,
-          "player": "TTVOCEDDP",
-          "country": "AU",
-          "pokemon": [
-            {
-              "id": "arcanine",
-              "name": "Arcanine",
-              "item": "Sitrus Berry",
-              "ability": "Intimidate",
-              "tera": "Fire",
-              "moves": [
-                "Flare Blitz",
-                "Snarl",
-                "Will-O-Wisp",
-                "Protect"
-              ]
-            },
-            {
-              "id": "venusaur",
-              "name": "Venusaur",
-              "item": "none",
-              "ability": "Chlorophyll",
-              "tera": "Grass",
-              "moves": [
-                "Sludge Bomb",
-                "Giga Drain",
-                "Leech Seed",
-                "Protect"
-              ]
-            },
-            {
-              "id": "rotom-wash",
-              "name": "Wash Rotom",
-              "item": "Choice Scarf",
-              "ability": "Levitate",
-              "tera": "Electric",
-              "moves": [
-                "Hydro Pump",
-                "Thunderbolt",
-                "Discharge",
-                "Volt Switch"
-              ]
-            },
-            {
-              "id": "garchomp",
-              "name": "Garchomp",
-              "item": "White Herb",
-              "ability": "Rough Skin",
-              "tera": "Dragon",
-              "moves": [
-                "Earthquake",
-                "Stomping Tantrum",
-                "Stone Edge",
-                "Protect"
-              ]
-            },
-            {
-              "id": "corviknight",
-              "name": "Corviknight",
-              "item": "Leftovers",
-              "ability": "Mirror Armor",
-              "tera": "Flying",
-              "moves": [
-                "Brave Bird",
-                "Iron Head",
-                "Tailwind",
-                "Protect"
-              ]
-            },
-            {
-              "id": "sneasler",
-              "name": "Sneasler",
-              "item": "Focus Sash",
-              "ability": "Poison Touch",
-              "tera": "Fighting",
-              "moves": [
-                "Fake Out",
-                "Close Combat",
-                "Dire Claw",
-                "Coaching"
               ]
             }
           ]
