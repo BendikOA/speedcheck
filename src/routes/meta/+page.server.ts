@@ -1,8 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { CHAMPIONS_ROSTER } from '$lib/championsRoster';
 import { Dex } from '@pkmn/dex';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -35,7 +33,6 @@ export interface MetaPageData {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function titleCase(s: string): string {
-  // Normalize move/item/ability names: e.g. "close combat" → "Close Combat"
   return s.replace(/\b\w/g, c => c.toUpperCase());
 }
 
@@ -55,11 +52,7 @@ function sortAndNormalize(
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(([name, count]) => {
-      const item: MetaEntryItem = {
-        name,
-        count,
-        pct: Math.round((count / usageCount) * 100),
-      };
+      const item: MetaEntryItem = { name, count, pct: Math.round((count / usageCount) * 100) };
       if (moveDex) {
         const move = moveDex.get(name);
         if (move?.exists) item.type = move.type as string;
@@ -68,27 +61,19 @@ function sortAndNormalize(
     });
 }
 
-function readJson(filePath: string): unknown {
-  return JSON.parse(readFileSync(filePath, 'utf-8'));
-}
-
 // ── Load ─────────────────────────────────────────────────────────────────────
 
-export const load: PageServerLoad = (): MetaPageData => {
-  const staticDir = resolve('static');
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const championsMeta = readJson(`${staticDir}/champions-meta.json`) as any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recentTeams = readJson(`${staticDir}/recent-teams.json`) as any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const limitlessTeams = readJson(`${staticDir}/limitless-teams.json`) as any;
+export const load: PageServerLoad = async ({ fetch }): Promise<MetaPageData> => {
+  const [championsMeta, recentTeams, limitlessTeams] = await Promise.all([
+    fetch('/champions-meta.json').then(r => r.json()),
+    fetch('/recent-teams.json').then(r => r.json()),
+    fetch('/limitless-teams.json').then(r => r.json()),
+  ]);
 
   const totalTeams: number = championsMeta.meta.teamSlots / 6; // ~547
 
-  // ── Teammate co-occurrence from all available team data ──
+  // ── Teammate co-occurrence ──
   const teammateMap = new Map<string, Map<string, number>>();
-  // Track per-pokemon appearance count in co-occurrence source (for % denominator)
   const tmSourceCount = new Map<string, number>();
 
   const allTournaments = [
@@ -122,11 +107,9 @@ export const load: PageServerLoad = (): MetaPageData => {
     if (!species.exists) continue;
 
     const usageCount: number = rawData?.usage ?? 0;
-
-    // Teammates from co-occurrence data
-    // Denominator: how often this pokemon appeared in the co-occurrence source
     const tmDenominator = tmSourceCount.get(id) ?? 1;
     const tmMap = teammateMap.get(id) ?? new Map<string, number>();
+
     const teammates = [...tmMap.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
