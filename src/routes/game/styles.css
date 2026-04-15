@@ -268,16 +268,32 @@
     opacity: 0.3;
     cursor: not-allowed;
   }
+  .tslot.side-you {
+    background: color-mix(in srgb, #52b44b 6%, transparent);
+    border-color: color-mix(in srgb, #52b44b 20%, var(--gb-3));
+  }
+  .tslot.side-opp {
+    background: color-mix(in srgb, #e8622d 6%, transparent);
+    border-color: color-mix(in srgb, #e8622d 20%, var(--gb-3));
+  }
   .tslot.on-field {
     border-color: var(--gb-1);
     background: var(--gb-3);
+  }
+  .tslot.on-field.side-you {
+    border-color: #52b44b;
+    background: color-mix(in srgb, #52b44b 18%, var(--gb-3));
+  }
+  .tslot.on-field.side-opp {
+    border-color: #e8622d;
+    background: color-mix(in srgb, #e8622d 18%, var(--gb-3));
   }
   .tslot:active:not(:disabled) {
     opacity: 0.8;
   }
   @media (hover: hover) {
     .tslot.has-mon:not(:disabled):hover {
-      background: var(--gb-2);
+      background: var(--gb-3);
       border-color: var(--gb-2);
     }
   }
