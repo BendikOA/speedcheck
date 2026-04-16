@@ -65,9 +65,7 @@
       <a href="/build" class:active={$page.url.pathname === "/build"}>Teambuilder</a>
       <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
       <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
-      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
-        >All Tiers</a
-      >
+      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a>
       <!-- <a href="/boost-tiers" class:active={$page.url.pathname === "/boost-tiers"}>Boost Tiers</a> -->
       <!-- <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a> -->
       <!-- <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a> -->
@@ -214,9 +212,7 @@
       <a href="/build" class:active={$page.url.pathname === "/build"}>Teambuilder</a>
       <a href="/teams" class:active={$page.url.pathname === "/teams"}>Teams</a>
       <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
-      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}
-        >All Tiers</a
-      >
+      <a href="/tiers" class:active={$page.url.pathname === "/tiers"}>All Tiers</a>
       <!-- Boost Tiers hidden -->
       <!--  <a href="/quiz" class:active={$page.url.pathname === "/quiz"}>Quiz</a> -->
       <!-- <a href="/feedback" class:active={$page.url.pathname === "/feedback"}>Feedback</a> -->
