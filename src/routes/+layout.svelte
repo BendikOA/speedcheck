@@ -39,7 +39,7 @@
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Turnadus",
+    name: "Turnadus - Pokémon VGC Companion",
     url: "https://turnadus.com",
     description:
       "Free Pokémon speed tier and turn order tool for VGC and Pokémon Champions. All in one ingame companion, teambuilder, meta analysis, speed tiers.",
