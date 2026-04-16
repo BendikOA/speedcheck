@@ -42,7 +42,7 @@
     name: "Turnadus",
     url: "https://turnadus.com",
     description:
-      "Free Pokémon speed tier and turn order tool for VGC and Pokémon Champions. All in one ingame companions and meta analysis. Check turn order, build teams, damage calc, meta overview, VGC team inspiration",
+      "Free Pokémon speed tier and turn order tool for VGC and Pokémon Champions. All in one ingame companion, teambuilder, meta analysis, speed tiers.",
     applicationCategory: "GameApplication",
     operatingSystem: "Web Browser",
     inLanguage: "en",
