@@ -1,6 +1,7 @@
 <script lang="ts">
   import './styles.css';
   import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
+  import { iconStyle } from '$lib/sprites';
   import Input from '$lib/components/ui/Input/index.svelte';
   import type { GenNumber } from '$lib/speedtiers';
   import type { PageData } from './$types';
@@ -10,84 +11,89 @@
   type Filter = 'champions' | GenNumber | null;
   let selected: Filter = null;
   let search = '';
-  let scarf = false;
   let tailwind = false;
   let trickRoom = false;
   let paralysis = false;
 
   const championsSet = new Set(data.championsIds);
 
-  function genFromFilter(f: Filter): GenNumber | null {
-    return f === 'champions' ? 9 : (f as GenNumber | null);
-  }
-
   $: isChampions = selected === 'champions';
-  $: genNum = genFromFilter(selected);
+  $: genNum = selected === 'champions' ? 9 : (selected as GenNumber | null);
   $: baseEntries = isChampions ? buildAllTiers(9) : (genNum ? buildSpeedTiers(genNum) : buildAllTiers(9));
   $: allEntries = isChampions
     ? baseEntries.filter(e => championsSet.has(e.id) || championsSet.has(e.baseSpeciesId))
     : baseEntries;
-  $: hasNatures = isChampions || genNum === null || genNum >= 3;
-  $: hasMegas   = isChampions || (genNum !== null && (genNum === 6 || genNum === 7));
+  $: hasNatures = isChampions || selected === null || (selected as number) >= 3;
+  $: hasMegas   = isChampions || (selected !== null && (selected === 6 || selected === 7));
 
-  type Row = {
-    id: string;
-    name: string;
+  type TierGroup = {
     baseSpe: number;
-    displayMax: number;
-    displayNeutral: number;
-    displayMin: number;
-    isMega: boolean;
+    entries: { id: string; name: string }[];
+    max: number;
+    neu: number;
+    zeroEv: number;
+    neg: number;
+    mScarf: number;
+    nScarf: number;
   };
 
-  $: filtered = (() => {
+  // Neutral nature, 252 EVs at lv50 with 31 IVs is always baseSpe + 52
+  function neuSpeed(baseSpe: number): number {
+    return baseSpe + 52;
+  }
+
+  $: grouped = (() => {
     const q = search.toLowerCase();
-    const rows: Row[] = [];
+    const map = new Map<number, TierGroup>();
 
-    for (const e of allEntries) {
-      const nameMatch = e.name.toLowerCase().includes(q);
-      const megaMatch = hasMegas && e.megaForms.some(m => m.name.toLowerCase().includes(q));
-      if (!nameMatch && !megaMatch) continue;
-
-      if (nameMatch) {
-        rows.push({
-          id:             e.id,
-          name:           e.name,
-          baseSpe:        e.baseSpe,
-          displayMax:     applyModifiers(e.maxSpeed,     { scarf, tailwind, paralysis }),
-          displayNeutral: applyModifiers(e.neutralSpeed, { scarf, tailwind, paralysis }),
-          displayMin:     applyModifiers(e.minSpeed,     { scarf, tailwind, paralysis }),
-          isMega: false,
+    function ensureTier(baseSpe: number, maxSpd: number, zeroEvSpd: number, negSpd: number): TierGroup {
+      if (!map.has(baseSpe)) {
+        const mod = (v: number) => applyModifiers(v, { tailwind, paralysis });
+        const max = mod(maxSpd);
+        const neu = mod(neuSpeed(baseSpe));
+        const zeroEv = mod(zeroEvSpd);
+        const neg = mod(negSpd);
+        map.set(baseSpe, {
+          baseSpe, entries: [],
+          max, neu, zeroEv, neg,
+          mScarf: Math.floor(max * 1.5),
+          nScarf: Math.floor(neu * 1.5),
         });
       }
+      return map.get(baseSpe)!;
+    }
 
-      // Expand mega forms as sub-rows
+    for (const e of allEntries) {
+      const eMatch = !q || e.name.toLowerCase().includes(q);
+      const megaMatches = hasMegas
+        ? e.megaForms.filter(m => !q || m.name.toLowerCase().includes(q))
+        : [];
+      if (!eMatch && !megaMatches.length && q) continue;
+
+      if (eMatch || !q) {
+        const tier = ensureTier(e.baseSpe, e.maxSpeed, e.neutralSpeed, e.minSpeed);
+        tier.entries.push({ id: e.id, name: e.name });
+      }
+
       if (hasMegas) {
         for (const m of e.megaForms) {
-          if (!nameMatch && !m.name.toLowerCase().includes(q)) continue;
-          rows.push({
-            id:             m.id,
-            name:           m.name,
-            baseSpe:        m.baseSpe,
-            displayMax:     applyModifiers(m.maxSpeed,     { scarf, tailwind, paralysis }),
-            displayNeutral: applyModifiers(m.neutralSpeed, { scarf, tailwind, paralysis }),
-            displayMin:     applyModifiers(m.minSpeed,     { scarf, tailwind, paralysis }),
-            isMega: true,
-          });
+          if (q && !eMatch && !m.name.toLowerCase().includes(q)) continue;
+          const tier = ensureTier(m.baseSpe, m.maxSpeed, m.neutralSpeed, m.minSpeed);
+          tier.entries.push({ id: m.id, name: m.name });
         }
       }
     }
 
-    rows.sort((a, b) => trickRoom
-      ? a.displayMax - b.displayMax || a.baseSpe - b.baseSpe
-      : b.displayMax - a.displayMax || b.baseSpe - a.baseSpe
-    );
+    const rows = [...map.values()];
+    rows.sort((a, b) => trickRoom ? a.max - b.max : b.max - a.max);
     return rows;
   })();
 
+  $: totalPokemon = grouped.reduce((s, r) => s + r.entries.length, 0);
+
   function changeFilter(f: Filter) {
     selected = f;
-    scarf = tailwind = trickRoom = paralysis = false;
+    tailwind = trickRoom = paralysis = false;
   }
 </script>
 
@@ -100,7 +106,6 @@
 </svelte:head>
 
 <div class="tiers-page">
-  <!-- 1. Choose Pokémon -->
   <div class="section-label">Choose Pokémon</div>
   <Input
     type="search"
@@ -112,7 +117,6 @@
     autocapitalize="off"
   />
 
-  <!-- 2. Variables -->
   <div class="section-label">Variables</div>
   <div class="controls">
     <div class="gen-tabs scroll-x">
@@ -128,36 +132,60 @@
         </button>
       {/each}
     </div>
+
+    <div class="toggles">
+      <label class="toggle" class:active={tailwind}>
+        <input type="checkbox" bind:checked={tailwind} /> Tailwind
+      </label>
+      <label class="toggle" class:active={trickRoom}>
+        <input type="checkbox" bind:checked={trickRoom} /> Trick Room
+      </label>
+      <label class="toggle" class:active={paralysis}>
+        <input type="checkbox" bind:checked={paralysis} /> Paralysis
+      </label>
+    </div>
   </div>
 
-  <!-- 3. Table -->
   <div class="table-wrap">
-    <table>
+    <table class="tier-table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Pokémon</th>
-          <th scope="col" class="col-speed">Base</th>
-          <th scope="col" class="col-speed">Max</th>
-          {#if hasNatures}<th scope="col" class="col-speed hide-xs">Neutral</th>{/if}
-          <th scope="col" class="col-speed">Min</th>
+          <th class="th-pokemon">Pokémon</th>
+          <th class="th-num">Base</th>
+          <th class="th-num">Max</th>
+          {#if hasNatures}<th class="th-num">Neu</th>{/if}
+          <th class="th-num">0EVs</th>
+          {#if hasNatures}<th class="th-num">Neg</th>{/if}
+          {#if hasNatures}<th class="th-num">M🧣</th>{/if}
+          {#if hasNatures}<th class="th-num">N🧣</th>{/if}
         </tr>
       </thead>
       <tbody>
-        {#each filtered as entry, i}
-          <tr class:mega-row={entry.isMega}>
-            <td class="rank">{i + 1}</td>
-            <td class="name">{entry.isMega ? '↳ ' : ''}{entry.name}</td>
-            <td class="base">{entry.baseSpe}</td>
-            <td class="stat max">{entry.displayMax}</td>
-            {#if hasNatures}<td class="stat hide-xs">{entry.displayNeutral}</td>{/if}
-            <td class="stat min">{entry.displayMin}</td>
+        {#each grouped as row (row.baseSpe)}
+          <tr>
+            <td class="td-sprites">
+              {#each row.entries as e (e.id)}
+                <span
+                  class="pkmn-icon"
+                  style={iconStyle(e.name)}
+                  title={e.name}
+                  aria-label={e.name}
+                  role="img"
+                ></span>
+              {/each}
+            </td>
+            <td class="td-num td-base">{row.baseSpe}</td>
+            <td class="td-num td-max">{row.max}</td>
+            {#if hasNatures}<td class="td-num td-neu">{row.neu}</td>{/if}
+            <td class="td-num">{row.zeroEv}</td>
+            {#if hasNatures}<td class="td-num td-neg">{row.neg}</td>{/if}
+            {#if hasNatures}<td class="td-num td-scarf">{row.mScarf}</td>{/if}
+            {#if hasNatures}<td class="td-num td-nscarf">{row.nScarf}</td>{/if}
           </tr>
         {/each}
       </tbody>
     </table>
   </div>
 
-  <p class="count">{filtered.length} Pokémon</p>
+  <p class="count">{grouped.length} tiers · {totalPokemon} Pokémon</p>
 </div>
-
