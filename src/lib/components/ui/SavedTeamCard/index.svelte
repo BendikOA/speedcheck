@@ -1,7 +1,7 @@
 <script lang="ts">
   import './styles.css';
   import { createEventDispatcher } from 'svelte';
-  import { iconStyle } from '$lib/sprites';
+  import { staticSpriteUrl } from '$lib/sprites';
   import { savedTeams, type SavedTeam } from '$lib/stores/savedTeams';
   import Input from '$lib/components/ui/Input/index.svelte';
   import Button from '$lib/components/ui/Button/index.svelte';
@@ -59,13 +59,13 @@
 
     <div class="saved-slots">
       {#each team.yourTeam.filter(Boolean) as slot}
-        <span
-          style={iconStyle(slot!.name)}
+        <img
+          src={staticSpriteUrl(slot!.name)}
           class="saved-sprite"
-          role="img"
-          aria-label={slot!.name}
+          alt={slot!.name}
           title={slot!.name}
-        ></span>
+          loading="lazy"
+        />
       {/each}
     </div>
   </div>
