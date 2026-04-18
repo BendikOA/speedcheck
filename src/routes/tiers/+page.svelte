@@ -1,7 +1,7 @@
 <script lang="ts">
   import './styles.css';
   import { buildSpeedTiers, buildAllTiers, applyModifiers, GEN_NUMBERS } from '$lib/speedtiers';
-  import { iconStyle } from '$lib/sprites';
+  import { iconStyle, itemIconStyle } from '$lib/sprites';
   import Input from '$lib/components/ui/Input/index.svelte';
   import type { GenNumber } from '$lib/speedtiers';
   import type { PageData } from './$types';
@@ -156,8 +156,8 @@
           {#if hasNatures}<th class="th-num">Neu</th>{/if}
           <th class="th-num">0EVs</th>
           {#if hasNatures}<th class="th-num">Neg</th>{/if}
-          {#if hasNatures}<th class="th-num">M🧣</th>{/if}
-          {#if hasNatures}<th class="th-num">N🧣</th>{/if}
+          {#if hasNatures}<th class="th-num th-scarf">M<span class="scarf-icon" style={itemIconStyle('Choice Scarf')}></span></th>{/if}
+          {#if hasNatures}<th class="th-num th-scarf">N<span class="scarf-icon" style={itemIconStyle('Choice Scarf')}></span></th>{/if}
         </tr>
       </thead>
       <tbody>

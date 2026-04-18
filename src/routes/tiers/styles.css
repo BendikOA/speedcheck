@@ -118,6 +118,17 @@
 
 .th-num { min-width: 3.2rem; }
 
+.th-scarf { white-space: nowrap; }
+
+.scarf-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-left: 2px;
+  image-rendering: pixelated;
+}
+
 .tier-table tbody tr {
   border-bottom: 1px solid var(--gb-3);
 }
