@@ -1,5 +1,7 @@
 import type { NatureTier } from './speedtiers';
 
+const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+
 export type UsageNatures       = Record<string, NatureTier>;
 export type UsageOrder         = string[];
 export type UsagePriorityMoves = Record<string, string[]>;
@@ -8,6 +10,17 @@ export type UsageMoves         = Record<string, string[]>; // top 4 move display
 export type UsageBuilds        = Record<string, { speEV: number; nature: NatureTier; item: string }>;
 export type UsageAbilitiesFull = Record<string, Array<{ name: string; pct: number; count: number }>>;
 export type UsageMovesFull     = Record<string, Array<{ name: string; pct: number }>>;
+
+export interface PokemonSet {
+  label:   string;   // display name, e.g. "White Herb" or "Standard"
+  item:    string;
+  ability: string;
+  nature:  string;   // full name, e.g. "Timid"
+  evs:     { hp: number; atk: number; def: number; spa: number; spd: number; spe: number };
+  moves:   string[];
+  proxy?:  boolean;  // true if EVs/nature come from a proxy format (Champions)
+}
+export type SetsByPokemon = Record<string, PokemonSet[]>;
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -215,7 +228,7 @@ export async function loadChampionsMoves(): Promise<UsageMoves> {
   const result: UsageMoves = {};
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const top4 = Object.keys(data.moves).slice(0, 4);
-    if (top4.length) result[id] = top4;
+    if (top4.length) result[toId(id)] = top4;
   }
   return result;
 }
@@ -225,7 +238,7 @@ export async function loadChampionsBuilds(): Promise<UsageBuilds> {
   const result: UsageBuilds = {};
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const topItem = Object.keys(data.items)[0];
-    if (topItem) result[id] = { speEV: 0, nature: '=' as import('./speedtiers').NatureTier, item: topItem };
+    if (topItem) result[toId(id)] = { speEV: 0, nature: '=' as import('./speedtiers').NatureTier, item: topItem };
   }
   return result;
 }
@@ -238,7 +251,7 @@ export async function loadChampionsAbilities(): Promise<UsageAbilities> {
     if (!entries.length) continue;
     const [name, count] = entries[0]; // already sorted desc by scraper
     const pct = Math.round((count / data.usage) * 100);
-    result[id] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
+    result[toId(id)] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
   }
   return result;
 }
@@ -297,4 +310,87 @@ export async function loadChampionsMovesFull(): Promise<UsageMovesFull> {
     }));
   }
   return result;
+}
+
+// ── Sets ──────────────────────────────────────────────────────────────────────
+
+const setsCache    = new Map<string, SetsByPokemon>();
+const setsInflight = new Map<string, Promise<SetsByPokemon>>();
+
+export async function loadSmogonSets(gen = 9, format?: string): Promise<SetsByPokemon> {
+  const k = cacheKey('smogon_sets', gen, format);
+  if (setsCache.has(k)) return setsCache.get(k)!;
+  const stored = lsGet<SetsByPokemon>(k);
+  if (stored) { setsCache.set(k, stored); return stored; }
+  if (setsInflight.has(k)) return setsInflight.get(k)!;
+
+  const p = (async (): Promise<SetsByPokemon> => {
+    const res  = await fetch(apiUrl('/api/smogon-sets', gen, format));
+    const data: SetsByPokemon = res.ok ? await res.json() : {};
+    setsCache.set(k, data);
+    lsSet(k, data);
+    return data;
+  })();
+  setsInflight.set(k, p);
+  return p;
+}
+
+let champSetsCache:    SetsByPokemon | null = null;
+let champSetsInflight: Promise<SetsByPokemon> | null = null;
+
+/** Deduplicates a Record<name, count> by lowercase key, keeping the highest-count variant. */
+function dedupByName(record: Record<string, number>): [string, number][] {
+  const map = new Map<string, { name: string; count: number }>();
+  for (const [name, count] of Object.entries(record)) {
+    const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const ex  = map.get(key);
+    if (!ex || count > ex.count) map.set(key, { name, count });
+  }
+  return [...map.values()].sort((a, b) => b.count - a.count).map(({ name, count }) => [name, count]);
+}
+
+/**
+ * Builds sets for Champions (Reg M-A) Pokémon.
+ * Items / moves / abilities come from Limitless tournament data.
+ * Nature + EVs are proxied from the most recent Smogon Gen 9 format (Reg I/G/F).
+ */
+export async function loadChampionsSets(): Promise<SetsByPokemon> {
+  if (champSetsCache) return champSetsCache;
+  if (champSetsInflight) return champSetsInflight;
+
+  champSetsInflight = (async (): Promise<SetsByPokemon> => {
+    const [meta, proxySets] = await Promise.all([
+      loadChampionsMeta(),
+      loadSmogonSets(9),
+    ]);
+
+    const result: SetsByPokemon = {};
+
+    for (const [id, data] of Object.entries(meta.pokemon)) {
+      const items    = dedupByName(data.items).slice(0, 2).map(([n]) => n);
+      const moves    = dedupByName(data.moves).slice(0, 4).map(([n]) => n);
+      const ability  = dedupByName(data.abilities)[0]?.[0] ?? '';
+
+      if (!items.length || !moves.length) continue;
+
+      const proxy  = proxySets[id]?.[0];
+      const nature = proxy?.nature ?? 'Timid';
+      const evs    = proxy?.evs    ?? { hp: 4, atk: 0, def: 0, spa: 252, spd: 0, spe: 252 };
+
+      result[id] = items.map(item => ({
+        label:   item,
+        item,
+        ability,
+        nature,
+        evs,
+        moves,
+        proxy:   !proxy,  // flag when we fell back to a default spread
+      }));
+    }
+
+    champSetsCache = result;
+    return result;
+  })();
+
+  return champSetsInflight;
 }

@@ -39,6 +39,8 @@
     loadChampionsBuilds,
     loadChampionsAbilitiesFull,
     loadChampionsMovesFull,
+    loadChampionsSets,
+    loadSmogonSets,
   } from "$lib/smogonUsage";
   import type {
     UsagePriorityMoves,
@@ -47,6 +49,7 @@
     UsageBuilds,
     UsageAbilitiesFull,
     UsageMovesFull,
+    SetsByPokemon,
   } from "$lib/smogonUsage";
 
   const CHAMPIONS_FORMAT = "champions-ma";
@@ -81,6 +84,7 @@
   let smogonBuilds: UsageBuilds = {};
   let champAbilitiesFull: UsageAbilitiesFull = {};
   let champMovesFull: UsageMovesFull = {};
+  let setsData: SetsByPokemon = {};
 
   // ── Team data ──────────────────────────────────────────────────────────────
   let yourTeam: TeamSlot[] = Array(6).fill(null);
@@ -102,6 +106,15 @@
       champAbilitiesFull = abilitiesFull;
       champMovesFull = movesFull;
       smogonPriorityMoves = {};
+      // Champions sets (items/moves/abilities from Limitless + Smogon-proxied nature/EVs).
+      // Also load Reg I as a fallback for any Pokémon not in the Champions meta.
+      // TODO after 2026-05-01: replace fallback with Champions-specific Smogon data when available.
+      const [champSets, regiSets] = await Promise.all([
+        loadChampionsSets(),
+        loadSmogonSets(9, 'gen9vgc2026regi'),
+      ]);
+      // Merge: Champions data wins; Reg I fills gaps (nature/EVs for non-meta mons)
+      setsData = { ...regiSets, ...champSets };
     } else {
       [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
         await Promise.all([
@@ -112,6 +125,7 @@
         ]);
       champAbilitiesFull = {};
       champMovesFull = {};
+      setsData = await loadSmogonSets(9, format);
     }
   }
 
@@ -1148,6 +1162,7 @@
     {cond}
     {smogonMoves}
     {champMovesFull}
+    {setsData}
     onclose={() => (calcOpen = false)}
   />
 {/if}

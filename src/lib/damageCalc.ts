@@ -1,9 +1,11 @@
 import { Pokemon, Move, Field, Side, calculate, Generations } from '@smogon/calc';
 import type { TeamSlot } from '$lib/stores/teams';
 import type { Conditions } from '$lib/speedtiers';
+import type { PokemonSet } from '$lib/smogonUsage';
 
 export interface CalcMoveResult {
   moveName: string;
+  moveType: string;
   minPct: number;
   maxPct: number;
   /** Minimum guaranteed hits to KO (1 = OHKO, 2 = 2HKO, etc.) */
@@ -20,9 +22,19 @@ export interface CalcSide {
   moves: CalcMoveResult[];
 }
 
+export interface CalcFieldMods {
+  helpingHand?: boolean;
+  reflect?: boolean;
+  lightScreen?: boolean;
+  auroraVeil?: boolean;
+  friendGuard?: boolean;
+  attackerBoosts?: Partial<{ atk: number; def: number; spa: number; spd: number; spe: number }>;
+  defenderBoosts?: Partial<{ atk: number; def: number; spa: number; spd: number; spe: number }>;
+}
+
 const GEN = Generations.get(9);
 
-function buildCalcField(cond: Conditions, attackerSide: 'you' | 'opp'): Field {
+function buildCalcField(cond: Conditions, attackerSide: 'you' | 'opp', mods?: CalcFieldMods): Field {
   const weather =
     cond.rain ? 'Rain' :
     cond.sun  ? 'Sun'  :
@@ -33,23 +45,36 @@ function buildCalcField(cond: Conditions, attackerSide: 'you' | 'opp'): Field {
     cond.grassy   ? 'Grassy'   :
     cond.psychic  ? 'Psychic'  : undefined;
 
-  const yourSide = new Side({ isTailwind: !!cond.yourTailwind });
-  const oppSide  = new Side({ isTailwind: !!cond.oppTailwind  });
+  const atkSide = new Side({
+    isTailwind:    attackerSide === 'you' ? !!cond.yourTailwind : !!cond.oppTailwind,
+    isHelpingHand: !!mods?.helpingHand,
+  });
+  const defSide = new Side({
+    isTailwind:    attackerSide === 'you' ? !!cond.oppTailwind : !!cond.yourTailwind,
+    isReflect:     !!mods?.reflect,
+    isLightScreen: !!mods?.lightScreen,
+    isAuroraVeil:  !!mods?.auroraVeil,
+    isFriendGuard: !!mods?.friendGuard,
+  });
 
   return new Field({
     gameType: 'Doubles',
     weather: weather as any,
     terrain: terrain as any,
-    attackerSide: attackerSide === 'you' ? yourSide : oppSide,
-    defenderSide: attackerSide === 'you' ? oppSide  : yourSide,
+    attackerSide: atkSide,
+    defenderSide: defSide,
   });
 }
 
-function buildCalcPokemon(slot: NonNullable<TeamSlot>): Pokemon {
+function buildCalcPokemon(
+  slot: NonNullable<TeamSlot>,
+  boosts?: Partial<{ atk: number; def: number; spa: number; spd: number; spe: number }>,
+): Pokemon {
   const level = slot.level ?? 50;
-  // EVs: use imported data when available; otherwise no EV investment (conservative)
+  // EVs are stored in Champions scale (0-32); multiply ×8 for @smogon/calc (0-252 scale)
   const evs = slot.evs
-    ? { hp: slot.evs.hp, atk: slot.evs.atk, def: slot.evs.def, spa: slot.evs.spa, spd: slot.evs.spd, spe: slot.evs.spe }
+    ? { hp: (slot.evs.hp ?? 0) * 8, atk: (slot.evs.atk ?? 0) * 8, def: (slot.evs.def ?? 0) * 8,
+        spa: (slot.evs.spa ?? 0) * 8, spd: (slot.evs.spd ?? 0) * 8, spe: (slot.evs.spe ?? 0) * 8 }
     : undefined;
   const ivs = slot.ivs
     ? { hp: slot.ivs.hp, atk: slot.ivs.atk, def: slot.ivs.def, spa: slot.ivs.spa, spd: slot.ivs.spd, spe: slot.ivs.spe }
@@ -57,14 +82,36 @@ function buildCalcPokemon(slot: NonNullable<TeamSlot>): Pokemon {
 
   return new Pokemon(GEN, slot.entry.name, {
     level,
-    // We only track speed nature; use Serious (neutral) for atk/def stats
-    nature: 'Serious',
+    nature:   (slot.natureName ?? 'Serious') as any,
     item:     (slot.item     ?? undefined) as any,
     ability:  (slot.ability  ?? slot.entry.abilities[0] ?? undefined) as any,
     teraType: (slot.teraType ?? undefined) as any,
     evs,
     ivs,
+    boosts:   boosts as any,
   });
+}
+
+/** Returns the computed final stats for a slot (EVs expected in Champions 0-32 scale). */
+export function getCalcStats(slot: NonNullable<TeamSlot>): Record<string, number> {
+  try { return buildCalcPokemon(slot).stats as unknown as Record<string, number>; }
+  catch { return {}; }
+}
+
+/**
+ * Returns a copy of `slot` with empty fields filled in from `set`.
+ * Imported data always takes priority. Set EVs are in traditional (0-252) scale.
+ */
+export function mergeSet(slot: NonNullable<TeamSlot>, set: PokemonSet): NonNullable<TeamSlot> {
+  const hasEvs = slot.evs && Object.values(slot.evs).some(v => v > 0);
+  return {
+    ...slot,
+    evs:        hasEvs ? slot.evs : (set.evs as any),
+    natureName: slot.natureName ?? set.nature,
+    item:       slot.item       ?? set.item,
+    ability:    slot.ability    ?? set.ability,
+    moves:      slot.moves?.length ? slot.moves : set.moves,
+  };
 }
 
 function nHkoFromPct(minPct: number, maxPct: number): { nHko: number; guaranteed: boolean } {
@@ -82,17 +129,18 @@ export function runCalc(
   defenderSlot: NonNullable<TeamSlot>,
   moves: string[],
   cond: Conditions,
+  mods?: CalcFieldMods,
 ): CalcMoveResult[] {
   let attacker: Pokemon;
   let defender: Pokemon;
   try {
-    attacker = buildCalcPokemon(attackerSlot);
-    defender = buildCalcPokemon(defenderSlot);
+    attacker = buildCalcPokemon(attackerSlot, mods?.attackerBoosts);
+    defender = buildCalcPokemon(defenderSlot, mods?.defenderBoosts);
   } catch {
     return [];
   }
 
-  const field = buildCalcField(cond, attackerSide);
+  const field = buildCalcField(cond, attackerSide, mods);
   const results: CalcMoveResult[] = [];
   const defHp = defender.stats.hp;
 
@@ -109,6 +157,7 @@ export function runCalc(
 
       results.push({
         moveName,
+        moveType: (result.move as any).type ?? move.type ?? 'Normal',
         minPct,
         maxPct,
         nHko,
