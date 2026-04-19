@@ -4,6 +4,8 @@
 node_modules/
 /build/
 dist/
+storybook-static/
+docs/
 improvements.md
 manualwork.md
 FEEDBACK_SETUP.md
