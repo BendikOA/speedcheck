@@ -2,6 +2,7 @@
   import './styles.css';
   import { spriteUrl, staticSpriteUrl, itemIconStyle } from '$lib/sprites';
   import type { MetaPageData, MetaEntry } from './+page.server';
+  import UsageSection from '$lib/components/ui/UsageSection/index.svelte';
 
   export let data: MetaPageData;
 
@@ -35,8 +36,18 @@
 </script>
 
 <svelte:head>
-  <title>Meta — Turnadus | VGC &amp; Pokémon Champions</title>
-  <meta name="description" content="Pokémon usage stats, moves, items, abilities and teammates for VGC and Pokémon Champions Regulation M-A." />
+  <title>Meta Analysis — Turnadus | Pokémon Champions Regulation M-A</title>
+  <meta name="description" content="Pokémon Champions Regulation M-A usage stats: top moves, items, abilities, and teammate pairings for every Pokémon in the meta." />
+  <link rel="canonical" href="https://turnadus.com/meta" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Meta Analysis — Turnadus | Pokémon Champions" />
+  <meta property="og:description" content="Pokémon Champions Regulation M-A usage stats: top moves, items, abilities, and teammate pairings for every Pokémon in the meta." />
+  <meta property="og:url" content="https://turnadus.com/meta" />
+  <meta property="og:image" content="https://turnadus.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Meta Analysis — Turnadus | Pokémon Champions" />
+  <meta name="twitter:description" content="Pokémon Champions Regulation M-A usage stats: top moves, items, abilities, and teammate pairings for every Pokémon in the meta." />
+  <meta name="twitter:image" content="https://turnadus.com/og-image.png" />
 </svelte:head>
 
 {#if drawerOpen}
@@ -136,82 +147,27 @@
       <!-- Moves / Items / Abilities / Teammates — 2×2 on desktop -->
       <div class="sections-grid">
 
-        <!-- Moves -->
-        <section class="detail-section">
-          <h2 class="detail-section-title">Moves</h2>
-          {#if selected.moves.length === 0}
-            <p class="no-data">No move data available.</p>
-          {:else}
-            <div class="usage-rows">
-              {#each selected.moves as move}
-                <div class="usage-row usage-row-move">
-                  <div class="usage-row-bar" style="width: {Math.min(move.pct, 100)}%"></div>
-                  {#if move.type}
-                    <span class="move-type-badge type-{move.type.toLowerCase()}">{move.type}</span>
-                  {/if}
-                  <span class="usage-row-name">{move.name}</span>
-                  <span class="usage-row-pct">{move.pct}%</span>
-                </div>
-              {/each}
-            </div>
-          {/if}
-        </section>
+        <UsageSection title="Moves" items={selected.moves} rowClass="usage-row-move" emptyText="No move data available.">
+          <svelte:fragment slot="default" let:item>
+            {#if item.type}
+              <span class="move-type-badge type-{item.type.toLowerCase()}">{item.type}</span>
+            {/if}
+          </svelte:fragment>
+        </UsageSection>
 
-        <!-- Items -->
-        <section class="detail-section">
-          <h2 class="detail-section-title">Items</h2>
-          {#if selected.items.length === 0}
-            <p class="no-data">No item data available.</p>
-          {:else}
-            <div class="usage-rows">
-              {#each selected.items as item}
-                <div class="usage-row usage-row-item">
-                  <div class="usage-row-bar" style="width: {Math.min(item.pct, 100)}%"></div>
-                  <span class="item-icon" style={itemIconStyle(item.name)} aria-hidden="true"></span>
-                  <span class="usage-row-name">{item.name}</span>
-                  <span class="usage-row-pct">{item.pct}%</span>
-                </div>
-              {/each}
-            </div>
-          {/if}
-        </section>
+        <UsageSection title="Items" items={selected.items} rowClass="usage-row-item" emptyText="No item data available.">
+          <svelte:fragment slot="default" let:item>
+            <span class="item-icon" style={itemIconStyle(item.name)} aria-hidden="true"></span>
+          </svelte:fragment>
+        </UsageSection>
 
-        <!-- Abilities -->
-        <section class="detail-section">
-          <h2 class="detail-section-title">Abilities</h2>
-          {#if selected.abilities.length === 0}
-            <p class="no-data">No ability data available.</p>
-          {:else}
-            <div class="usage-rows">
-              {#each selected.abilities as ability}
-                <div class="usage-row">
-                  <div class="usage-row-bar" style="width: {Math.min(ability.pct, 100)}%"></div>
-                  <span class="usage-row-name">{ability.name}</span>
-                  <span class="usage-row-pct">{ability.pct}%</span>
-                </div>
-              {/each}
-            </div>
-          {/if}
-        </section>
+        <UsageSection title="Abilities" items={selected.abilities} emptyText="No ability data available." />
 
-        <!-- Teammates -->
-        <section class="detail-section">
-          <h2 class="detail-section-title">Teammates</h2>
-          {#if selected.teammates.length === 0}
-            <p class="no-data">No teammate data available.</p>
-          {:else}
-            <div class="usage-rows">
-              {#each selected.teammates as tm}
-                <div class="teammate-row">
-                  <div class="usage-row-bar" style="width: {Math.min(tm.pct, 100)}%"></div>
-                  <img src={staticSpriteUrl(tm.name)} alt={tm.name} class="teammate-sprite" />
-                  <span class="usage-row-name">{tm.name}</span>
-                  <span class="usage-row-pct">{tm.pct}%</span>
-                </div>
-              {/each}
-            </div>
-          {/if}
-        </section>
+        <UsageSection title="Teammates" items={selected.teammates} rowClass="teammate-row" emptyText="No teammate data available.">
+          <svelte:fragment slot="default" let:item>
+            <img src={staticSpriteUrl(item.name)} alt={item.name} class="teammate-sprite" />
+          </svelte:fragment>
+        </UsageSection>
 
       </div>
 

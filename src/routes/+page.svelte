@@ -21,6 +21,7 @@
   import TeamSlot from "$lib/components/ui/TeamSlot/index.svelte";
   import SavedTeamCard from "$lib/components/ui/SavedTeamCard/index.svelte";
   import TabGroup from "$lib/components/ui/TabGroup/index.svelte";
+  import PasteModal from "$lib/components/ui/PasteModal/index.svelte";
   import { browser } from "$app/environment";
   import { loadSmogonOrder } from "$lib/smogonUsage";
   import { CHAMPIONS_ROSTER } from "$lib/championsRoster";
@@ -203,15 +204,14 @@
   // ── Paste import ──────────────────────────────────────────────────────────
   let showImport = false;
   let importSide: "you" | "opp" = "you";
-  let importText = "";
   let importError = "";
   let importLoading = false;
 
-  async function doImport() {
+  async function doImport(rawText: string) {
     importError = "";
     importLoading = true;
     try {
-      const text = await resolvePaste(importText);
+      const text = await resolvePaste(rawText);
       const slots = parsePaste(text, buildAllTiers(9));
       const filled = slots.filter(Boolean);
       if (!filled.length) {
@@ -221,7 +221,6 @@
       if (importSide === "you") yourTeam = slots;
       else oppTeam = slots;
       showImport = false;
-      importText = "";
     } catch (e: any) {
       importError = e?.message ?? "Failed to fetch paste.";
     } finally {
@@ -232,19 +231,17 @@
 
 <svelte:head>
   <title>Turnadus — Pokémon Speed & Turn Order Tool for VGC & Champions</title>
-  <meta
-    name="description"
-    content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first."
-  />
-  <meta
-    property="og:title"
-    content="Turnadus — Pokémon Speed & Turn Order Tool"
-  />
-  <meta
-    property="og:description"
-    content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first."
-  />
+  <meta name="description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
+  <link rel="canonical" href="https://turnadus.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Turnadus — Pokémon Speed & Turn Order Tool" />
+  <meta property="og:description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
   <meta property="og:url" content="https://turnadus.com/" />
+  <meta property="og:image" content="https://turnadus.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Turnadus — Pokémon Speed & Turn Order Tool" />
+  <meta name="twitter:description" content="Free Pokémon speed tier tool for VGC and Pokémon Champions. Build teams, import from Pokepaste, compare speeds, and see who goes first." />
+  <meta name="twitter:image" content="https://turnadus.com/og-image.png" />
 </svelte:head>
 <svelte:window
   on:keydown={(e) => {
@@ -265,69 +262,23 @@
   />
 {/if}
 
-{#if showImport}
-  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div
-    class="modal-backdrop"
-    on:click|self={() => {
-      showImport = false;
-      importError = "";
-    }}
-  >
-    <div class="modal">
-      <div class="modal-header">
-        <span class="modal-title">Import Poképaste</span>
-        <button
-          class="modal-close"
-          on:click={() => {
-            showImport = false;
-            importError = "";
-          }}>✕</button
-        >
-      </div>
-
-      <TabGroup
-        tabs={[
-          { label: "Your Team", value: "you" },
-          { label: "Opponent", value: "opp" },
-        ]}
-        value={importSide}
-        on:change={(e) => (importSide = e.detail as "you" | "opp")}
-      />
-
-      <textarea
-        class="import-textarea"
-        placeholder="Paste a pokepast.es URL or raw Showdown export here…"
-        bind:value={importText}
-        rows="10"
-        autocomplete="off"
-        spellcheck="false"
-      ></textarea>
-
-      {#if importError}
-        <p class="import-error">{importError}</p>
-      {/if}
-
-      <div class="modal-actions">
-        <Button
-          variant="primary"
-          size="sm"
-          disabled={importLoading || !importText.trim()}
-          onClick={doImport}>{importLoading ? "Loading…" : "Import"}</Button
-        >
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => {
-            showImport = false;
-            importError = "";
-            importText = "";
-          }}>Cancel</Button
-        >
-      </div>
-    </div>
-  </div>
-{/if}
+<PasteModal
+  open={showImport}
+  loading={importLoading}
+  error={importError}
+  placeholder="Paste a pokepast.es URL or raw Showdown export here…"
+  on:close={() => { showImport = false; importError = ""; }}
+  on:import={(e) => doImport(e.detail)}
+>
+  <TabGroup
+    tabs={[
+      { label: "Your Team", value: "you" },
+      { label: "Opponent", value: "opp" },
+    ]}
+    value={importSide}
+    on:change={(e) => (importSide = e.detail as "you" | "opp")}
+  />
+</PasteModal>
 
 <div class="page">
   <div class="page-header">

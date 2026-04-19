@@ -1,0 +1,39 @@
+# Turnadus — Pokémon VGC & Champions Companion
+
+> Free companion app for competitive Pokémon (VGC and Pokémon Champions). Calculates speed tiers, turn order, damage, and provides meta analysis.
+
+## What Turnadus does
+
+- **Turn order calculator** (`/game`): Given two teams, calculates which Pokémon moves first under any combination of field conditions — weather, terrain, Tailwind, Trick Room, Choice Scarf, paralysis, mega evolutions, stat stages, and species abilities (Swift Swim, Chlorophyll, etc.)
+- **Speed tier reference** (`/tiers`): Complete table of every Pokémon's speed stat at all nature/EV thresholds. Filterable by Champions legal list or generation.
+- **Boosted speed tiers** (`/boost-tiers`): Speed values after Dragon Dance (+1), Agility (+2), Choice Scarf, and Tailwind.
+- **Team builder** (`/build`): Full EV/IV editor with meta-sorted moves and items, damage calculator, and speed comparisons vs the meta.
+- **Meta analysis** (`/meta`): Usage stats for Pokémon Champions Regulation M-A — top moves, items, abilities, and teammate pairings per Pokémon.
+- **Tournament teams** (`/teams`): Recent tournament winning teams.
+
+## Formats supported
+
+- **Pokémon Champions M-A**: Community format with 187 legal Pokémon and a compressed EV system (0–32 per stat, 66 total)
+- **VGC Regulation I** (`gen9vgc2026regi`): Official Pokémon VGC format via Smogon stats
+
+## Data sources
+
+- Species data: `@pkmn/dex` (bundled)
+- Damage calc: `@smogon/calc` (bundled)
+- Smogon meta: Live Smogon chaos JSON (proxied server-side, 24h cache)
+- Champions meta: Manually maintained snapshot at `/champions-meta.json`
+- Tournament data: Limitless tournament results at `/recent-teams.json`
+
+## Speed calculation
+
+Speed at level 50: `floor((2 × base + iv + floor(ev / 4)) × 0.5 + 5) × natureMult`
+
+Effective speed modifiers applied in order: nature → scarf (×1.5) → paralysis (×0.5) → weather ability (×2) → Proto/Quark Drive (×1.5) → Tailwind (×2) → Trick Room (reversal) → speed stages
+
+## Tech
+
+SvelteKit SPA, TypeScript, hosted on Vercel. Source: https://github.com/BendikOA/speedcheck
+
+## Site
+
+https://turnadus.com

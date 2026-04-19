@@ -22,8 +22,18 @@
 </script>
 
 <svelte:head>
-  <title>Teams — Turnadus | VGC &amp; Pokémon Champions</title>
-  <meta name="description" content="Top tournament teams for VGC and Pokémon Champions." />
+  <title>Tournament Teams — Turnadus | Pokémon Champions &amp; VGC</title>
+  <meta name="description" content="Top tournament winning teams for Pokémon Champions and VGC. See what the best players bring, and manage your own saved teams." />
+  <link rel="canonical" href="https://turnadus.com/teams" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tournament Teams — Turnadus" />
+  <meta property="og:description" content="Top tournament winning teams for Pokémon Champions and VGC. See what the best players bring, and manage your own saved teams." />
+  <meta property="og:url" content="https://turnadus.com/teams" />
+  <meta property="og:image" content="https://turnadus.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tournament Teams — Turnadus" />
+  <meta name="twitter:description" content="Top tournament winning teams for Pokémon Champions and VGC. See what the best players bring, and manage your own saved teams." />
+  <meta name="twitter:image" content="https://turnadus.com/og-image.png" />
 </svelte:head>
 
 <div class="teams-page">

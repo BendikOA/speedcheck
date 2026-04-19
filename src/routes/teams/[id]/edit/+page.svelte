@@ -19,6 +19,8 @@
   import type { StatSpread } from '$lib/stores/teams';
   import { loadChampionsMovesFull, loadChampionsBuilds } from '$lib/smogonUsage';
   import type { CalcMoveResult } from '$lib/damageCalc';
+  import { generatePaste } from '$lib/pasteExport';
+  import PasteModal from '$lib/components/ui/PasteModal/index.svelte';
 
   // ── Team loading ──────────────────────────────────────────────────────────
   let team: SavedTeam | null = null;
@@ -216,20 +218,18 @@
     '=': '= Neutral',
     '-': '− Speed (Brave / Quiet / Relaxed / Sassy)',
   };
-  const NATURE_EXPORT: Record<NatureTier, string> = { '+': 'Timid', '=': 'Hardy', '-': 'Brave' };
   const TERA_TYPES = ['Normal','Fire','Water','Electric','Grass','Ice','Fighting','Poison','Ground','Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy'];
 
   // ── Import ────────────────────────────────────────────────────────────────
   let showImportModal = false;
-  let importText = '';
   let importError = '';
   let importLoading = false;
 
-  async function doImport() {
+  async function doImport(rawText: string) {
     importError = '';
     importLoading = true;
     try {
-      const text = await resolvePaste(importText);
+      const text = await resolvePaste(rawText);
       const parsed = parsePaste(text, allEntries);
       const filled = parsed.filter(Boolean);
       if (!filled.length) { importError = 'No matching Pokémon found — check the paste.'; return; }
@@ -240,7 +240,6 @@
         moves: s.moves, nickname: s.nickname,
       } : null);
       showImportModal = false;
-      importText = '';
     } catch (e: unknown) {
       importError = (e as Error)?.message ?? 'Failed to fetch paste.';
     } finally {
@@ -253,47 +252,8 @@
   let exportText = '';
   let exportCopied = false;
 
-  function generatePaste(): string {
-    const blocks: string[] = [];
-    for (const slot of slots) {
-      if (!slot) continue;
-      const lines: string[] = [];
-      const namePart = slot.nickname ? `${slot.nickname} (${slot.name})` : slot.name;
-      lines.push(slot.item ? `${namePart} @ ${slot.item}` : namePart);
-      if (slot.ability) lines.push(`Ability: ${slot.ability}`);
-      if (slot.level && slot.level !== 50) lines.push(`Level: ${slot.level}`);
-      if (hasTera && slot.teraType) lines.push(`Tera Type: ${slot.teraType}`);
-      if (slot.evs) {
-        const ev = slot.evs;
-        const parts: string[] = [];
-        if (ev.hp)  parts.push(`${ev.hp} HP`);
-        if (ev.atk) parts.push(`${ev.atk} Atk`);
-        if (ev.def) parts.push(`${ev.def} Def`);
-        if (ev.spa) parts.push(`${ev.spa} SpA`);
-        if (ev.spd) parts.push(`${ev.spd} SpD`);
-        if (ev.spe) parts.push(`${ev.spe} Spe`);
-        if (parts.length) lines.push(`EVs: ${parts.join(' / ')}`);
-      }
-      lines.push(`${NATURE_EXPORT[slot.nature ?? '=']} Nature`);
-      if (slot.ivs) {
-        const iv = slot.ivs;
-        const parts: string[] = [];
-        if (iv.hp  !== 31) parts.push(`${iv.hp} HP`);
-        if (iv.atk !== 31) parts.push(`${iv.atk} Atk`);
-        if (iv.def !== 31) parts.push(`${iv.def} Def`);
-        if (iv.spa !== 31) parts.push(`${iv.spa} SpA`);
-        if (iv.spd !== 31) parts.push(`${iv.spd} SpD`);
-        if (iv.spe !== 31) parts.push(`${iv.spe} Spe`);
-        if (parts.length) lines.push(`IVs: ${parts.join(' / ')}`);
-      }
-      for (const move of slot.moves ?? []) { if (move) lines.push(`- ${move}`); }
-      blocks.push(lines.join('\n'));
-    }
-    return blocks.join('\n\n');
-  }
-
   async function exportPaste() {
-    const text = generatePaste();
+    const text = generatePaste(slots, { hasTera });
     try {
       await navigator.clipboard.writeText(text);
       exportCopied = true;
@@ -431,25 +391,14 @@
   <PokemonPicker entries={allEntries} on:pick={onPick} on:close={() => (showPicker = false)} />
 {/if}
 
-<!-- Import modal -->
-{#if showImportModal}
-  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="tb-modal-backdrop" on:click={() => { showImportModal = false; importError = ''; }}>
-    <div class="tb-modal-box" on:click|stopPropagation>
-      <div class="tb-modal-header">
-        <span class="tb-modal-title">Import Poképaste</span>
-        <button class="tb-modal-close" on:click={() => { showImportModal = false; importError = ''; }}>✕</button>
-      </div>
-      <textarea class="tb-textarea" placeholder="Paste a Showdown team or pokepast.es URL…" bind:value={importText}></textarea>
-      {#if importError}<p class="tb-import-error">{importError}</p>{/if}
-      <div class="tb-modal-actions">
-        <Button variant="primary" size="sm" disabled={importLoading || !importText.trim()} onClick={doImport}>
-          {importLoading ? 'Importing…' : 'Import'}
-        </Button>
-      </div>
-    </div>
-  </div>
-{/if}
+<PasteModal
+  open={showImportModal}
+  loading={importLoading}
+  error={importError}
+  showCancel={false}
+  on:close={() => { showImportModal = false; importError = ''; }}
+  on:import={(e) => doImport(e.detail)}
+/>
 
 <!-- Export modal -->
 {#if showExportModal}

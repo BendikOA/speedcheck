@@ -69,9 +69,16 @@
 <svelte:head>
   <title>Boosted Speed Tiers — Turnadus | Scarf &amp; Stat Boost Reference</title>
   <meta name="description" content="Pokémon speed tiers under every boost condition — Choice Scarf, Tailwind, stat stages, and more. Essential reference for VGC and Pokémon Champions players." />
+  <link rel="canonical" href="https://turnadus.com/boost-tiers" />
+  <meta property="og:type" content="website" />
   <meta property="og:title" content="Boosted Speed Tiers — Turnadus" />
   <meta property="og:description" content="See Pokémon speeds with Choice Scarf, Tailwind, and stat boosts applied. Built for VGC and Pokémon Champions players." />
   <meta property="og:url" content="https://turnadus.com/boost-tiers" />
+  <meta property="og:image" content="https://turnadus.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Boosted Speed Tiers — Turnadus" />
+  <meta name="twitter:description" content="See Pokémon speeds with Choice Scarf, Tailwind, and stat boosts applied. Built for VGC and Pokémon Champions players." />
+  <meta name="twitter:image" content="https://turnadus.com/og-image.png" />
 </svelte:head>
 
 <div class="boost-page">

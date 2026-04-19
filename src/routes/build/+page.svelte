@@ -19,6 +19,9 @@
   import type { StatSpread } from '$lib/stores/teams';
   import { loadChampionsMovesFull, loadChampionsBuilds, loadChampionsItemUsage } from '$lib/smogonUsage';
   import type { CalcMoveResult } from '$lib/damageCalc';
+  import { generatePaste } from '$lib/pasteExport';
+  import { NATURE_TABLE, ALL_NATURES, natureMult, natureLabel } from '$lib/natures';
+  import PasteModal from '$lib/components/ui/PasteModal/index.svelte';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let team: SavedTeam | null = null;
@@ -253,53 +256,6 @@
     setField(i, 'scarf', toId(name) === 'choicescarf');
   }
 
-  // ── Constants ─────────────────────────────────────────────────────────────
-  interface NatureInfo { plus: keyof StatSpread | null; minus: keyof StatSpread | null; tier: NatureTier; }
-  const NATURE_TABLE: Record<string, NatureInfo> = {
-    Hardy:   { plus: null,  minus: null,  tier: '=' },
-    Lonely:  { plus: 'atk', minus: 'def', tier: '=' },
-    Brave:   { plus: 'atk', minus: 'spe', tier: '-' },
-    Adamant: { plus: 'atk', minus: 'spa', tier: '=' },
-    Naughty: { plus: 'atk', minus: 'spd', tier: '=' },
-    Bold:    { plus: 'def', minus: 'atk', tier: '=' },
-    Docile:  { plus: null,  minus: null,  tier: '=' },
-    Relaxed: { plus: 'def', minus: 'spe', tier: '-' },
-    Impish:  { plus: 'def', minus: 'spa', tier: '=' },
-    Lax:     { plus: 'def', minus: 'spd', tier: '=' },
-    Timid:   { plus: 'spe', minus: 'atk', tier: '+' },
-    Hasty:   { plus: 'spe', minus: 'def', tier: '+' },
-    Serious: { plus: null,  minus: null,  tier: '=' },
-    Jolly:   { plus: 'spe', minus: 'spa', tier: '+' },
-    Naive:   { plus: 'spe', minus: 'spd', tier: '+' },
-    Modest:  { plus: 'spa', minus: 'atk', tier: '=' },
-    Mild:    { plus: 'spa', minus: 'def', tier: '=' },
-    Quiet:   { plus: 'spa', minus: 'spe', tier: '-' },
-    Bashful: { plus: null,  minus: null,  tier: '=' },
-    Rash:    { plus: 'spa', minus: 'spd', tier: '=' },
-    Calm:    { plus: 'spd', minus: 'atk', tier: '=' },
-    Gentle:  { plus: 'spd', minus: 'def', tier: '=' },
-    Sassy:   { plus: 'spd', minus: 'spe', tier: '-' },
-    Careful: { plus: 'spd', minus: 'spa', tier: '=' },
-    Quirky:  { plus: null,  minus: null,  tier: '=' },
-  };
-  const ALL_NATURES = Object.keys(NATURE_TABLE);
-
-  function natureMult(natureName: string | undefined, stat: keyof StatSpread): number {
-    if (!natureName) return 1.0;
-    const n = NATURE_TABLE[natureName];
-    if (!n) return 1.0;
-    if (n.plus === stat)  return 1.1;
-    if (n.minus === stat) return 0.9;
-    return 1.0;
-  }
-
-  function natureLabel(name: string): string {
-    const n = NATURE_TABLE[name];
-    if (!n || !n.plus) return name;
-    const STAT_NAMES: Record<string, string> = { atk: 'Atk', def: 'Def', spa: 'SpA', spd: 'SpD', spe: 'Spe' };
-    return `${name} (+${STAT_NAMES[n.plus!]}, −${STAT_NAMES[n.minus!]})`;
-  }
-
   function setNature(i: number, name: string) {
     const info = NATURE_TABLE[name];
     if (!info) return;
@@ -311,18 +267,17 @@
 
   // ── Import/Export ─────────────────────────────────────────────────────────
   let showImport = false;
-  let importText = '';
   let importError = '';
   let importLoading = false;
   let showExport = false;
   let exportText = '';
   let exportCopied = false;
 
-  async function doImport() {
+  async function doImport(rawText: string) {
     importError = '';
     importLoading = true;
     try {
-      const text = await resolvePaste(importText);
+      const text = await resolvePaste(rawText);
       const parsed = parsePaste(text, allEntries);
       if (!parsed.filter(Boolean).length) { importError = 'No matching Pokémon found.'; return; }
       // Convert EVs to Champions scale if needed.
@@ -351,7 +306,6 @@
       } : null);
       slots.forEach(s => { if (s) loadMoveData(s.id); });
       showImport = false;
-      importText = '';
     } catch (e: unknown) {
       importError = (e as Error)?.message ?? 'Failed to fetch paste.';
     } finally {
@@ -359,47 +313,12 @@
     }
   }
 
-  function generatePaste(): string {
-    const blocks: string[] = [];
-    for (const slot of slots) {
-      if (!slot) continue;
-      const lines: string[] = [];
-      const np = slot.nickname ? `${slot.nickname} (${slot.name})` : slot.name;
-      lines.push(slot.item ? `${np} @ ${slot.item}` : np);
-      if (slot.ability) lines.push(`Ability: ${slot.ability}`);
-      if (slot.level && slot.level !== 50) lines.push(`Level: ${slot.level}`);
-      if (hasTera && slot.teraType) lines.push(`Tera Type: ${slot.teraType}`);
-      if (slot.evs) {
-        // Pokepaste/Showdown always uses traditional EVs; 1 champ pt = 8 traditional EVs
-        const scale = evMode === 'champ' ? 8 : 1;
-        const e = slot.evs, p: string[] = [];
-        if (e.hp)  p.push(`${e.hp  * scale} HP`);
-        if (e.atk) p.push(`${e.atk * scale} Atk`);
-        if (e.def) p.push(`${e.def * scale} Def`);
-        if (e.spa) p.push(`${e.spa * scale} SpA`);
-        if (e.spd) p.push(`${e.spd * scale} SpD`);
-        if (e.spe) p.push(`${e.spe * scale} Spe`);
-        if (p.length) lines.push(`EVs: ${p.join(' / ')}`);
-      }
-      lines.push(`${slot.natureName ?? (slot.nature === '+' ? 'Timid' : slot.nature === '-' ? 'Brave' : 'Hardy')} Nature`);
-      if (slot.ivs) {
-        const iv = slot.ivs, p: string[] = [];
-        if (iv.hp  !== 31) p.push(`${iv.hp} HP`);
-        if (iv.atk !== 31) p.push(`${iv.atk} Atk`);
-        if (iv.def !== 31) p.push(`${iv.def} Def`);
-        if (iv.spa !== 31) p.push(`${iv.spa} SpA`);
-        if (iv.spd !== 31) p.push(`${iv.spd} SpD`);
-        if (iv.spe !== 31) p.push(`${iv.spe} Spe`);
-        if (p.length) lines.push(`IVs: ${p.join(' / ')}`);
-      }
-      for (const m of slot.moves ?? []) { if (m) lines.push(`- ${m}`); }
-      blocks.push(lines.join('\n'));
-    }
-    return blocks.join('\n\n');
+  function buildPaste(): string {
+    return generatePaste(slots, { evScale: evMode === 'champ' ? 8 : 1, hasTera });
   }
 
   async function exportPaste() {
-    const text = generatePaste();
+    const text = buildPaste();
     try {
       await navigator.clipboard.writeText(text);
       exportCopied = true;
@@ -524,8 +443,18 @@
 </script>
 
 <svelte:head>
-  <title>Team Builder — Turnadus</title>
-  <meta name="description" content="Build your Pokémon VGC team with EV sliders, meta-sorted moves, and damage/speed comparisons." />
+  <title>Team Builder — Turnadus | Pokémon VGC &amp; Champions</title>
+  <meta name="description" content="Build your Pokémon VGC or Champions team. EV sliders, meta-sorted moves and items, damage calculations, and speed comparisons — all in one place." />
+  <link rel="canonical" href="https://turnadus.com/build" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Team Builder — Turnadus" />
+  <meta property="og:description" content="Build your Pokémon VGC or Champions team. EV sliders, meta-sorted moves, damage calc, and speed comparisons." />
+  <meta property="og:url" content="https://turnadus.com/build" />
+  <meta property="og:image" content="https://turnadus.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Team Builder — Turnadus" />
+  <meta name="twitter:description" content="Build your Pokémon VGC or Champions team. EV sliders, meta-sorted moves, damage calc, and speed comparisons." />
+  <meta name="twitter:image" content="https://turnadus.com/og-image.png" />
 </svelte:head>
 
 <!-- Picker -->
@@ -533,25 +462,14 @@
   <PokemonPicker entries={allEntries} on:pick={onPick} on:close={() => (showPicker = false)} />
 {/if}
 
-<!-- Import modal -->
-{#if showImport}
-  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-  <div class="bld-modal-bg" on:click={() => { showImport = false; importError = ''; }}>
-    <div class="bld-modal" on:click|stopPropagation>
-      <div class="bld-modal-hd">
-        <span>Import Poképaste</span>
-        <button class="bld-modal-x" on:click={() => { showImport = false; importError = ''; }}>✕</button>
-      </div>
-      <textarea class="bld-textarea" placeholder="Paste a Showdown team or pokepast.es URL…" bind:value={importText}></textarea>
-      {#if importError}<p class="bld-err">{importError}</p>{/if}
-      <div class="bld-modal-ft">
-        <Button variant="primary" size="sm" disabled={importLoading || !importText.trim()} onClick={doImport}>
-          {importLoading ? 'Importing…' : 'Import'}
-        </Button>
-      </div>
-    </div>
-  </div>
-{/if}
+<PasteModal
+  open={showImport}
+  loading={importLoading}
+  error={importError}
+  showCancel={false}
+  on:close={() => { showImport = false; importError = ''; }}
+  on:import={(e) => doImport(e.detail)}
+/>
 
 <!-- Export modal -->
 {#if showExport}
