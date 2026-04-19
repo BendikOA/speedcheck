@@ -523,8 +523,8 @@
   .row-top {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0.3rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
     min-width: 0;
   }
 
@@ -534,6 +534,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   .row-badges {
@@ -781,41 +783,55 @@
 
   /* ── Mobile layout (≤ 600 px) ─────────────────────────────────────────── */
   @media (max-width: 600px) {
-    /* 3-column grid: rank | sprite | full content
-       Speed/tier values wrap to a full-width row below via grid-column span  */
+    /* speed-row is a simple flex column — row-main is the only child
+       (pos + sprite are now inside row-top).
+       Speed/tier values are siblings of row-main, span full width below.   */
     .speed-row {
-      display: grid;
-      grid-template-columns: 1.6rem 48px 1fr;
-      column-gap: 0.5rem;
-      row-gap: 0;
-      align-items: start;
-      padding: 0.75rem 0.75rem 0.75rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0.75rem 0.6rem 0.75rem 0.6rem;
     }
 
+    /* row-top: pos · name · badges | sprite pushed right */
+    .row-top {
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 0.35rem;
+    }
     .pos {
-      font-size: 1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
       width: auto;
-      align-self: start;
-      padding-top: 0.25rem;
+      flex-shrink: 0;
+      color: var(--gb-low);
     }
-
+    .row-name { font-size: 0.92rem; }
+    .row-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem;
+      flex: 1;
+      min-width: 0;
+    }
     .row-sprite {
-      width: 48px;
-      height: 48px;
-      align-self: start;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      margin-left: auto;
     }
 
-    /* Content: takes col 3, full remaining width */
+    /* row-main: full width, stacked sections */
     .row-main {
-      grid-column: 3;
+      width: 100%;
       gap: 0.45rem;
       min-width: 0;
     }
 
-    /* Tier range + single speed: span all 3 columns as a full-width footer row */
+    /* Tier range + single speed: full-width row below row-main */
     .row-tier-speeds,
     .row-speed {
-      grid-column: 1 / -1;
+      width: 100%;
       justify-content: flex-start;
       margin-top: 0.5rem;
       padding-top: 0.5rem;

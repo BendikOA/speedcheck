@@ -868,16 +868,15 @@
             class:side-you={row.side === "you"}
             class:side-opp={row.side === "opp"}
           >
-            <span class="pos">{i + 1}</span>
-            <img
-              src={spriteUrl(displayName)}
-              alt={displayName}
-              class="row-sprite"
-            />
-
             <div class="row-main">
               <div class="row-top">
+                <span class="pos">{i + 1}</span>
                 <span class="row-name">{displayName}</span>
+                <img
+                  src={spriteUrl(displayName)}
+                  alt={displayName}
+                  class="row-sprite"
+                />
                 <div class="row-badges">
                   {#if row.megaIndex > 0}
                     {@const mf = row.megaForms[row.megaIndex - 1]}
