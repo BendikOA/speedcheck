@@ -275,7 +275,7 @@ export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> 
         merged.set(key, { name, count });
       }
     }
-    result[id] = Array.from(merged.values()).map(({ name, count }) => ({
+    result[toId(id)] = Array.from(merged.values()).map(({ name, count }) => ({
       name,
       count,
       pct: Math.round((count / data.usage) * 100),
@@ -304,7 +304,7 @@ export async function loadChampionsMovesFull(): Promise<UsageMovesFull> {
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const entries = Object.entries(data.moves);
     if (!entries.length) continue;
-    result[id] = entries.slice(0, 8).map(([name, count]) => ({
+    result[toId(id)] = entries.slice(0, 8).map(([name, count]) => ({
       name,
       pct: Math.round((count / data.usage) * 100),
     }));
@@ -373,11 +373,11 @@ export async function loadChampionsSets(): Promise<SetsByPokemon> {
 
       if (!items.length || !moves.length) continue;
 
-      const proxy  = proxySets[id]?.[0];
+      const proxy  = proxySets[toId(id)]?.[0];
       const nature = proxy?.nature ?? 'Timid';
       const evs    = proxy?.evs    ?? { hp: 4, atk: 0, def: 0, spa: 252, spd: 0, spe: 252 };
 
-      result[id] = items.map(item => ({
+      result[toId(id)] = items.map(item => ({
         label:   item,
         item,
         ability,

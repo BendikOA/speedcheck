@@ -102,18 +102,23 @@
         ]);
       smogonMoves = moves;
       smogonAbilities = abilities;
-      smogonBuilds = builds;
       champAbilitiesFull = abilitiesFull;
       champMovesFull = movesFull;
       smogonPriorityMoves = {};
-      // Champions sets (items/moves/abilities from Limitless + Smogon-proxied nature/EVs).
-      // Also load Reg I as a fallback for any Pokémon not in the Champions meta.
-      // TODO after 2026-05-01: replace fallback with Champions-specific Smogon data when available.
-      const [champSets, regiSets] = await Promise.all([
+      // TODO after 2026-05-01: replace 'gen9vgc2026regi' with Champions-specific Smogon format when available.
+      const [champSets, regiSets, regiBuilds] = await Promise.all([
         loadChampionsSets(),
         loadSmogonSets(9, 'gen9vgc2026regi'),
+        loadSmogonBuilds(9, 'gen9vgc2026regi'),
       ]);
-      // Merge: Champions data wins; Reg I fills gaps (nature/EVs for non-meta mons)
+      // Builds: Champions wins for item; Reg I fills in speEV + nature (Champions meta has no spread data)
+      smogonBuilds = Object.fromEntries(
+        Object.entries(regiBuilds).map(([id, b]) => [
+          id,
+          { ...b, item: builds[id]?.item ?? b.item },
+        ])
+      );
+      // Sets: Champions data wins; Reg I fills gaps for non-meta mons
       setsData = { ...regiSets, ...champSets };
     } else {
       [smogonPriorityMoves, smogonAbilities, smogonMoves, smogonBuilds] =
