@@ -12,7 +12,7 @@
     DEFAULT_CONDITIONS,
   } from "$lib/speedtiers";
   import type { Conditions, NatureTier } from "$lib/speedtiers";
-  import { spriteUrl } from "$lib/sprites";
+  import { spriteUrl, itemIconStyle } from "$lib/sprites";
   import {
     getPriorityMoves,
     getPriorityAbilities,
@@ -41,6 +41,7 @@
     loadChampionsMovesFull,
     loadChampionsSets,
     loadSmogonSets,
+    loadChampionsPriorityMoves,
   } from "$lib/smogonUsage";
   import type {
     UsagePriorityMoves,
@@ -73,6 +74,7 @@
         likelyItemsActive,
         likelyMovesActive,
         likelyBuildsActive,
+        tierMode,
       }));
     } catch { /* ignore */ }
   }
@@ -104,13 +106,16 @@
       smogonAbilities = abilities;
       champAbilitiesFull = abilitiesFull;
       champMovesFull = movesFull;
-      smogonPriorityMoves = {};
       // TODO after 2026-05-01: replace 'gen9vgc2026regi' with Champions-specific Smogon format when available.
-      const [champSets, regiSets, regiBuilds] = await Promise.all([
+      const [champSets, regiSets, regiBuilds, regiPriorityMoves, champPriorityMoves] = await Promise.all([
         loadChampionsSets(),
         loadSmogonSets(9, 'gen9vgc2026regi'),
         loadSmogonBuilds(9, 'gen9vgc2026regi'),
+        loadSmogonPriorityMoves(9, 'gen9vgc2026regi'),
+        loadChampionsPriorityMoves(),
       ]);
+      // Priority: Limitless first, Smogon Reg I fills gaps
+      smogonPriorityMoves = { ...regiPriorityMoves, ...champPriorityMoves };
       // Builds: Champions wins for item; Reg I fills in speEV + nature (Champions meta has no spread data)
       smogonBuilds = Object.fromEntries(
         Object.entries(regiBuilds).map(([id, b]) => [
@@ -145,6 +150,7 @@
         if (saved.likelyMovesActive     === true) likelyMovesActive     = true;
         if (saved.likelyAbilitiesActive === true) likelyAbilitiesActive = true;
         if (saved.likelyBuildsActive    === true) likelyBuildsActive    = true;
+        if (saved.tierMode              === true) tierMode              = true;
       }
     } catch { /* ignore */ }
     _settingsLoaded = true;
@@ -195,10 +201,11 @@
   let likelyMovesActive      = false;
   let likelyAbilitiesActive  = false;
   let likelyBuildsActive     = false; // EV/Nature
+  let tierMode               = true; // show speed tier range instead of guessed single value
 
   let _settingsLoaded = false;
   $: if (_settingsLoaded) {
-    selectedReg, likelyAbilitiesActive, likelyItemsActive, likelyMovesActive, likelyBuildsActive;
+    selectedReg, likelyAbilitiesActive, likelyItemsActive, likelyMovesActive, likelyBuildsActive, tierMode;
     saveSettings();
   }
 
@@ -296,14 +303,6 @@
     fieldProto = new Map(fieldProto);
   }
 
-  function cycleNature(key: string) {
-    const cur = fieldNature.get(key) ?? "=";
-    // = (neutral) → + (positive) → - (negative) → = …
-    const next: NatureTier = cur === "=" ? "+" : cur === "+" ? "-" : "=";
-    fieldNature.set(key, next);
-    fieldNature = new Map(fieldNature);
-  }
-
   function toggleCommander(key: string) {
     fieldCommander.set(key, !(fieldCommander.get(key) ?? false));
     fieldCommander = new Map(fieldCommander);
@@ -365,6 +364,8 @@
     hasMegaStone: boolean;
     priorityMoves: PriorityMove[];
     priorityAbilities: PriorityAbility[];
+    /** Tier-mode speed range: [neg0EV, neutral0EV, neutral252EV, pos252EV] with field mods applied */
+    tierSpeeds: [number, number, number, number];
   };
 
   $: fieldRows = (() => {
@@ -436,13 +437,12 @@
         ? (fieldSpeedBoost.get(key) ?? 0)
         : 0;
 
-      // Priority moves: learnset-based normally, usage-filtered when likelyMovesActive
-      const effectivePriorityMoves =
-        likelyMovesActive && smogonPriorityMoves[slot.entry.id]
-          ? smogonPriorityMoves[slot.entry.id]
-              .map((id) => PRIORITY_MOVES[id])
-              .filter((m): m is PriorityMove => !!m)
-          : getPriorityMoves(slot.entry.id);
+      // Priority moves: always use usage-filtered data (≥1%) when available, static learnset as fallback
+      const effectivePriorityMoves = smogonPriorityMoves[slot.entry.id]
+        ? smogonPriorityMoves[slot.entry.id]
+            .map((id) => PRIORITY_MOVES[id])
+            .filter((m): m is PriorityMove => !!m)
+        : getPriorityMoves(slot.entry.id);
 
       const speedEV = fieldSpeedEV.get(key);
       const speedDown = fieldSpeedDown.get(key) ?? false;
@@ -498,6 +498,20 @@
         })(),
         priorityMoves: effectivePriorityMoves,
         priorityAbilities: getPriorityAbilities(effectiveAbilities),
+        tierSpeeds: (() => {
+          const mods = { scarf, paralysis, speedDown, protoBoost, commander, megaIndex, speedBoostStage };
+          const applyStage = (spd: number) => {
+            if (speedStage > 0) return Math.floor(spd * (2 + speedStage) / 2);
+            if (speedStage < 0) return Math.floor(spd * 2 / (2 + Math.abs(speedStage)));
+            return spd;
+          };
+          return [
+            applyStage(calcEffectiveSpeed(slot.entry, side, { ...mods, natureTier: '-' }, cond)),
+            applyStage(calcEffectiveSpeed(slot.entry, side, { ...mods, natureTier: '=' }, cond)),
+            applyStage(calcEffectiveSpeed(slot.entry, side, { ...mods, natureTier: '=', speedEV: 252 }, cond)),
+            applyStage(calcEffectiveSpeed(slot.entry, side, { ...mods, natureTier: '+' }, cond)),
+          ] as [number, number, number, number];
+        })(),
       });
     };
 
@@ -510,11 +524,11 @@
       if (s) buildRow("opp", i, s);
     });
 
-    rows.sort((a, b) =>
-      cond.trickRoom
-        ? a.effectiveSpeed - b.effectiveSpeed
-        : b.effectiveSpeed - a.effectiveSpeed,
-    );
+    rows.sort((a, b) => {
+      const va = tierMode ? a.tierSpeeds[2] : a.effectiveSpeed; // neutral+252 as tier sort key
+      const vb = tierMode ? b.tierSpeeds[2] : b.effectiveSpeed;
+      return cond.trickRoom ? va - vb : vb - va;
+    });
 
     return rows;
   })();
@@ -656,6 +670,14 @@
                 variant="toggle"
                 active={likelyBuildsActive}
                 onClick={toggleLikelyBuilds}>EV/Nature</Button
+              >
+            </div>
+            <p class="settings-label">Speed display</p>
+            <div class="settings-options">
+              <Button
+                variant="toggle"
+                active={tierMode}
+                onClick={() => (tierMode = !tierMode)}>Tier Range</Button
               >
             </div>
             <p class="settings-label">Usage data source</p>
@@ -946,25 +968,6 @@
               </div>
 
               <div class="row-toggles">
-                <!-- Nature: cycles = → + → - -->
-                <button
-                  class="toggle-pill nature-pill"
-                  class:nature-pos={row.nature === "+"}
-                  class:nature-neu={row.nature === "="}
-                  class:nature-neg={row.nature === "-"}
-                  on:click={() => cycleNature(row.key)}
-                  use:tooltip={row.natureLocked
-                    ? "Nature from pokepaste (known)"
-                    : "Speed nature — click to cycle\n+ Positive (Timid/Jolly/Naive/Hasty): 252 EVs ×1.1 — max speed investment\n= Neutral: 0 EVs, no modifier — no speed investment\n− Negative (Brave/Quiet/Relaxed/Sassy): 0 EVs ×0.9 — TR min speed"}
-                  >{row.nature === "+"
-                    ? "+"
-                    : row.nature === "="
-                      ? "="
-                      : "−"}Nat{#if likelyBuildsActive && !row.natureLocked}<span
-                      class="nature-assumed">*</span
-                    >{/if}</button
-                >
-
                 <!-- Spe EV chip (shown when Likely Build is active) -->
                 {#if row.speedEV !== undefined}
                   <span
@@ -1147,7 +1150,34 @@
               {/if}
             </div>
 
-            <span class="row-speed">{row.effectiveSpeed}</span>
+            {#if tierMode}
+              <span class="row-tier-speeds">
+                {#if row.scarf}
+                  <span class="tier-scarf-icon" style={itemIconStyle('Choice Scarf')}></span>
+                {/if}
+                <span class="tier-col">
+                  <span class="tier-val tier-neg">{row.tierSpeeds[0]}</span>
+                  <span class="tier-lbl">−Nat</span>
+                </span>
+                <span class="tier-sep">/</span>
+                <span class="tier-col">
+                  <span class="tier-val">{row.tierSpeeds[1]}</span>
+                  <span class="tier-lbl">0 EV</span>
+                </span>
+                <span class="tier-sep">/</span>
+                <span class="tier-col">
+                  <span class="tier-val">{row.tierSpeeds[2]}</span>
+                  <span class="tier-lbl">Neu</span>
+                </span>
+                <span class="tier-sep">/</span>
+                <span class="tier-col">
+                  <span class="tier-val tier-max">{row.tierSpeeds[3]}</span>
+                  <span class="tier-lbl">+Nat</span>
+                </span>
+              </span>
+            {:else}
+              <span class="row-speed">{row.effectiveSpeed}</span>
+            {/if}
           </div>
         {/each}
       </div>

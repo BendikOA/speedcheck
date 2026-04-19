@@ -464,13 +464,6 @@
     flex-wrap: wrap;
   }
 
-  @media (max-width: 500px) {
-    .section-title {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.35rem;
-    }
-  }
 
   .empty-hint {
     font-size: 0.85rem;
@@ -678,6 +671,49 @@
   }
 
 
+  .row-tier-speeds {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .tier-scarf-icon {
+    width: 20px;
+    height: 20px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+    margin-right: 0.2rem;
+  }
+  .tier-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05rem;
+  }
+  .tier-val {
+    font-size: 1.05rem;
+    min-width: 2.6rem;
+    text-align: center;
+  }
+  .tier-lbl {
+    font-size: 0.6rem;
+    opacity: 0.5;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .tier-neg { color: #f87171; }
+  .tier-max { color: #4ade80; }
+  .tier-sep {
+    font-size: 0.75rem;
+    opacity: 0.3;
+    padding: 0 0.05rem;
+    align-self: flex-start;
+    padding-top: 0.2rem;
+  }
+
   /* Usage tabs */
   .usage-tabs {
     display: flex;
@@ -706,18 +742,6 @@
     padding: 0.35rem 0.1rem 0.1rem;
   }
 
-  @media (max-width: 500px) {
-    .move-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-    .move-chip {
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
   .move-chip {
     font-size: 0.78rem;
     padding: 0.15rem 0.55rem;
@@ -755,28 +779,104 @@
     pointer-events: auto;
   }
 
-  /* Mobile tightening */
-  @media (max-width: 500px) {
+  /* ── Mobile layout (≤ 600 px) ─────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    /* 3-column grid: rank | sprite | full content
+       Speed/tier values wrap to a full-width row below via grid-column span  */
     .speed-row {
-      gap: 0.4rem;
-      padding: 0.5rem 0.6rem;
+      display: grid;
+      grid-template-columns: 1.6rem 48px 1fr;
+      column-gap: 0.5rem;
+      row-gap: 0;
+      align-items: start;
+      padding: 0.75rem 0.75rem 0.75rem 0.5rem;
     }
+
+    .pos {
+      font-size: 1rem;
+      width: auto;
+      align-self: start;
+      padding-top: 0.25rem;
+    }
+
     .row-sprite {
       width: 48px;
       height: 48px;
+      align-self: start;
     }
-    .row-name {
-      font-size: 0.9rem;
+
+    /* Content: takes col 3, full remaining width */
+    .row-main {
+      grid-column: 3;
+      gap: 0.45rem;
+      min-width: 0;
     }
+
+    /* Tier range + single speed: span all 3 columns as a full-width footer row */
+    .row-tier-speeds,
     .row-speed {
-      font-size: 1.35rem;
-      min-width: 3rem;
+      grid-column: 1 / -1;
+      justify-content: flex-start;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--gb-3);
     }
-    .pos {
-      font-size: 1rem;
-      width: 1.25rem;
+
+    /* Tier range: spread values evenly across full width */
+    .row-tier-speeds {
+      gap: 0;
+      justify-content: space-around;
     }
-    .stage-group {
-      flex-basis: 100%;
+    .tier-col  { flex: 1; }
+    .tier-val  { font-size: 1.1rem; min-width: unset; }
+    .tier-lbl  { font-size: 0.58rem; }
+    .tier-sep  { display: none; }
+    .tier-scarf-icon { margin-right: 0; width: 20px; height: 20px; }
+
+    /* Single speed value */
+    .row-speed {
+      font-size: 1.5rem;
+      min-width: unset;
+      text-align: left;
+    }
+
+    /* Name */
+    .row-name { font-size: 0.92rem; }
+
+    /* Name + badges on same line, wrap to next if needed */
+    .row-top  { gap: 0.3rem; align-items: center; }
+    .row-badges { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+
+    /* Toggles */
+    .row-toggles { gap: 0.3rem; flex-wrap: wrap; }
+    .toggle-pill { font-size: 0.75rem; min-height: 30px; padding: 0 0.5rem; }
+    .stage-group { flex-basis: auto; gap: 0.25rem; }
+    .stage-btn   { min-height: 30px; }
+    .stage-val   { font-size: 0.75rem; }
+
+    /* Move/ability chips: flex wrap, 2 per row, sized to widest in row */
+    .move-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      padding: 0;
+    }
+    .move-chip {
+      flex: 1 1 calc(50% - 0.15rem);
+      max-width: calc(50% - 0.15rem);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      box-sizing: border-box;
+    }
+
+    /* Section header */
+    .section-title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
     }
   }

@@ -15,9 +15,11 @@ export const GET: RequestHandler = async ({ url }) => {
   if (chaos?.data) {
     for (const [name, entry] of Object.entries<any>(chaos.data)) {
       if (!entry.Moves) continue;
-      // Keep only priority moves that appear with any usage, sorted by usage desc
+      const rawCount: number = entry['Raw count'] ?? 0;
+      if (rawCount === 0) continue;
+      // Keep only priority moves with ≥1% usage
       const used = Object.entries<number>(entry.Moves)
-        .filter(([move]) => PRIORITY_IDS.has(toId(move)))
+        .filter(([move, count]) => PRIORITY_IDS.has(toId(move)) && count / rawCount >= 0.01)
         .sort((a, b) => b[1] - a[1])
         .map(([move]) => toId(move));
       if (used.length) result[toId(name)] = used;

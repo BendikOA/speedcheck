@@ -42,7 +42,7 @@ export interface SpeedEntry {
  * Key = mega form id (lowercase, no spaces), value = single fixed ability name.
  */
 export const CHAMPIONS_MEGA_ABILITY: Record<string, string> = {
-  'floette-mega':    'Fairy Aura',
+  'floettemega':    'Fairy Aura',
   // Add others here as confirmed from the Champions game
 };
 

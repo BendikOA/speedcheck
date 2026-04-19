@@ -1,4 +1,5 @@
 import type { NatureTier } from './speedtiers';
+import { PRIORITY_MOVES } from './priority';
 
 const toId = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
@@ -114,7 +115,7 @@ export async function loadSmogonOrder(gen = 9, format?: string): Promise<UsageOr
 }
 
 export async function loadSmogonPriorityMoves(gen = 9, format?: string): Promise<UsagePriorityMoves> {
-  const k = cacheKey('smogon_priority_moves', gen, format);
+  const k = cacheKey('smogon_priority_moves_v2', gen, format);
   if (movesCache.has(k)) return movesCache.get(k)!;
   const stored = lsGet<UsagePriorityMoves>(k);
   if (stored) { movesCache.set(k, stored); return stored; }
@@ -192,6 +193,13 @@ export function getSmogonNature(usageData: UsageNatures, pokemonId: string): Nat
 
 // ── Champions (Limitless Reg M-A) data ────────────────────────────────────
 
+// Maps champions-meta.json IDs (after toId) to the correct @pkmn/dex Showdown ID.
+// Needed when the Champions game uses a non-standard form of a Pokémon.
+const CHAMPIONS_ID_REMAP: Record<string, string> = {
+  'floette': 'floetteeternal',
+};
+const champId = (rawId: string): string => CHAMPIONS_ID_REMAP[rawId] ?? rawId;
+
 interface ChampionsPokemon {
   usage:     number;
   moves:     Record<string, number>;
@@ -223,12 +231,28 @@ async function loadChampionsMeta(): Promise<ChampionsMeta> {
   return championsMetaInflight;
 }
 
+const PRIORITY_IDS = new Set(Object.keys(PRIORITY_MOVES));
+
+export async function loadChampionsPriorityMoves(): Promise<UsagePriorityMoves> {
+  const meta = await loadChampionsMeta();
+  const result: UsagePriorityMoves = {};
+  for (const [id, data] of Object.entries(meta.pokemon)) {
+    if (!data.usage) continue;
+    const used = Object.entries(data.moves)
+      .filter(([move, count]) => PRIORITY_IDS.has(toId(move)) && count / data.usage >= 0.01)
+      .sort((a, b) => b[1] - a[1])
+      .map(([move]) => toId(move));
+    if (used.length) result[champId(toId(id))] = used;
+  }
+  return result;
+}
+
 export async function loadChampionsMoves(): Promise<UsageMoves> {
   const meta   = await loadChampionsMeta();
   const result: UsageMoves = {};
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const top4 = Object.keys(data.moves).slice(0, 4);
-    if (top4.length) result[toId(id)] = top4;
+    if (top4.length) result[champId(toId(id))] = top4;
   }
   return result;
 }
@@ -238,7 +262,7 @@ export async function loadChampionsBuilds(): Promise<UsageBuilds> {
   const result: UsageBuilds = {};
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const topItem = Object.keys(data.items)[0];
-    if (topItem) result[toId(id)] = { speEV: 0, nature: '=' as import('./speedtiers').NatureTier, item: topItem };
+    if (topItem) result[champId(toId(id))] = { speEV: 0, nature: '=' as import('./speedtiers').NatureTier, item: topItem };
   }
   return result;
 }
@@ -251,7 +275,7 @@ export async function loadChampionsAbilities(): Promise<UsageAbilities> {
     if (!entries.length) continue;
     const [name, count] = entries[0]; // already sorted desc by scraper
     const pct = Math.round((count / data.usage) * 100);
-    result[toId(id)] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
+    result[champId(toId(id))] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
   }
   return result;
 }
@@ -275,7 +299,7 @@ export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> 
         merged.set(key, { name, count });
       }
     }
-    result[toId(id)] = Array.from(merged.values()).map(({ name, count }) => ({
+    result[champId(toId(id))] = Array.from(merged.values()).map(({ name, count }) => ({
       name,
       count,
       pct: Math.round((count / data.usage) * 100),
@@ -304,7 +328,7 @@ export async function loadChampionsMovesFull(): Promise<UsageMovesFull> {
   for (const [id, data] of Object.entries(meta.pokemon)) {
     const entries = Object.entries(data.moves);
     if (!entries.length) continue;
-    result[toId(id)] = entries.slice(0, 8).map(([name, count]) => ({
+    result[champId(toId(id))] = entries.slice(0, 8).map(([name, count]) => ({
       name,
       pct: Math.round((count / data.usage) * 100),
     }));
@@ -373,11 +397,12 @@ export async function loadChampionsSets(): Promise<SetsByPokemon> {
 
       if (!items.length || !moves.length) continue;
 
-      const proxy  = proxySets[toId(id)]?.[0];
+      const cid    = champId(toId(id));
+      const proxy  = proxySets[cid]?.[0] ?? proxySets[toId(id)]?.[0];
       const nature = proxy?.nature ?? 'Timid';
       const evs    = proxy?.evs    ?? { hp: 4, atk: 0, def: 0, spa: 252, spd: 0, spe: 252 };
 
-      result[toId(id)] = items.map(item => ({
+      result[cid] = items.map(item => ({
         label:   item,
         item,
         ability,

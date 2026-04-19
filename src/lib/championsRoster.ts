@@ -39,7 +39,7 @@ export const CHAMPIONS_ROSTER = new Set<string>([
 
   // Gen VI
   'chesnaught', 'delphox', 'greninja', 'diggersby', 'talonflame', 'vivillon',
-  'floette', 'florges', 'pangoro', 'furfrou', 'meowstic', 'aegislash',
+  'floetteeternal', 'florges', 'pangoro', 'furfrou', 'meowstic', 'aegislash',
   'aromatisse', 'slurpuff', 'clawitzer', 'heliolisk', 'tyrantrum', 'aurorus',
   'sylveon', 'hawlucha', 'dedenne', 'goodra', 'klefki', 'trevenant',
   'gourgeist', 'avalugg', 'noivern',
