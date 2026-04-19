@@ -555,7 +555,7 @@
               <span class="bld-slot-sub">{slot.item || slot.ability || '\u00a0'}</span>
             </div>
             {#if slot.nature !== '='}
-              <span class="bld-slot-nat" class:nat-plus={slot.nature === '+'} class:nat-minus={slot.nature === '-'}>{slot.nature === '+' ? '+Spe' : '−Spe'}</span>
+              <span class="bld-slot-nat" class:nat-plus={slot.nature === '+'} class:nat-minus={slot.nature === '-'}>{slot.nature === '+' ? '▲ Spe' : '▼ Spe'}</span>
             {/if}
           {:else}
             <span class="bld-slot-num">{i + 1}</span>

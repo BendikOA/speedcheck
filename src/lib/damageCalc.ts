@@ -143,7 +143,11 @@ export function runCalc(
 
   // If the attacker has a sun-setting ability (e.g. Mega Sol on Mega Meganium),
   // treat the field as sunny so Weather Ball is correctly typed as Fire.
-  const attackerAbilityId = (attackerSlot.ability ?? attackerSlot.entry.abilities[0] ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  // When holding a mega stone, the mega form's ability overrides the base ability.
+  const megaFormAbility = attackerSlot.item
+    ? attackerSlot.entry.megaForms.find(m => m.megaStone === attackerSlot.item)?.ability
+    : undefined;
+  const attackerAbilityId = (megaFormAbility ?? attackerSlot.ability ?? attackerSlot.entry.abilities[0] ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const condWithAbilityWeather: Conditions =
     SUN_SETTING_ABILITIES.has(attackerAbilityId) && !cond.rain && !cond.sun && !cond.sand && !cond.snow
       ? { ...cond, sun: true }

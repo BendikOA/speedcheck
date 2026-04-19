@@ -227,7 +227,7 @@
       set.add(index);
       fieldScarfs.set(key, team[index]?.scarf ?? false);
       fieldParalysis.set(key, false);
-      if (!fieldNature.has(key)) fieldNature.set(key, "=");
+      if (!fieldNature.has(key)) fieldNature.set(key, team[index]?.nature ?? "=");
       // Auto-apply likely build if mode is active
       if (likelyBuildsActive && team[index]) {
         const build = smogonBuilds[team[index]!.entry.id];
@@ -1157,7 +1157,7 @@
                 {/if}
                 <span class="tier-col">
                   <span class="tier-val tier-neg">{row.tierSpeeds[0]}</span>
-                  <span class="tier-lbl">−Nat</span>
+                  <span class="tier-lbl">▼ Nat</span>
                 </span>
                 <span class="tier-sep">/</span>
                 <span class="tier-col">
@@ -1172,7 +1172,7 @@
                 <span class="tier-sep">/</span>
                 <span class="tier-col">
                   <span class="tier-val tier-max">{row.tierSpeeds[3]}</span>
-                  <span class="tier-lbl">+Nat</span>
+                  <span class="tier-lbl">▲ Nat</span>
                 </span>
               </span>
             {:else}

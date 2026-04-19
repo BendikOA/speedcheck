@@ -9,6 +9,7 @@ docs/
 improvements.md
 manualwork.md
 FEEDBACK_SETUP.md
+static/oldschemes.md
 .env
 .env.*
 !.env.example
