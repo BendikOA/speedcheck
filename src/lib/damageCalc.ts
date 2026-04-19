@@ -2,6 +2,7 @@ import { Pokemon, Move, Field, Side, calculate, Generations } from '@smogon/calc
 import type { TeamSlot } from '$lib/stores/teams';
 import type { Conditions } from '$lib/speedtiers';
 import type { PokemonSet } from '$lib/smogonUsage';
+import { SUN_SETTING_ABILITIES } from '$lib/speedtiers';
 
 export interface CalcMoveResult {
   moveName: string;
@@ -140,7 +141,15 @@ export function runCalc(
     return [];
   }
 
-  const field = buildCalcField(cond, attackerSide, mods);
+  // If the attacker has a sun-setting ability (e.g. Mega Sol on Mega Meganium),
+  // treat the field as sunny so Weather Ball is correctly typed as Fire.
+  const attackerAbilityId = (attackerSlot.ability ?? attackerSlot.entry.abilities[0] ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const condWithAbilityWeather: Conditions =
+    SUN_SETTING_ABILITIES.has(attackerAbilityId) && !cond.rain && !cond.sun && !cond.sand && !cond.snow
+      ? { ...cond, sun: true }
+      : cond;
+
+  const field = buildCalcField(condWithAbilityWeather, attackerSide, mods);
   const results: CalcMoveResult[] = [];
   const defHp = defender.stats.hp;
 

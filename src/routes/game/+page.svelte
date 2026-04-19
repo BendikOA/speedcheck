@@ -1197,6 +1197,7 @@
     {smogonMoves}
     {champMovesFull}
     {setsData}
+    {fieldMega}
     onclose={() => (calcOpen = false)}
   />
 {/if}

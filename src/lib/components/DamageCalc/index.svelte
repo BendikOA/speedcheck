@@ -17,6 +17,7 @@
   export let smogonMoves: UsageMoves = {};
   export let champMovesFull: UsageMovesFull = {};
   export let setsData: SetsByPokemon = {};
+  export let fieldMega: Map<string, number> = new Map();
   export let onclose: () => void = () => {};
 
   const GEN9 = Generations.get(9);
@@ -83,11 +84,16 @@
   }
   function entryAbilityNames(slot: NonNullable<TeamSlot>): string[] {
     return slot.entry.abilities
-      .map(id => GEN9.abilities.get(id)?.name)
+      .map(id => GEN9.abilities.get(id as any)?.name as string | undefined)
       .filter((n): n is string => !!n);
   }
-  function abilityOptions(slot: NonNullable<TeamSlot> | null): string[] {
+  function abilityOptions(slot: NonNullable<TeamSlot> | null, megaIdx = 0): string[] {
     if (!slot) return [];
+    const megaAbility = megaIdx > 0 ? slot.entry.megaForms[megaIdx - 1]?.ability : undefined;
+    if (megaAbility) {
+      // Mega form has a fixed ability — only offer that one
+      return [megaAbility];
+    }
     const fromEntry = entryAbilityNames(slot);
     if (slot.ability && !fromEntry.includes(slot.ability)) return [slot.ability, ...fromEntry];
     return fromEntry;
@@ -105,6 +111,9 @@
 
   $: atkSlot = selYou !== null ? yourTeam[selYou] : null;
   $: defSlot = selOpp !== null ? oppTeam[selOpp]  : null;
+
+  $: atkMegaIdx = selYou !== null ? (fieldMega.get(`you-${selYou}`) ?? 0) : 0;
+  $: defMegaIdx = selOpp !== null ? (fieldMega.get(`opp-${selOpp}`) ?? 0) : 0;
 
   $: atkSets = atkSlot ? (setsData[atkSlot.entry.id] ?? []) : [];
   $: defSets = defSlot ? (setsData[defSlot.entry.id] ?? []) : [];
@@ -125,19 +134,19 @@
     const s = atkEffective;
     atkNature  = s?.natureName ?? 'Serious';
     atkEvs     = copyEvs(s?.evs);
-    const opts = abilityOptions(s);
-    atkAbility = s?.ability ?? opts[0] ?? '';
+    const opts = abilityOptions(s, atkMegaIdx);
+    atkAbility = opts[0] ?? s?.ability ?? '';
   }
   $: {
     const s = defEffective;
     defNature  = s?.natureName ?? 'Serious';
     defEvs     = copyEvs(s?.evs);
-    const opts = abilityOptions(s);
-    defAbility = s?.ability ?? opts[0] ?? '';
+    const opts = abilityOptions(s, defMegaIdx);
+    defAbility = opts[0] ?? s?.ability ?? '';
   }
 
-  $: atkAbilityOpts = abilityOptions(atkEffective);
-  $: defAbilityOpts = abilityOptions(defEffective);
+  $: atkAbilityOpts = abilityOptions(atkEffective, atkMegaIdx);
+  $: defAbilityOpts = abilityOptions(defEffective, defMegaIdx);
 
   // Final slots used for calc (with user overrides applied, EVs in 0-32 Champions scale)
   $: atkCalcSlot = atkEffective

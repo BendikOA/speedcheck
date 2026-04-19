@@ -43,8 +43,12 @@ export interface SpeedEntry {
  */
 export const CHAMPIONS_MEGA_ABILITY: Record<string, string> = {
   'floettemega':    'Fairy Aura',
+  'meganiummega':   'Mega Sol',
   // Add others here as confirmed from the Champions game
 };
+
+// Abilities that set permanent sun (like Drought), used to infer field state in calcs
+export const SUN_SETTING_ABILITIES = new Set(['drought', 'megasol']);
 
 // Abilities that double speed in a specific field condition
 export const WEATHER_ABILITY: Record<string, 'rain' | 'sun' | 'sand' | 'snow' | 'electric'> = {
