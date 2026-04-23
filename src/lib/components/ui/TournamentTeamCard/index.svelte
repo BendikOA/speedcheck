@@ -1,5 +1,5 @@
 <script lang="ts">
-  import './styles.css';
+  import './styles.scss';
   import { iconStyle } from '$lib/sprites';
   import { savedTeams } from '$lib/stores/savedTeams';
   import Button from '$lib/components/ui/Button/index.svelte';

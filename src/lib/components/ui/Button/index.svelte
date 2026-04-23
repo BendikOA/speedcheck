@@ -15,7 +15,7 @@
 -->
 
 <script lang="ts">
-  import './styles.css';
+  import './styles.scss';
   import { tooltip as applyTooltip } from '$lib/tooltip';
 
   export let variant: 'primary' | 'secondary' | 'danger' | 'toggle' = 'primary';

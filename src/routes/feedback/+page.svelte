@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { enhance } from '$app/forms';
   import type { ActionData } from './$types';
   import Button from '$lib/components/ui/Button/index.svelte';

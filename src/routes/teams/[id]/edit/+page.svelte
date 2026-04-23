@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';

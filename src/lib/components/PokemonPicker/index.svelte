@@ -29,7 +29,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import type { SpeedEntry } from '$lib/speedtiers';
   import { spriteUrl } from '$lib/sprites';
-  import './styles.css';
+  import './styles.scss';
 
   export let entries: SpeedEntry[];
   export let featured: SpeedEntry[] = [];

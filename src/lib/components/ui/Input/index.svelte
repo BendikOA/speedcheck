@@ -15,7 +15,7 @@
 -->
 
 <script lang="ts">
-  import './styles.css';
+  import './styles.scss';
 
   export let type: string = 'text';
   export let placeholder: string = '';

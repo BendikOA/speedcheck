@@ -1,0 +1,7 @@
+{
+  "pill": {
+    "padding":   { "$value": "0 4px 2px" },
+    "font-size": { "$value": "0.75rem" },
+    "radius":    { "$value": "100px" }
+  }
+}

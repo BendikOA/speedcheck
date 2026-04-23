@@ -1,0 +1,7 @@
+// Scrollable containers — momentum scrolling on iOS, hidden scrollbar
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll-x::-webkit-scrollbar { display: none; }

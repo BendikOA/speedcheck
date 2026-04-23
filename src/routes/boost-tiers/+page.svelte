@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { buildAllTiers, buildSpeedTiers, GEN_NUMBERS } from '$lib/speedtiers';
   import Input from '$lib/components/ui/Input/index.svelte';
   import type { GenNumber } from '$lib/speedtiers';

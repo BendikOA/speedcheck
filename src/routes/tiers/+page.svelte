@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { buildSpeedTiers, buildAllTiers, GEN_NUMBERS } from '$lib/speedtiers';
   import { staticSpriteUrl, itemIconStyle } from '$lib/sprites';
   import Input from '$lib/components/ui/Input/index.svelte';

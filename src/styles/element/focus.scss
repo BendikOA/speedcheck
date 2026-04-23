@@ -1,0 +1,8 @@
+// Keyboard focus ring — visible only for keyboard navigation
+:focus { outline: none; }
+
+:focus-visible {
+  outline: 2px solid var(--gb-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { savedTeams } from '$lib/stores/savedTeams';
   import SavedTeamCard from '$lib/components/ui/SavedTeamCard/index.svelte';
   import TournamentTeamCard from '$lib/components/ui/TournamentTeamCard/index.svelte';

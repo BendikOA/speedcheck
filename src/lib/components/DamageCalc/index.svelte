@@ -1,5 +1,5 @@
 <script lang="ts">
-  import './styles.css';
+  import './styles.scss';
   import { slide } from 'svelte/transition';
   import { Generations } from '@smogon/calc';
   import type { TeamSlot } from '$lib/stores/teams';

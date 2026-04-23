@@ -4,6 +4,7 @@
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
+    "tokens": "style-dictionary build --config style-dictionary.config.js",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
@@ -17,7 +18,9 @@
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "sass": "^1.99.0",
     "storybook": "^8.6.14",
+    "style-dictionary": "^5.4.0",
     "svelte": "^5.0.0",
     "typescript": "^5.0.0",
     "vite": "^6.0.0"

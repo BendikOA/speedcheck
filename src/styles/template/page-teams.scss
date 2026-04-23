@@ -4,7 +4,6 @@
   gap: 2.5rem;
 }
 
-/* ── Section shells ── */
 .teams-section,
 .saved-section {
   display: flex;
@@ -38,7 +37,6 @@
   color: var(--gb-low);
 }
 
-/* ── Lists ── */
 .teams-list,
 .saved-list {
   display: flex;
@@ -46,7 +44,6 @@
   gap: 0.5rem;
 }
 
-/* ── Empty states ── */
 .teams-empty {
   font-size: 0.85rem;
   color: var(--gb-low);

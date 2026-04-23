@@ -21,7 +21,7 @@
 <script lang="ts">
   import { t, left, top } from './tooltip';
   import { hideTooltip } from '$lib/tooltip';
-  import './styles.css';
+  import './styles.scss';
 </script>
 
 <svelte:window

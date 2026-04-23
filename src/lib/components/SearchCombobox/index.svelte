@@ -29,7 +29,7 @@
   import { items as itemsStore, value as valueStore, placeholder as placeholderStore, id as idStore, inputValue, filtered, onValueChange, onOpenChangeComplete } from './searchCombobox';
   import { Combobox } from "bits-ui";
   import { createEventDispatcher } from "svelte";
-  import './styles.css';
+  import './styles.scss';
 
   /** Full list of options to filter from */
   export let items: string[] = [];

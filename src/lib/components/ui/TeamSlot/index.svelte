@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "./styles.css";
+  import "./styles.scss";
   import { createEventDispatcher } from "svelte";
   import { spriteUrl } from "$lib/sprites";
   import type { TeamSlot } from "$lib/stores/teams";

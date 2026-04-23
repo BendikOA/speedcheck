@@ -1,0 +1,7 @@
+{
+  "input": {
+    "padding":   { "$value": "0.65rem 0.85rem" },
+    "font-size": { "$value": "16px" },
+    "height":    { "$value": "44px" }
+  }
+}

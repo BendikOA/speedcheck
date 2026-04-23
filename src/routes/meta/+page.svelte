@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { spriteUrl, staticSpriteUrl, itemIconStyle } from '$lib/sprites';
   import type { MetaPageData, MetaEntry } from './+page.server';
   import UsageSection from '$lib/components/ui/UsageSection/index.svelte';

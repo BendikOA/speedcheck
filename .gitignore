@@ -9,6 +9,9 @@ docs/
 improvements.md
 manualwork.md
 FEEDBACK_SETUP.md
+FRONTEND.md
+TOKENS.md
+src/styles/tokens/build/
 static/oldschemes.md
 .env
 .env.*

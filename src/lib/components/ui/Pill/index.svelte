@@ -1,5 +1,5 @@
 <script lang="ts">
-  import './styles.css';
+  import './styles.scss';
   import { tooltip as tooltipAction } from '$lib/tooltip';
 
   /** Accent color — any valid CSS color string, e.g. "#f5c96c" or "var(--gb-1)".

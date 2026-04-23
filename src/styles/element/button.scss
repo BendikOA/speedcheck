@@ -1,0 +1,12 @@
+button {
+  background: var(--gb-4);
+  color: var(--gb-hi);
+  border: 1px solid var(--gb-3);
+}
+
+button, label[role="button"], a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

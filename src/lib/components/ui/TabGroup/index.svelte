@@ -1,5 +1,5 @@
 <script lang="ts">
-  import './styles.css';
+  import './styles.scss';
   import { createEventDispatcher } from 'svelte';
 
   /** Each tab: a display label and an opaque value string */

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import './styles.css';
   import { onMount } from 'svelte';
   import { buildSpeedTiers, buildAllTiers, GEN_NUMBERS } from '$lib/speedtiers';
   import type { GenNumber, SpeedEntry } from '$lib/speedtiers';

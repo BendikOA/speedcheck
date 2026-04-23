@@ -1,0 +1,25 @@
+{
+  "color": {
+    "gray": {
+      "1":   { "$value": "#e4e6f0", "$type": "color" },
+      "2":   { "$value": "#8e96aa", "$type": "color" },
+      "3":   { "$value": "#272c40", "$type": "color" },
+      "4":   { "$value": "#0e1120", "$type": "color" },
+      "5":   { "$value": "#07090e", "$type": "color" },
+      "hi":  { "$value": "#e8eaf4", "$type": "color" },
+      "low": { "$value": "#585d76", "$type": "color" }
+    },
+    "green":   { "$value": "#4a9c41", "$type": "color" },
+    "danger":  { "$value": "#e04848", "$type": "color" },
+    "success": { "$value": "#3a9c30", "$type": "color" }
+  },
+  "size": {
+    "borderRadius": {
+      "md": { "$value": "8px" },
+      "sm": { "$value": "4px" }
+    }
+  },
+  "fontFamily": {
+    "mono": { "$value": "'Intel One Mono', monospace" }
+  }
+}

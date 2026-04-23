@@ -1,6 +1,5 @@
 <script lang="ts">
-  import "../app.css";
-  import "./layout.css";
+  import "../app.scss";
   import { browser, dev } from "$app/environment";
   import { page } from "$app/stores";
   import Tooltip from "$lib/components/Tooltip/index.svelte";
