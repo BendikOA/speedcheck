@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 
 function styleTokens() {
   function build() {
-    execSync('node_modules/.bin/style-dictionary build --config style-dictionary.config.js', {
+    execSync('node scripts/build-tokens.js', {
       stdio: 'inherit',
       cwd: process.cwd(),
     });

@@ -1,2 +1,3 @@
-@use 'build/tokens';
-@use 'env';
+@use 'build/tokens';      // component sizing tokens on :root
+@use 'build/theme-dark';  // dark theme color tokens on [data-theme="dark"]
+@use 'env';               // safe-area env() values
