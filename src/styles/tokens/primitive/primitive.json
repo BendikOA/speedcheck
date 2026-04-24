@@ -1,25 +1,54 @@
 {
   "color": {
     "gray": {
-      "1":   { "$value": "#e4e6f0", "$type": "color" },
-      "2":   { "$value": "#8e96aa", "$type": "color" },
-      "3":   { "$value": "#272c40", "$type": "color" },
-      "4":   { "$value": "#0e1120", "$type": "color" },
-      "5":   { "$value": "#07090e", "$type": "color" },
-      "hi":  { "$value": "#e8eaf4", "$type": "color" },
-      "low": { "$value": "#585d76", "$type": "color" }
+      "050": { "value": "#e8eaf4", "type": "color" },
+      "100": { "value": "#e4e6f0", "type": "color" },
+      "300": { "value": "#8e96aa", "type": "color" },
+      "500": { "value": "#585d76", "type": "color" },
+      "700": { "value": "#272c40", "type": "color" },
+      "800": { "value": "#0e1120", "type": "color" },
+      "900": { "value": "#07090e", "type": "color" }
     },
-    "green":   { "$value": "#4a9c41", "$type": "color" },
-    "danger":  { "$value": "#e04848", "$type": "color" },
-    "success": { "$value": "#3a9c30", "$type": "color" }
+    "green": {
+      "500": { "value": "#4a9c41", "type": "color" },
+      "600": { "value": "#3a9c30", "type": "color" }
+    },
+    "red": {
+      "500": { "value": "#e04848", "type": "color" }
+    },
+    "black": { "value": "#000000", "type": "color" },
+    "white": { "value": "#ffffff", "type": "color" }
   },
   "size": {
+    "space": {
+      "0":  { "value": "0",  "type": "size" },
+      "1":  { "value": "4",  "type": "size" },
+      "2":  { "value": "8",  "type": "size" },
+      "3":  { "value": "12", "type": "size" },
+      "4":  { "value": "16", "type": "size" },
+      "5":  { "value": "20", "type": "size" },
+      "6":  { "value": "24", "type": "size" },
+      "8":  { "value": "32", "type": "size" },
+      "10": { "value": "40", "type": "size" },
+      "12": { "value": "48", "type": "size" }
+    },
+    "font": {
+      "1": { "value": "12", "type": "size" },
+      "2": { "value": "14", "type": "size" },
+      "3": { "value": "16", "type": "size" },
+      "4": { "value": "18", "type": "size" },
+      "5": { "value": "20", "type": "size" },
+      "6": { "value": "24", "type": "size" },
+      "7": { "value": "32", "type": "size" }
+    },
     "borderRadius": {
-      "md": { "$value": "8px" },
-      "sm": { "$value": "4px" }
+      "1":   { "value": "4",   "type": "size" },
+      "2":   { "value": "8",   "type": "size" },
+      "3":   { "value": "16",  "type": "size" },
+      "100": { "value": "100", "type": "size" }
     }
   },
   "fontFamily": {
-    "mono": { "$value": "'Intel One Mono', monospace" }
+    "mono": { "value": "'Intel One Mono', monospace" }
   }
 }
