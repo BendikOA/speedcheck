@@ -1,21 +1,21 @@
 {
   "gb": {
-    "1":   { "$value": "{color.gray.1}",   "$type": "color" },
-    "2":   { "$value": "{color.gray.2}",   "$type": "color" },
-    "3":   { "$value": "{color.gray.3}",   "$type": "color" },
-    "4":   { "$value": "{color.gray.4}",   "$type": "color" },
-    "5":   { "$value": "{color.gray.5}",   "$type": "color" },
-    "hi":  { "$value": "{color.gray.hi}",  "$type": "color" },
-    "low": { "$value": "{color.gray.low}", "$type": "color" }
+    "1":   { "value": "{color.gray.100}", "type": "color" },
+    "2":   { "value": "{color.gray.300}", "type": "color" },
+    "3":   { "value": "{color.gray.700}", "type": "color" },
+    "4":   { "value": "{color.gray.800}", "type": "color" },
+    "5":   { "value": "{color.gray.900}", "type": "color" },
+    "hi":  { "value": "{color.gray.050}", "type": "color" },
+    "low": { "value": "{color.gray.500}", "type": "color" }
   },
   "accent": {
-    "2": { "$value": "{color.green}", "$type": "color" }
+    "2": { "value": "{color.green.500}", "type": "color" }
   },
-  "danger":  { "$value": "{color.danger}",  "$type": "color" },
-  "success": { "$value": "{color.success}", "$type": "color" },
-  "radius":    { "$value": "{size.borderRadius.md}" },
-  "radius-sm": { "$value": "{size.borderRadius.sm}" },
-  "font":         { "$value": "{fontFamily.mono}" },
-  "font-heading": { "$value": "{fontFamily.mono}" },
-  "font-mono":    { "$value": "{fontFamily.mono}" }
+  "danger":  { "value": "{color.red.500}",   "type": "color" },
+  "success": { "value": "{color.green.600}", "type": "color" },
+  "radius":    { "value": "8px" },
+  "radius-sm": { "value": "4px" },
+  "font":         { "value": "{fontFamily.mono}" },
+  "font-heading": { "value": "{fontFamily.mono}" },
+  "font-mono":    { "value": "{fontFamily.mono}" }
 }
