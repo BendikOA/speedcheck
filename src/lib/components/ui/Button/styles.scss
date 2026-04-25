@@ -17,6 +17,8 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+  padding-top: 0;
+  padding-bottom: 2px;
 }
 
 /* Variants */
@@ -74,7 +76,7 @@
   height: 20px;
   min-height: unset;
   line-height: 1;
-  padding: 0;
+  padding: 0 0 2px;
   font-size: 12px;
   border-radius: var(--radius-sm);
 }
