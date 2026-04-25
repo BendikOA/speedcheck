@@ -1,9 +1,13 @@
 .btn {
+  box-sizing: border-box;
   border: none;
   border-radius: var(--radius);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 20px;
   cursor: pointer;
-  min-height: 52px;
+  min-width: 174px;
+  height: 48px;
   transition:
     background 0.15s,
     border-color 0.15s,
@@ -12,91 +16,67 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Sizes */
-.sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-}
-
-.md {
-  padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
-}
-
-.lg {
-  padding: 0.85rem 2rem;
-  font-size: 1.05rem;
+  white-space: nowrap;
 }
 
 /* Variants */
 .primary {
-  background: var(--gb-1);
-  color: var(--gb-5);
-}
-
-.primary:active:not(:disabled) {
-  background: var(--gb-5);
-  color: var(--gb-1);
+  background: var(--color-secondary);
+  color: var(--color-white);
 }
 
 @media (hover: hover) {
   .primary:hover:not(:disabled) {
-    background: var(--gb-2);
+    opacity: 0.85;
   }
 }
 
-.secondary {
-  background: var(--gb-5);
-  border: 1px solid var(--gb-2);
-  color: var(--gb-low);
+.primary:active:not(:disabled) {
+  opacity: 0.7;
 }
 
-.secondary:active:not(:disabled) {
-  background: var(--gb-3);
-  border-color: var(--gb-1);
-  color: var(--gb-hi);
+.secondary {
+  background: transparent;
+  border: 2px solid var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 @media (hover: hover) {
   .secondary:hover:not(:disabled) {
-    background: var(--gb-4);
-    border-color: var(--gb-low);
-    color: var(--gb-2);
+    background: color-mix(in srgb, var(--color-secondary) 6%, transparent);
   }
 }
 
-.danger {
-  background: var(--danger);
-  color: white;
+.secondary:active:not(:disabled) {
+  opacity: 0.7;
 }
 
-.toggle {
-  background: var(--gb-4);
-  border: 1px solid var(--gb-3);
-  color: var(--gb-1);
-  font-size: 0.82rem;
-  font-weight: 500;
-  padding: 0.35rem 0.7rem;
-  min-height: 44px;
-  white-space: nowrap;
-}
-
-.toggle:active:not(:disabled) {
-  opacity: 0.8;
+.accent {
+  background: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 @media (hover: hover) {
-  .toggle:hover:not(:disabled) {
-    border-color: var(--gb-1);
+  .accent:hover:not(:disabled) {
+    opacity: 0.85;
   }
 }
 
-.toggle.active {
-  background: var(--gb-1);
-  border-color: var(--gb-1);
-  color: var(--gb-5);
+.accent:active:not(:disabled) {
+  opacity: 0.7;
+}
+
+
+/* Sizes — override for sm usage */
+.sm {
+  width: 64px;
+  min-width: unset;
+  height: 20px;
+  min-height: unset;
+  line-height: 1;
+  padding: 0;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
 }
 
 /* Disabled */
@@ -105,14 +85,16 @@
   cursor: not-allowed;
 }
 
-/* Full width (for mobile) */
+/* Full width */
 .full-width {
   width: 100%;
+  min-width: unset;
 }
 
 @media (min-width: 600px) {
   .full-width {
     width: auto;
+    min-width: 174px;
     align-self: flex-start;
   }
 }

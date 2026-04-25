@@ -13,9 +13,14 @@
   },
   "danger":  { "value": "{theme.color.danger}",  "type": "color" },
   "success": { "value": "{theme.color.success}", "type": "color" },
+  "color-primary":   { "value": "{color.primary}",    "type": "color" },
+  "color-secondary": { "value": "{color.secondary}",  "type": "color" },
+  "color-bg":        { "value": "{color.bg}",         "type": "color" },
+  "color-white":     { "value": "{color.white-main}", "type": "color" },
   "radius":    { "value": "8px" },
   "radius-sm": { "value": "4px" },
   "font":         { "value": "{fontFamily.mono}" },
   "font-heading": { "value": "{fontFamily.mono}" },
-  "font-mono":    { "value": "{fontFamily.mono}" }
+  "font-mono":    { "value": "{fontFamily.mono}" },
+  "font-arc":     { "value": "{fontFamily.arc}" }
 }

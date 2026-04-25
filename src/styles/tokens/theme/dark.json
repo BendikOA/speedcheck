@@ -1,16 +1,16 @@
 {
   "theme": {
     "color": {
-      "050": { "value": "{color.gray.050}", "type": "color" },
-      "100": { "value": "{color.gray.100}", "type": "color" },
-      "300": { "value": "{color.gray.300}", "type": "color" },
-      "500": { "value": "{color.gray.500}", "type": "color" },
-      "700": { "value": "{color.gray.700}", "type": "color" },
-      "800": { "value": "{color.gray.800}", "type": "color" },
-      "900": { "value": "{color.gray.900}", "type": "color" },
-      "accent":  { "value": "{color.green.500}", "type": "color" },
-      "danger":  { "value": "{color.red.500}",   "type": "color" },
-      "success": { "value": "{color.green.600}", "type": "color" }
+      "050": { "value": "{color.bg-scale.050}", "type": "color" },
+      "100": { "value": "{color.bg-scale.100}", "type": "color" },
+      "300": { "value": "{color.bg-scale.300}", "type": "color" },
+      "500": { "value": "{color.bg-scale.500}", "type": "color" },
+      "700": { "value": "{color.bg-scale.700}", "type": "color" },
+      "800": { "value": "{color.bg-scale.800}", "type": "color" },
+      "900": { "value": "{color.bg-scale.900}", "type": "color" },
+      "accent":  { "value": "{color.primary-scale.300}", "type": "color" },
+      "danger":  { "value": "#ef4444",                  "type": "color" },
+      "success": { "value": "{color.primary-scale.400}", "type": "color" }
     }
   }
 }

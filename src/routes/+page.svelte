@@ -17,9 +17,8 @@
   import PokemonPicker from "$lib/components/PokemonPicker/index.svelte";
   import Button from "$lib/components/ui/Button/index.svelte";
   import Input from "$lib/components/ui/Input/index.svelte";
-  import TeamSlot from "$lib/components/ui/TeamSlot/index.svelte";
+  import TeamPanel from "$lib/components/ui/TeamPanel/index.svelte";
   import SavedTeamCard from "$lib/components/ui/SavedTeamCard/index.svelte";
-  import TabGroup from "$lib/components/ui/TabGroup/index.svelte";
   import PasteModal from "$lib/components/ui/PasteModal/index.svelte";
   import { browser } from "$app/environment";
   import { loadSmogonOrder } from "$lib/smogonUsage";
@@ -268,22 +267,13 @@
   placeholder="Paste a pokepast.es URL or raw Showdown export here…"
   on:close={() => { showImport = false; importError = ""; }}
   on:import={(e) => doImport(e.detail)}
->
-  <TabGroup
-    tabs={[
-      { label: "Your Team", value: "you" },
-      { label: "Opponent", value: "opp" },
-    ]}
-    value={importSide}
-    on:change={(e) => (importSide = e.detail as "you" | "opp")}
-  />
-</PasteModal>
+/>
 
 <div class="page">
   <div class="page-header">
     <span class="page-title">Pokémon Select</span>
     <div class="header-filters">
-      <Button variant="toggle" active={regMA} onClick={() => (regMA = !regMA)}>Reg M-A</Button>
+      <Button variant="secondary" onClick={() => (regMA = !regMA)}>Reg M-A</Button>
       <div class="select-wrap">
         <select
           class="gen-select"
@@ -315,34 +305,45 @@
   </div>
 
   <div class="layout">
-    <!-- Teams -->
     <div class="teams-col">
-      {#each [{ side: "you" as const, team: yourTeam }, { side: "opp" as const, team: oppTeam }] as { side, team }}
-        <div class="team-block">
-          <span
-            class="team-label"
-            class:you={side === "you"}
-            class:opp={side === "opp"}
-          >
-            {#if side === "you"}
-              My Team{#if loadedTeamName}
-                <span class="team-label-name">{loadedTeamName}</span>{/if}
-            {:else}
-              Opponent
-            {/if}
-          </span>
-          <div class="slots">
-            {#each team as slot, i}
-              <TeamSlot
-                {slot}
-                on:pick={() => openPicker(side, i)}
-                on:clear={() => clearSlot(side, i)}
-                on:scarf={() => toggleScarf(side, i)}
-              />
-            {/each}
-          </div>
+      <TeamPanel
+        label={loadedTeamName || "Your team"}
+        color="#bcfd49"
+        slots={yourTeam}
+        on:pick={(e) => openPicker("you", e.detail.index)}
+        on:clear={(e) => clearSlot("you", e.detail.index)}
+        on:scarf={(e) => toggleScarf("you", e.detail.index)}
+        on:save={() => (showSaveInput = true)}
+        on:import={() => { importSide = "you"; showImport = true; }}
+      />
+
+      {#if showSaveInput}
+        <div class="save-row">
+          <Input
+            id="save-label"
+            name="save-label"
+            placeholder="Team name…"
+            bind:value={saveLabel}
+            on:keydown={(e) =>
+              (e as unknown as KeyboardEvent).key === "Enter" &&
+              saveCurrentTeam()}
+            autocomplete="off"
+          />
+          <Button variant="primary" size="sm" onClick={saveCurrentTeam}>Save</Button>
+          <Button variant="secondary" size="sm" onClick={() => { showSaveInput = false; saveLabel = ""; }}>✕</Button>
         </div>
-      {/each}
+      {/if}
+
+      <TeamPanel
+        label="Opp team"
+        color="#fd7949"
+        slots={oppTeam}
+        showSave={false}
+        on:pick={(e) => openPicker("opp", e.detail.index)}
+        on:clear={(e) => clearSlot("opp", e.detail.index)}
+        on:scarf={(e) => toggleScarf("opp", e.detail.index)}
+        on:import={() => { importSide = "opp"; showImport = true; }}
+      />
 
       <div class="action-row">
         <Button
@@ -353,40 +354,6 @@
         >
           Start Game →
         </Button>
-        <Button variant="secondary" onClick={() => (showImport = true)}>
-          Import Paste
-        </Button>
-        {#if canSave}
-          {#if showSaveInput}
-            <div class="save-row">
-              <Input
-                id="save-label"
-                name="save-label"
-                placeholder="Team name…"
-                bind:value={saveLabel}
-                on:keydown={(e) =>
-                  (e as unknown as KeyboardEvent).key === "Enter" &&
-                  saveCurrentTeam()}
-                autocomplete="off"
-              />
-              <Button variant="primary" size="sm" onClick={saveCurrentTeam}
-                >Save</Button
-              >
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  showSaveInput = false;
-                  saveLabel = "";
-                }}>✕</Button
-              >
-            </div>
-          {:else}
-            <Button variant="secondary" onClick={() => (showSaveInput = true)}
-              >Save Team</Button
-            >
-          {/if}
-        {/if}
       </div>
     </div>
 

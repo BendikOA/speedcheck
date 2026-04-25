@@ -650,24 +650,24 @@
             <p class="settings-label">Show in results</p>
             <div class="settings-options">
               <Button
-                variant="toggle"
+                variant="secondary"
                 active={likelyAbilitiesActive}
                 onClick={() => (likelyAbilitiesActive = !likelyAbilitiesActive)}
                 >Abilities</Button
               >
               <Button
-                variant="toggle"
+                variant="secondary"
                 active={likelyItemsActive}
                 onClick={() => (likelyItemsActive = !likelyItemsActive)}
                 >Items</Button
               >
               <Button
-                variant="toggle"
+                variant="secondary"
                 active={likelyMovesActive}
                 onClick={toggleLikelyMoves}>Moves</Button
               >
               <Button
-                variant="toggle"
+                variant="secondary"
                 active={likelyBuildsActive}
                 onClick={toggleLikelyBuilds}>EV/Nature</Button
               >
@@ -675,7 +675,7 @@
             <p class="settings-label">Speed display</p>
             <div class="settings-options">
               <Button
-                variant="toggle"
+                variant="secondary"
                 active={tierMode}
                 onClick={() => (tierMode = !tierMode)}>Tier Range</Button
               >
@@ -684,7 +684,7 @@
             <div class="settings-options" class:loading={!smogonReady}>
               {#each GEN9_REGS as reg}
                 <Button
-                  variant="toggle"
+                  variant="secondary"
                   active={selectedReg === reg.format}
                   onClick={() => changeReg(reg.format)}>{reg.label}</Button
                 >
@@ -779,7 +779,7 @@
       <span class="cond-group-label">Field</span>
       <div class="cond-group-btns">
         <Button
-          variant="toggle"
+          variant="secondary"
           class="cond-btn"
           active={cond.trickRoom}
           tooltip={"Trick Room: reverses Speed order for 5 turns — slower Pokémon move first"}
@@ -787,7 +787,7 @@
           >Trick Room</Button
         >
         <Button
-          variant="toggle"
+          variant="secondary"
           class="cond-btn"
           active={cond.yourTailwind}
           tooltip={"Your Tailwind: doubles Speed for your side for 4 turns (×2)"}
@@ -795,7 +795,7 @@
           >Your TW</Button
         >
         <Button
-          variant="toggle"
+          variant="secondary"
           class="cond-btn"
           active={cond.oppTailwind}
           tooltip={"Opponent Tailwind: doubles Speed for the opponent's side for 4 turns (×2)"}
@@ -809,7 +809,7 @@
       <div class="cond-group-btns">
         {#each [{ key: "rain" as const, label: "Rain", tip: "Rain: doubles Speed of Swift Swim users (Kingdra, Barraskewda, etc.)" }, { key: "sun" as const, label: "Sun", tip: "Sun: doubles Speed of Chlorophyll users (Venusaur, Lilligant, etc.) and activates Protosynthesis" }, { key: "sand" as const, label: "Sand", tip: "Sand: doubles Speed of Sand Rush users (Excadrill, Sandaconda, etc.)" }, { key: "snow" as const, label: "Snow", tip: "Snow: doubles Speed of Slush Rush users (Beartic, Cetitan, etc.)" }] as btn}
           <Button
-            variant="toggle"
+            variant="secondary"
             class="cond-btn"
             active={cond[btn.key]}
             tooltip={btn.tip}
@@ -823,7 +823,7 @@
       <div class="cond-group-btns">
         {#each [{ key: "electric" as const, label: "Electric", tip: "Electric Terrain: doubles Speed of Surge Surfer users (Raichu-Alola) and activates Quark Drive" }, { key: "grassy" as const, label: "Grassy", tip: "Grassy Terrain: gives Grassy Glide +1 priority. Halves damage from Earthquake/Bulldoze." }, { key: "psychic" as const, label: "Psychic", tip: "Psychic Terrain: blocks all +1 and higher priority moves targeting grounded Pokémon" }] as btn}
           <Button
-            variant="toggle"
+            variant="secondary"
             class="cond-btn"
             active={cond[btn.key]}
             tooltip={btn.tip}

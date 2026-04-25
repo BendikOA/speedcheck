@@ -3,7 +3,7 @@ nav {
   top: 0;
   z-index: 50;
   border-bottom: 1px solid var(--gb-3);
-  background: var(--gb-4);
+  background: var(--color-bg);
   flex-shrink: 0;
 }
 
@@ -29,7 +29,7 @@ nav {
 }
 
 .brand-name {
-  font-family: "Early GameBoy", monospace;
+  font-family: var(--font-arc);
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -240,17 +240,13 @@ nav a.active {
 
 main {
   flex: 1;
-  padding: 1.5rem 1rem;
-  padding-left: max(1rem, var(--safe-left));
-  padding-right: max(1rem, var(--safe-right));
+  padding: 1.5rem 10px;
+  padding-left: max(10px, var(--safe-left));
+  padding-right: max(10px, var(--safe-right));
   padding-bottom: 1.5rem;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-}
-
-@media (min-width: 600px) {
-  main { padding: 2rem 1.5rem 1.5rem; }
 }
 
 .kofi-banner {
