@@ -5,7 +5,7 @@ const meta = {
   title: 'UI/Button',
   component: Button,
   argTypes: {
-    variant:   { control: 'select', options: ['primary', 'secondary', 'accent'] },
+    variant:   { control: 'select', options: ['primary', 'secondary', 'accent', 'brand'] },
     size:      { control: 'select', options: ['sm', 'md'] },
     disabled:  { control: 'boolean' },
     fullWidth: { control: 'boolean' },
@@ -25,6 +25,15 @@ export const Secondary: Story = {
 
 export const Accent: Story = {
   args: { variant: 'accent' },
+};
+
+export const Brand: Story = {
+  args: { variant: 'brand' },
+};
+
+export const SmallBrand: Story = {
+  name: 'Small — brand',
+  args: { variant: 'brand', size: 'sm' },
 };
 
 export const Disabled: Story = {

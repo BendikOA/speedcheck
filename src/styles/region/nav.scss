@@ -2,8 +2,8 @@ nav {
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 1px solid var(--gb-3);
   background: var(--color-bg);
+  border-bottom: 1px solid var(--gb-3);
   flex-shrink: 0;
 }
 
@@ -11,88 +11,128 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  height: 52px;
-  padding: 0 1rem;
-  padding-left: max(1rem, var(--safe-left));
-  padding-right: max(1rem, var(--safe-right));
+  height: 64px;
+  padding: 0 1.5rem;
+  padding-left:  max(1.5rem, var(--safe-left));
+  padding-right: max(1.5rem, var(--safe-right));
+  gap: 1.5rem;
 }
 
+/* ── Brand ── */
 .brand {
   display: flex;
   align-items: center;
-  color: var(--gb-2);
-  white-space: nowrap;
-  min-height: 44px;
+  gap: 1rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-img {
+  height: 30px;
+  width: auto;
+  display: block;
 }
 
 .brand-name {
   font-family: var(--font-arc);
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--gb-2);
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--color-secondary);
+  line-height: 1;
+  letter-spacing: -0.01em;
 }
 
-.nav-links {
+/* ── Nav right ── */
+.nav-right {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 40px;
 }
 
-.theme-toggle {
-  margin-left: auto;
+/* ── Nav links ── */
+.nav-links {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-nav a {
-  color: color-mix(in srgb, var(--gb-hi) 55%, transparent);
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.nav-links a {
+  font-family: var(--font-arc);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gb-3);
+  padding: 0.25rem 0;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
   white-space: nowrap;
   min-height: 44px;
-  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
 }
 
-nav a:hover { color: var(--gb-hi); }
-nav a.active {
-  color: var(--gb-hi);
-  font-weight: 700;
+.nav-links a:hover { color: var(--color-secondary); }
+
+.nav-links a.active {
+  color: var(--color-secondary);
 }
 
-.theme-toggle {
-  margin-left: auto;
-  background: none;
-  border: 1px solid var(--gb-3);
-  border-radius: var(--radius-sm);
-  color: var(--gb-low);
-  padding: 0 0.6rem;
-  min-height: 44px;
-  cursor: pointer;
-  flex-shrink: 0;
+.nav-underline {
+  position: absolute;
+  bottom: 8px;
+  height: 2px;
+  background: var(--color-secondary);
+  border-radius: 1px;
+  pointer-events: none;
   transition:
-    color 0.15s,
-    border-color 0.15s;
-}
-.theme-toggle:hover {
-  color: var(--gb-2);
-  border-color: var(--gb-low);
+    left  0.45s cubic-bezier(0.76, 0, 0.24, 1),
+    width 0.45s cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 0.2s ease;
 }
 
+/* ── Ko-fi button ── */
+.kofi-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 196px;
+  height: 40px;
+  flex-shrink: 0;
+  background: var(--color-secondary);
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.13em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: opacity 0.15s;
+}
+
+.kofi-btn:hover { opacity: 0.85; }
+
+/* ── Hamburger ── */
 .hamburger {
   display: none;
-  grid-column: 3;
-  justify-self: end;
   background: none;
   border: none;
-  color: var(--gb-low);
-  padding: 0 0.25rem;
+  color: var(--gb-3);
+  padding: 0.25rem;
   min-height: 44px;
+  min-width: 44px;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
 }
 
+/* ── Drawer ── */
 .drawer-backdrop {
   position: fixed;
   inset: 0;
@@ -124,20 +164,12 @@ nav a.active {
   flex-shrink: 0;
 }
 
-.drawer-brand {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--gb-2);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: unset;
-}
+.drawer-brand { gap: 0.4rem; }
 
 .drawer-close {
   background: none;
   border: none;
-  color: var(--gb-low);
+  color: var(--gb-2);
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
@@ -156,88 +188,55 @@ nav a.active {
 .drawer-links a {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
   padding: 1rem 1.25rem;
-  font-size: 1.1rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-arc);
+  font-size: 16px;
   font-weight: 500;
-  color: var(--gb-low);
+  color: var(--gb-2);
   border-bottom: 1px solid var(--gb-3);
-  min-height: unset;
-  transition:
-    background 0.1s,
-    color 0.1s;
+  text-decoration: none;
+  transition: background 0.1s, color 0.1s;
 }
+
 .drawer-links a:hover {
   background: var(--gb-3);
-  color: var(--gb-2);
+  color: var(--gb-hi);
 }
+
 .drawer-links a.active {
-  background: var(--gb-hi);
-  color: var(--gb-5);
+  color: var(--gb-hi);
   font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .drawer-footer {
   border-top: 1px solid var(--gb-3);
-  display: flex;
-  flex-direction: column;
   flex-shrink: 0;
-}
-
-.mobile-theme-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--gb-3);
-  color: var(--gb-low);
-  font-size: 1rem;
-  padding: 0 1.25rem;
-  height: 56px;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-}
-.mobile-theme-btn:hover {
-  background: var(--gb-3);
-  color: var(--gb-2);
 }
 
 .drawer-kofi {
   padding: 1rem 1.25rem;
   padding-bottom: max(1rem, var(--safe-bottom));
   font-size: 0.78rem;
-  color: var(--gb-low);
-  text-align: center;
-  line-height: 1.6;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  min-width: 0;
-}
-.drawer-kofi a {
   color: var(--gb-2);
+  line-height: 1.6;
+}
+
+.drawer-kofi a {
+  color: var(--gb-hi);
   font-weight: 600;
-  font-size: 0.8rem;
-  min-height: unset;
-  display: inline;
 }
-.drawer-kofi a:hover { color: var(--gb-2); }
 
+/* ── Mobile ── */
 @media (max-width: 640px) {
-  nav {
-    grid-template-columns: 1fr auto;
-  }
-  .nav-links { display: none; }
-  .theme-toggle { display: none; }
-  .hamburger {
-    display: flex;
-    align-items: center;
-  }
+  .nav-right  { display: none; }
+  .hamburger  { display: flex; }
+  .brand-name { font-size: 24px; }
+  .brand-img  { height: 24px; }
 }
 
+/* ── Layout regions ── */
 main {
   flex: 1;
   padding: 1.5rem 10px;

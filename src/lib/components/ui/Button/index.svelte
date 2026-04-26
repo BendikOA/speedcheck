@@ -2,7 +2,7 @@
   import './styles.scss';
   import { tooltip as applyTooltip } from '$lib/tooltip';
 
-  export let variant: 'primary' | 'secondary' | 'accent' = 'primary';
+  export let variant: 'primary' | 'secondary' | 'accent' | 'brand' = 'primary';
   export let size: 'sm' | 'md' = 'md';
   export let disabled = false;
   export let fullWidth = false;
