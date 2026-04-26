@@ -4,7 +4,7 @@
   import { afterNavigate } from '$app/navigation';
 
   let menuOpen = false;
-  let navLinksEl: HTMLElement;
+  let navLinksEl: HTMLElement | undefined;
   let ulLeft = 0;
   let ulWidth = 0;
   let ulVisible = false;

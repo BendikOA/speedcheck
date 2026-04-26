@@ -14,7 +14,7 @@
 .team-label {
   display: flex;
   align-items: center;
-  gap: 21px;
+  gap: 13px;
 }
 
 .team-color {
@@ -35,11 +35,11 @@
 .team-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 }
 
 .team-slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 150px));
+  gap: clamp(4px, 2vw, 20px);
 }

@@ -1,11 +1,24 @@
+@keyframes nav-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 nav {
   position: sticky;
   top: 0;
   z-index: 50;
   background: var(--color-bg);
-  border-bottom: 1px solid var(--gb-3);
   flex-shrink: 0;
+  overflow: clip;
 }
+
+nav .brand                    { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1)   0ms both; }
+nav .nav-links a:nth-child(1) { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1)  80ms both; }
+nav .nav-links a:nth-child(2) { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 150ms both; }
+nav .nav-links a:nth-child(3) { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 210ms both; }
+nav .nav-links a:nth-child(4) { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 270ms both; }
+nav .nav-links a:nth-child(5) { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 330ms both; }
+nav .kofi-btn                 { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 390ms both; }
 
 .nav-inner {
   display: flex;
@@ -14,7 +27,7 @@ nav {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  height: 64px;
+  height: 60px;
   padding: 0 1.5rem;
   padding-left:  max(1.5rem, var(--safe-left));
   padding-right: max(1.5rem, var(--safe-right));
@@ -25,7 +38,7 @@ nav {
 .brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
   text-decoration: none;
   flex-shrink: 0;
 }
@@ -62,18 +75,18 @@ nav {
 
 .nav-links a {
   font-family: var(--font-arc);
-  font-size: 16px;
+  font-size: var(--font-size-4);
   font-weight: 500;
-  color: var(--gb-3);
+  color: var(--color-secondary);
   padding: 0.25rem 0;
-  text-decoration: none;
   text-transform: none;
+  text-decoration: none;
   letter-spacing: normal;
   white-space: nowrap;
   min-height: 44px;
   display: flex;
   align-items: center;
-  transition: color 0.15s;
+  transition: opacity 0.15s;
 }
 
 .nav-links a:hover { color: var(--color-secondary); }
@@ -239,9 +252,9 @@ nav {
 /* ── Layout regions ── */
 main {
   flex: 1;
-  padding: 1.5rem 10px;
-  padding-left: max(10px, var(--safe-left));
-  padding-right: max(10px, var(--safe-right));
+  padding: 1.5rem 16px;
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
   padding-bottom: 1.5rem;
   width: 100%;
   max-width: 1280px;

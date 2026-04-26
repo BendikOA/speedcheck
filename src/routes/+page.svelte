@@ -20,6 +20,7 @@
   import TeamPanel from "$lib/components/ui/TeamPanel/index.svelte";
   import SavedTeamCard from "$lib/components/ui/SavedTeamCard/index.svelte";
   import PasteModal from "$lib/components/ui/PasteModal/index.svelte";
+  import PlayerIntro from "$lib/components/ui/PlayerIntro/index.svelte";
   import { browser } from "$app/environment";
   import { loadSmogonOrder } from "$lib/smogonUsage";
   import { CHAMPIONS_ROSTER } from "$lib/championsRoster";
@@ -270,6 +271,8 @@
 />
 
 <div class="page">
+  <PlayerIntro step="Step 1/2" title="Select Pokemon" />
+
   <div class="page-header">
     <span class="page-title">Pokémon Select</span>
     <div class="header-filters">

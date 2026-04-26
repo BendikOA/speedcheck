@@ -11,10 +11,10 @@
   export let showSave: boolean = true;
 
   const dispatch = createEventDispatcher<{
-    pick:   { index: number };
-    clear:  { index: number };
-    scarf:  { index: number };
-    save:   void;
+    pick: { index: number };
+    clear: { index: number };
+    scarf: { index: number };
+    save: void;
     import: void;
   }>();
 </script>
@@ -27,9 +27,13 @@
     </div>
     <div class="team-actions">
       {#if showSave}
-        <Button variant="secondary" size="sm" onClick={() => dispatch("save")}>Save</Button>
+        <Button variant="brand" size="sm" onClick={() => dispatch("save")}
+          >Save</Button
+        >
       {/if}
-      <Button variant="secondary" size="sm" onClick={() => dispatch("import")}>Import</Button>
+      <Button variant="secondary" size="sm" onClick={() => dispatch("import")}
+        >Import</Button
+      >
     </div>
   </div>
 

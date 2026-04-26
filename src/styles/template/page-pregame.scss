@@ -1,3 +1,22 @@
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Nav finishes around 880ms. Page elements start overlapping at 280ms
+   so the whole sequence feels like one continuous cascade, not two separate bursts. */
+.page > .player-intro {
+  animation: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) 280ms both;
+}
+
+.teams-col > .team-panel:nth-child(1) {
+  animation: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) 400ms both;
+}
+
+.teams-col > .team-panel:not(:nth-child(1)) {
+  animation: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) 520ms both;
+}
+
 .page-header {
   display: flex;
   align-items: center;
