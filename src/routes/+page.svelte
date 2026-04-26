@@ -9,7 +9,6 @@
   } from "$lib/speedtiers";
   import type { SpeedEntry, GenNumber } from "$lib/speedtiers";
   import { parsePaste, resolvePaste } from "$lib/parsePaste";
-  import { spriteUrl } from "$lib/sprites";
   import { teamState } from "$lib/stores/teams";
   import type { TeamSlot as TeamSlotData } from "$lib/stores/teams";
   import { savedTeams } from "$lib/stores/savedTeams";
@@ -18,9 +17,10 @@
   import Button from "$lib/components/ui/Button/index.svelte";
   import Input from "$lib/components/ui/Input/index.svelte";
   import TeamPanel from "$lib/components/ui/TeamPanel/index.svelte";
-  import SavedTeamCard from "$lib/components/ui/SavedTeamCard/index.svelte";
+  import Teamcard from "$lib/components/ui/Teamcard/index.svelte";
   import PasteModal from "$lib/components/ui/PasteModal/index.svelte";
   import PlayerIntro from "$lib/components/ui/PlayerIntro/index.svelte";
+  import SpeedOrder from "$lib/components/ui/SpeedOrder/index.svelte";
   import { browser } from "$app/environment";
   import { loadSmogonOrder } from "$lib/smogonUsage";
   import { CHAMPIONS_ROSTER } from "$lib/championsRoster";
@@ -273,40 +273,6 @@
 <div class="page">
   <PlayerIntro step="Step 1/2" title="Select Pokemon" />
 
-  <div class="page-header">
-    <span class="page-title">Pokémon Select</span>
-    <div class="header-filters">
-      <Button variant="secondary" onClick={() => (regMA = !regMA)}>Reg M-A</Button>
-      <div class="select-wrap">
-        <select
-          class="gen-select"
-          value={genFilter ?? ""}
-          on:change={(e) => {
-            const v = e.currentTarget.value;
-            changeGen(v === "" ? null : (+v as GenNumber));
-          }}
-        >
-          <option value="">All Gens</option>
-          {#each GEN_NUMBERS as g}
-            <option value={g}>Gen {g}</option>
-          {/each}
-        </select>
-        <svg
-          class="select-chevron"
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg
-        >
-      </div>
-    </div>
-  </div>
-
   <div class="layout">
     <div class="teams-col">
       <TeamPanel
@@ -362,28 +328,11 @@
 
     <!-- Speed preview sidebar -->
     {#if speedPreview.length > 0}
-      <div class="preview-col">
-        <span class="preview-title">Speed Order</span>
-        <div class="preview-list">
-          {#each speedPreview as row, i}
-            <div
-              class="preview-row"
-              class:side-you={row.side === "you"}
-              class:side-opp={row.side === "opp"}
-            >
-              <span class="preview-rank">{i + 1}</span>
-              <img
-                src={spriteUrl(row.entry.name)}
-                alt={row.entry.name}
-                class="preview-sprite"
-              />
-              <span class="preview-name">{row.entry.name}</span>
-              <span class="preview-speed">{row.speed}</span>
-            </div>
-          {/each}
-        </div>
-        <p class="preview-note">Modifiers available in game view</p>
-      </div>
+      <SpeedOrder
+        entries={speedPreview}
+        yourColor="#bcfd49"
+        oppColor="#fd7949"
+      />
     {/if}
   </div>
 
@@ -393,7 +342,7 @@
       <span class="saved-title">Saved Teams</span>
       <div class="saved-list">
         {#each $savedTeams as team (team.id)}
-          <SavedTeamCard {team} on:load={(e) => loadTeam(e.detail)} />
+          <Teamcard {team} on:load={(e) => loadTeam(e.detail)} />
         {/each}
       </div>
     </div>

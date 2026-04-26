@@ -252,10 +252,10 @@ nav .kofi-btn                 { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.
 /* ── Layout regions ── */
 main {
   flex: 1;
-  padding: 1.5rem 16px;
+  padding: 10px 16px;
   padding-left: max(16px, var(--safe-left));
   padding-right: max(16px, var(--safe-right));
-  padding-bottom: 1.5rem;
+  padding-bottom: 10px;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;

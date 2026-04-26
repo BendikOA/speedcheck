@@ -40,6 +40,12 @@
 
 .team-slots {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 150px));
-  gap: clamp(4px, 2vw, 20px);
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(4px, 2vw, 16px);
+}
+
+@media (max-width: 600px) {
+  .team-slots {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

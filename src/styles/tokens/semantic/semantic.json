@@ -6,6 +6,7 @@
     "4":   { "value": "{theme.color.800}", "type": "color" },
     "5":   { "value": "{theme.color.900}", "type": "color" },
     "hi":  { "value": "{theme.color.050}", "type": "color" },
+    "mid": { "value": "{theme.color.400}", "type": "color" },
     "low": { "value": "{theme.color.500}", "type": "color" }
   },
   "accent": {

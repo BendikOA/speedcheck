@@ -4,6 +4,7 @@
       "050": { "value": "{color.bg-scale.050}", "type": "color" },
       "100": { "value": "{color.bg-scale.100}", "type": "color" },
       "300": { "value": "{color.bg-scale.300}", "type": "color" },
+      "400": { "value": "{color.bg-scale.400}", "type": "color" },
       "500": { "value": "{color.bg-scale.500}", "type": "color" },
       "700": { "value": "{color.bg-scale.700}", "type": "color" },
       "800": { "value": "{color.bg-scale.800}", "type": "color" },

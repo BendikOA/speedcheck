@@ -1,6 +1,6 @@
 <script lang="ts">
   import { savedTeams } from '$lib/stores/savedTeams';
-  import SavedTeamCard from '$lib/components/ui/SavedTeamCard/index.svelte';
+  import Teamcard from '$lib/components/ui/Teamcard/index.svelte';
   import TournamentTeamCard from '$lib/components/ui/TournamentTeamCard/index.svelte';
   import type { RecentTeamsData, RecentTournament, TournamentTeam } from '$lib/types/recentTeams';
 
@@ -77,7 +77,7 @@
     {:else}
       <div class="saved-list">
         {#each $savedTeams as team (team.id)}
-          <SavedTeamCard {team} on:load={() => {}} />
+          <Teamcard {team} on:load={() => {}} />
         {/each}
       </div>
     {/if}
