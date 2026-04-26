@@ -67,7 +67,7 @@
   border: none;
   border-bottom: 1px solid var(--gb-2);
   color: var(--gb-hi);
-  font-size: 16px; /* prevents iOS zoom */
+  font-size: var(--font-size-5); /* prevents iOS zoom on inputs < 16px */
   flex-shrink: 0;
   background-color: var(--gb-3);
 }

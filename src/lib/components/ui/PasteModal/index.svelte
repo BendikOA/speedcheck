@@ -1,4 +1,5 @@
 <script lang="ts">
+  import './styles.scss';
   import { createEventDispatcher } from 'svelte';
   import Button from '$lib/components/ui/Button/index.svelte';
 
@@ -54,86 +55,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .pm-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 500;
-    padding: 1rem;
-  }
-
-  .pm-box {
-    background: var(--gb-4);
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 560px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.25rem;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  }
-
-  .pm-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .pm-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--gb-hi);
-  }
-
-  .pm-close {
-    background: transparent;
-    border: none;
-    color: var(--gb-low);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.15rem 0.4rem;
-    border-radius: var(--radius-sm, 4px);
-    min-height: 36px;
-    min-width: 36px;
-  }
-  .pm-close:hover {
-    background: var(--gb-3);
-    color: var(--gb-hi);
-  }
-
-  .pm-textarea {
-    width: 100%;
-    background: var(--gb-5, var(--gb-3));
-    border: 1px solid var(--gb-3);
-    border-radius: var(--radius-sm, 4px);
-    color: var(--gb-hi);
-    font-family: monospace;
-    font-size: 0.8rem;
-    padding: 0.6rem;
-    resize: vertical;
-    box-sizing: border-box;
-  }
-  .pm-textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-
-  .pm-error {
-    font-size: 0.8rem;
-    color: var(--danger);
-    margin: 0;
-  }
-
-  .pm-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-  }
-</style>

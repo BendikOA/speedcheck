@@ -45,7 +45,7 @@
 }
 
 .slot-card.filled {
-  background: #787676;
+  background: var(--gb-mid);
 }
 
 @media (hover: hover) {
@@ -54,7 +54,7 @@
   }
 
   .slot-card.filled .slot-pick:hover {
-    background: #5e5c5c;
+    background: var(--gb-low);
   }
 }
 
