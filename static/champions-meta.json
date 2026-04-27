@@ -1,40 +1,42 @@
 {
-  "updated": "2026-04-26",
+  "updated": "2026-04-27",
   "source": "play.limitlesstcg.com/api",
   "format": "M-A",
   "meta": {
-    "tournaments": 107,
-    "teamSlots": 9168,
-    "pokemonCount": 188
+    "tournaments": 118,
+    "teamSlots": 10122,
+    "pokemonCount": 189
   },
   "pokemon": {
     "sneasler": {
-      "usage": 841,
+      "usage": 929,
       "moves": {
-        "Close Combat": 835,
-        "Dire Claw": 818,
-        "Fake Out": 775,
-        "Protect": 670,
-        "Coaching": 117,
-        "Rock Tomb": 33,
-        "Rock Slide": 25,
-        "Throat Chop": 23,
-        "Gunk Shot": 15,
-        "Feint": 7,
-        "Acrobatics": 5,
+        "Close Combat": 923,
+        "Dire Claw": 900,
+        "Fake Out": 855,
+        "Protect": 738,
+        "Coaching": 125,
+        "Rock Tomb": 36,
+        "Rock Slide": 28,
+        "Throat Chop": 25,
+        "Gunk Shot": 21,
+        "Feint": 11,
+        "Acrobatics": 6,
+        "Upper Hand": 4,
+        "U-turn": 4,
         "Poison Jab": 4,
         "close combat": 4,
         "dire claw": 4,
         "fake out": 4,
         "protect": 4,
-        "Upper Hand": 3,
+        "Quick Guard": 2,
+        "Rain Dance": 2,
         "Fling": 2,
-        "U-turn": 2,
         "Swords Dance": 2,
         "Brick Break": 2,
         "Taunt": 2,
         "Fake out": 2,
-        "Rain Dance": 1,
+        "X-Scissor": 1,
         "Zuffa": 1,
         "Artigli Fatali": 1,
         "Bruciapelo": 1,
@@ -42,18 +44,21 @@
         "Low Sweep": 1
       },
       "abilities": {
-        "Unburden": 770,
-        "Poison Touch": 53,
+        "Unburden": 851,
+        "Poison Touch": 58,
         "Pressure": 13,
+        "unburden": 3,
         "poison touch": 2,
-        "unburden": 2,
+        "Defiant": 1,
         "Agiltecnica": 1
       },
       "items": {
-        "White Herb": 653,
-        "Focus Sash": 151,
+        "White Herb": 721,
+        "Focus Sash": 169,
         "Mental Herb": 22,
         "white herb": 3,
+        "Poison Barb": 2,
+        "Sitrus Berry": 2,
         "King": 2,
         "Focus Band": 2,
         "Lum Berry": 1,
@@ -61,27 +66,26 @@
         "Bright Powder": 1,
         "Coba Berry": 1,
         "Erbachiara": 1,
-        "Leftovers": 1,
-        "Sitrus Berry": 1,
-        "Poison Barb": 1
+        "Leftovers": 1
       }
     },
     "incineroar": {
-      "usage": 686,
+      "usage": 731,
       "moves": {
-        "Fake Out": 677,
-        "Parting Shot": 649,
-        "Flare Blitz": 603,
-        "Throat Chop": 327,
-        "Darkest Lariat": 238,
-        "Protect": 66,
-        "Will-O-Wisp": 36,
-        "Close Combat": 35,
-        "Helping Hand": 32,
-        "Taunt": 23,
-        "Snarl": 23,
-        "Assurance": 6,
-        "Roar": 5,
+        "Fake Out": 721,
+        "Parting Shot": 693,
+        "Flare Blitz": 643,
+        "Throat Chop": 349,
+        "Darkest Lariat": 252,
+        "Protect": 70,
+        "Close Combat": 39,
+        "Will-O-Wisp": 37,
+        "Helping Hand": 33,
+        "Taunt": 25,
+        "Snarl": 24,
+        "Assurance": 7,
+        "Roar": 6,
+        "Fake out": 2,
         "Eruption": 2,
         "fake out": 2,
         "flare blitz": 2,
@@ -95,7 +99,6 @@
         "Bruciapelo": 1,
         "Stomping Tantrum": 1,
         "Flare blitz": 1,
-        "Fake out": 1,
         "Drain Punch": 1,
         "Fakeout": 1,
         "Will-o-Wisp": 1,
@@ -103,25 +106,26 @@
         "Low Kick": 1
       },
       "abilities": {
-        "Intimidate": 672,
+        "Intimidate": 716,
         "Blaze": 10,
-        "intimidate": 3,
+        "intimidate": 4,
         "Prepotenza": 1
       },
       "items": {
-        "Sitrus Berry": 351,
-        "Chople Berry": 146,
-        "Shuca Berry": 90,
-        "Lum Berry": 25,
-        "Leftovers": 21,
+        "Sitrus Berry": 370,
+        "Chople Berry": 162,
+        "Shuca Berry": 94,
+        "Lum Berry": 26,
+        "Leftovers": 22,
+        "White Herb": 20,
         "Passho Berry": 19,
-        "White Herb": 19,
         "Black Glasses": 5,
+        "Charcoal": 2,
+        "Quick Claw": 2,
         "Mental Herb": 2,
         "Pomaro Berry": 1,
         "Baccarosmel": 1,
         "Charti Berry": 1,
-        "Quick Claw": 1,
         "sitrus berry": 1,
         "Shuca berry": 1,
         "Roseli Berry": 1,
@@ -129,27 +133,31 @@
       }
     },
     "garchomp": {
-      "usage": 623,
+      "usage": 690,
       "moves": {
-        "Earthquake": 561,
-        "Dragon Claw": 522,
-        "Rock Slide": 488,
-        "Protect": 440,
-        "Stomping Tantrum": 308,
-        "Poison Jab": 27,
-        "Swords Dance": 26,
-        "Stone Edge": 23,
-        "Iron Head": 19,
-        "Scale Shot": 17,
+        "Earthquake": 621,
+        "Dragon Claw": 581,
+        "Rock Slide": 549,
+        "Protect": 492,
+        "Stomping Tantrum": 331,
+        "Swords Dance": 28,
+        "Poison Jab": 28,
+        "Stone Edge": 24,
+        "Iron Head": 21,
+        "Scale Shot": 18,
         "Bulldoze": 15,
-        "Breaking Swipe": 12,
-        "Rock Tomb": 5,
+        "Breaking Swipe": 13,
+        "Rock Tomb": 6,
         "Outrage": 4,
         "Shadow Claw": 3,
+        "Dragon Rush": 2,
         "Avalanche": 2,
         "earthquake": 2,
         "dragon claw": 2,
         "protect": 2,
+        "Earth Power": 1,
+        "Fire Fang": 1,
+        "Double-Edge": 1,
         "Crunch": 1,
         "Facade": 1,
         "rock slide": 1,
@@ -161,34 +169,33 @@
         "Dragon claw": 1,
         "Stomping tantrum": 1,
         "Stone edge": 1,
-        "Dragon Rush": 1,
         "Dragon Cheer": 1,
         "High Horsepower": 1
       },
       "abilities": {
-        "Rough Skin": 581,
-        "Sand Veil": 39,
+        "Rough Skin": 645,
+        "Sand Veil": 42,
         "rough skin": 2,
         " Rough skin": 1
       },
       "items": {
-        "Choice Scarf": 164,
-        "Soft Sand": 112,
-        "White Herb": 87,
-        "Sitrus Berry": 60,
-        "Haban Berry": 55,
-        "Lum Berry": 52,
+        "Choice Scarf": 177,
+        "Soft Sand": 123,
+        "White Herb": 98,
+        "Sitrus Berry": 73,
+        "Haban Berry": 64,
+        "Lum Berry": 56,
+        "Bright Powder": 16,
         "Focus Sash": 16,
-        "Bright Powder": 15,
         "Yache Berry": 15,
         "Garchompite": 12,
-        "Roseli Berry": 9,
-        "Dragon Fang": 7,
+        "Roseli Berry": 10,
+        "Dragon Fang": 10,
         "Hard Stone": 4,
         "Leftovers": 4,
         "Mental Herb": 3,
+        "Quick Claw": 2,
         "King": 2,
-        "Quick Claw": 1,
         "haban berry": 1,
         "Shell Bell": 1,
         "Scope Lens": 1,
@@ -197,19 +204,19 @@
       }
     },
     "kingambit": {
-      "usage": 554,
+      "usage": 618,
       "moves": {
-        "Sucker Punch": 552,
-        "Kowtow Cleave": 499,
-        "Protect": 499,
-        "Iron Head": 345,
-        "Swords Dance": 157,
-        "Low Kick": 143,
+        "Sucker Punch": 616,
+        "Kowtow Cleave": 558,
+        "Protect": 555,
+        "Iron Head": 382,
+        "Low Kick": 173,
+        "Swords Dance": 166,
         "Assurance": 8,
+        "Throat Chop": 2,
         "Brick Break": 2,
         "Low kick": 2,
         "Iron Defense": 1,
-        "Throat Chop": 1,
         "sucker punch": 1,
         "protect": 1,
         "kowtow cleave": 1,
@@ -219,21 +226,22 @@
         "Protec": 1
       },
       "abilities": {
-        "Defiant": 547,
-        "Supreme Overlord": 6,
+        "Defiant": 610,
+        "Supreme Overlord": 7,
         "defiant": 1
       },
       "items": {
-        "Black Glasses": 343,
-        "Chople Berry": 177,
-        "Focus Sash": 10,
+        "Black Glasses": 366,
+        "Chople Berry": 212,
+        "Focus Sash": 13,
+        "Lum Berry": 6,
         "Leftovers": 5,
-        "Lum Berry": 4,
         "Bright Powder": 3,
         "Occa Berry": 2,
         "White Herb": 2,
         "Metal Coat": 2,
         "Shuca Berry": 2,
+        "Shell Bell": 1,
         "chople berry": 1,
         "Black glasses": 1,
         "Scope Lens": 1,
@@ -241,14 +249,14 @@
       }
     },
     "basculegion": {
-      "usage": 480,
+      "usage": 545,
       "moves": {
-        "Last Respects": 471,
-        "Wave Crash": 440,
-        "Aqua Jet": 435,
-        "Flip Turn": 353,
-        "Protect": 128,
-        "Liquidation": 32,
+        "Last Respects": 536,
+        "Aqua Jet": 499,
+        "Wave Crash": 493,
+        "Flip Turn": 384,
+        "Protect": 163,
+        "Liquidation": 44,
         "Icy Wind": 12,
         "Psychic Fangs": 4,
         "Shadow Ball": 4,
@@ -278,17 +286,17 @@
         "Mud Shot": 1
       },
       "abilities": {
-        "Adaptability": 389,
-        "Swift Swim": 86,
+        "Adaptability": 443,
+        "Swift Swim": 97,
         "adaptability": 2,
         "swift swim": 2,
         "Adattabilita": 1
       },
       "items": {
-        "Choice Scarf": 338,
-        "Mystic Water": 71,
-        "Focus Sash": 32,
-        "Sitrus Berry": 26,
+        "Choice Scarf": 367,
+        "Mystic Water": 80,
+        "Focus Sash": 44,
+        "Sitrus Berry": 41,
         "White Herb": 3,
         "Kasib Berry": 2,
         "Focus Band": 2,
@@ -300,17 +308,17 @@
       }
     },
     "sinistcha": {
-      "usage": 444,
+      "usage": 477,
       "moves": {
-        "Matcha Gotcha": 440,
-        "Rage Powder": 433,
-        "Trick Room": 329,
-        "Life Dew": 244,
-        "Protect": 149,
-        "Strength Sap": 91,
-        "Shadow Ball": 54,
-        "Imprison": 17,
-        "Calm Mind": 3,
+        "Matcha Gotcha": 473,
+        "Rage Powder": 462,
+        "Trick Room": 356,
+        "Life Dew": 262,
+        "Protect": 158,
+        "Strength Sap": 98,
+        "Shadow Ball": 60,
+        "Imprison": 18,
+        "Calm Mind": 5,
         "Curse": 2,
         "Scald": 2,
         "Iron Defense": 1,
@@ -327,23 +335,23 @@
         "Leaf Storm": 1
       },
       "abilities": {
-        "Hospitality": 437,
-        "Heatproof": 5,
+        "Hospitality": 469,
+        "Heatproof": 6,
         "Rain Dish": 1,
         "hospitality": 1
       },
       "items": {
-        "Sitrus Berry": 245,
-        "Leftovers": 48,
-        "Occa Berry": 43,
-        "Colbur Berry": 28,
+        "Sitrus Berry": 261,
+        "Leftovers": 55,
+        "Occa Berry": 45,
+        "Colbur Berry": 31,
+        "Coba Berry": 20,
         "Kasib Berry": 19,
-        "Coba Berry": 18,
         "Mental Herb": 14,
         "Bright Powder": 8,
+        "Focus Sash": 7,
+        "Miracle Seed": 5,
         "Yache Berry": 5,
-        "Focus Sash": 5,
-        "Miracle Seed": 4,
         "Quick Claw": 2,
         "White Herb": 2,
         "Lum Berry": 1,
@@ -352,19 +360,21 @@
       }
     },
     "aerodactyl": {
-      "usage": 346,
+      "usage": 395,
       "moves": {
-        "Rock Slide": 344,
-        "Tailwind": 332,
-        "Protect": 330,
-        "Dual Wingbeat": 325,
-        "Wide Guard": 24,
+        "Rock Slide": 393,
+        "Tailwind": 378,
+        "Protect": 378,
+        "Dual Wingbeat": 371,
+        "Wide Guard": 27,
         "Ice Fang": 6,
+        "Taunt": 5,
         "Crunch": 4,
-        "Taunt": 3,
         "Stone Edge": 3,
         "Aerial Ace": 2,
         "Rain Dance": 2,
+        "Thunder Fang": 1,
+        "Fire Blast": 1,
         "Sandstorm": 1,
         "Dragon Dance": 1,
         "Earthquake": 1,
@@ -376,42 +386,42 @@
         "tailwind": 1
       },
       "abilities": {
-        "Unnerve": 319,
+        "Unnerve": 367,
         "Rock Head": 15,
         "Pressure": 8,
-        "Tough Claws": 2,
+        "Tough Claws": 3,
         "unnerve": 1,
         "Unerve": 1
       },
       "items": {
-        "Focus Sash": 292,
-        "Aerodactylite": 42,
-        "Lum Berry": 3,
+        "Focus Sash": 324,
+        "Aerodactylite": 57,
+        "Lum Berry": 4,
+        "Leftovers": 2,
         "Charti Berry": 2,
         "Passho Berry": 1,
         "Sitrus Berry": 1,
         "Quick Claw": 1,
         "focus sash": 1,
         "Mental Herb": 1,
-        "Leftovers": 1,
         "Choice Scarf": 1
       }
     },
     "rotom-wash": {
-      "usage": 271,
+      "usage": 298,
       "moves": {
-        "Hydro Pump": 267,
-        "Thunderbolt": 221,
-        "Will-O-Wisp": 144,
-        "Volt Switch": 143,
-        "Protect": 128,
-        "Electroweb": 89,
-        "Trick": 18,
+        "Hydro Pump": 294,
+        "Thunderbolt": 240,
+        "Will-O-Wisp": 162,
+        "Volt Switch": 154,
+        "Protect": 146,
+        "Electroweb": 99,
+        "Trick": 21,
         "Helping Hand": 16,
-        "Discharge": 13,
+        "Discharge": 14,
         "Shadow Ball": 9,
+        "Nasty Plot": 8,
         "Dark Pulse": 8,
-        "Nasty Plot": 7,
         "Thunder": 7,
         "Eerie Impulse": 6,
         "Pain Split": 2,
@@ -422,26 +432,26 @@
         "Light Screen": 1
       },
       "abilities": {
-        "Levitate": 271
+        "Levitate": 298
       },
       "items": {
-        "Sitrus Berry": 100,
-        "Choice Scarf": 98,
-        "Leftovers": 62,
+        "Sitrus Berry": 116,
+        "Choice Scarf": 107,
+        "Leftovers": 64,
         "Magnet": 8,
         "Quick Claw": 2,
         "Lum Berry": 1
       }
     },
     "pelipper": {
-      "usage": 220,
+      "usage": 249,
       "moves": {
-        "Hurricane": 214,
-        "Weather Ball": 196,
-        "Tailwind": 163,
-        "Protect": 141,
-        "Wide Guard": 72,
-        "Muddy Water": 26,
+        "Hurricane": 243,
+        "Weather Ball": 222,
+        "Tailwind": 188,
+        "Protect": 160,
+        "Wide Guard": 85,
+        "Muddy Water": 30,
         "Icy Wind": 20,
         "U-turn": 12,
         "Hydro Pump": 6,
@@ -462,21 +472,21 @@
         "Knock Off": 1
       },
       "abilities": {
-        "Drizzle": 212,
+        "Drizzle": 241,
         "Keen Eye": 4,
         "drizzle": 2,
         "Rain Dish": 1,
         "Piovischio": 1
       },
       "items": {
-        "Focus Sash": 155,
+        "Focus Sash": 173,
+        "Sitrus Berry": 30,
         "Choice Scarf": 24,
-        "Sitrus Berry": 22,
-        "Leftovers": 5,
+        "Leftovers": 6,
         "Wacan Berry": 4,
-        "Mystic Water": 2,
+        "Mystic Water": 3,
+        "Lum Berry": 2,
         "focus sash": 2,
-        "Lum Berry": 1,
         "Sharp Beak": 1,
         "Soft Sand": 1,
         "Focalnastro": 1,
@@ -485,24 +495,24 @@
       }
     },
     "charizard": {
-      "usage": 206,
+      "usage": 234,
       "moves": {
-        "Protect": 201,
-        "Heat Wave": 166,
-        "Solar Beam": 152,
-        "Weather Ball": 107,
-        "Air Slash": 30,
-        "Flare Blitz": 30,
-        "Dragon Claw": 29,
-        "Overheat": 28,
-        "Dragon Dance": 27,
+        "Protect": 229,
+        "Heat Wave": 192,
+        "Solar Beam": 177,
+        "Weather Ball": 126,
+        "Overheat": 33,
+        "Flare Blitz": 32,
+        "Dragon Claw": 31,
+        "Air Slash": 31,
+        "Dragon Dance": 29,
         "Dragon Pulse": 12,
-        "Flamethrower": 9,
+        "Flamethrower": 10,
         "Ancient Power": 4,
+        "Focus Blast": 3,
         "Thunder Punch": 3,
         "Blast Burn": 2,
         "Scorching Sands": 2,
-        "Focus Blast": 2,
         "Fire Blast": 2,
         "Outrage": 2,
         "Flame Charge": 2,
@@ -521,76 +531,32 @@
         "Swords Dance": 1
       },
       "abilities": {
-        "Blaze": 125,
-        "Solar Power": 77,
-        "Tough Claws": 2,
-        "Drought": 2
+        "Blaze": 142,
+        "Solar Power": 84,
+        "Drought": 6,
+        "Tough Claws": 2
       },
       "items": {
-        "Charizardite Y": 171,
-        "Charizardite X": 33,
+        "Charizardite Y": 197,
+        "Charizardite X": 35,
         "Lum Berry": 1,
         "Leftovers": 1
       }
     },
-    "whimsicott": {
-      "usage": 198,
-      "moves": {
-        "Tailwind": 196,
-        "Moonblast": 192,
-        "Encore": 159,
-        "Protect": 115,
-        "Sunny Day": 51,
-        "Fake Tears": 14,
-        "Taunt": 13,
-        "Helping Hand": 11,
-        "Endeavor": 10,
-        "Giga Drain": 8,
-        "Light Screen": 6,
-        "Leech Seed": 4,
-        "Energy Ball": 3,
-        "Dazzling Gleam": 2,
-        "Memento": 1,
-        "Cotton Guard": 1,
-        "Worry Seed": 1,
-        "Trick Room": 1,
-        "Substitute": 1,
-        "Cotton Spore": 1,
-        "Energy ball": 1,
-        "Dazzling gleam": 1
-      },
-      "abilities": {
-        "Prankster": 197,
-        " Prankster": 1
-      },
-      "items": {
-        "Focus Sash": 163,
-        "Mental Herb": 15,
-        "Occa Berry": 5,
-        "Leftovers": 4,
-        "Sitrus Berry": 3,
-        "Babiri Berry": 2,
-        "Miracle Seed": 1,
-        "White Herb": 1,
-        "Fairy Feather": 1,
-        "Coba Berry": 1,
-        "Bright Powder": 1,
-        "Occa berry": 1
-      }
-    },
     "archaludon": {
-      "usage": 195,
+      "usage": 225,
       "moves": {
-        "Electro Shot": 173,
-        "Flash Cannon": 171,
-        "Protect": 162,
-        "Draco Meteor": 107,
-        "Dragon Pulse": 70,
-        "Aura Sphere": 38,
-        "Thunderbolt": 19,
-        "Snarl": 15,
+        "Electro Shot": 201,
+        "Flash Cannon": 197,
+        "Protect": 190,
+        "Draco Meteor": 118,
+        "Dragon Pulse": 86,
+        "Aura Sphere": 46,
+        "Thunderbolt": 20,
+        "Snarl": 16,
         "Dragon pulse": 5,
         "flash canon": 4,
+        "Steel Beam": 2,
         "Thunder Wave": 2,
         "flash cannon": 2,
         "draco meteor": 2,
@@ -599,56 +565,104 @@
         "Breaking Swipe": 2,
         "Roar": 1,
         "Solar Beam": 1,
-        "Dark Pulse": 1,
-        "Steel Beam": 1
+        "Dark Pulse": 1
       },
       "abilities": {
-        "Stamina": 136,
-        "Sturdy": 47,
-        "Stalwart": 10,
+        "Stamina": 160,
+        "Sturdy": 50,
+        "Stalwart": 13,
         "stamina": 2
       },
       "items": {
-        "Leftovers": 103,
-        "Chople Berry": 18,
+        "Leftovers": 121,
+        "Chople Berry": 24,
         "White Herb": 17,
         "Magnet": 14,
-        "Sitrus Berry": 12,
+        "Sitrus Berry": 13,
         "Choice Scarf": 8,
+        "Dragon Fang": 7,
+        "Metal Coat": 4,
         "dragon fang": 4,
         "Quick Claw": 4,
-        "Dragon Fang": 4,
-        "Metal Coat": 3,
         "Shuca Berry": 2,
         "Bright Powder": 2,
         "leftovers": 2,
+        "Mental Herb": 1,
         "Scope Lens": 1,
         "Shell Bell": 1
       }
     },
-    "farigiraf": {
-      "usage": 184,
+    "whimsicott": {
+      "usage": 217,
       "moves": {
-        "Trick Room": 180,
-        "Psychic": 136,
-        "Hyper Voice": 128,
-        "Helping Hand": 97,
-        "Protect": 87,
-        "Twin Beam": 23,
-        "Imprison": 21,
+        "Tailwind": 215,
+        "Moonblast": 209,
+        "Encore": 173,
+        "Protect": 128,
+        "Sunny Day": 55,
+        "Fake Tears": 17,
+        "Taunt": 13,
+        "Helping Hand": 12,
+        "Endeavor": 12,
+        "Giga Drain": 8,
+        "Light Screen": 6,
+        "Leech Seed": 4,
+        "Energy Ball": 3,
+        "Worry Seed": 2,
+        "Memento": 2,
+        "Dazzling Gleam": 2,
+        "Play Rough": 1,
+        "Cotton Guard": 1,
+        "Trick Room": 1,
+        "Substitute": 1,
+        "Cotton Spore": 1,
+        "Energy ball": 1,
+        "Dazzling gleam": 1
+      },
+      "abilities": {
+        "Prankster": 215,
+        "prankster": 1,
+        " Prankster": 1
+      },
+      "items": {
+        "Focus Sash": 180,
+        "Mental Herb": 15,
+        "Occa Berry": 5,
+        "Leftovers": 4,
+        "Fairy Feather": 3,
+        "Sitrus Berry": 3,
+        "Babiri Berry": 2,
+        "Miracle Seed": 1,
+        "White Herb": 1,
+        "Coba Berry": 1,
+        "Bright Powder": 1,
+        "Occa berry": 1
+      }
+    },
+    "farigiraf": {
+      "usage": 208,
+      "moves": {
+        "Trick Room": 203,
+        "Psychic": 152,
+        "Hyper Voice": 143,
+        "Helping Hand": 107,
+        "Protect": 94,
+        "Twin Beam": 28,
+        "Imprison": 27,
+        "Rain Dance": 15,
         "Psychic Noise": 12,
         "Foul Play": 9,
-        "Rain Dance": 8,
-        "Psyshock": 5,
-        "Light Screen": 4,
-        "Low Kick": 3,
-        "Nasty Plot": 3,
+        "Low Kick": 6,
+        "Psyshock": 6,
+        "Light Screen": 5,
+        "Nasty Plot": 4,
         "Dazzling Gleam": 3,
         "Shadow Ball": 3,
         "Ally Switch": 2,
         "Thunderbolt": 2,
         "Calm Mind": 2,
         "Expanding Force": 2,
+        "Wish": 1,
         "Psychic Terrain": 1,
         "Baton Pass": 1,
         "Hyper voice": 1,
@@ -657,16 +671,17 @@
         "Reflect": 1
       },
       "abilities": {
-        "Armor Tail": 183,
+        "Armor Tail": 206,
+        "Cud Chew": 1,
         "Armor tail": 1
       },
       "items": {
-        "Sitrus Berry": 104,
-        "Colbur Berry": 36,
-        "Mental Herb": 21,
-        "Lum Berry": 7,
+        "Sitrus Berry": 121,
+        "Colbur Berry": 40,
+        "Mental Herb": 22,
+        "Lum Berry": 8,
+        "Silk Scarf": 6,
         "Leftovers": 6,
-        "Silk Scarf": 5,
         "Twisted Spoon": 2,
         "Focus Sash": 1,
         "Sitrus berry": 1,
@@ -674,19 +689,19 @@
       }
     },
     "milotic": {
-      "usage": 178,
+      "usage": 197,
       "moves": {
-        "Scald": 148,
-        "Protect": 133,
-        "Icy Wind": 109,
-        "Recover": 89,
-        "Ice Beam": 67,
-        "Life Dew": 39,
-        "Muddy Water": 34,
-        "Hypnosis": 26,
-        "Coil": 25,
+        "Scald": 165,
+        "Protect": 147,
+        "Icy Wind": 119,
+        "Recover": 98,
+        "Ice Beam": 74,
+        "Life Dew": 45,
+        "Muddy Water": 38,
+        "Hypnosis": 30,
+        "Coil": 29,
         "Helping Hand": 15,
-        "Blizzard": 4,
+        "Blizzard": 5,
         "Haze": 4,
         "Alluring Voice": 3,
         "Mirror Coat": 2,
@@ -705,14 +720,14 @@
         "Muddy water": 1
       },
       "abilities": {
-        "Competitive": 173,
+        "Competitive": 192,
         "Marvel Scale": 4,
         " Competitive": 1
       },
       "items": {
-        "Leftovers": 145,
-        "Sitrus Berry": 19,
-        "Mystic Water": 8,
+        "Leftovers": 159,
+        "Sitrus Berry": 22,
+        "Mystic Water": 10,
         "Rindo Berry": 2,
         "Lum Berry": 2,
         "Left overs": 1,
@@ -720,21 +735,22 @@
       }
     },
     "tyranitar": {
-      "usage": 159,
+      "usage": 177,
       "moves": {
-        "Rock Slide": 155,
-        "Protect": 140,
-        "Knock Off": 120,
-        "Low Kick": 87,
-        "Ice Punch": 33,
-        "Crunch": 24,
-        "Dragon Dance": 17,
-        "Stone Edge": 13,
-        "High Horsepower": 12,
-        "Fire Punch": 4,
-        "Earthquake": 4,
-        "Superpower": 3,
+        "Rock Slide": 172,
+        "Protect": 157,
+        "Knock Off": 134,
+        "Low Kick": 95,
+        "Ice Punch": 36,
+        "Crunch": 27,
+        "Dragon Dance": 19,
+        "Stone Edge": 14,
+        "High Horsepower": 14,
+        "Superpower": 5,
+        "Fire Punch": 5,
+        "Earthquake": 5,
         "Heavy Slam": 3,
+        "Dragon Claw": 2,
         "Breaking Swipe": 2,
         "Body Press": 2,
         "Stomping Tantrum": 2,
@@ -751,74 +767,52 @@
         "Snarl": 1,
         "Ice Beam": 1,
         "Lash Out": 1,
-        "Taunt": 1,
-        "Dragon Claw": 1
+        "Taunt": 1
       },
       "abilities": {
-        "Sand Stream": 158,
+        "Sand Stream": 176,
         "Clear Body": 1
       },
       "items": {
-        "Tyranitarite": 108,
+        "Tyranitarite": 122,
+        "Chople Berry": 14,
         "Choice Scarf": 14,
-        "Chople Berry": 13,
-        "Focus Sash": 8,
+        "Focus Sash": 9,
         "Leftovers": 6,
+        "Sitrus Berry": 3,
         "Shuca Berry": 3,
-        "Sitrus Berry": 2,
         "Lum Berry": 2,
+        "Roseli Berry": 1,
         "White Herb": 1,
         "Passho Berry": 1,
         "Hard Stone": 1
       }
     },
-    "floette-mega": {
-      "usage": 149,
-      "moves": {
-        "Protect": 149,
-        "Dazzling Gleam": 133,
-        "Calm Mind": 123,
-        "Moonblast": 119,
-        "Draining Kiss": 38,
-        "Light of Ruin": 31,
-        "Substitute": 1,
-        "Psychic": 1,
-        "Giga Drain": 1
-      },
-      "abilities": {
-        "Fairy Aura": 83,
-        "Flower Veil": 63,
-        "Symbiosis": 3
-      },
-      "items": {
-        "Floettite": 149
-      }
-    },
     "dragonite": {
-      "usage": 148,
+      "usage": 164,
       "moves": {
-        "Protect": 117,
-        "Hurricane": 73,
-        "Extreme Speed": 59,
-        "Draco Meteor": 53,
-        "Tailwind": 51,
-        "Dragon Pulse": 40,
+        "Protect": 127,
+        "Hurricane": 82,
+        "Extreme Speed": 67,
+        "Draco Meteor": 59,
+        "Tailwind": 55,
+        "Dragon Pulse": 46,
         "Scale Shot": 32,
-        "Thunder": 24,
-        "Ice Beam": 18,
-        "Thunderbolt": 12,
-        "Dragon Claw": 11,
+        "Thunder": 26,
+        "Ice Beam": 20,
+        "Thunderbolt": 15,
+        "Dragon Claw": 15,
+        "Low Kick": 13,
         "Haze": 9,
-        "Low Kick": 8,
+        "Outrage": 8,
         "Flamethrower": 7,
         "Thunder Punch": 7,
         "Rock Slide": 7,
-        "Outrage": 7,
+        "Fire Blast": 6,
         "Earthquake": 6,
         "Roost": 6,
         "Stomping Tantrum": 5,
         "Dragon Dance": 4,
-        "Fire Blast": 4,
         "Breaking Swipe": 4,
         "Surf": 3,
         "Air Slash": 3,
@@ -826,6 +820,8 @@
         "Ice Spinner": 2,
         "Ice Punch": 2,
         "Fire Spin": 2,
+        "Hydro Pump": 1,
+        "Iron Head": 1,
         "Blizzard": 1,
         "Dragon Tail": 1,
         "Brick Break": 1,
@@ -842,20 +838,21 @@
         "Rain Dance": 1
       },
       "abilities": {
-        "Multiscale": 92,
-        "Inner Focus": 55,
+        "Multiscale": 99,
+        "Inner Focus": 63,
+        "multiscale": 1,
         "Inner focus": 1
       },
       "items": {
-        "Dragoninite": 93,
+        "Dragoninite": 103,
         "Lum Berry": 30,
-        "Dragon Fang": 5,
+        "Dragon Fang": 9,
         "Sitrus Berry": 4,
+        "Choice Scarf": 3,
         "White Herb": 3,
         "Leftovers": 3,
         "Silk Scarf": 3,
-        "Choice Scarf": 2,
-        "Dragonitite": 1,
+        "Dragonitite": 2,
         "Quick Claw": 1,
         "Dragonnite": 1,
         "Focus Sash": 1,
@@ -863,15 +860,15 @@
       }
     },
     "venusaur": {
-      "usage": 147,
+      "usage": 162,
       "moves": {
-        "Sludge Bomb": 142,
-        "Protect": 125,
-        "Sleep Powder": 101,
-        "Earth Power": 55,
-        "Energy Ball": 49,
-        "Leaf Storm": 46,
-        "Giga Drain": 37,
+        "Sludge Bomb": 157,
+        "Protect": 140,
+        "Sleep Powder": 106,
+        "Earth Power": 65,
+        "Energy Ball": 54,
+        "Leaf Storm": 49,
+        "Giga Drain": 44,
         "Leech Seed": 13,
         "Solar Beam": 7,
         "Sunny Day": 4,
@@ -881,14 +878,15 @@
         "Outrage": 1
       },
       "abilities": {
-        "Chlorophyll": 138,
-        "Overgrow": 8,
+        "Chlorophyll": 151,
+        "Overgrow": 9,
+        "Clorophile": 1,
         "Thick Fat": 1
       },
       "items": {
-        "Focus Sash": 84,
-        "Venusaurite": 33,
-        "Leftovers": 8,
+        "Focus Sash": 90,
+        "Venusaurite": 40,
+        "Leftovers": 10,
         "Sitrus Berry": 4,
         "Coba Berry": 4,
         "Miracle Seed": 3,
@@ -902,15 +900,37 @@
         "Poison Barb": 1
       }
     },
-    "floette": {
-      "usage": 133,
+    "floette-mega": {
+      "usage": 150,
       "moves": {
-        "Protect": 131,
-        "Dazzling Gleam": 115,
-        "Moonblast": 112,
-        "Calm Mind": 108,
-        "Draining Kiss": 32,
-        "Light of Ruin": 23,
+        "Protect": 150,
+        "Dazzling Gleam": 134,
+        "Calm Mind": 124,
+        "Moonblast": 119,
+        "Draining Kiss": 38,
+        "Light of Ruin": 31,
+        "Giga Drain": 2,
+        "Substitute": 1,
+        "Psychic": 1
+      },
+      "abilities": {
+        "Fairy Aura": 84,
+        "Flower Veil": 63,
+        "Symbiosis": 3
+      },
+      "items": {
+        "Floettite": 150
+      }
+    },
+    "floette": {
+      "usage": 143,
+      "moves": {
+        "Protect": 141,
+        "Dazzling Gleam": 124,
+        "Moonblast": 122,
+        "Calm Mind": 111,
+        "Draining Kiss": 33,
+        "Light of Ruin": 30,
         "Psychic": 4,
         "protect": 1,
         "dazzling gleam": 1,
@@ -919,58 +939,27 @@
         "Energy Ball": 1
       },
       "abilities": {
-        "Flower Veil": 130,
+        "Flower Veil": 138,
+        "Fairy Aura": 3,
         "fairy aura": 1,
-        "Fairy Aura": 1,
         "Symbiosis": 1
       },
       "items": {
-        "Floettite": 131,
+        "Floettite": 141,
         "floettite": 1,
         "Floetitte": 1
       }
     },
-    "corviknight": {
-      "usage": 119,
-      "moves": {
-        "Brave Bird": 103,
-        "Roost": 80,
-        "Tailwind": 76,
-        "Body Press": 58,
-        "Iron Head": 53,
-        "Bulk Up": 52,
-        "Iron Defense": 28,
-        "Protect": 19,
-        "Taunt": 3,
-        "Dual Wingbeat": 2,
-        "U-turn": 1,
-        "Heavy Slam": 1
-      },
-      "abilities": {
-        "Mirror Armor": 111,
-        "Pressure": 6,
-        "Unnerve": 2
-      },
-      "items": {
-        "Leftovers": 86,
-        "Sitrus Berry": 13,
-        "Occa Berry": 10,
-        "Lum Berry": 6,
-        "Sharp Beak": 2,
-        "Quick Claw": 1,
-        "Mental Herb": 1
-      }
-    },
     "maushold": {
-      "usage": 118,
+      "usage": 129,
       "moves": {
-        "Follow Me": 116,
-        "Protect": 112,
-        "Super Fang": 95,
-        "Taunt": 53,
-        "Helping Hand": 33,
-        "Encore": 26,
-        "Feint": 12,
+        "Follow Me": 127,
+        "Protect": 122,
+        "Super Fang": 105,
+        "Taunt": 55,
+        "Helping Hand": 39,
+        "Encore": 30,
+        "Feint": 13,
         "Population Bomb": 12,
         "Rain Dance": 4,
         "U-turn": 2,
@@ -982,14 +971,14 @@
         "Follow me": 1
       },
       "abilities": {
-        "Friend Guard": 115,
+        "Friend Guard": 126,
         "Technician": 2,
         " Friendguard": 1
       },
       "items": {
-        "Chople Berry": 66,
-        "Focus Sash": 36,
-        "Sitrus Berry": 7,
+        "Chople Berry": 72,
+        "Focus Sash": 40,
+        "Sitrus Berry": 8,
         "King": 2,
         "Mental Herb": 2,
         "Lum Berry": 2,
@@ -998,82 +987,85 @@
         "Kings Rock": 1
       }
     },
-    "aegislash": {
-      "usage": 115,
+    "corviknight": {
+      "usage": 129,
       "moves": {
-        "King's Shield": 113,
-        "Poltergeist": 87,
-        "Shadow Sneak": 85,
+        "Brave Bird": 110,
+        "Roost": 88,
+        "Tailwind": 82,
+        "Body Press": 62,
         "Iron Head": 59,
-        "Sacred Sword": 31,
-        "Shadow Ball": 27,
+        "Bulk Up": 57,
+        "Iron Defense": 32,
+        "Protect": 19,
+        "Taunt": 3,
+        "Dual Wingbeat": 2,
+        "U-turn": 1,
+        "Heavy Slam": 1
+      },
+      "abilities": {
+        "Mirror Armor": 121,
+        "Pressure": 6,
+        "Unnerve": 2
+      },
+      "items": {
+        "Leftovers": 94,
+        "Sitrus Berry": 13,
+        "Occa Berry": 10,
+        "Lum Berry": 7,
+        "Sharp Beak": 2,
+        "Metal Coat": 1,
+        "Quick Claw": 1,
+        "Mental Herb": 1
+      }
+    },
+    "aegislash": {
+      "usage": 128,
+      "moves": {
+        "King's Shield": 126,
+        "Poltergeist": 98,
+        "Shadow Sneak": 96,
+        "Iron Head": 67,
+        "Sacred Sword": 34,
+        "Shadow Ball": 28,
         "Flash Cannon": 23,
         "Wide Guard": 18,
-        "Close Combat": 11,
+        "Close Combat": 15,
         "Protect": 2,
         "Substitute": 2,
+        "Swords Dance": 1,
         "Shadow Claw": 1,
         "Sacret Sword": 1
       },
       "abilities": {
-        "Stance Change": 115
+        "Stance Change": 127,
+        "stance-change": 1
       },
       "items": {
-        "Spell Tag": 86,
+        "Spell Tag": 95,
         "Leftovers": 10,
-        "Focus Sash": 4,
+        "Focus Sash": 5,
+        "White Herb": 4,
+        "Colbur Berry": 4,
+        "Sitrus Berry": 3,
         "Occa Berry": 3,
-        "Colbur Berry": 3,
-        "White Herb": 3,
-        "Sitrus Berry": 2,
         "Metal coat": 1,
         "King": 1,
         "Kasib Berry": 1,
         "Metal Coat": 1
       }
     },
-    "delphox": {
-      "usage": 97,
-      "moves": {
-        "Protect": 96,
-        "Heat Wave": 96,
-        "Psychic": 82,
-        "Substitute": 46,
-        "Encore": 27,
-        "Psyshock": 13,
-        "Nasty Plot": 9,
-        "Dazzling Gleam": 4,
-        "Focus Blast": 4,
-        "Scorching Sands": 2,
-        "Calm Mind": 2,
-        "Expanding Force": 2,
-        "Overheat": 1,
-        "Flamethrower": 1,
-        "Will-O-Wisp": 1,
-        "Shadow Ball": 1,
-        "Grass Knot": 1
-      },
-      "abilities": {
-        "Blaze": 89,
-        "Magician": 5,
-        "Levitate": 3
-      },
-      "items": {
-        "Delphoxite": 96,
-        "Lum Berry": 1
-      }
-    },
     "froslass": {
-      "usage": 97,
+      "usage": 113,
       "moves": {
-        "Protect": 95,
-        "Blizzard": 94,
-        "Shadow Ball": 93,
-        "Aurora Veil": 69,
-        "Substitute": 11,
+        "Protect": 111,
+        "Blizzard": 110,
+        "Shadow Ball": 109,
+        "Aurora Veil": 80,
+        "Substitute": 14,
         "Nasty Plot": 6,
-        "Taunt": 4,
-        "Will-O-Wisp": 3,
+        "Taunt": 5,
+        "Will-O-Wisp": 4,
         "Thunderbolt": 3,
         "Icy Wind": 2,
         "Aura Veil": 1,
@@ -1086,99 +1078,104 @@
         "Freeze-Dry": 1
       },
       "abilities": {
-        "Cursed Body": 69,
-        "Snow Cloak": 26,
-        "Snow Warning": 1,
+        "Cursed Body": 82,
+        "Snow Cloak": 27,
+        "Snow Warning": 2,
+        "cursed-body": 1,
         "cursed body": 1
       },
       "items": {
-        "Froslassite": 95,
+        "Froslassite": 111,
         "froslassite": 1,
         "Focus Sash": 1
       }
     },
     "talonflame": {
-      "usage": 95,
+      "usage": 110,
       "moves": {
-        "Tailwind": 94,
-        "Protect": 79,
-        "Flare Blitz": 59,
-        "Dual Wingbeat": 39,
-        "Acrobatics": 28,
-        "Brave Bird": 28,
-        "Will-O-Wisp": 24,
+        "Tailwind": 109,
+        "Protect": 93,
+        "Flare Blitz": 66,
+        "Dual Wingbeat": 44,
+        "Acrobatics": 34,
+        "Brave Bird": 32,
+        "Will-O-Wisp": 29,
         "Upper Hand": 8,
-        "Quick Guard": 4,
+        "Quick Guard": 5,
+        "Taunt": 4,
         "Rain Dance": 4,
         "Overheat": 4,
+        "Flame Charge": 2,
         "U-turn": 2,
-        "Taunt": 2,
-        "Flame Charge": 1,
         "Blaze Kick": 1,
         "Sunny Day": 1,
         "Quick Attack": 1,
         "Hurricane": 1
       },
       "abilities": {
-        "Gale Wings": 92,
-        "Flame Body": 2,
+        "Gale Wings": 105,
+        "Flame Body": 4,
         "Glale Wings": 1
       },
       "items": {
-        "Sharp Beak": 46,
-        "Focus Sash": 14,
-        "No Item": 9,
-        "None": 4,
-        "Charti Berry": 3,
+        "Sharp Beak": 50,
+        "Focus Sash": 16,
+        "No Item": 13,
+        "None": 6,
+        "Charti Berry": 4,
         "Nothing": 3,
         "nothing": 3,
+        "Leftovers": 2,
+        "White Herb": 2,
         "-": 2,
         "Sem Item": 2,
-        "Lum Berry": 1,
         "none item": 1,
+        "Lum Berry": 1,
         "no item": 1,
-        "White Herb": 1,
-        "Leftovers": 1,
         "Oran Berry": 1,
         "Mental Herb": 1,
         "Sitrus Berry": 1,
         "no object": 1
       }
     },
-    "excadrill": {
-      "usage": 90,
+    "delphox": {
+      "usage": 108,
       "moves": {
-        "Protect": 89,
-        "Iron Head": 85,
-        "Earthquake": 61,
-        "Rock Slide": 56,
-        "High Horsepower": 54,
-        "Swords Dance": 6,
-        "Drill Run": 3,
-        "Poison Jab": 2,
-        "Fissure": 2,
-        "Horn Drill": 1,
-        "Rock Tomb": 1
+        "Heat Wave": 107,
+        "Protect": 107,
+        "Psychic": 90,
+        "Substitute": 49,
+        "Encore": 32,
+        "Psyshock": 16,
+        "Nasty Plot": 10,
+        "Dazzling Gleam": 5,
+        "Focus Blast": 4,
+        "Flamethrower": 2,
+        "Scorching Sands": 2,
+        "Calm Mind": 2,
+        "Expanding Force": 2,
+        "Overheat": 1,
+        "Will-O-Wisp": 1,
+        "Shadow Ball": 1,
+        "Grass Knot": 1
       },
       "abilities": {
-        "Sand Rush": 89,
-        "Mold Breaker": 1
+        "Blaze": 100,
+        "Magician": 5,
+        "Levitate": 3
       },
       "items": {
-        "Focus Sash": 81,
-        "White Herb": 4,
-        "Excadrite": 2,
-        "Quick Claw": 2,
-        "Soft Sand": 1
+        "Delphoxite": 107,
+        "Lum Berry": 1
       }
     },
     "meganium": {
-      "usage": 85,
+      "usage": 97,
       "moves": {
-        "Solar Beam": 85,
-        "Dazzling Gleam": 82,
-        "Weather Ball": 81,
-        "Protect": 79,
+        "Solar Beam": 97,
+        "Dazzling Gleam": 94,
+        "Weather Ball": 93,
+        "Protect": 91,
         "Synthesis": 8,
         "Earth Power": 2,
         "Leech Seed": 1,
@@ -1186,57 +1183,86 @@
         "Earthquake": 1
       },
       "abilities": {
-        "Overgrow": 56,
-        "Leaf Guard": 29
+        "Overgrow": 63,
+        "Leaf Guard": 33,
+        "Mega Sol": 1
       },
       "items": {
-        "Meganiumite": 85
+        "Meganiumite": 97
+      }
+    },
+    "excadrill": {
+      "usage": 95,
+      "moves": {
+        "Protect": 94,
+        "Iron Head": 90,
+        "Earthquake": 65,
+        "Rock Slide": 60,
+        "High Horsepower": 55,
+        "Swords Dance": 7,
+        "Drill Run": 3,
+        "Poison Jab": 2,
+        "Fissure": 2,
+        "Horn Drill": 1,
+        "Rock Tomb": 1
+      },
+      "abilities": {
+        "Sand Rush": 94,
+        "Mold Breaker": 1
+      },
+      "items": {
+        "Focus Sash": 85,
+        "White Herb": 5,
+        "Excadrite": 2,
+        "Quick Claw": 2,
+        "Soft Sand": 1
       }
     },
     "kommo-o": {
-      "usage": 84,
+      "usage": 93,
       "moves": {
-        "Protect": 84,
-        "Clanging Scales": 83,
-        "Aura Sphere": 80,
-        "Clangorous Soul": 75,
+        "Protect": 93,
+        "Clanging Scales": 92,
+        "Aura Sphere": 89,
+        "Clangorous Soul": 82,
+        "Draco Meteor": 5,
         "Flamethrower": 5,
-        "Draco Meteor": 3,
         "Vacuum Wave": 2,
         "Flash Cannon": 2,
         "Body Press": 1,
         "Iron Defense": 1
       },
       "abilities": {
-        "Soundproof": 56,
-        "Overcoat": 23,
+        "Soundproof": 62,
+        "Overcoat": 26,
         "Bulletproof": 5
       },
       "items": {
-        "Leftovers": 56,
-        "Dragon Fang": 16,
+        "Leftovers": 61,
+        "Dragon Fang": 19,
         "Sitrus Berry": 6,
         "Haban Berry": 4,
+        "Shell Bell": 1,
         "Mental Herb": 1,
         "Black Belt": 1
       }
     },
     "gengar": {
-      "usage": 80,
+      "usage": 89,
       "moves": {
-        "Shadow Ball": 77,
-        "Protect": 74,
-        "Sludge Bomb": 49,
-        "Perish Song": 40,
-        "Disable": 28,
-        "Icy Wind": 11,
+        "Shadow Ball": 86,
+        "Protect": 82,
+        "Sludge Bomb": 58,
+        "Perish Song": 44,
+        "Disable": 30,
+        "Icy Wind": 14,
         "Will-O-Wisp": 6,
         "Substitute": 6,
         "Dazzling Gleam": 4,
         "Sludge Wave": 4,
+        "Trick": 3,
         "Psychic": 3,
         "Focus Blast": 2,
-        "Trick": 2,
         "Taunt": 2,
         "Thunderbolt": 1,
         "Ice Punch": 1,
@@ -1252,53 +1278,54 @@
         "Shadow ball": 1
       },
       "abilities": {
-        "Cursed Body": 75,
-        "Shadow Tag": 3,
+        "Cursed Body": 82,
+        "Shadow Tag": 5,
         "shadow tag": 1,
         " Cursed body": 1
       },
       "items": {
-        "Gengarite": 71,
+        "Gengarite": 79,
         "Focus Sash": 5,
-        "Choice Scarf": 2,
+        "Choice Scarf": 3,
         "gengarite": 1,
         "Quick Claw": 1
       }
     },
     "primarina": {
-      "usage": 78,
+      "usage": 85,
       "moves": {
-        "Hyper Voice": 76,
-        "Protect": 74,
-        "Moonblast": 73,
-        "Calm Mind": 35,
+        "Hyper Voice": 83,
+        "Protect": 81,
+        "Moonblast": 80,
+        "Calm Mind": 38,
+        "Ice Beam": 8,
         "Dazzling Gleam": 7,
-        "Ice Beam": 7,
         "Haze": 5,
         "Icy Wind": 5,
         "Hydro Cannon": 4,
         "Aqua Jet": 4,
         "Weather Ball": 4,
+        "Rain Dance": 3,
         "Psychic": 3,
         "Draining Kiss": 3,
+        "Substitute": 2,
         "Sparkling Aria": 2,
         "Perish Song": 2,
-        "Rain Dance": 2,
+        "Hydro Pump": 1,
         "Encore": 1,
         "Helping Hand": 1,
         "Psychic Noise": 1,
         "Blizzard": 1,
-        "Substitute": 1,
         "Life Dew": 1
       },
       "abilities": {
-        "Liquid Voice": 76,
+        "Liquid Voice": 83,
         "Torrent": 2
       },
       "items": {
-        "Leftovers": 36,
-        "Mystic Water": 18,
-        "Sitrus Berry": 15,
+        "Leftovers": 38,
+        "Mystic Water": 22,
+        "Sitrus Berry": 16,
         "Fairy Feather": 6,
         "Focus Sash": 1,
         "Quick Claw": 1,
@@ -1306,17 +1333,18 @@
       }
     },
     "scizor": {
-      "usage": 76,
+      "usage": 84,
       "moves": {
-        "Bullet Punch": 74,
-        "Protect": 73,
-        "Bug Bite": 60,
-        "Swords Dance": 53,
-        "Dual Wingbeat": 11,
-        "Close Combat": 10,
+        "Bullet Punch": 82,
+        "Protect": 81,
+        "Bug Bite": 65,
+        "Swords Dance": 59,
+        "Dual Wingbeat": 13,
+        "Close Combat": 12,
         "Assurance": 6,
         "Psycho Cut": 5,
         "Knock Off": 2,
+        "Brick Break": 1,
         "U-turn": 1,
         "Iron Head": 1,
         "Pugnoscarica": 1,
@@ -1329,14 +1357,14 @@
         "dual wingbeat": 1
       },
       "abilities": {
-        "Technician": 67,
-        "Light Metal": 5,
+        "Technician": 73,
+        "Light Metal": 7,
         "Swarm": 2,
         "Tecnico": 1,
         "technician": 1
       },
       "items": {
-        "Scizorite": 59,
+        "Scizorite": 67,
         "Metal Coat": 8,
         "Focus Sash": 4,
         "Sitrus Berry": 2,
@@ -1344,19 +1372,56 @@
         "scizorite": 1
       }
     },
-    "torkoal": {
-      "usage": 72,
+    "gardevoir": {
+      "usage": 82,
       "moves": {
-        "Eruption": 71,
-        "Protect": 66,
-        "Heat Wave": 49,
-        "Earth Power": 38,
-        "Weather Ball": 35,
+        "Hyper Voice": 62,
+        "Protect": 61,
+        "Psychic": 48,
+        "Trick Room": 36,
+        "Psyshock": 33,
+        "Moonblast": 21,
+        "Dazzling Gleam": 18,
+        "Calm Mind": 16,
+        "Icy Wind": 11,
+        "Aura Sphere": 7,
+        "Vacuum Wave": 5,
+        "Thunderbolt": 3,
+        "Mystical Fire": 2,
+        "Hyper Beam": 1,
+        "Shadow Ball": 1,
+        "Focus Blast": 1,
+        "Trick": 1,
+        "Taunt": 1
+      },
+      "abilities": {
+        "Telepathy": 39,
+        "Trace": 36,
+        "Synchronize": 5,
+        "Telepathy to Pixilate when MEGA": 1,
+        "Pixilate": 1
+      },
+      "items": {
+        "Gardevoirite": 62,
+        "Choice Scarf": 17,
+        "Sitrus Berry": 1,
+        "Kasib Berry": 1,
+        "Focus Sash": 1
+      }
+    },
+    "torkoal": {
+      "usage": 77,
+      "moves": {
+        "Eruption": 76,
+        "Protect": 71,
+        "Heat Wave": 53,
+        "Earth Power": 40,
+        "Weather Ball": 38,
         "Solar Beam": 6,
+        "Helping Hand": 4,
         "Yawn": 4,
         "Flamethrower": 4,
         "Overheat": 3,
-        "Helping Hand": 3,
         "Body Press": 2,
         "Will-O-Wisp": 1,
         "Eternabeam": 1,
@@ -1367,65 +1432,28 @@
         "Heat Crash": 1
       },
       "abilities": {
-        "Drought": 70,
+        "Drought": 75,
         "White Smoke": 2
       },
       "items": {
-        "Charcoal": 67,
+        "Charcoal": 72,
         "Sitrus Berry": 2,
         "Passho Berry": 1,
         "charcoal": 1,
         "Focus Sash": 1
       }
     },
-    "gardevoir": {
-      "usage": 68,
-      "moves": {
-        "Hyper Voice": 49,
-        "Protect": 48,
-        "Psychic": 36,
-        "Psyshock": 30,
-        "Trick Room": 28,
-        "Moonblast": 20,
-        "Dazzling Gleam": 17,
-        "Calm Mind": 13,
-        "Icy Wind": 11,
-        "Aura Sphere": 7,
-        "Vacuum Wave": 4,
-        "Thunderbolt": 3,
-        "Hyper Beam": 1,
-        "Shadow Ball": 1,
-        "Mystical Fire": 1,
-        "Focus Blast": 1,
-        "Trick": 1,
-        "Taunt": 1
-      },
-      "abilities": {
-        "Telepathy": 36,
-        "Trace": 28,
-        "Synchronize": 2,
-        "Telepathy to Pixilate when MEGA": 1,
-        "Pixilate": 1
-      },
-      "items": {
-        "Gardevoirite": 49,
-        "Choice Scarf": 16,
-        "Sitrus Berry": 1,
-        "Kasib Berry": 1,
-        "Focus Sash": 1
-      }
-    },
     "politoed": {
-      "usage": 63,
+      "usage": 71,
       "moves": {
-        "Protect": 61,
-        "Weather Ball": 54,
-        "Perish Song": 41,
-        "Encore": 30,
-        "Icy Wind": 24,
-        "Helping Hand": 19,
-        "Muddy Water": 9,
-        "Ice Beam": 6,
+        "Protect": 69,
+        "Weather Ball": 61,
+        "Perish Song": 43,
+        "Encore": 33,
+        "Icy Wind": 28,
+        "Helping Hand": 23,
+        "Muddy Water": 10,
+        "Ice Beam": 9,
         "Rain Dance": 3,
         "Substitute": 1,
         "Weather ball": 1,
@@ -1434,12 +1462,12 @@
         "Psychic": 1
       },
       "abilities": {
-        "Drizzle": 60,
+        "Drizzle": 68,
         "Water Absorb": 3
       },
       "items": {
-        "Leftovers": 33,
-        "Sitrus Berry": 22,
+        "Leftovers": 38,
+        "Sitrus Berry": 25,
         "Mystic Water": 5,
         "Quick Claw": 1,
         "Wacan Berry": 1,
@@ -1447,12 +1475,12 @@
       }
     },
     "charizard-mega-y": {
-      "usage": 61,
+      "usage": 62,
       "moves": {
-        "Protect": 61,
-        "Heat Wave": 59,
-        "Solar Beam": 51,
-        "Weather Ball": 30,
+        "Protect": 62,
+        "Heat Wave": 60,
+        "Solar Beam": 52,
+        "Weather Ball": 31,
         "Air Slash": 14,
         "Overheat": 12,
         "Dragon Pulse": 3,
@@ -1465,31 +1493,63 @@
         "Solar Blade": 1
       },
       "abilities": {
-        "Drought": 40,
+        "Drought": 41,
         "Blaze": 11,
         "Solar Power": 10
       },
       "items": {
-        "Charizardite Y": 61
+        "Charizardite Y": 62
+      }
+    },
+    "kangaskhan": {
+      "usage": 58,
+      "moves": {
+        "Fake Out": 57,
+        "Double-Edge": 51,
+        "Sucker Punch": 40,
+        "Drain Punch": 31,
+        "Low Kick": 17,
+        "Crunch": 10,
+        "Protect": 6,
+        "Body Slam": 5,
+        "Ice Punch": 4,
+        "Bite": 2,
+        "Hammer Arm": 1,
+        "Last Resort": 1,
+        "Thunder Punch": 1,
+        "Giga Impact": 1,
+        "Earthquake": 1,
+        "Icy Wind": 1,
+        "Substitute": 1
+      },
+      "abilities": {
+        "Scrappy": 47,
+        "Inner Focus": 10,
+        "Early Bird": 1
+      },
+      "items": {
+        "Kangaskhanite": 57,
+        "Silk Scarf": 1
       }
     },
     "sylveon": {
-      "usage": 55,
+      "usage": 58,
       "moves": {
-        "Hyper Voice": 54,
-        "Protect": 32,
-        "Quick Attack": 22,
-        "Detect": 18,
-        "Calm Mind": 18,
+        "Hyper Voice": 57,
+        "Protect": 33,
+        "Quick Attack": 23,
+        "Detect": 19,
+        "Calm Mind": 19,
         "Hyper Beam": 17,
-        "Shadow Ball": 15,
+        "Shadow Ball": 16,
         "Helping Hand": 10,
-        "Moonblast": 8,
-        "Yawn": 7,
+        "Moonblast": 9,
+        "Yawn": 9,
         "Mystical Fire": 6,
         "Substitute": 3,
         "Psychic": 3,
         "Draining Kiss": 2,
+        "Mud-Slap": 1,
         "Wish": 1,
         "Dazzling Gleam": 1,
         "Light Screen": 1,
@@ -1497,26 +1557,54 @@
         "Psyshock": 1
       },
       "abilities": {
-        "Pixilate": 53,
+        "Pixilate": 56,
         "Cute Charm": 2
       },
       "items": {
-        "Fairy Feather": 38,
+        "Fairy Feather": 40,
         "Leftovers": 12,
         "Sitrus Berry": 2,
+        "Choice Scarf": 1,
         "Fairium Z": 1,
         "Quick Claw": 1,
         "Focus Sash": 1
       }
     },
-    "clefable": {
-      "usage": 50,
+    "ninetales-alola": {
+      "usage": 54,
       "moves": {
-        "Follow Me": 49,
-        "Moonblast": 49,
-        "Protect": 44,
-        "Helping Hand": 37,
-        "Life Dew": 9,
+        "Blizzard": 53,
+        "Protect": 42,
+        "Encore": 30,
+        "Aurora Veil": 27,
+        "Freeze-Dry": 20,
+        "Moonblast": 15,
+        "Icy Wind": 14,
+        "Disable": 11,
+        "Dazzling Gleam": 3,
+        "Psyshock": 1
+      },
+      "abilities": {
+        "Snow Warning": 51,
+        "Snow Cloak": 3
+      },
+      "items": {
+        "Focus Sash": 37,
+        "Choice Scarf": 6,
+        "Never-Melt Ice": 6,
+        "Babiri Berry": 2,
+        "Occa Berry": 2,
+        "Bright Powder": 1
+      }
+    },
+    "clefable": {
+      "usage": 52,
+      "moves": {
+        "Moonblast": 51,
+        "Follow Me": 51,
+        "Protect": 46,
+        "Helping Hand": 38,
+        "Life Dew": 10,
         "Thunder Wave": 3,
         "Icy Wind": 3,
         "Thunderbolt": 1,
@@ -1527,13 +1615,13 @@
         "Draining Kiss": 1
       },
       "abilities": {
-        "Unaware": 44,
-        "Cute Charm": 3,
-        "Magic Guard": 3
+        "Unaware": 45,
+        "Magic Guard": 4,
+        "Cute Charm": 3
       },
       "items": {
-        "Sitrus Berry": 41,
-        "Clefablite": 3,
+        "Sitrus Berry": 42,
+        "Clefablite": 4,
         "Kebia Berry": 2,
         "Mental Herb": 1,
         "Lum Berry": 1,
@@ -1541,52 +1629,25 @@
         "Leftovers": 1
       }
     },
-    "ninetales-alola": {
-      "usage": 49,
-      "moves": {
-        "Blizzard": 48,
-        "Protect": 38,
-        "Encore": 27,
-        "Aurora Veil": 26,
-        "Freeze-Dry": 17,
-        "Moonblast": 14,
-        "Icy Wind": 13,
-        "Disable": 9,
-        "Dazzling Gleam": 3,
-        "Psyshock": 1
-      },
-      "abilities": {
-        "Snow Warning": 46,
-        "Snow Cloak": 3
-      },
-      "items": {
-        "Focus Sash": 36,
-        "Choice Scarf": 5,
-        "Never-Melt Ice": 4,
-        "Occa Berry": 2,
-        "Bright Powder": 1,
-        "Babiri Berry": 1
-      }
-    },
     "dragapult": {
-      "usage": 48,
+      "usage": 50,
       "moves": {
-        "Protect": 27,
-        "Dragon Darts": 25,
+        "Protect": 29,
+        "Dragon Darts": 26,
         "Will-O-Wisp": 23,
         "Phantom Force": 22,
-        "Shadow Ball": 20,
-        "Draco Meteor": 17,
-        "Psychic Fangs": 9,
+        "Shadow Ball": 21,
+        "Draco Meteor": 18,
+        "Psychic Fangs": 10,
         "U-turn": 9,
-        "Hex": 7,
+        "Hex": 8,
         "Thunder Wave": 7,
         "Dragon Pulse": 4,
+        "Sucker Punch": 3,
         "Substitute": 3,
         "Thunderbolt": 3,
         "Light Screen": 3,
         "Outrage": 3,
-        "Sucker Punch": 2,
         "Dragon Dance": 2,
         "Breaking Swipe": 2,
         "Reflect": 2,
@@ -1594,15 +1655,15 @@
         "Flamethrower": 1
       },
       "abilities": {
-        "Clear Body": 39,
+        "Clear Body": 41,
         "Infiltrator": 7,
         "Cursed Body": 2
       },
       "items": {
         "Focus Sash": 13,
         "Dragon Fang": 8,
-        "Spell Tag": 6,
-        "Colbur Berry": 6,
+        "Spell Tag": 7,
+        "Colbur Berry": 7,
         "Lum Berry": 6,
         "Kasib Berry": 4,
         "White Herb": 2,
@@ -1611,57 +1672,62 @@
       }
     },
     "palafin": {
-      "usage": 46,
+      "usage": 48,
       "moves": {
-        "Wave Crash": 44,
-        "Jet Punch": 43,
-        "Protect": 36,
-        "Close Combat": 26,
-        "Flip Turn": 13,
+        "Jet Punch": 45,
+        "Wave Crash": 45,
+        "Protect": 37,
+        "Close Combat": 28,
+        "Flip Turn": 14,
         "Ice Punch": 10,
         "Bulk Up": 5,
         "Aqua Jet": 3,
         "Drain Punch": 3,
+        "Endeavor": 1,
         "Haze": 1
       },
       "abilities": {
-        "Zero to Hero": 46
+        "Zero to Hero": 48
       },
       "items": {
-        "Mystic Water": 38,
+        "Mystic Water": 39,
         "Choice Scarf": 4,
         "Sitrus Berry": 3,
+        "Focus Sash": 1,
         "Leftovers": 1
       }
     },
-    "kangaskhan": {
-      "usage": 45,
+    "rotom-heat": {
+      "usage": 46,
       "moves": {
-        "Fake Out": 44,
-        "Double-Edge": 39,
-        "Sucker Punch": 32,
-        "Drain Punch": 24,
-        "Low Kick": 13,
-        "Crunch": 6,
-        "Protect": 6,
-        "Body Slam": 4,
-        "Ice Punch": 2,
-        "Bite": 2,
-        "Last Resort": 1,
-        "Thunder Punch": 1,
-        "Giga Impact": 1,
-        "Earthquake": 1,
-        "Icy Wind": 1,
-        "Substitute": 1
+        "Overheat": 45,
+        "Volt Switch": 33,
+        "Thunderbolt": 32,
+        "Protect": 21,
+        "Electroweb": 19,
+        "Will-O-Wisp": 14,
+        "Trick": 7,
+        "Eerie Impulse": 3,
+        "Nasty Plot": 2,
+        "Discharge": 2,
+        "Dark Pulse": 1,
+        "Shadow Ball": 1,
+        "Helping Hand": 1,
+        "Thunder": 1,
+        "Rain Dance": 1,
+        "Volt Tackle": 1
       },
       "abilities": {
-        "Scrappy": 38,
-        "Inner Focus": 6,
-        "Early Bird": 1
+        "Levitate": 46
       },
       "items": {
-        "Kangaskhanite": 44,
-        "Silk Scarf": 1
+        "Choice Scarf": 22,
+        "Sitrus Berry": 8,
+        "Passho Berry": 7,
+        "Leftovers": 5,
+        "Magnet": 2,
+        "Charcoal": 1,
+        "White Herb": 1
       }
     },
     "tyranitar-mega": {
@@ -1712,35 +1778,87 @@
         "Gengarite": 42
       }
     },
-    "rotom-heat": {
-      "usage": 40,
+    "floette-eternal": {
+      "usage": 39,
       "moves": {
-        "Overheat": 39,
-        "Thunderbolt": 28,
-        "Volt Switch": 28,
-        "Protect": 19,
-        "Electroweb": 16,
-        "Will-O-Wisp": 12,
-        "Trick": 6,
-        "Eerie Impulse": 3,
-        "Nasty Plot": 2,
-        "Discharge": 2,
-        "Shadow Ball": 1,
-        "Helping Hand": 1,
-        "Thunder": 1,
-        "Rain Dance": 1,
-        "Volt Tackle": 1
+        "Protect": 39,
+        "Dazzling Gleam": 38,
+        "Moonblast": 36,
+        "Light of Ruin": 20,
+        "Calm Mind": 16,
+        "Psychic": 3,
+        "Draining Kiss": 3,
+        "Energy Ball": 1
       },
       "abilities": {
-        "Levitate": 40
+        "Flower Veil": 37,
+        "Fairy Aura": 2
       },
       "items": {
-        "Choice Scarf": 18,
-        "Sitrus Berry": 8,
-        "Passho Berry": 6,
-        "Leftovers": 5,
-        "Magnet": 2,
-        "White Herb": 1
+        "Floettite": 39
+      }
+    },
+    "arcanine-hisui": {
+      "usage": 39,
+      "moves": {
+        "Flare Blitz": 39,
+        "Rock Slide": 35,
+        "Extreme Speed": 31,
+        "Protect": 28,
+        "Head Smash": 8,
+        "Wild Charge": 3,
+        "Close Combat": 2,
+        "Helping Hand": 2,
+        "Snarl": 2,
+        "Scorching Sands": 1,
+        "Crunch": 1,
+        "Will-O-Wisp": 1,
+        "Psychic Fangs": 1,
+        "Morning Sun": 1,
+        "Rock Tomb": 1
+      },
+      "abilities": {
+        "Intimidate": 33,
+        "Rock Head": 6
+      },
+      "items": {
+        "Focus Sash": 12,
+        "Sitrus Berry": 5,
+        "Lum Berry": 5,
+        "Choice Scarf": 4,
+        "Hard Stone": 3,
+        "Chople Berry": 3,
+        "Shuca Berry": 3,
+        "White Herb": 3,
+        "Quick Claw": 1
+      }
+    },
+    "glimmora": {
+      "usage": 39,
+      "moves": {
+        "Power Gem": 37,
+        "Sludge Bomb": 36,
+        "Spiky Shield": 33,
+        "Earth Power": 32,
+        "Protect": 5,
+        "Mortal Spin": 2,
+        "Substitute": 2,
+        "Sludge Wave": 2,
+        "Ancient Power": 2,
+        "Stealth Rock": 1,
+        "Energy Ball": 1,
+        "Flash Cannon": 1,
+        "Dazzling Gleam": 1,
+        "Meteor Beam": 1
+      },
+      "abilities": {
+        "Toxic Debris": 39
+      },
+      "items": {
+        "Glimmoranite": 35,
+        "Focus Sash": 2,
+        "Hard Stone": 1,
+        "Choice Scarf": 1
       }
     },
     "delphox-mega": {
@@ -1768,34 +1886,6 @@
         "Delphoxite": 39
       }
     },
-    "glimmora": {
-      "usage": 38,
-      "moves": {
-        "Power Gem": 36,
-        "Sludge Bomb": 35,
-        "Spiky Shield": 32,
-        "Earth Power": 31,
-        "Protect": 5,
-        "Mortal Spin": 2,
-        "Substitute": 2,
-        "Sludge Wave": 2,
-        "Ancient Power": 2,
-        "Stealth Rock": 1,
-        "Energy Ball": 1,
-        "Flash Cannon": 1,
-        "Dazzling Gleam": 1,
-        "Meteor Beam": 1
-      },
-      "abilities": {
-        "Toxic Debris": 38
-      },
-      "items": {
-        "Glimmoranite": 34,
-        "Focus Sash": 2,
-        "Hard Stone": 1,
-        "Choice Scarf": 1
-      }
-    },
     "froslass-mega": {
       "usage": 38,
       "moves": {
@@ -1819,53 +1909,18 @@
         "Froslassite": 38
       }
     },
-    "arcanine-hisui": {
+    "sableye": {
       "usage": 36,
       "moves": {
-        "Flare Blitz": 36,
-        "Rock Slide": 33,
-        "Extreme Speed": 30,
-        "Protect": 26,
-        "Head Smash": 6,
-        "Wild Charge": 2,
-        "Helping Hand": 2,
-        "Snarl": 2,
-        "Scorching Sands": 1,
-        "Crunch": 1,
-        "Close Combat": 1,
-        "Will-O-Wisp": 1,
-        "Psychic Fangs": 1,
-        "Morning Sun": 1,
-        "Rock Tomb": 1
-      },
-      "abilities": {
-        "Intimidate": 32,
-        "Rock Head": 4
-      },
-      "items": {
-        "Focus Sash": 11,
-        "Sitrus Berry": 5,
-        "Lum Berry": 5,
-        "Chople Berry": 3,
-        "Shuca Berry": 3,
-        "White Herb": 3,
-        "Choice Scarf": 3,
-        "Hard Stone": 2,
-        "Quick Claw": 1
-      }
-    },
-    "sableye": {
-      "usage": 34,
-      "moves": {
-        "Encore": 19,
+        "Encore": 20,
+        "Rain Dance": 16,
         "Light Screen": 16,
-        "Rain Dance": 15,
-        "Disable": 14,
-        "Foul Play": 13,
-        "Fake Out": 10,
-        "Will-O-Wisp": 10,
+        "Disable": 15,
+        "Foul Play": 14,
+        "Will-O-Wisp": 12,
+        "Fake Out": 11,
+        "Quash": 7,
         "Reflect": 7,
-        "Quash": 6,
         "Thunder Wave": 6,
         "Taunt": 2,
         "Detect": 2,
@@ -1886,12 +1941,12 @@
         "Knock Off": 1
       },
       "abilities": {
-        "Prankster": 32,
-        "Burla": 1,
-        "Keen Eye": 1
+        "Prankster": 33,
+        "Keen Eye": 2,
+        "Burla": 1
       },
       "items": {
-        "Roseli Berry": 19,
+        "Roseli Berry": 21,
         "Focus Sash": 4,
         "Lum Berry": 3,
         "Sitrus Berry": 2,
@@ -1902,18 +1957,19 @@
       }
     },
     "gyarados": {
-      "usage": 34,
+      "usage": 35,
       "moves": {
-        "Waterfall": 33,
+        "Waterfall": 34,
         "Protect": 30,
+        "Crunch": 16,
         "Dragon Dance": 16,
-        "Crunch": 15,
         "Thunder Wave": 15,
         "Taunt": 8,
-        "Ice Fang": 6,
+        "Ice Fang": 7,
         "Helping Hand": 3,
         "Avalanche": 2,
         "Icy Wind": 2,
+        "Hydro Pump": 1,
         "Iron Head": 1,
         "Power Whip": 1,
         "Stone Edge": 1,
@@ -1922,12 +1978,12 @@
         "Hurricane": 1
       },
       "abilities": {
-        "Intimidate": 34
+        "Intimidate": 35
       },
       "items": {
         "Gyaradosite": 15,
         "Leftovers": 7,
-        "Lum Berry": 4,
+        "Lum Berry": 5,
         "Sitrus Berry": 3,
         "Wacan Berry": 2,
         "Charti Berry": 1,
@@ -1936,15 +1992,15 @@
       }
     },
     "volcarona": {
-      "usage": 31,
+      "usage": 33,
       "moves": {
-        "Rage Powder": 23,
-        "Protect": 19,
-        "Heat Wave": 13,
-        "Struggle Bug": 12,
+        "Rage Powder": 25,
+        "Protect": 21,
+        "Heat Wave": 15,
+        "Struggle Bug": 13,
+        "Tailwind": 10,
         "Quiver Dance": 10,
         "Fiery Dance": 10,
-        "Tailwind": 9,
         "Bug Buzz": 6,
         "Will-O-Wisp": 5,
         "Whirlwind": 4,
@@ -1955,14 +2011,133 @@
         "Air Slash": 1
       },
       "abilities": {
-        "Flame Body": 30,
+        "Flame Body": 32,
         "Swarm": 1
       },
       "items": {
-        "Sitrus Berry": 18,
+        "Sitrus Berry": 20,
         "Leftovers": 7,
         "Passho Berry": 3,
         "Charti Berry": 3
+      }
+    },
+    "blastoise": {
+      "usage": 32,
+      "moves": {
+        "Water Spout": 28,
+        "Dark Pulse": 25,
+        "Protect": 22,
+        "Fake Out": 13,
+        "Shell Smash": 13,
+        "Aura Sphere": 9,
+        "Water Pulse": 8,
+        "Muddy Water": 2,
+        "Ice Beam": 2,
+        "Icy Wind": 1,
+        "Dragon Pulse": 1,
+        "Water Sport": 1,
+        "Liquidation": 1,
+        "Earthquake": 1,
+        "Rock Slide": 1
+      },
+      "abilities": {
+        "Rain Dish": 24,
+        "Torrent": 8
+      },
+      "items": {
+        "Blastoisinite": 31,
+        "Leftovers": 1
+      }
+    },
+    "typhlosion-hisui": {
+      "usage": 32,
+      "moves": {
+        "Shadow Ball": 30,
+        "Eruption": 30,
+        "Heat Wave": 28,
+        "Overheat": 19,
+        "Extrasensory": 5,
+        "Flamethrower": 3,
+        "Infernal Parade": 3,
+        "Solar Beam": 3,
+        "Focus Blast": 3,
+        "Blast Burn": 2,
+        "Protect": 1,
+        "Mystical Fire": 1
+      },
+      "abilities": {
+        "Blaze": 19,
+        "Frisk": 13
+      },
+      "items": {
+        "Choice Scarf": 31,
+        "Charcoal": 1
+      }
+    },
+    "tsareena": {
+      "usage": 30,
+      "moves": {
+        "Triple Axel": 26,
+        "Trop Kick": 21,
+        "Protect": 14,
+        "Low Kick": 13,
+        "U-turn": 10,
+        "Power Whip": 9,
+        "Zen Headbutt": 8,
+        "Helping Hand": 6,
+        "Sunny Day": 4,
+        "Taunt": 3,
+        "Knock Off": 3,
+        "High Jump Kick": 3
+      },
+      "abilities": {
+        "Queenly Majesty": 29,
+        "Leaf Guard": 1
+      },
+      "items": {
+        "Choice Scarf": 9,
+        "Sitrus Berry": 7,
+        "Focus Sash": 4,
+        "Kebia Berry": 3,
+        "Miracle Seed": 2,
+        "White Herb": 2,
+        "Coba Berry": 2,
+        "Leftovers": 1
+      }
+    },
+    "hydreigon": {
+      "usage": 29,
+      "moves": {
+        "Dark Pulse": 27,
+        "Draco Meteor": 24,
+        "Snarl": 15,
+        "Protect": 11,
+        "Heat Wave": 9,
+        "Earth Power": 9,
+        "Dragon Pulse": 5,
+        "Flamethrower": 4,
+        "Tailwind": 3,
+        "Flash Cannon": 3,
+        "Focus Energy": 2,
+        "Focus Blast": 1,
+        "Taunt": 1,
+        "Thunder Wave": 1,
+        "U-turn": 1
+      },
+      "abilities": {
+        "Levitate": 29
+      },
+      "items": {
+        "Choice Scarf": 14,
+        "Black Glasses": 3,
+        "Sitrus Berry": 2,
+        "Quick Claw": 2,
+        "Scope Lens": 2,
+        "Chople Berry": 2,
+        "Haban Berry": 1,
+        "White Herb": 1,
+        "Leftovers": 1,
+        "Roseli Berry": 1
       }
     },
     "meganium-mega": {
@@ -1986,94 +2161,26 @@
         "Meganiumite": 29
       }
     },
-    "typhlosion-hisui": {
-      "usage": 27,
-      "moves": {
-        "Eruption": 25,
-        "Shadow Ball": 25,
-        "Heat Wave": 24,
-        "Overheat": 16,
-        "Extrasensory": 4,
-        "Infernal Parade": 3,
-        "Solar Beam": 3,
-        "Focus Blast": 3,
-        "Flamethrower": 2,
-        "Protect": 1,
-        "Blast Burn": 1,
-        "Mystical Fire": 1
-      },
-      "abilities": {
-        "Blaze": 17,
-        "Frisk": 10
-      },
-      "items": {
-        "Choice Scarf": 26,
-        "Charcoal": 1
-      }
-    },
-    "tsareena": {
-      "usage": 27,
-      "moves": {
-        "Triple Axel": 23,
-        "Trop Kick": 21,
-        "Low Kick": 12,
-        "Protect": 11,
-        "U-turn": 10,
-        "Zen Headbutt": 8,
-        "Power Whip": 6,
-        "Helping Hand": 5,
-        "Sunny Day": 4,
-        "Knock Off": 3,
-        "High Jump Kick": 3,
-        "Taunt": 2
-      },
-      "abilities": {
-        "Queenly Majesty": 26,
-        "Leaf Guard": 1
-      },
-      "items": {
-        "Choice Scarf": 9,
-        "Sitrus Berry": 6,
-        "Focus Sash": 4,
-        "Kebia Berry": 2,
-        "White Herb": 2,
-        "Coba Berry": 2,
-        "Miracle Seed": 1,
-        "Leftovers": 1
-      }
-    },
-    "hydreigon": {
+    "scovillain": {
       "usage": 26,
       "moves": {
-        "Dark Pulse": 25,
-        "Draco Meteor": 21,
-        "Snarl": 12,
-        "Protect": 11,
-        "Earth Power": 9,
-        "Heat Wave": 6,
-        "Dragon Pulse": 5,
-        "Flamethrower": 4,
-        "Flash Cannon": 3,
-        "Focus Energy": 2,
-        "Tailwind": 2,
-        "Focus Blast": 1,
-        "Taunt": 1,
-        "Thunder Wave": 1,
-        "U-turn": 1
+        "Rage Powder": 25,
+        "Protect": 25,
+        "Leech Seed": 16,
+        "Flamethrower": 13,
+        "Overheat": 12,
+        "Leaf Storm": 8,
+        "Giga Drain": 3,
+        "Rage": 1,
+        "Solar Beam": 1
       },
       "abilities": {
-        "Levitate": 26
+        "Moody": 21,
+        "Chlorophyll": 3,
+        "Insomnia": 2
       },
       "items": {
-        "Choice Scarf": 12,
-        "Black Glasses": 3,
-        "Sitrus Berry": 2,
-        "Quick Claw": 2,
-        "Scope Lens": 2,
-        "Chople Berry": 2,
-        "White Herb": 1,
-        "Leftovers": 1,
-        "Roseli Berry": 1
+        "Scovillainite": 26
       }
     },
     "scizor-mega": {
@@ -2120,109 +2227,60 @@
         "dragonitite": 1
       }
     },
-    "blastoise": {
+    "tauros-paldea-aqua": {
       "usage": 24,
       "moves": {
-        "Water Spout": 20,
-        "Protect": 19,
-        "Dark Pulse": 18,
-        "Shell Smash": 11,
-        "Fake Out": 7,
-        "Water Pulse": 7,
-        "Aura Sphere": 4,
-        "Muddy Water": 2,
-        "Ice Beam": 2,
-        "Icy Wind": 1,
-        "Dragon Pulse": 1,
-        "Water Sport": 1,
-        "Liquidation": 1,
-        "Earthquake": 1,
-        "Rock Slide": 1
-      },
-      "abilities": {
-        "Rain Dish": 19,
-        "Torrent": 5
-      },
-      "items": {
-        "Blastoisinite": 23,
-        "Leftovers": 1
-      }
-    },
-    "hatterene": {
-      "usage": 22,
-      "moves": {
-        "Trick Room": 22,
-        "Dazzling Gleam": 21,
-        "Psychic": 21,
-        "Protect": 19,
-        "Magic Powder": 2,
-        "Expanding Force": 1,
-        "Ice Shard": 1,
-        "Mystical Fire": 1
-      },
-      "abilities": {
-        "Magic Bounce": 21,
-        "Magic bounce": 1
-      },
-      "items": {
-        "Fairy Feather": 19,
-        "BrightPowder": 1,
-        "Twisted Spoon": 1,
-        "fairy feather": 1
-      }
-    },
-    "starmie": {
-      "usage": 20,
-      "moves": {
-        "Protect": 19,
-        "Liquidation": 19,
-        "Psycho Cut": 14,
-        "Aqua Jet": 9,
-        "Ice Spinner": 9,
-        "Zen Headbutt": 4,
-        "Skill Swap": 2,
-        "Substitute": 2,
-        "Waterfall": 1,
-        "Flip Turn": 1
-      },
-      "abilities": {
-        "Natural Cure": 15,
-        "Illuminate": 5
-      },
-      "items": {
-        "Starminite": 20
-      }
-    },
-    "tauros-paldea-aqua": {
-      "usage": 20,
-      "moves": {
-        "Close Combat": 20,
-        "Aqua Jet": 19,
-        "Protect": 19,
-        "Wave Crash": 18,
+        "Close Combat": 24,
+        "Aqua Jet": 23,
+        "Protect": 23,
+        "Wave Crash": 22,
         "High Horsepower": 1,
         "Rock Slide": 1,
         "Raging Bull": 1,
         "Zen Headbutt": 1
       },
       "abilities": {
-        "Intimidate": 19,
+        "Intimidate": 23,
         "Cud Chew": 1
       },
       "items": {
-        "White Herb": 15,
-        "Mystic Water": 3,
+        "White Herb": 17,
+        "Mystic Water": 5,
         "Quick Claw": 1,
         "Sitrus Berry": 1
       }
     },
-    "golurk": {
-      "usage": 20,
+    "hatterene": {
+      "usage": 23,
       "moves": {
-        "Headlong Rush": 17,
-        "Poltergeist": 16,
-        "Protect": 16,
-        "Ice Punch": 11,
+        "Trick Room": 23,
+        "Dazzling Gleam": 22,
+        "Psychic": 22,
+        "Protect": 20,
+        "Magic Powder": 2,
+        "Expanding Force": 1,
+        "Ice Shard": 1,
+        "Mystical Fire": 1
+      },
+      "abilities": {
+        "Magic Bounce": 22,
+        "Magic bounce": 1
+      },
+      "items": {
+        "Fairy Feather": 19,
+        "Sitrus Berry": 1,
+        "BrightPowder": 1,
+        "Twisted Spoon": 1,
+        "fairy feather": 1
+      }
+    },
+    "golurk": {
+      "usage": 22,
+      "moves": {
+        "Headlong Rush": 19,
+        "Poltergeist": 18,
+        "Protect": 18,
+        "Ice Punch": 13,
         "Drain Punch": 5,
         "Rock Slide": 3,
         "Shadow Punch": 2,
@@ -2235,42 +2293,86 @@
         "High Horsepower": 1
       },
       "abilities": {
-        "Iron Fist": 17,
-        "No Guard": 3
+        "Iron Fist": 18,
+        "No Guard": 4
       },
       "items": {
-        "Golurkite": 17,
+        "Golurkite": 19,
         "Meganiumite": 1,
         "Spell Tag": 1,
         "Quick Claw": 1
       }
     },
-    "mimikyu": {
-      "usage": 19,
+    "starmie": {
+      "usage": 21,
       "moves": {
-        "Play Rough": 19,
-        "Shadow Sneak": 14,
-        "Trick Room": 10,
-        "Shadow Claw": 8,
-        "Protect": 8,
+        "Liquidation": 20,
+        "Protect": 20,
+        "Psycho Cut": 15,
+        "Aqua Jet": 10,
+        "Ice Spinner": 9,
+        "Zen Headbutt": 4,
+        "Skill Swap": 2,
+        "Substitute": 2,
+        "Waterfall": 1,
+        "Flip Turn": 1
+      },
+      "abilities": {
+        "Natural Cure": 16,
+        "Illuminate": 5
+      },
+      "items": {
+        "Starminite": 21
+      }
+    },
+    "mimikyu": {
+      "usage": 21,
+      "moves": {
+        "Play Rough": 20,
+        "Shadow Sneak": 16,
+        "Trick Room": 11,
+        "Shadow Claw": 10,
+        "Protect": 9,
         "Taunt": 4,
         "Phantom Force": 3,
         "Substitute": 3,
         "Swords Dance": 2,
         "Curse": 2,
+        "Wood Hammer": 1,
         "Will-o-Wisp": 1,
         "Will-O-Wisp": 1,
         "Endure": 1
       },
       "abilities": {
-        "Disguise": 19
+        "Disguise": 21
       },
       "items": {
-        "White Herb": 7,
+        "White Herb": 8,
         "Mental Herb": 7,
         "Lum Berry": 3,
+        "Scope Lens": 1,
         "Spell Tag": 1,
         "Sitrus Berry": 1
+      }
+    },
+    "aggron": {
+      "usage": 19,
+      "moves": {
+        "Body Press": 19,
+        "Protect": 19,
+        "Heavy Slam": 18,
+        "Iron Defense": 17,
+        "Curse": 1,
+        "Payback": 1,
+        "Rock Slide": 1
+      },
+      "abilities": {
+        "Sturdy": 14,
+        "Heavy Metal": 5
+      },
+      "items": {
+        "Aggronite": 18,
+        "Leftovers": 1
       }
     },
     "gardevoir-mega": {
@@ -2292,6 +2394,57 @@
       },
       "items": {
         "Gardevoirite": 19
+      }
+    },
+    "lucario": {
+      "usage": 17,
+      "moves": {
+        "Meteor Mash": 12,
+        "Protect": 12,
+        "Close Combat": 11,
+        "Bullet Punch": 10,
+        "Flash Cannon": 3,
+        "Aura Sphere": 3,
+        "Detect": 3,
+        "Vacuum Wave": 3,
+        "Drain Punch": 2,
+        "Calm Mind": 1,
+        "Ice Punch": 1,
+        "Shadow Claw": 1,
+        "Bulk Up": 1,
+        "Stone Edge": 1,
+        "Nasty Plot": 1,
+        "Thunder Punch": 1,
+        "Psychic": 1,
+        "Upper Hand": 1
+      },
+      "abilities": {
+        "Inner Focus": 17
+      },
+      "items": {
+        "Lucarionite": 15,
+        "Focus Sash": 1,
+        "Quick Claw": 1
+      }
+    },
+    "azumarill": {
+      "usage": 17,
+      "moves": {
+        "Aqua Jet": 17,
+        "Play Rough": 17,
+        "Belly Drum": 15,
+        "Protect": 14,
+        "Liquidation": 3,
+        "Superpower": 1,
+        "Brick Break": 1
+      },
+      "abilities": {
+        "Huge Power": 16,
+        "Thick Fat": 1
+      },
+      "items": {
+        "Sitrus Berry": 16,
+        "Mystic Water": 1
       }
     },
     "arcanine": {
@@ -2325,66 +2478,65 @@
         "leftovers": 1
       }
     },
-    "aggron": {
-      "usage": 17,
-      "moves": {
-        "Body Press": 17,
-        "Protect": 17,
-        "Heavy Slam": 16,
-        "Iron Defense": 15,
-        "Curse": 1,
-        "Payback": 1,
-        "Rock Slide": 1
-      },
-      "abilities": {
-        "Sturdy": 12,
-        "Heavy Metal": 5
-      },
-      "items": {
-        "Aggronite": 16,
-        "Leftovers": 1
-      }
-    },
-    "azumarill": {
+    "gallade": {
       "usage": 16,
       "moves": {
-        "Aqua Jet": 16,
-        "Play Rough": 16,
-        "Belly Drum": 14,
-        "Protect": 13,
-        "Liquidation": 3,
-        "Superpower": 1,
-        "Brick Break": 1
+        "Sacred Sword": 15,
+        "Psycho Cut": 14,
+        "Protect": 11,
+        "Trick Room": 7,
+        "Wide Guard": 5,
+        "Leaf Blade": 3,
+        "Knock Off": 3,
+        "Close Combat": 1,
+        "Coaching": 1,
+        "Rock Slide": 1,
+        "Shadow Sneak": 1,
+        "Ice Punch": 1,
+        "Encore": 1
       },
       "abilities": {
-        "Huge Power": 15,
-        "Thick Fat": 1
+        "Sharpness": 13,
+        "Steadfast": 2,
+        "Justified": 1
       },
       "items": {
-        "Sitrus Berry": 15,
-        "Mystic Water": 1
+        "Focus Sash": 4,
+        "Galladite": 4,
+        "White Herb": 4,
+        "Black Belt": 2,
+        "Scope Lens": 1,
+        "Sitrus Berry": 1
       }
     },
-    "scovillain": {
+    "zoroark-hisui": {
       "usage": 16,
       "moves": {
-        "Protect": 15,
-        "Rage Powder": 15,
-        "Flamethrower": 11,
-        "Leech Seed": 10,
-        "Leaf Storm": 5,
-        "Overheat": 5,
-        "Giga Drain": 1,
-        "Rage": 1,
-        "Solar Beam": 1
+        "Icy Wind": 12,
+        "Hyper Voice": 10,
+        "Shadow Ball": 9,
+        "Bitter Malice": 7,
+        "Protect": 6,
+        "Psychic": 4,
+        "Snarl": 4,
+        "Nasty Plot": 2,
+        "Taunt": 2,
+        "Trick": 2,
+        "Will-O-Wisp": 1,
+        "Sludge Bomb": 1,
+        "Hyper Beam": 1,
+        "Knock Off": 1,
+        "Roar": 1,
+        "Focus Blast": 1
       },
       "abilities": {
-        "Moody": 12,
-        "Chlorophyll": 3,
-        "Insomnia": 1
+        "Illusion": 16
       },
       "items": {
-        "Scovillainite": 16
+        "Choice Scarf": 8,
+        "Focus Sash": 4,
+        "Silk Scarf": 3,
+        "Spell Tag": 1
       }
     },
     "orthworm": {
@@ -2405,6 +2557,23 @@
         "Sitrus Berry": 14,
         "Mental Herb": 1,
         "Aguav Berry": 1
+      }
+    },
+    "charizard-mega-x": {
+      "usage": 15,
+      "moves": {
+        "Flare Blitz": 15,
+        "Dragon Dance": 15,
+        "Protect": 15,
+        "Dragon Claw": 14,
+        "Roost": 1
+      },
+      "abilities": {
+        "Tough Claws": 10,
+        "Blaze": 5
+      },
+      "items": {
+        "Charizardite X": 15
       }
     },
     "kangaskhan-mega": {
@@ -2430,110 +2599,32 @@
         "Kangaskhanite": 15
       }
     },
-    "zoroark-hisui": {
+    "tinkaton": {
       "usage": 14,
       "moves": {
-        "Icy Wind": 11,
-        "Hyper Voice": 10,
-        "Shadow Ball": 7,
-        "Bitter Malice": 7,
+        "Gigaton Hammer": 14,
+        "Fake Out": 13,
+        "Play Rough": 7,
+        "Encore": 5,
         "Protect": 5,
-        "Snarl": 4,
-        "Psychic": 3,
-        "Trick": 2,
-        "Sludge Bomb": 1,
-        "Hyper Beam": 1,
-        "Taunt": 1,
-        "Nasty Plot": 1,
-        "Knock Off": 1,
-        "Roar": 1,
-        "Focus Blast": 1
+        "Knock Off": 4,
+        "Helping Hand": 2,
+        "Feint": 2,
+        "Thunder Wave": 2,
+        "Stealth Rock": 1,
+        "Swords Dance": 1
       },
       "abilities": {
-        "Illusion": 14
+        "Mold Breaker": 8,
+        "Own Tempo": 6
       },
       "items": {
-        "Choice Scarf": 7,
-        "Focus Sash": 4,
-        "Silk Scarf": 3
-      }
-    },
-    "lucario": {
-      "usage": 14,
-      "moves": {
-        "Meteor Mash": 10,
-        "Protect": 10,
-        "Close Combat": 9,
-        "Bullet Punch": 8,
-        "Vacuum Wave": 3,
-        "Drain Punch": 2,
-        "Detect": 2,
-        "Aura Sphere": 2,
-        "Flash Cannon": 2,
-        "Ice Punch": 1,
-        "Shadow Claw": 1,
-        "Bulk Up": 1,
-        "Stone Edge": 1,
-        "Nasty Plot": 1,
-        "Thunder Punch": 1,
-        "Psychic": 1,
-        "Upper Hand": 1
-      },
-      "abilities": {
-        "Inner Focus": 14
-      },
-      "items": {
-        "Lucarionite": 12,
-        "Focus Sash": 1,
-        "Quick Claw": 1
-      }
-    },
-    "charizard-mega-x": {
-      "usage": 14,
-      "moves": {
-        "Flare Blitz": 14,
-        "Protect": 14,
-        "Dragon Dance": 14,
-        "Dragon Claw": 13,
-        "Roost": 1
-      },
-      "abilities": {
-        "Tough Claws": 9,
-        "Blaze": 5
-      },
-      "items": {
-        "Charizardite X": 14
-      }
-    },
-    "gallade": {
-      "usage": 14,
-      "moves": {
-        "Sacred Sword": 13,
-        "Psycho Cut": 12,
-        "Protect": 9,
-        "Trick Room": 6,
-        "Wide Guard": 5,
-        "Knock Off": 3,
-        "Leaf Blade": 2,
-        "Close Combat": 1,
-        "Coaching": 1,
-        "Rock Slide": 1,
-        "Shadow Sneak": 1,
-        "Ice Punch": 1,
-        "Encore": 1
-      },
-      "abilities": {
-        "Sharpness": 11,
-        "Steadfast": 2,
-        "Justified": 1
-      },
-      "items": {
-        "Galladite": 4,
-        "White Herb": 4,
-        "Focus Sash": 3,
-        "Scope Lens": 1,
-        "Black Belt": 1,
-        "Sitrus Berry": 1
+        "Metal Coat": 7,
+        "Shuca Berry": 2,
+        "Sitrus Berry": 2,
+        "Leftovers": 1,
+        "Fairy Feather": 1,
+        "Focus Sash": 1
       }
     },
     "glimmora-mega": {
@@ -2555,61 +2646,92 @@
         "Glimmoranite": 14
       }
     },
-    "tinkaton": {
+    "drampa": {
       "usage": 13,
       "moves": {
-        "Gigaton Hammer": 13,
-        "Fake Out": 12,
-        "Play Rough": 7,
-        "Knock Off": 4,
-        "Encore": 4,
-        "Protect": 4,
-        "Helping Hand": 2,
-        "Feint": 2,
-        "Thunder Wave": 2,
-        "Stealth Rock": 1,
-        "Swords Dance": 1
+        "Hyper Voice": 11,
+        "Draco Meteor": 8,
+        "Protect": 7,
+        "Dragon Pulse": 5,
+        "Earth Power": 5,
+        "Flamethrower": 4,
+        "Thunderbolt": 3,
+        "Calm Mind": 2,
+        "Surf": 1,
+        "Blizzard": 1,
+        "Comet Punch": 1,
+        "Volt Switch": 1,
+        "Land's Wrath": 1,
+        "Roost": 1
       },
       "abilities": {
-        "Mold Breaker": 7,
-        "Own Tempo": 6
+        "Cloud Nine": 6,
+        "Berserk": 5,
+        "berserk": 1,
+        "Color Change": 1
       },
       "items": {
-        "Metal Coat": 7,
-        "Sitrus Berry": 2,
+        "Drampanite": 9,
+        "Chople Berry": 1,
+        "Quick Claw": 1,
         "Leftovers": 1,
-        "Fairy Feather": 1,
-        "Shuca Berry": 1,
-        "Focus Sash": 1
+        "Mental Herb": 1
       }
     },
-    "floette-eternal": {
-      "usage": 12,
+    "lopunny": {
+      "usage": 13,
       "moves": {
-        "Dazzling Gleam": 12,
-        "Protect": 12,
-        "Moonblast": 10,
-        "Calm Mind": 7,
-        "Light of Ruin": 5,
-        "Psychic": 1,
-        "Draining Kiss": 1
+        "Close Combat": 13,
+        "Fake Out": 12,
+        "Protect": 7,
+        "Quick attack": 4,
+        "Triple Axel": 3,
+        "Triple axel": 2,
+        "Encore": 2,
+        "Giga Impact": 2,
+        "Quick Attack": 2,
+        "Rain Dance": 2,
+        "Facade": 1,
+        "Ice Punch": 1,
+        "Mega Kick": 1
       },
       "abilities": {
-        "Flower Veil": 11,
-        "Fairy Aura": 1
+        "Limber": 7,
+        "Cute Charm": 6
       },
       "items": {
-        "Floettite": 12
+        "Lopunnite": 13
+      }
+    },
+    "crabominable": {
+      "usage": 13,
+      "moves": {
+        "Ice Hammer": 13,
+        "Drain Punch": 12,
+        "Protect": 10,
+        "Thunder Punch": 8,
+        "Mach Punch": 5,
+        "Close Combat": 1,
+        "Rock Slide": 1,
+        "Match Punch": 1,
+        "Crabhammer": 1
+      },
+      "abilities": {
+        "Hyper Cutter": 10,
+        "Iron Fist": 3
+      },
+      "items": {
+        "Crabominite": 13
       }
     },
     "meowscarada": {
-      "usage": 12,
+      "usage": 13,
       "moves": {
-        "Flower Trick": 12,
-        "Knock Off": 9,
+        "Flower Trick": 13,
+        "Knock Off": 10,
+        "Protect": 6,
+        "Triple Axel": 6,
         "U-turn": 5,
-        "Triple Axel": 5,
-        "Protect": 5,
         "Sucker Punch": 4,
         "Low Kick": 2,
         "Throat Chop": 2,
@@ -2619,13 +2741,36 @@
         "Taunt": 1
       },
       "abilities": {
-        "Protean": 8,
+        "Protean": 9,
         "Overgrow": 4
       },
       "items": {
-        "Focus Sash": 6,
+        "Focus Sash": 7,
         "Choice Scarf": 5,
         "Sitrus Berry": 1
+      }
+    },
+    "skarmory": {
+      "usage": 12,
+      "moves": {
+        "Protect": 12,
+        "Iron Head": 12,
+        "Brave Bird": 11,
+        "Tailwind": 5,
+        "Swords Dance": 2,
+        "Rock Slide": 2,
+        "Substitute": 1,
+        "Drill Run": 1,
+        "Dual Wingbeat": 1,
+        "Body Press": 1
+      },
+      "abilities": {
+        "Sturdy": 8,
+        "Weak Armor": 4
+      },
+      "items": {
+        "Skarmorite": 11,
+        "Meganiumite": 1
       }
     },
     "aggron-mega": {
@@ -2665,185 +2810,112 @@
         "Never-Melt Ice": 1
       }
     },
-    "lopunny": {
-      "usage": 12,
-      "moves": {
-        "Close Combat": 12,
-        "Fake Out": 11,
-        "Protect": 6,
-        "Quick attack": 4,
-        "Triple axel": 2,
-        "Triple Axel": 2,
-        "Encore": 2,
-        "Giga Impact": 2,
-        "Quick Attack": 2,
-        "Rain Dance": 2,
-        "Facade": 1,
-        "Ice Punch": 1,
-        "Mega Kick": 1
-      },
-      "abilities": {
-        "Cute Charm": 6,
-        "Limber": 6
-      },
-      "items": {
-        "Lopunnite": 12
-      }
-    },
-    "crabominable": {
-      "usage": 11,
-      "moves": {
-        "Ice Hammer": 11,
-        "Drain Punch": 10,
-        "Protect": 8,
-        "Thunder Punch": 6,
-        "Mach Punch": 5,
-        "Close Combat": 1,
-        "Rock Slide": 1,
-        "Match Punch": 1,
-        "Crabhammer": 1
-      },
-      "abilities": {
-        "Hyper Cutter": 8,
-        "Iron Fist": 3
-      },
-      "items": {
-        "Crabominite": 11
-      }
-    },
-    "skarmory": {
-      "usage": 11,
-      "moves": {
-        "Iron Head": 11,
-        "Protect": 11,
-        "Brave Bird": 10,
-        "Tailwind": 5,
-        "Swords Dance": 2,
-        "Rock Slide": 2,
-        "Drill Run": 1,
-        "Dual Wingbeat": 1,
-        "Body Press": 1
-      },
-      "abilities": {
-        "Sturdy": 7,
-        "Weak Armor": 4
-      },
-      "items": {
-        "Skarmorite": 10,
-        "Meganiumite": 1
-      }
-    },
-    "drampa": {
-      "usage": 10,
-      "moves": {
-        "Hyper Voice": 8,
-        "Draco Meteor": 7,
-        "Protect": 4,
-        "Earth Power": 4,
-        "Thunderbolt": 3,
-        "Flamethrower": 3,
-        "Dragon Pulse": 3,
-        "Surf": 1,
-        "Blizzard": 1,
-        "Calm Mind": 1,
-        "Comet Punch": 1,
-        "Volt Switch": 1,
-        "Land's Wrath": 1,
-        "Roost": 1
-      },
-      "abilities": {
-        "Berserk": 5,
-        "Cloud Nine": 3,
-        "berserk": 1,
-        "Color Change": 1
-      },
-      "items": {
-        "Drampanite": 7,
-        "Quick Claw": 1,
-        "Leftovers": 1,
-        "Mental Herb": 1
-      }
-    },
-    "oranguru": {
-      "usage": 10,
-      "moves": {
-        "Instruct": 10,
-        "Trick Room": 10,
-        "Protect": 6,
-        "Psychic": 5,
-        "Foul Play": 5,
-        "Encore": 2,
-        "Taunt": 1,
-        "Play Rough": 1
-      },
-      "abilities": {
-        "Inner Focus": 10
-      },
-      "items": {
-        "Mental Herb": 5,
-        "Colbur Berry": 4,
-        "Focus Sash": 1
-      }
-    },
     "empoleon": {
-      "usage": 10,
+      "usage": 11,
       "moves": {
+        "Protect": 10,
         "Flash Cannon": 10,
-        "Protect": 9,
         "Roar": 5,
+        "Ice Beam": 4,
         "Water Pulse": 4,
-        "Ice Beam": 3,
+        "Hydro Pump": 3,
+        "Surf": 2,
         "Vacuum Wave": 2,
-        "Hydro Pump": 2,
         "Weather Ball": 2,
-        "Surf": 1,
         "Yawn": 1,
         "Chilling Water": 1
       },
       "abilities": {
-        "Competitive": 10
+        "Competitive": 11
       },
       "items": {
         "Leftovers": 5,
         "Sitrus Berry": 3,
-        "Chople Berry": 2
+        "Chople Berry": 2,
+        "Shuca Berry": 1
+      }
+    },
+    "oranguru": {
+      "usage": 11,
+      "moves": {
+        "Instruct": 11,
+        "Trick Room": 11,
+        "Protect": 7,
+        "Psychic": 5,
+        "Foul Play": 5,
+        "Encore": 2,
+        "Psyshock": 1,
+        "Taunt": 1,
+        "Play Rough": 1
+      },
+      "abilities": {
+        "Inner Focus": 11
+      },
+      "items": {
+        "Mental Herb": 6,
+        "Colbur Berry": 4,
+        "Focus Sash": 1
+      }
+    },
+    "araquanid": {
+      "usage": 10,
+      "moves": {
+        "Liquidation": 10,
+        "Protect": 8,
+        "Leech Life": 7,
+        "Wide Guard": 5,
+        "Lunge": 4,
+        "Trailblaze": 1,
+        "Mirror Coat": 1,
+        "Rain Dance": 1,
+        "Crunch": 1,
+        "Poison Jab": 1,
+        "Substitute": 1
+      },
+      "abilities": {
+        "Water Bubble": 10
+      },
+      "items": {
+        "Leftovers": 5,
+        "Mystic Water": 4,
+        "Sitrus Berry": 1
       }
     },
     "meowstic": {
-      "usage": 9,
+      "usage": 10,
       "moves": {
         "Psychic Terrain": 6,
         "Fake Out": 5,
         "Expanding Force": 5,
+        "Helping Hand": 4,
+        "Thunder Wave": 4,
+        "Alluring Voice": 3,
         "Gravity": 3,
-        "Helping Hand": 3,
-        "Thunder Wave": 3,
+        "Sunny Day": 2,
         "Magic Room": 2,
-        "Alluring Voice": 2,
         "Rain Dance": 2,
-        "Sunny Day": 1,
         "Charm": 1,
         "Reflect": 1,
         "Light Screen": 1,
         "Psychic": 1
       },
       "abilities": {
-        "Prankster": 9
+        "Prankster": 10
       },
       "items": {
         "Meowsticite": 4,
+        "Sitrus Berry": 3,
         "Mental Herb": 2,
-        "Sitrus Berry": 2,
         "Focus Sash": 1
       }
     },
     "manectric": {
-      "usage": 9,
+      "usage": 10,
       "moves": {
-        "Protect": 9,
-        "Volt Switch": 8,
-        "Snarl": 7,
-        "Thunderbolt": 5,
+        "Protect": 10,
+        "Volt Switch": 9,
+        "Snarl": 8,
+        "Thunderbolt": 6,
         "Thunder": 2,
         "Discharge": 1,
         "Overheat": 1,
@@ -2852,11 +2924,58 @@
         "Flamethrower": 1
       },
       "abilities": {
-        "Lightning Rod": 8,
+        "Lightning Rod": 9,
         "Static": 1
       },
       "items": {
-        "Manectite": 9
+        "Manectite": 10
+      }
+    },
+    "klefki": {
+      "usage": 9,
+      "moves": {
+        "Light Screen": 7,
+        "Dazzling Gleam": 6,
+        "Reflect": 6,
+        "Rain Dance": 4,
+        "Thunder Wave": 4,
+        "Trick Room": 3,
+        "Protect": 2,
+        "Foul Play": 2,
+        "Flash Cannon": 1,
+        "Metal Sound": 1
+      },
+      "abilities": {
+        "Prankster": 9
+      },
+      "items": {
+        "Mental Herb": 4,
+        "Shuca Berry": 2,
+        "Leftovers": 1,
+        "Focus Sash": 1,
+        "Fairy Feather": 1
+      }
+    },
+    "mamoswine": {
+      "usage": 9,
+      "moves": {
+        "Earthquake": 7,
+        "Rock Slide": 7,
+        "High Horsepower": 6,
+        "Icicle Crash": 6,
+        "Icicle Spear": 3,
+        "Ice Shard": 3,
+        "Protect": 3,
+        "Icy Wind": 1
+      },
+      "abilities": {
+        "Oblivious": 8,
+        "Thick Fat": 1
+      },
+      "items": {
+        "Choice Scarf": 6,
+        "Focus Sash": 2,
+        "Never-Melt Ice": 1
       }
     },
     "weavile": {
@@ -2927,6 +3046,35 @@
         "Venusaurite": 9
       }
     },
+    "raichu": {
+      "usage": 8,
+      "moves": {
+        "Fake Out": 8,
+        "Volt Switch": 5,
+        "Eerie Impulse": 2,
+        "Thunderbolt": 2,
+        "Nuzzle": 2,
+        "Rain Dance": 2,
+        "Encore": 2,
+        "Electroweb": 2,
+        "Protect": 1,
+        "Thunder": 1,
+        "Feint": 1,
+        "Endeavor": 1,
+        "Alluring Voice": 1,
+        "Helping Hand": 1,
+        "Fake Tears": 1
+      },
+      "abilities": {
+        "Lightning Rod": 8
+      },
+      "items": {
+        "Focus Sash": 4,
+        "Shuca Berry": 2,
+        "Sitrus Berry": 1,
+        "Magnet": 1
+      }
+    },
     "conkeldurr": {
       "usage": 8,
       "moves": {
@@ -2951,50 +3099,30 @@
         "White Herb": 1
       }
     },
-    "mamoswine": {
+    "ceruledge": {
       "usage": 8,
       "moves": {
-        "Earthquake": 6,
-        "Rock Slide": 6,
-        "Icicle Crash": 6,
-        "High Horsepower": 5,
-        "Ice Shard": 3,
-        "Protect": 3,
-        "Icicle Spear": 2,
-        "Icy Wind": 1
+        "Bitter Blade": 7,
+        "Protect": 6,
+        "Shadow Sneak": 6,
+        "Bulk Up": 3,
+        "Swords Dance": 3,
+        "Will-O-Wisp": 1,
+        "Esper Wing": 1,
+        "Gastro Acid": 1,
+        "Grass Knot": 1,
+        "Absorb": 1,
+        "Shadow Claw": 1,
+        "Destiny Bond": 1
       },
       "abilities": {
-        "Oblivious": 7,
-        "Thick Fat": 1
+        "Flash Fire": 8
       },
       "items": {
-        "Choice Scarf": 5,
-        "Focus Sash": 2,
-        "Never-Melt Ice": 1
-      }
-    },
-    "klefki": {
-      "usage": 8,
-      "moves": {
-        "Light Screen": 7,
-        "Reflect": 6,
-        "Dazzling Gleam": 5,
-        "Thunder Wave": 3,
-        "Trick Room": 3,
-        "Rain Dance": 3,
-        "Foul Play": 2,
-        "Flash Cannon": 1,
-        "Metal Sound": 1,
-        "Protect": 1
-      },
-      "abilities": {
-        "Prankster": 8
-      },
-      "items": {
-        "Mental Herb": 4,
-        "Shuca Berry": 2,
-        "Focus Sash": 1,
-        "Fairy Feather": 1
+        "Colbur Berry": 3,
+        "Lum Berry": 2,
+        "Leftovers": 2,
+        "Charcoal": 1
       }
     },
     "alakazam": {
@@ -3041,50 +3169,28 @@
         "Choice Scarf": 1
       }
     },
-    "araquanid": {
+    "starmie-mega": {
       "usage": 7,
       "moves": {
-        "Liquidation": 7,
-        "Leech Life": 6,
-        "Protect": 6,
-        "Lunge": 4,
-        "Wide Guard": 2,
-        "Crunch": 1,
-        "Poison Jab": 1,
-        "Substitute": 1
-      },
-      "abilities": {
-        "Water Bubble": 7
-      },
-      "items": {
-        "Leftovers": 4,
-        "Mystic Water": 2,
-        "Sitrus Berry": 1
-      }
-    },
-    "ceruledge": {
-      "usage": 7,
-      "moves": {
-        "Bitter Blade": 6,
-        "Shadow Sneak": 5,
+        "Ice Spinner": 5,
         "Protect": 5,
-        "Bulk Up": 3,
-        "Swords Dance": 3,
-        "Esper Wing": 1,
-        "Gastro Acid": 1,
-        "Grass Knot": 1,
-        "Absorb": 1,
-        "Shadow Claw": 1,
-        "Destiny Bond": 1
+        "Waterfall": 4,
+        "Aqua Jet": 3,
+        "Liquidation": 3,
+        "Zen Headbutt": 2,
+        "Psycho Cut": 1,
+        "Thunder Wave": 1,
+        "Jet Punch": 1,
+        "Flip Turn": 1,
+        "Trick Room": 1,
+        "Power Gem": 1
       },
       "abilities": {
-        "Flash Fire": 7
+        "Huge Power": 6,
+        "Natural Cure": 1
       },
       "items": {
-        "Colbur Berry": 3,
-        "Leftovers": 2,
-        "Lum Berry": 1,
-        "Charcoal": 1
+        "Starminite": 7
       }
     },
     "lopunny-mega": {
@@ -3182,55 +3288,29 @@
         "Sharp Beak": 1
       }
     },
-    "raichu": {
-      "usage": 7,
-      "moves": {
-        "Fake Out": 7,
-        "Volt Switch": 4,
-        "Eerie Impulse": 2,
-        "Thunderbolt": 2,
-        "Nuzzle": 2,
-        "Rain Dance": 2,
-        "Encore": 2,
-        "Electroweb": 2,
-        "Feint": 1,
-        "Endeavor": 1,
-        "Alluring Voice": 1,
-        "Helping Hand": 1,
-        "Fake Tears": 1
-      },
-      "abilities": {
-        "Lightning Rod": 7
-      },
-      "items": {
-        "Focus Sash": 3,
-        "Shuca Berry": 2,
-        "Sitrus Berry": 1,
-        "Magnet": 1
-      }
-    },
-    "starmie-mega": {
+    "slowking-galar": {
       "usage": 6,
       "moves": {
-        "Protect": 5,
-        "Ice Spinner": 4,
-        "Liquidation": 3,
-        "Waterfall": 3,
-        "Aqua Jet": 2,
-        "Psycho Cut": 1,
-        "Zen Headbutt": 1,
-        "Thunder Wave": 1,
-        "Jet Punch": 1,
-        "Flip Turn": 1,
-        "Trick Room": 1,
+        "Sludge Bomb": 6,
+        "Chilly Reception": 5,
+        "Trick Room": 4,
+        "Psychic": 3,
+        "Psychic Noise": 2,
+        "Yawn": 1,
+        "Eerie Spell": 1,
+        "Toxic": 1,
         "Power Gem": 1
       },
       "abilities": {
-        "Huge Power": 5,
-        "Natural Cure": 1
+        "Regenerator": 5,
+        "Own Tempo": 1
       },
       "items": {
-        "Starminite": 6
+        "Colbur Berry": 2,
+        "Leftovers": 1,
+        "Mental Herb": 1,
+        "Focus Sash": 1,
+        "Poison Barb": 1
       }
     },
     "rotom-mow": {
@@ -3252,6 +3332,54 @@
         "Leftovers": 2,
         "Focus Sash": 1,
         "Choice Scarf": 1
+      }
+    },
+    "bellibolt": {
+      "usage": 5,
+      "moves": {
+        "Protect": 4,
+        "Discharge": 3,
+        "Parabolic Charge": 2,
+        "Weather Ball": 2,
+        "Thunderbolt": 2,
+        "Toxic": 1,
+        "Electroweb": 1,
+        "Volt Switch": 1,
+        "Muddy Water": 1,
+        "Slack Off": 1,
+        "Sucker Punch": 1,
+        "Thunder": 1
+      },
+      "abilities": {
+        "Electromorphosis": 5
+      },
+      "items": {
+        "Leftovers": 4,
+        "Sitrus Berry": 1
+      }
+    },
+    "hawlucha": {
+      "usage": 5,
+      "moves": {
+        "Protect": 4,
+        "High Jump Kick": 3,
+        "Brave Bird": 3,
+        "Entrainment": 2,
+        "Close Combat": 2,
+        "Dual Wingbeat": 2,
+        "Stone Edge": 1,
+        "Trailblaze": 1,
+        "Upper Hand": 1,
+        "Flying Press": 1
+      },
+      "abilities": {
+        "Mold Breaker": 2,
+        "Limber": 2,
+        "Unburden": 1
+      },
+      "items": {
+        "Hawluchanite": 4,
+        "White Herb": 1
       }
     },
     "gyarados-mega": {
@@ -3313,50 +3441,41 @@
         "Chesnaughtite": 5
       }
     },
-    "slowking-galar": {
+    "lycanroc": {
       "usage": 4,
       "moves": {
-        "Sludge Bomb": 4,
-        "Chilly Reception": 3,
-        "Trick Room": 2,
-        "Psychic": 2,
-        "Yawn": 1,
-        "Eerie Spell": 1,
-        "Toxic": 1,
-        "Power Gem": 1,
-        "Psychic Noise": 1
+        "Rock Slide": 4,
+        "Protect": 4,
+        "Close Combat": 3,
+        "Endeavor": 3,
+        "Howl": 1,
+        "Accelerock": 1
       },
       "abilities": {
-        "Regenerator": 3,
-        "Own Tempo": 1
+        "Sand Rush": 4
       },
       "items": {
-        "Mental Herb": 1,
-        "Focus Sash": 1,
-        "Poison Barb": 1,
-        "Colbur Berry": 1
+        "Focus Sash": 4
       }
     },
-    "hawlucha": {
+    "heliolisk": {
       "usage": 4,
       "moves": {
-        "Protect": 4,
-        "High Jump Kick": 2,
-        "Brave Bird": 2,
-        "Entrainment": 2,
-        "Close Combat": 2,
-        "Dual Wingbeat": 2,
-        "Upper Hand": 1,
-        "Flying Press": 1
+        "Thunderbolt": 4,
+        "Electroweb": 4,
+        "Shed Tail": 3,
+        "Protect": 2,
+        "Volt Switch": 1,
+        "Weather Ball": 1,
+        "Focus Blast": 1
       },
       "abilities": {
-        "Limber": 2,
-        "Unburden": 1,
-        "Mold Breaker": 1
+        "Dry Skin": 4
       },
       "items": {
-        "Hawluchanite": 3,
-        "White Herb": 1
+        "Choice Scarf": 2,
+        "Focus Sash": 1,
+        "Magnet": 1
       }
     },
     "camerupt": {
@@ -3450,27 +3569,6 @@
         "Leftovers": 2,
         "Choice Scarf": 1,
         "Altarianite": 1
-      }
-    },
-    "bellibolt": {
-      "usage": 4,
-      "moves": {
-        "Protect": 4,
-        "Discharge": 3,
-        "Weather Ball": 2,
-        "Thunderbolt": 2,
-        "Muddy Water": 1,
-        "Slack Off": 1,
-        "Parabolic Charge": 1,
-        "Sucker Punch": 1,
-        "Thunder": 1
-      },
-      "abilities": {
-        "Electromorphosis": 4
-      },
-      "items": {
-        "Leftovers": 3,
-        "Sitrus Berry": 1
       }
     },
     "kleavor": {
@@ -3682,6 +3780,43 @@
         "Lucarionite": 4
       }
     },
+    "skeledirge": {
+      "usage": 3,
+      "moves": {
+        "Torch Song": 3,
+        "Slack Off": 2,
+        "Shadow Ball": 2,
+        "Sunny Day": 1,
+        "Alluring Voice": 1,
+        "Yawn": 1,
+        "Earth Power": 1,
+        "Protect": 1
+      },
+      "abilities": {
+        "Unaware": 3
+      },
+      "items": {
+        "Sitrus Berry": 1,
+        "Leftovers": 1,
+        "Shuca Berry": 1
+      }
+    },
+    "feraligatr": {
+      "usage": 3,
+      "moves": {
+        "Protect": 3,
+        "Liquidation": 3,
+        "Double-Edge": 3,
+        "Dragon Dance": 2,
+        "Aqua Jet": 1
+      },
+      "abilities": {
+        "Sheer Force": 3
+      },
+      "items": {
+        "Feraligite": 3
+      }
+    },
     "sharpedo": {
       "usage": 3,
       "moves": {
@@ -3785,23 +3920,6 @@
         "Galladite": 3
       }
     },
-    "lycanroc": {
-      "usage": 3,
-      "moves": {
-        "Rock Slide": 3,
-        "Protect": 3,
-        "Close Combat": 2,
-        "Endeavor": 2,
-        "Howl": 1,
-        "Accelerock": 1
-      },
-      "abilities": {
-        "Sand Rush": 3
-      },
-      "items": {
-        "Focus Sash": 3
-      }
-    },
     "ditto": {
       "usage": 3,
       "moves": {
@@ -3855,25 +3973,6 @@
         "Miracle Seed": 1
       }
     },
-    "heliolisk": {
-      "usage": 3,
-      "moves": {
-        "Electroweb": 3,
-        "Thunderbolt": 3,
-        "Shed Tail": 2,
-        "Protect": 2,
-        "Weather Ball": 1,
-        "Focus Blast": 1
-      },
-      "abilities": {
-        "Dry Skin": 3
-      },
-      "items": {
-        "Choice Scarf": 1,
-        "Focus Sash": 1,
-        "Magnet": 1
-      }
-    },
     "vanilluxe": {
       "usage": 3,
       "moves": {
@@ -3893,6 +3992,60 @@
         "Focus Sash": 1
       }
     },
+    "pinsir": {
+      "usage": 2,
+      "moves": {
+        "Body Slam": 2,
+        "Protect": 2,
+        "Close Combat": 1,
+        "Feint": 1,
+        "Swords Dance": 1,
+        "Lunge": 1
+      },
+      "abilities": {
+        "Hyper Cutter": 1,
+        "Moxie": 1
+      },
+      "items": {
+        "Pinsirite": 2
+      }
+    },
+    "emboar": {
+      "usage": 2,
+      "moves": {
+        "Flare Blitz": 2,
+        "Burn Up": 1,
+        "Temper Flare": 1,
+        "Rock Tomb": 1,
+        "Close Combat": 1,
+        "High Horsepower": 1,
+        "Iron Head": 1
+      },
+      "abilities": {
+        "Reckless": 1,
+        "Blaze": 1
+      },
+      "items": {
+        "Leftovers": 1,
+        "Quick Claw": 1
+      }
+    },
+    "hydrapple": {
+      "usage": 2,
+      "moves": {
+        "Earth Power": 2,
+        "Fickle Beam": 2,
+        "Energy Ball": 2,
+        "Protect": 2
+      },
+      "abilities": {
+        "Regenerator": 2
+      },
+      "items": {
+        "Haban Berry": 1,
+        "Leftovers": 1
+      }
+    },
     "luxray": {
       "usage": 2,
       "moves": {
@@ -3908,24 +4061,6 @@
       },
       "items": {
         "Sitrus Berry": 2
-      }
-    },
-    "skeledirge": {
-      "usage": 2,
-      "moves": {
-        "Torch Song": 2,
-        "Shadow Ball": 2,
-        "Yawn": 1,
-        "Slack Off": 1,
-        "Earth Power": 1,
-        "Protect": 1
-      },
-      "abilities": {
-        "Unaware": 2
-      },
-      "items": {
-        "Leftovers": 1,
-        "Shuca Berry": 1
       }
     },
     "hippowdon": {
@@ -4278,6 +4413,21 @@
         "Excadrite": 2
       }
     },
+    "beedrill": {
+      "usage": 1,
+      "moves": {
+        "Cross Poison": 1,
+        "Pin Missile": 1,
+        "U-turn": 1,
+        "Protect": 1
+      },
+      "abilities": {
+        "Adaptability": 1
+      },
+      "items": {
+        "Beedrillite": 1
+      }
+    },
     "avalugg-hisui": {
       "usage": 1,
       "moves": {
@@ -4291,21 +4441,6 @@
       },
       "items": {
         "Lum Berry": 1
-      }
-    },
-    "emboar": {
-      "usage": 1,
-      "moves": {
-        "Close Combat": 1,
-        "Flare Blitz": 1,
-        "High Horsepower": 1,
-        "Iron Head": 1
-      },
-      "abilities": {
-        "Blaze": 1
-      },
-      "items": {
-        "Quick Claw": 1
       }
     },
     "toxicroak": {
@@ -4348,21 +4483,6 @@
       },
       "abilities": {
         "Soundproof": 1
-      },
-      "items": {
-        "Leftovers": 1
-      }
-    },
-    "hydrapple": {
-      "usage": 1,
-      "moves": {
-        "Fickle Beam": 1,
-        "Energy Ball": 1,
-        "Earth Power": 1,
-        "Protect": 1
-      },
-      "abilities": {
-        "Regenerator": 1
       },
       "items": {
         "Leftovers": 1
@@ -4531,36 +4651,6 @@
       },
       "items": {
         "Sitrus Berry": 1
-      }
-    },
-    "pinsir": {
-      "usage": 1,
-      "moves": {
-        "Swords Dance": 1,
-        "Body Slam": 1,
-        "Protect": 1,
-        "Lunge": 1
-      },
-      "abilities": {
-        "Moxie": 1
-      },
-      "items": {
-        "Pinsirite": 1
-      }
-    },
-    "feraligatr": {
-      "usage": 1,
-      "moves": {
-        "Liquidation": 1,
-        "Double-Edge": 1,
-        "Dragon Dance": 1,
-        "Protect": 1
-      },
-      "abilities": {
-        "Sheer Force": 1
-      },
-      "items": {
-        "Feraligite": 1
       }
     },
     "noivern": {
