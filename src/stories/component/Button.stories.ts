@@ -8,6 +8,7 @@ const meta = {
     variant:   { control: 'select', options: ['primary', 'secondary', 'accent', 'brand'] },
     size:      { control: 'select', options: ['sm', 'md'] },
     disabled:  { control: 'boolean' },
+    active:    { control: 'boolean' },
     fullWidth: { control: 'boolean' },
   },
 } satisfies Meta<Button>;
@@ -23,6 +24,11 @@ export const Secondary: Story = {
   args: { variant: 'secondary' },
 };
 
+export const SecondaryActive: Story = {
+  name: 'Secondary — active',
+  args: { variant: 'secondary', active: true },
+};
+
 export const Accent: Story = {
   args: { variant: 'accent' },
 };
@@ -31,26 +37,26 @@ export const Brand: Story = {
   args: { variant: 'brand' },
 };
 
-export const SmallBrand: Story = {
-  name: 'Small — brand',
-  args: { variant: 'brand', size: 'sm' },
-};
-
 export const Disabled: Story = {
   args: { variant: 'primary', disabled: true },
 };
 
-export const SmallSecondary: Story = {
-  name: 'Small — outline',
-  args: { variant: 'secondary', size: 'sm' },
-};
-
 export const SmallPrimary: Story = {
-  name: 'Small — dark',
+  name: 'Small — primary',
   args: { variant: 'primary', size: 'sm' },
 };
 
+export const SmallSecondary: Story = {
+  name: 'Small — secondary',
+  args: { variant: 'secondary', size: 'sm' },
+};
+
 export const SmallAccent: Story = {
-  name: 'Small — green',
+  name: 'Small — accent',
   args: { variant: 'accent', size: 'sm' },
+};
+
+export const SmallBrand: Story = {
+  name: 'Small — brand',
+  args: { variant: 'brand', size: 'sm' },
 };

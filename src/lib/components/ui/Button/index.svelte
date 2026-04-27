@@ -5,6 +5,7 @@
   export let variant: 'primary' | 'secondary' | 'accent' | 'brand' = 'primary';
   export let size: 'sm' | 'md' = 'md';
   export let disabled = false;
+  export let active = false;
   export let fullWidth = false;
   export let type: 'button' | 'submit' | 'reset' = 'button';
   export let onClick: () => void = () => {};
@@ -17,6 +18,7 @@
 <button
   class="btn {variant} {size} {cls}"
   class:full-width={fullWidth}
+  class:active
   {disabled}
   {type}
   on:click={onClick}
