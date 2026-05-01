@@ -191,149 +191,78 @@ export function getSmogonNature(usageData: UsageNatures, pokemonId: string): Nat
   return usageData[pokemonId] ?? null;
 }
 
-// ── Champions (Limitless Reg M-A) data ────────────────────────────────────
+// ── Champions (Reg M-A) data — sourced from Smogon ladder ─────────────────
 
-// Maps champions-meta.json IDs (after toId) to the correct @pkmn/dex Showdown ID.
-// Needed when the Champions game uses a non-standard form of a Pokémon.
-const CHAMPIONS_ID_REMAP: Record<string, string> = {
-  'floette': 'floetteeternal',
-};
-const champId = (rawId: string): string => CHAMPIONS_ID_REMAP[rawId] ?? rawId;
+const REGMA_FORMAT = 'gen9championsvgc2026regma';
 
-interface ChampionsPokemon {
-  usage:     number;
-  moves:     Record<string, number>;
-  abilities: Record<string, number>;
-  items:     Record<string, number>;
-}
+export async function loadChampionsMoves():         Promise<UsageMoves>         { return loadSmogonMoves(9, REGMA_FORMAT); }
+export async function loadChampionsBuilds():        Promise<UsageBuilds>        { return loadSmogonBuilds(9, REGMA_FORMAT); }
+export async function loadChampionsAbilities():     Promise<UsageAbilities>     { return loadSmogonAbilities(9, REGMA_FORMAT); }
+export async function loadChampionsPriorityMoves(): Promise<UsagePriorityMoves> { return loadSmogonPriorityMoves(9, REGMA_FORMAT); }
 
-interface ChampionsMeta {
-  updated: string;
-  format:  string;
-  meta:    { tournaments: number; teamSlots: number; pokemonCount: number };
-  pokemon: Record<string, ChampionsPokemon>;
-}
+// ── Full distributions (moves / abilities / items) ─────────────────────────
 
-let championsMetaCache:    ChampionsMeta | null = null;
-let championsMetaInflight: Promise<ChampionsMeta> | null = null;
-
-async function loadChampionsMeta(): Promise<ChampionsMeta> {
-  if (championsMetaCache) return championsMetaCache;
-  if (championsMetaInflight) return championsMetaInflight;
-
-  championsMetaInflight = (async () => {
-    const res = await fetch('/champions-meta.json');
-    const data: ChampionsMeta = res.ok ? await res.json() : { updated: '', format: 'M-A', meta: { tournaments: 0, teamSlots: 0, pokemonCount: 0 }, pokemon: {} };
-    championsMetaCache = data;
-    return data;
-  })();
-
-  return championsMetaInflight;
-}
-
-const PRIORITY_IDS = new Set(Object.keys(PRIORITY_MOVES));
-
-export async function loadChampionsPriorityMoves(): Promise<UsagePriorityMoves> {
-  const meta = await loadChampionsMeta();
-  const result: UsagePriorityMoves = {};
-  for (const [id, data] of Object.entries(meta.pokemon)) {
-    if (!data.usage) continue;
-    const used = Object.entries(data.moves)
-      .filter(([move, count]) => PRIORITY_IDS.has(toId(move)) && count / data.usage >= 0.01)
-      .sort((a, b) => b[1] - a[1])
-      .map(([move]) => toId(move));
-    if (used.length) result[champId(toId(id))] = used;
-  }
-  return result;
-}
-
-export async function loadChampionsMoves(): Promise<UsageMoves> {
-  const meta   = await loadChampionsMeta();
-  const result: UsageMoves = {};
-  for (const [id, data] of Object.entries(meta.pokemon)) {
-    const top4 = Object.keys(data.moves).slice(0, 4);
-    if (top4.length) result[champId(toId(id))] = top4;
-  }
-  return result;
-}
-
-export async function loadChampionsBuilds(): Promise<UsageBuilds> {
-  const meta   = await loadChampionsMeta();
-  const result: UsageBuilds = {};
-  for (const [id, data] of Object.entries(meta.pokemon)) {
-    const topItem = Object.keys(data.items)[0];
-    if (topItem) result[champId(toId(id))] = { speEV: 0, nature: '=' as import('./speedtiers').NatureTier, item: topItem };
-  }
-  return result;
-}
-
-export async function loadChampionsAbilities(): Promise<UsageAbilities> {
-  const meta   = await loadChampionsMeta();
-  const result: UsageAbilities = {};
-  for (const [id, data] of Object.entries(meta.pokemon)) {
-    const entries = Object.entries(data.abilities);
-    if (!entries.length) continue;
-    const [name, count] = entries[0]; // already sorted desc by scraper
-    const pct = Math.round((count / data.usage) * 100);
-    result[champId(toId(id))] = { name, desc: `Most used in Champions Reg M-A (${pct}% of ${data.usage} teams)` };
-  }
-  return result;
-}
-
-export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> {
-  const meta   = await loadChampionsMeta();
-  const result: UsageAbilitiesFull = {};
-  for (const [id, data] of Object.entries(meta.pokemon)) {
-    const entries = Object.entries(data.abilities);
-    if (!entries.length) continue;
-    // Deduplicate by normalized name (raw data has mixed-case duplicates)
-    const merged = new Map<string, { name: string; count: number }>();
-    for (const [name, count] of entries) {
-      const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const existing = merged.get(key);
-      if (existing) {
-        existing.count += count;
-        // Keep whichever capitalisation has the higher individual count
-        if (count > existing.count - count) existing.name = name;
-      } else {
-        merged.set(key, { name, count });
-      }
-    }
-    result[champId(toId(id))] = Array.from(merged.values()).map(({ name, count }) => ({
-      name,
-      count,
-      pct: Math.round((count / data.usage) * 100),
-    }));
-  }
-  return result;
-}
-
-/** Aggregate item usage counts across all pokemon → sorted list of item names (most used first). */
-export async function loadChampionsItemUsage(): Promise<string[]> {
-  const meta = await loadChampionsMeta();
-  const totals: Record<string, number> = {};
-  for (const data of Object.values(meta.pokemon)) {
-    for (const [item, count] of Object.entries(data.items)) {
-      totals[item] = (totals[item] ?? 0) + count;
-    }
-  }
-  return Object.entries(totals)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name]) => name);
-}
+const champMovesFullCache    = new Map<string, UsageMovesFull>();
+const champMovesFullInflight = new Map<string, Promise<UsageMovesFull>>();
 
 export async function loadChampionsMovesFull(): Promise<UsageMovesFull> {
-  const meta   = await loadChampionsMeta();
-  const result: UsageMovesFull = {};
-  for (const [id, data] of Object.entries(meta.pokemon)) {
-    const entries = Object.entries(data.moves);
-    if (!entries.length) continue;
-    result[champId(toId(id))] = entries.slice(0, 8).map(([name, count]) => ({
-      name,
-      pct: Math.round((count / data.usage) * 100),
-    }));
-  }
-  return result;
+  const k = cacheKey('smogon_moves_full', 9, REGMA_FORMAT);
+  if (champMovesFullCache.has(k)) return champMovesFullCache.get(k)!;
+  const stored = lsGet<UsageMovesFull>(k);
+  if (stored) { champMovesFullCache.set(k, stored); return stored; }
+  if (champMovesFullInflight.has(k)) return champMovesFullInflight.get(k)!;
+
+  const p = (async (): Promise<UsageMovesFull> => {
+    const res  = await fetch(apiUrl('/api/smogon-moves-full', 9, REGMA_FORMAT));
+    const data: UsageMovesFull = res.ok ? await res.json() : {};
+    champMovesFullCache.set(k, data);
+    lsSet(k, data);
+    return data;
+  })();
+  champMovesFullInflight.set(k, p);
+  return p;
+}
+
+const champAbilsFullCache    = new Map<string, UsageAbilitiesFull>();
+const champAbilsFullInflight = new Map<string, Promise<UsageAbilitiesFull>>();
+
+export async function loadChampionsAbilitiesFull(): Promise<UsageAbilitiesFull> {
+  const k = cacheKey('smogon_abilities_full', 9, REGMA_FORMAT);
+  if (champAbilsFullCache.has(k)) return champAbilsFullCache.get(k)!;
+  const stored = lsGet<UsageAbilitiesFull>(k);
+  if (stored) { champAbilsFullCache.set(k, stored); return stored; }
+  if (champAbilsFullInflight.has(k)) return champAbilsFullInflight.get(k)!;
+
+  const p = (async (): Promise<UsageAbilitiesFull> => {
+    const res  = await fetch(apiUrl('/api/smogon-abilities-full', 9, REGMA_FORMAT));
+    const data: UsageAbilitiesFull = res.ok ? await res.json() : {};
+    champAbilsFullCache.set(k, data);
+    lsSet(k, data);
+    return data;
+  })();
+  champAbilsFullInflight.set(k, p);
+  return p;
+}
+
+const champItemUsageCache    = new Map<string, string[]>();
+const champItemUsageInflight = new Map<string, Promise<string[]>>();
+
+export async function loadChampionsItemUsage(): Promise<string[]> {
+  const k = cacheKey('smogon_item_usage', 9, REGMA_FORMAT);
+  if (champItemUsageCache.has(k)) return champItemUsageCache.get(k)!;
+  const stored = lsGet<string[]>(k);
+  if (stored) { champItemUsageCache.set(k, stored); return stored; }
+  if (champItemUsageInflight.has(k)) return champItemUsageInflight.get(k)!;
+
+  const p = (async (): Promise<string[]> => {
+    const res  = await fetch(apiUrl('/api/smogon-item-usage', 9, REGMA_FORMAT));
+    const data: string[] = res.ok ? await res.json() : [];
+    champItemUsageCache.set(k, data);
+    lsSet(k, data);
+    return data;
+  })();
+  champItemUsageInflight.set(k, p);
+  return p;
 }
 
 // ── Sets ──────────────────────────────────────────────────────────────────────
@@ -359,63 +288,4 @@ export async function loadSmogonSets(gen = 9, format?: string): Promise<SetsByPo
   return p;
 }
 
-let champSetsCache:    SetsByPokemon | null = null;
-let champSetsInflight: Promise<SetsByPokemon> | null = null;
-
-/** Deduplicates a Record<name, count> by lowercase key, keeping the highest-count variant. */
-function dedupByName(record: Record<string, number>): [string, number][] {
-  const map = new Map<string, { name: string; count: number }>();
-  for (const [name, count] of Object.entries(record)) {
-    const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const ex  = map.get(key);
-    if (!ex || count > ex.count) map.set(key, { name, count });
-  }
-  return [...map.values()].sort((a, b) => b.count - a.count).map(({ name, count }) => [name, count]);
-}
-
-/**
- * Builds sets for Champions (Reg M-A) Pokémon.
- * Items / moves / abilities come from Limitless tournament data.
- * Nature + EVs are proxied from the most recent Smogon Gen 9 format (Reg I/G/F).
- */
-export async function loadChampionsSets(): Promise<SetsByPokemon> {
-  if (champSetsCache) return champSetsCache;
-  if (champSetsInflight) return champSetsInflight;
-
-  champSetsInflight = (async (): Promise<SetsByPokemon> => {
-    const [meta, proxySets] = await Promise.all([
-      loadChampionsMeta(),
-      loadSmogonSets(9),
-    ]);
-
-    const result: SetsByPokemon = {};
-
-    for (const [id, data] of Object.entries(meta.pokemon)) {
-      const items    = dedupByName(data.items).slice(0, 2).map(([n]) => n);
-      const moves    = dedupByName(data.moves).slice(0, 4).map(([n]) => n);
-      const ability  = dedupByName(data.abilities)[0]?.[0] ?? '';
-
-      if (!items.length || !moves.length) continue;
-
-      const cid    = champId(toId(id));
-      const proxy  = proxySets[cid]?.[0] ?? proxySets[toId(id)]?.[0];
-      const nature = proxy?.nature ?? 'Timid';
-      const evs    = proxy?.evs    ?? { hp: 4, atk: 0, def: 0, spa: 252, spd: 0, spe: 252 };
-
-      result[cid] = items.map(item => ({
-        label:   item,
-        item,
-        ability,
-        nature,
-        evs,
-        moves,
-        proxy:   !proxy,  // flag when we fell back to a default spread
-      }));
-    }
-
-    champSetsCache = result;
-    return result;
-  })();
-
-  return champSetsInflight;
-}
+export async function loadChampionsSets(): Promise<SetsByPokemon> { return loadSmogonSets(9, REGMA_FORMAT); }

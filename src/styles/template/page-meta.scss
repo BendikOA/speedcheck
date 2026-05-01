@@ -292,13 +292,18 @@
 
 .usage-row-name {
   font-size: 0.82rem;
-  color: var(--gb-hi);
+  color: var(--color-secondary);
   z-index: 1;
   position: relative;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0.22rem 0.4rem;
+}
+
+.usage-rows .usage-row:nth-child(even) {
+  background: color-mix(in srgb, var(--gb-3) 25%, transparent);
+  border-radius: var(--radius-sm);
 }
 
 .usage-row-pct {
@@ -365,6 +370,53 @@
 .no-data {
   font-size: 0.82rem;
   color: var(--gb-low);
+}
+
+/* ── Spread rows ── */
+.spreads-section {
+  margin-top: 1.5rem;
+}
+
+.usage-row-spread {
+  grid-template-columns: 4.2rem 1fr 2.5rem;
+}
+
+.spread-nature {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: var(--gb-3);
+  color: var(--gb-hi);
+  z-index: 1;
+  position: relative;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.spread-evs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.6rem;
+  padding: 0.22rem 0.4rem;
+  z-index: 1;
+  position: relative;
+}
+
+.spread-ev {
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-secondary);
+  white-space: nowrap;
+}
+
+.spread-ev-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin-left: 0.15rem;
+  opacity: 0.7;
 }
 
 /* ── 2×2 sections grid (desktop only) ── */

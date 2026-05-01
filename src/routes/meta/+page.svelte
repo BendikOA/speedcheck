@@ -1,6 +1,6 @@
 <script lang="ts">
   import { spriteUrl, staticSpriteUrl, itemIconStyle } from '$lib/sprites';
-  import type { MetaPageData, MetaEntry } from './+page.server';
+  import type { MetaPageData, MetaEntry, SpreadEntry } from './+page.server';
   import UsageSection from '$lib/components/ui/UsageSection/index.svelte';
 
   export let data: MetaPageData;
@@ -32,6 +32,12 @@
     selectedId = id;
     drawerOpen = false;
   }
+
+  const EV_LABELS: [keyof SpreadEntry['evs'], string][] = [
+    ['hp', 'HP'], ['atk', 'Atk'], ['def', 'Def'],
+    ['spa', 'SpA'], ['spd', 'SpD'], ['spe', 'Spe'],
+  ];
+
 </script>
 
 <svelte:head>
@@ -169,6 +175,26 @@
         </UsageSection>
 
       </div>
+
+      {#if selected.spreads.length > 0}
+        <section class="detail-section spreads-section">
+          <h2 class="detail-section-title">Spreads</h2>
+          <div class="usage-rows">
+            {#each selected.spreads as spread}
+              <div class="usage-row usage-row-spread">
+                <div class="usage-row-bar" style="width: {Math.min(spread.pct, 100)}%"></div>
+                <span class="spread-nature nature-{spread.nature.toLowerCase()}">{spread.nature}</span>
+                <span class="usage-row-name spread-evs">
+                  {#each EV_LABELS.filter(([k]) => spread.evs[k] > 0) as [k, label]}
+                    <span class="spread-ev">{spread.evs[k]}<span class="spread-ev-label">{label}</span></span>
+                  {/each}
+                </span>
+                <span class="usage-row-pct">{spread.pct}%</span>
+              </div>
+            {/each}
+          </div>
+        </section>
+      {/if}
 
     {/if}
   </div>

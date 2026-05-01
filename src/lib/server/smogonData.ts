@@ -4,7 +4,10 @@
 // months: explicit list to try; empty = try last 6 rolling months.
 const GEN_SEARCH: Record<number, { formats: string[]; months?: string[] }> = {
   9: {
-    formats: ['gen9vgc2026regi', 'gen9vgc2026regibo3', 'gen9vgc2026regf', 'gen9vgc2026regfbo3', 'gen9vgc2025regg'],
+    formats: [
+      'gen9championsvgc2026regma', 'gen9championsvgc2026regmabo3',
+      'gen9vgc2026regi', 'gen9vgc2026regibo3', 'gen9vgc2026regf', 'gen9vgc2026regfbo3', 'gen9vgc2025regg',
+    ],
   },
   8: {
     formats: ['gen8vgc2022', 'gen8vgc2021series10', 'gen8vgc2021series9', 'gen8vgc2021', 'gen8vgc2020'],
@@ -28,14 +31,15 @@ const GEN_SEARCH: Record<number, { formats: string[]; months?: string[] }> = {
 
 // Exported regulation options for client-side display
 export const GEN9_REGS: { label: string; format: string }[] = [
-  { label: 'Reg I', format: 'gen9vgc2026regi' },
-  { label: 'Reg F', format: 'gen9vgc2026regf' },
-  { label: 'Reg G', format: 'gen9vgc2025regg' },
+  { label: 'Reg MA', format: 'gen9championsvgc2026regma' },
+  { label: 'Reg I',  format: 'gen9vgc2026regi' },
+  { label: 'Reg F',  format: 'gen9vgc2026regf' },
+  { label: 'Reg G',  format: 'gen9vgc2025regg' },
 ];
 
 const TTL_MS = 24 * 60 * 60 * 1000;
 
-// Per-format cache (key = format string or `gen:${gen}`)
+// Per-format cache (key = format string or `gen:${gen}` or `${format}:0`)
 const cacheMap   = new Map<string, any>();
 const fetchedMap = new Map<string, number>();
 
@@ -49,10 +53,9 @@ function rollingMonths(count = 6): string[] {
   return months;
 }
 
-async function tryFetch(format: string, months: string[]): Promise<any | null> {
+async function tryFetch(format: string, months: string[], elos = [1760, 0]): Promise<any | null> {
   for (const ym of months) {
-    // Try high-rated ladder first (1760), fall back to all-ratings (0)
-    for (const elo of [1760, 0]) {
+    for (const elo of elos) {
       const url = `https://www.smogon.com/stats/${ym}/chaos/${format}-${elo}.json`;
       try {
         const res = await fetch(url);
@@ -101,4 +104,23 @@ export async function getSmogonChaos(gen = 9, format?: string): Promise<any | nu
     }
   }
   return null;
+}
+
+/**
+ * Fetch Smogon chaos data at elo=0 (all ratings) for a specific format.
+ * Intended for meta-analysis pages that want broader sample sizes.
+ */
+export async function getSmogonChaosAllRatings(format: string): Promise<any | null> {
+  const cacheKey = `${format}:0`;
+  const now = Date.now();
+  if (cacheMap.has(cacheKey) && (now - (fetchedMap.get(cacheKey) ?? 0)) < TTL_MS) {
+    return cacheMap.get(cacheKey);
+  }
+  const months = rollingMonths(6);
+  const data = await tryFetch(format, months, [0]);
+  if (data) {
+    cacheMap.set(cacheKey, data);
+    fetchedMap.set(cacheKey, now);
+  }
+  return data ?? null;
 }
