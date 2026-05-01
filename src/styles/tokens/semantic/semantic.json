@@ -33,5 +33,11 @@
   "font":         { "value": "{fontFamily.mono}" },
   "font-heading": { "value": "{fontFamily.mono}" },
   "font-mono":    { "value": "{fontFamily.mono}" },
-  "font-arc":     { "value": "{fontFamily.arc}" }
+  "font-arc":     { "value": "{fontFamily.arc}" },
+  "font-dm":      { "value": "{fontFamily.dm}" },
+
+  "white-300":     { "value": "{color.white-scale.300}",     "type": "color" },
+  "white-400":     { "value": "{color.white-scale.400}",     "type": "color" },
+  "primary-050":   { "value": "{color.primary-scale.050}",   "type": "color" },
+  "secondary-100": { "value": "{color.secondary-scale.100}", "type": "color" }
 }

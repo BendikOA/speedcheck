@@ -38,8 +38,7 @@
   <div class="nav-inner">
 
     <a href="/" class="brand">
-      <img src="/Rulebook.png" alt="" aria-hidden="true" class="brand-img" />
-      <span class="brand-name">TURNADUS</span>
+      <span class="brand-name">Turnadus</span>
     </a>
 
     <div class="nav-right">
@@ -61,7 +60,10 @@
         target="_blank"
         rel="noopener"
         class="kofi-btn"
-      >SUPPORT ME ON KOFI</a>
+      >
+        Support Me
+        <img src="/kofi-icon.png" alt="" aria-hidden="true" width="19" height="19" />
+      </a>
     </div>
 
     <button
@@ -93,8 +95,7 @@
   <nav class="drawer" aria-label="Mobile navigation">
     <div class="drawer-header">
       <a href="/" class="brand drawer-brand">
-        <img src="/Rulebook.png" alt="" aria-hidden="true" class="brand-img" style="height:24px" />
-        <span class="brand-name" style="font-size:1.1rem">TURNADUS</span>
+        <span class="brand-name" style="font-size:1.1rem">Turnadus</span>
       </a>
       <button class="drawer-close" on:click={() => (menuOpen = false)} aria-label="Close menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">

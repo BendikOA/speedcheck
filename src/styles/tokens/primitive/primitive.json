@@ -90,6 +90,7 @@
   },
   "fontFamily": {
     "mono": { "value": "'Intel One Mono', monospace" },
-    "arc":  { "value": "'Archivo', sans-serif" }
+    "arc":  { "value": "'Archivo', sans-serif" },
+    "dm":   { "value": "'DM Sans', sans-serif" }
   }
 }

@@ -13,21 +13,13 @@ const mockEntries = [
 const meta = {
   title: 'UI/SpeedOrder',
   component: SpeedOrder,
-  argTypes: {
-    yourColor: { control: 'color' },
-    oppColor:  { control: 'color' },
-  },
 } satisfies Meta<SpeedOrder>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    entries: mockEntries,
-    yourColor: '#bcfd49',
-    oppColor: '#fd7949',
-  },
+  args: { entries: mockEntries },
 };
 
 export const Empty: Story = {

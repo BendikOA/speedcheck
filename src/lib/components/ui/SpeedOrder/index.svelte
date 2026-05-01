@@ -1,7 +1,5 @@
-<script lang="ts">
-  import './styles.scss';
+<script context="module" lang="ts">
   import type { SpeedEntry } from '$lib/speedtiers';
-  import { spriteUrl } from '$lib/sprites';
 
   export interface SpeedRow {
     side: 'you' | 'opp';
@@ -9,26 +7,27 @@
     speed: number;
     scarf: boolean;
   }
+</script>
+
+<script lang="ts">
+  import './styles.scss';
+  import { staticSpriteUrl } from '$lib/sprites';
 
   export let entries: SpeedRow[] = [];
-  export let yourColor: string = 'var(--color-primary)';
-  export let oppColor: string = '#fd7949';
 </script>
 
 <div class="speed-order">
-  <div class="speed-order-header">SPEED ORDER</div>
+  <div class="speed-order-header">Speed Order</div>
   {#each entries as row}
-    <div class="speed-order-row">
+    <div class="speed-order-row {row.side}">
       <div class="speed-order-left">
-        <div
-          class="speed-order-accent"
-          style="background: {row.side === 'you' ? yourColor : oppColor}"
-        ></div>
-        <img
-          class="speed-order-sprite"
-          src={spriteUrl(row.entry.name)}
-          alt={row.entry.name}
-        />
+        <div class="speed-order-sprite-wrap">
+          <img
+            class="speed-order-sprite"
+            src={staticSpriteUrl(row.entry.name)}
+            alt={row.entry.name}
+          />
+        </div>
         <span class="speed-order-name">{row.entry.name}</span>
       </div>
       <span class="speed-order-speed">{row.speed}</span>

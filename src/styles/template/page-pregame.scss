@@ -27,7 +27,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 220px;
+  grid-template-columns: 1fr 184px;
   gap: 10px;
   align-items: start;
 }
@@ -80,16 +80,10 @@
 
 .action-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-@media (min-width: 600px) {
-  .action-row {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .save-row {
@@ -100,32 +94,10 @@
 }
 
 .saved-section {
-  margin-top: 2rem;
-  border-top: 1px solid var(--gb-3);
-  padding-top: 1.25rem;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-secondary);
 }
 
-.saved-title {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--gb-low);
-  margin-bottom: 0.75rem;
-}
-
-.saved-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-@media (max-width: 560px) {
-  .saved-list {
-    flex-direction: column;
-  }
-}
 
 .modal-backdrop {
   position: fixed;

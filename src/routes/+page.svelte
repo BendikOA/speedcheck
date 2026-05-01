@@ -17,7 +17,7 @@
   import Button from "$lib/components/ui/Button/index.svelte";
   import Input from "$lib/components/ui/Input/index.svelte";
   import TeamPanel from "$lib/components/ui/TeamPanel/index.svelte";
-  import Teamcard from "$lib/components/ui/Teamcard/index.svelte";
+  import TeamSection from "$lib/components/ui/TeamSection/index.svelte";
   import PasteModal from "$lib/components/ui/PasteModal/index.svelte";
   import PlayerIntro from "$lib/components/ui/PlayerIntro/index.svelte";
   import SpeedOrder from "$lib/components/ui/SpeedOrder/index.svelte";
@@ -33,6 +33,7 @@
   let yourTeam: TeamSlotData[] = Array(6).fill(null);
   let oppTeam: TeamSlotData[] = Array(6).fill(null);
   let loadedTeamName: string = "";
+  let loadedTeamId: string | null = null;
   let pickerTarget: { side: "you" | "opp"; index: number } | null = null;
   let usageOrder: string[] = [];
 
@@ -172,7 +173,15 @@
     showSaveInput = false;
   }
 
+  function resetTeams() {
+    yourTeam = Array(6).fill(null);
+    oppTeam = Array(6).fill(null);
+    loadedTeamId = null;
+    loadedTeamName = "";
+  }
+
   function loadTeam(saved: SavedTeam) {
+    loadedTeamId = saved.id;
     loadedTeamName = saved.label ?? "";
     // Use full national dex so legality filtering can't drop saved Pokémon
     const tiers = buildAllTiers(9);
@@ -277,7 +286,6 @@
     <div class="teams-col">
       <TeamPanel
         label={loadedTeamName || "Your team"}
-        color="#bcfd49"
         slots={yourTeam}
         on:pick={(e) => openPicker("you", e.detail.index)}
         on:clear={(e) => clearSlot("you", e.detail.index)}
@@ -305,7 +313,6 @@
 
       <TeamPanel
         label="Opp team"
-        color="#fd7949"
         slots={oppTeam}
         showSave={false}
         on:pick={(e) => openPicker("opp", e.detail.index)}
@@ -315,36 +322,25 @@
       />
 
       <div class="action-row">
-        <Button
-          variant="primary"
-          fullWidth={true}
-          disabled={!canStart}
-          onClick={startGame}
-        >
-          Start Game →
-        </Button>
+        <Button variant="primary" disabled={!canStart} onClick={startGame}>Start Game</Button>
+        <Button variant="secondary" onClick={resetTeams}>Reset</Button>
       </div>
     </div>
 
     <!-- Speed preview sidebar -->
     {#if speedPreview.length > 0}
-      <SpeedOrder
-        entries={speedPreview}
-        yourColor="#bcfd49"
-        oppColor="#fd7949"
-      />
+      <SpeedOrder entries={speedPreview} />
     {/if}
   </div>
 
   <!-- Saved teams -->
   {#if $savedTeams.length > 0}
     <div class="saved-section">
-      <span class="saved-title">Saved Teams</span>
-      <div class="saved-list">
-        {#each $savedTeams as team (team.id)}
-          <Teamcard {team} on:load={(e) => loadTeam(e.detail)} />
-        {/each}
-      </div>
+      <TeamSection
+        teams={$savedTeams}
+        activeTeamId={loadedTeamId}
+        on:load={(e) => loadTeam(e.detail)}
+      />
     </div>
   {/if}
 </div>

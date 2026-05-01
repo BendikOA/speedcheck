@@ -28,9 +28,9 @@ nav .kofi-btn                 { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.
   width: 100%;
   margin: 0 auto;
   height: 60px;
-  padding: 0 1.5rem;
-  padding-left:  max(1.5rem, var(--safe-left));
-  padding-right: max(1.5rem, var(--safe-right));
+  padding: 0 16px;
+  padding-left:  max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
   gap: 1.5rem;
 }
 
@@ -50,9 +50,10 @@ nav .kofi-btn                 { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.
 }
 
 .brand-name {
-  font-family: var(--font-arc);
+  font-family: var(--font-dm);
   font-size: 36px;
-  font-weight: bold;
+  font-weight: 700;
+  font-variation-settings: 'opsz' 14;
   color: var(--color-secondary);
   line-height: 1;
   letter-spacing: -0.01em;
@@ -74,9 +75,10 @@ nav .kofi-btn                 { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.
 }
 
 .nav-links a {
-  font-family: var(--font-arc);
+  font-family: var(--font-dm);
   font-size: var(--font-size-4);
-  font-weight: 500;
+  font-weight: 600;
+  font-variation-settings: 'opsz' 14;
   color: var(--color-secondary);
   padding: 0.25rem 0;
   text-transform: none;
@@ -117,13 +119,14 @@ nav .kofi-btn                 { animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.
   flex-shrink: 0;
   background: var(--color-secondary);
   color: var(--color-bg);
-  font-family: var(--font-arc);
+  font-family: var(--font-dm);
   font-size: var(--font-size-5);
-  font-weight: 500;
+  font-weight: 700;
+  font-variation-settings: 'opsz' 14;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   padding: 10px 20px;
   transition: opacity 0.15s;
 }

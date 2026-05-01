@@ -1,17 +1,18 @@
 .speed-order {
-  background: var(--gb-1);
-  border: 2px solid var(--color-secondary);
-  border-radius: var(--radius);
-  overflow: hidden;
-  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
   width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
 }
 
 .speed-order-header {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid var(--color-secondary);
+  padding: 4px 8px;
+  background: var(--white-400, #a8a8a8);
+  border-radius: var(--radius) var(--radius) 0 0;
   font-family: var(--font-mono);
   font-size: var(--font-size-3);
   font-weight: 500;
@@ -21,36 +22,43 @@
 
 .speed-order-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  height: 47px;
-  border-bottom: 1px solid var(--color-secondary);
-  padding-right: 10px;
-}
-
-.speed-order-row:last-child {
-  border-bottom: none;
+  padding: 4px 8px;
+  background: var(--white-300, #d0d0d0);
 }
 
 .speed-order-left {
   display: flex;
-  align-items: flex-end;
-  height: 45px;
-  gap: 9px;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
-.speed-order-accent {
-  width: 4px;
-  height: 100%;
+.speed-order-sprite-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   flex-shrink: 0;
+}
+
+.speed-order-row.you .speed-order-sprite-wrap {
+  background: var(--primary-050, #f2ffe0);
+}
+
+.speed-order-row.opp .speed-order-sprite-wrap {
+  background: #ffe5e0;
 }
 
 .speed-order-sprite {
-  width: 48px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   image-rendering: pixelated;
-  flex-shrink: 0;
 }
 
 .speed-order-name {
@@ -61,15 +69,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-bottom: 4px;
 }
 
 .speed-order-speed {
-  font-family: var(--font-arc);
-  font-size: var(--font-size-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3);
   font-weight: 500;
   color: var(--color-secondary);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
-  padding-bottom: 4px;
+  white-space: nowrap;
 }

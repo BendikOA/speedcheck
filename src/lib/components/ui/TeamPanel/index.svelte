@@ -6,8 +6,7 @@
   import Button from "$lib/components/ui/Button/index.svelte";
 
   export let label: string = "Your team";
-  export let color: string = "#bcfd49";
-  export let slots: (TeamSlot | null)[] = Array(6).fill(null);
+export let slots: (TeamSlot | null)[] = Array(6).fill(null);
   export let showSave: boolean = true;
 
   const dispatch = createEventDispatcher<{
@@ -22,7 +21,6 @@
 <div class="team-panel">
   <div class="team-header">
     <div class="team-label">
-      <span class="team-color" style="background: {color}"></span>
       <span class="team-name">{label}</span>
     </div>
     <div class="team-actions">
