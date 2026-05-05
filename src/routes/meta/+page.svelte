@@ -38,6 +38,24 @@
     ['spa', 'SpA'], ['spd', 'SpD'], ['spe', 'Spe'],
   ];
 
+  function copySpread(spread: SpreadEntry) {
+    if (!selected) return;
+    const evParts = EV_LABELS
+      .filter(([k]) => spread.evs[k] > 0)
+      .map(([k, label]) => `${spread.evs[k]} ${label}`);
+    const item    = selected.items[0]?.name ?? '';
+    const ability = selected.abilities[0]?.name ?? '';
+    const moves   = selected.moves.slice(0, 4).map(m => `- ${m.name}`);
+    const paste = [
+      `${selected.name}${item ? ` @ ${item}` : ''}`,
+      ability ? `Ability: ${ability}` : '',
+      evParts.length ? `EVs: ${evParts.join(' / ')}` : '',
+      `${spread.nature} Nature`,
+      ...moves,
+    ].filter(Boolean).join('\n');
+    navigator.clipboard.writeText(paste);
+  }
+
 </script>
 
 <svelte:head>
@@ -190,6 +208,7 @@
                   {/each}
                 </span>
                 <span class="usage-row-pct">{spread.pct}%</span>
+                <button class="spread-copy-btn" on:click={() => copySpread(spread)} title="Copy pokepaste">copy</button>
               </div>
             {/each}
           </div>

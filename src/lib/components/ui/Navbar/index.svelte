@@ -1,34 +1,15 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
-  import { afterNavigate } from '$app/navigation';
+  import { page } from "$app/stores";
+  import { afterNavigate } from "$app/navigation";
 
   let menuOpen = false;
-  let navLinksEl: HTMLElement | undefined;
-  let ulLeft = 0;
-  let ulWidth = 0;
-  let ulVisible = false;
-
-  function updateUnderline() {
-    if (!navLinksEl) return;
-    const active = navLinksEl.querySelector('a.active') as HTMLElement | null;
-    if (!active) { ulVisible = false; return; }
-    const cr = navLinksEl.getBoundingClientRect();
-    const lr = active.getBoundingClientRect();
-    ulLeft  = lr.left - cr.left;
-    ulWidth = lr.width;
-    ulVisible = true;
-  }
-
-  onMount(updateUnderline);
 
   afterNavigate(() => {
     menuOpen = false;
-    updateUnderline();
   });
 
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape') menuOpen = false;
+    if (e.key === "Escape") menuOpen = false;
   }
 </script>
 
@@ -36,25 +17,23 @@
 
 <nav>
   <div class="nav-inner">
-
     <a href="/" class="brand">
       <span class="brand-name">Turnadus</span>
     </a>
 
-    <div class="nav-right">
-      <div class="nav-links" bind:this={navLinksEl}>
-        <a href="/"      class:active={$page.url.pathname === '/'}>Pregame</a>
-        <a href="/game"  class:active={$page.url.pathname === '/game'}>Game</a>
-        <a href="/meta"  class:active={$page.url.pathname === '/meta'}>Meta</a>
-        <a href="/build" class:active={$page.url.pathname === '/build'}>Teambuilder</a>
-        <a href="/teams" class:active={$page.url.pathname === '/teams'}>Team Report</a>
-        <span
-          class="nav-underline"
-          aria-hidden="true"
-          style="left: {ulLeft}px; width: {ulWidth}px; opacity: {ulVisible ? 1 : 0}"
-        ></span>
-      </div>
+    <div class="nav-links">
+      <a href="/" class:active={$page.url.pathname === "/"}>Pregame</a>
+      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+      <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
+      <a href="/build" class:active={$page.url.pathname === "/build"}
+        >Teambuilder</a
+      >
+      <a href="/teams" class:active={$page.url.pathname === "/teams"}
+        >Team Report</a
+      >
+    </div>
 
+    <div class="nav-right">
       <a
         href="https://ko-fi.com/T6T21XBBI8"
         target="_blank"
@@ -62,7 +41,13 @@
         class="kofi-btn"
       >
         Support Me
-        <img src="/kofi-icon.png" alt="" aria-hidden="true" width="19" height="19" />
+        <img
+          src="/kofi-icon.png"
+          alt=""
+          aria-hidden="true"
+          width="19"
+          height="19"
+        />
       </a>
     </div>
 
@@ -73,18 +58,38 @@
       aria-expanded={menuOpen}
     >
       {#if menuOpen}
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" /><line
+            x1="6"
+            y1="6"
+            x2="18"
+            y2="18"
+          />
         </svg>
       {:else}
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       {/if}
     </button>
-
   </div>
 </nav>
 
@@ -97,19 +102,40 @@
       <a href="/" class="brand drawer-brand">
         <span class="brand-name" style="font-size:1.1rem">Turnadus</span>
       </a>
-      <button class="drawer-close" on:click={() => (menuOpen = false)} aria-label="Close menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+      <button
+        class="drawer-close"
+        on:click={() => (menuOpen = false)}
+        aria-label="Close menu"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" /><line
+            x1="6"
+            y1="6"
+            x2="18"
+            y2="18"
+          />
         </svg>
       </button>
     </div>
 
     <div class="drawer-links">
-      <a href="/"      class:active={$page.url.pathname === '/'}>Pregame</a>
-      <a href="/game"  class:active={$page.url.pathname === '/game'}>Game</a>
-      <a href="/meta"  class:active={$page.url.pathname === '/meta'}>Meta</a>
-      <a href="/build" class:active={$page.url.pathname === '/build'}>Teambuilder</a>
-      <a href="/teams" class:active={$page.url.pathname === '/teams'}>Team Report</a>
+      <a href="/" class:active={$page.url.pathname === "/"}>Pregame</a>
+      <a href="/game" class:active={$page.url.pathname === "/game"}>Game</a>
+      <a href="/meta" class:active={$page.url.pathname === "/meta"}>Meta</a>
+      <a href="/build" class:active={$page.url.pathname === "/build"}
+        >Teambuilder</a
+      >
+      <a href="/teams" class:active={$page.url.pathname === "/teams"}
+        >Team Report</a
+      >
     </div>
 
     <div class="drawer-footer">

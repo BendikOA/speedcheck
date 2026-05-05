@@ -249,18 +249,18 @@
 }
 
 .stat-total-label {
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--gb-low);
+  color: var(--color-secondary);
   text-align: right;
 }
 
 .stat-total-val {
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
-  color: var(--gb-hi);
+  color: var(--color-secondary);
   font-weight: 700;
   text-align: right;
 }
@@ -378,7 +378,28 @@
 }
 
 .usage-row-spread {
-  grid-template-columns: 4.2rem 1fr 2.5rem;
+  grid-template-columns: 4.2rem 1fr 2.5rem auto;
+}
+
+.spread-copy-btn {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gb-3);
+  background: transparent;
+  color: var(--gb-low);
+  cursor: pointer;
+  z-index: 1;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.1s, border-color 0.1s;
+}
+.spread-copy-btn:hover {
+  color: var(--gb-1);
+  border-color: var(--gb-1);
 }
 
 .spread-nature {

@@ -73,6 +73,14 @@ function parseSpreadKey(key: string): { nature: string; evs: SpreadEntry['evs'] 
   return { nature: key.slice(0, colon), evs: { hp, atk, def, spa, spd, spe } };
 }
 
+function normalizeCounts(
+  data: Record<string, number> | undefined,
+  total: number,
+): Record<string, number> {
+  if (!data || total === 0) return {};
+  return Object.fromEntries(Object.entries(data).map(([k, v]) => [k, v / total]));
+}
+
 function mergeFractions(
   a: Record<string, number> = {},
   b: Record<string, number> = {},
@@ -175,11 +183,11 @@ export const load: PageServerLoad = async (): Promise<MetaPageData> => {
       ? Math.round((combinedRawCount / totalTeamSlots) * 1000) / 10
       : 0;
 
-    const moves     = topItems(mergeFractions(bo1Entry?.Moves,     bo3Entry?.Moves),     combinedRawCount, 12, gen9Dex.moves);
-    const items     = topItems(mergeFractions(bo1Entry?.Items,     bo3Entry?.Items),     combinedRawCount, 12);
-    const abilities = topItems(mergeFractions(bo1Entry?.Abilities, bo3Entry?.Abilities), combinedRawCount, 12);
+    const moves     = topItems(mergeFractions(normalizeCounts(bo1Entry?.Moves,     bo1Count), normalizeCounts(bo3Entry?.Moves,     bo3Count)), combinedRawCount, 12, gen9Dex.moves);
+    const items     = topItems(mergeFractions(normalizeCounts(bo1Entry?.Items,     bo1Count), normalizeCounts(bo3Entry?.Items,     bo3Count)), combinedRawCount, 12);
+    const abilities = topItems(mergeFractions(normalizeCounts(bo1Entry?.Abilities, bo1Count), normalizeCounts(bo3Entry?.Abilities, bo3Count)), combinedRawCount, 12);
 
-    const mergedSpreads = mergeFractions(bo1Entry?.Spreads, bo3Entry?.Spreads);
+    const mergedSpreads = mergeFractions(normalizeCounts(bo1Entry?.Spreads, bo1Count), normalizeCounts(bo3Entry?.Spreads, bo3Count));
     const spreads: SpreadEntry[] = [...mergedSpreads.entries()]
       .map(([key, { sum, n }]) => ({ key, avg: sum / n }))
       .sort((a, b) => b.avg - a.avg)
@@ -189,7 +197,7 @@ export const load: PageServerLoad = async (): Promise<MetaPageData> => {
         return parsed ? [{ ...parsed, pct: Math.round(avg * 100) }] : [];
       });
 
-    const mergedTm = mergeFractions(bo1Entry?.Teammates, bo3Entry?.Teammates);
+    const mergedTm = mergeFractions(normalizeCounts(bo1Entry?.Teammates, bo1Count), normalizeCounts(bo3Entry?.Teammates, bo3Count));
     const teammates = [...mergedTm.entries()]
       .map(([tmName, { sum, n }]) => ({ tmName, avg: sum / n }))
       .sort((a, b) => b.avg - a.avg)
